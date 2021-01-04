@@ -1,4 +1,4 @@
-# Aplicación FutGol
+# Aplicación FutGol TFG
 [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-kotlin.png?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-kotlin/)
 
 ## Technologies used

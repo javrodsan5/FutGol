@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'usuarios')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+</head>
+<body>
+<h2>Usuarios</h2>
+
+<table id="usuarios" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Apodo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="usuario : ${usuarios}">
+        <td th:text="${usuario.nombre}"></td>
+        <td th:text="${usuario.email}"></td>
+        <td th:text="${usuario.nombreUsuario}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

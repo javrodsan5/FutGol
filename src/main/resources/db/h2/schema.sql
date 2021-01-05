@@ -5,7 +5,16 @@ DROP TABLE visits IF EXISTS;
 DROP TABLE pets IF EXISTS;
 DROP TABLE types IF EXISTS;
 DROP TABLE owners IF EXISTS;
+DROP TABLE usuarios IF EXISTS;
 
+CREATE TABLE usuarios (
+    id INTEGER IDENTITY PRIMARY KEY,
+    nombre VARCHAR(30),
+    email  VARCHAR(255),
+    nombreUsuario    VARCHAR(255),
+    password       VARCHAR(80),
+);
+CREATE INDEX usuario_name ON usuarios (nombre);
 
 CREATE TABLE vets (
   id         INTEGER IDENTITY PRIMARY KEY,

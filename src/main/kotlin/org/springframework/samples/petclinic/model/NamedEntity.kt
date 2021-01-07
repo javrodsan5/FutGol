@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.model
 
 import javax.persistence.Column
 import javax.persistence.MappedSuperclass
+import javax.validation.constraints.NotBlank
 
 
 /**
@@ -31,6 +32,7 @@ import javax.persistence.MappedSuperclass
 open class NamedEntity : BaseEntity() {
 
     @Column(name = "name")
+    @NotBlank
     open var name: String? = null
 
     override fun toString(): String =

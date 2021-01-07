@@ -9,10 +9,11 @@ DROP TABLE usuarios IF EXISTS;
 
 CREATE TABLE usuarios (
     id INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(30),
-    email  VARCHAR(255),
-    nombre_usuario    VARCHAR(255),
-    password       VARCHAR(80)
+    name VARCHAR(30) NOT NULL,
+    email  VARCHAR(255) NOT NULL,
+    nombre_usuario    VARCHAR(255) NOT NULL,
+    password       VARCHAR(80) NOT NULL,
+    es_admin BIT NOT NULL
 );
 CREATE INDEX usuario_name ON usuarios (name);
 

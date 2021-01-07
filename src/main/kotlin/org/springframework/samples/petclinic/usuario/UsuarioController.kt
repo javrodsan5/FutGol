@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.stereotype.Controller
+import javax.validation.Valid
 
 @Controller
 class UsuarioController (val usuarioRepository: UsuarioRepository) {
@@ -30,7 +31,7 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
     }
 
     @PostMapping("/usuarios/registro")
-    fun processCreationForm(usuario: Usuario, result: BindingResult, model: Model): String {
+    fun processCreationForm(@Valid usuario: Usuario, result: BindingResult, model: Model): String {
         return if (result.hasErrors()) {
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO

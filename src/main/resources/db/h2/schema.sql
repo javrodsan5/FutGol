@@ -9,12 +9,12 @@ DROP TABLE usuarios IF EXISTS;
 
 CREATE TABLE usuarios (
     id INTEGER IDENTITY PRIMARY KEY,
-    nombre VARCHAR(30),
+    name VARCHAR(30),
     email  VARCHAR(255),
-    nombreUsuario    VARCHAR(255),
-    password       VARCHAR(80),
+    nombre_usuario    VARCHAR(255),
+    password       VARCHAR(80)
 );
-CREATE INDEX usuario_name ON usuarios (nombre);
+CREATE INDEX usuario_name ON usuarios (name);
 
 CREATE TABLE vets (
   id         INTEGER IDENTITY PRIMARY KEY,

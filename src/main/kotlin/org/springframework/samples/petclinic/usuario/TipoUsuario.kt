@@ -6,5 +6,5 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "tipoUsuario")
-class TipoUsuario : NamedEntity()
+class TipoUsuario : NamedEntity(){
 }

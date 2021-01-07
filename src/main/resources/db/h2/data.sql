@@ -1,6 +1,6 @@
 
-INSERT INTO usuario VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'javierito', 'passworsita';
-INSERT INTO usuario VALUES (2, 'Fernando', 'emialdefernando@gmail.com', 'ferki', 'passworsitaFer');
+INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'javierito', 'passworsita');
+INSERT INTO usuarios VALUES (2, 'Fernando', 'emialdefernando@gmail.com', 'ferki', 'passworsitaFer');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');

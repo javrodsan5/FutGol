@@ -47,6 +47,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-taglibs")
+    implementation("org.springframework.security:spring-security-test")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("javax.cache:cache-api")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -55,6 +58,7 @@ dependencies {
     implementation("org.webjars:jquery:$jQueryVersion")
     implementation("org.webjars:jquery-ui:$jQueryUIVersion")
     implementation("org.webjars:bootstrap:$boostrapVersion")
+    implementation("org.projectlombok:lombok:1.18.16")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")

@@ -5,17 +5,52 @@ DROP TABLE visits IF EXISTS;
 DROP TABLE pets IF EXISTS;
 DROP TABLE types IF EXISTS;
 DROP TABLE owners IF EXISTS;
+DROP TABLE users IF EXISTS;
+DROP TABLE authorities IF EXISTS;
 DROP TABLE usuarios IF EXISTS;
+
+CREATE TABLE ligas (
+    id INTEGER IDENTITY PRIMARY KEY,
+    name VARCHAR(30) NOT NULL
+);
+
+CREATE INDEX liga_name ON ligas (name);
+
+CREATE TABLE users (
+    id       INTEGER IDENTITY PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    enabled BOOLEAN NOT NULL
+);
+
+CREATE INDEX user_name ON users (username);
+
+CREATE TABLE authorities (
+    id INTEGER IDENTITY PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    authority VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE authorities ADD CONSTRAINT fk_user_authority FOREIGN KEY (username) REFERENCES users (username);
+
+CREATE INDEX authority_name ON authorities (authority);
 
 CREATE TABLE usuarios (
     id INTEGER IDENTITY PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     email  VARCHAR(255) NOT NULL,
-    nombre_usuario    VARCHAR(255) NOT NULL,
-    password       VARCHAR(80) NOT NULL,
-    es_admin BIT NOT NULL
+    es_admin BIT NOT NULL,
+    authority_username   VARCHAR(255) NOT NULL,
+    liga_name VARCHAR(255)
 );
+
+ALTER TABLE usuarios ADD CONSTRAINT fk_authority_usuario FOREIGN KEY (authority_username) REFERENCES authorities (username);
+ALTER TABLE usuarios ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (liga_name) REFERENCES ligas (name);
+
 CREATE INDEX usuario_name ON usuarios (name);
+
+
+
 
 CREATE TABLE vets (
   id         INTEGER IDENTITY PRIMARY KEY,

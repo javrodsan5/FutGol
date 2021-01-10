@@ -1,6 +1,11 @@
+INSERT INTO ligas VALUES (1, 'cervezoides');
+INSERT INTO ligas VALUES (2, 'informaticos futboleros');
 
-INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'javierito', 'passworsita', 1);
-INSERT INTO usuarios VALUES (2, 'Fernando', 'emialdefernando@gmail.com', 'ferki', 'passworsitaFer', 0);
+
+INSERT INTO users VALUES (1, 'administrador1', 'password',TRUE);
+INSERT INTO authorities VALUES (1, 'administrador1', 'admin');
+INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 1, 'administrador1', 'cervezoides');
+--INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com', 'ferki', 'passworsitaFer', 0);
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');

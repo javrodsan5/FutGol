@@ -28,6 +28,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/owners/**").denyAll()
                 .and()
                 .formLogin()
+                .loginPage("/login.html")
                 .failureUrl("/login-error")
                 .and()
                 .logout()

@@ -42,7 +42,9 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
+
         <div class="navbar-collapse collapse" id="main-navbar">
+            <div sec:authorize="isAuthenticated()">
             <ul class="nav navbar-nav navbar-right">
 
                 <li th:fragment="menuItem (path,active,title,glyph,text)" class="active"
@@ -69,6 +71,15 @@
                     <span>Veterinarians</span>
                 </li>
 
+                    <li th:replace="::menuItem ('/logout','logout','logout','logout','Logout')">
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                        <span>Logout</span>
+                    </li>
+            </ul>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+            <ul class="nav navbar-nav navbar-right">
+
                 <li th:replace="::menuItem ('/oups','error','trigger a RuntimeException to see how it is handled','warning-sign','Error')">
                     <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                     <span>Error</span>
@@ -83,8 +94,8 @@
                     <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                     <span>Login</span>
                 </li>
-
             </ul>
+                </div>
         </div>
     </div>
 </nav>

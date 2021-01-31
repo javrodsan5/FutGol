@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'usuario')}">
+
+  <body>
+  
+  
+    <h2>Mi cuenta</h2>
+  
+  
+    <table class="table table-striped" th:object="${usuario}">
+      <tr>
+        <th>Nombre</th>
+        <td><b th:text="*{name}"></b></td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td th:text="*{email}"/></td>
+      </tr>
+    </table>
+
+  </body>
+
+</html>

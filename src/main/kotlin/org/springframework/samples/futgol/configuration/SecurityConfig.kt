@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
 
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import javax.sql.DataSource
 
 
@@ -33,8 +34,14 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .loginPage("/login.html")
                 .failureUrl("/login-error")
                 .and()
-                .logout()
-                .logoutSuccessUrl("/")
+              .logout()
+              .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
+              .logoutSuccessUrl("/")
+              .invalidateHttpSession(true)
+              .deleteCookies("JSESSIONID")
+
+        http.csrf().ignoringAntMatchers("/usuarios/**");
+        http.csrf().ignoringAntMatchers("/liga/**");
 
         http.csrf().ignoringAntMatchers("/h2-console/**");
         http.headers().frameOptions().sameOrigin();

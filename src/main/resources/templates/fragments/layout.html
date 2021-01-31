@@ -66,6 +66,11 @@
                     <span>Mis ligas</span>
                 </li>
 
+                <li th:replace="::menuItem ('/micuenta','usuario','Mi cuenta','th-list','Mi cuenta')">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span>Mi cuenta</span>
+                </li>
+
                 <li th:replace="::menuItem ('/liga/crear','liga','Crear liga','th-list','liga')">
                     <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                     <span>Liga</span>

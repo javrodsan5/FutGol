@@ -13,7 +13,7 @@ import java.security.Principal
 import javax.validation.Valid
 
 @Controller
-class UsuarioController (val usuarioRepository: UsuarioRepository) {
+class UsuarioController (val usuarioServicio: UsuarioServicio) {
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
     private val VISTA_LISTADO_USUARIOS = "usuarios/usuariosList"
@@ -23,7 +23,7 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
 
     fun usuarioLogueado(principal: Principal): Usuario? {
         val username: String = principal.getName()
-        return usuarioRepository.buscarUsuarioPorNombreUsuario(username)
+        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
     }
 
     @GetMapping("/micuenta")
@@ -37,9 +37,11 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
 
 
     @GetMapping("/usuarios")
-    fun listarUsuarios(model: MutableMap<String, Any>): String {
-        val usuarios = usuarioRepository.findAll()
-        model["usuarios"]= usuarios
+    fun listarUsuarios(model: Model): String {
+        val usuarios = usuarioServicio.findAllUsuarios()
+        if (usuarios != null) {
+            model["usuarios"]= usuarios
+        }
         return VISTA_LISTADO_USUARIOS
     }
 
@@ -56,7 +58,7 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO
         } else {
-            this.usuarioRepository.save(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
             "redirect:/"
         }
     }

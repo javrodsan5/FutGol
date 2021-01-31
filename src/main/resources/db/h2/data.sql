@@ -1,19 +1,22 @@
-INSERT INTO ligas VALUES (1, 'cervezoides');
-INSERT INTO ligas VALUES (2, 'informaticos futboleros');
-INSERT INTO ligas VALUES (3, 'miligaFerki');
-
 INSERT INTO users VALUES (1, 'administrador1', 'password',TRUE);
 INSERT INTO users VALUES (2, 'ferki', 'ferki',TRUE);
 
-INSERT INTO authorities VALUES (1, 'administrador1', 'admin');
-INSERT INTO authorities VALUES (2, 'ferki', 'admin');
+INSERT INTO authorities VALUES (1, 'administrador1', 'usuario');
+INSERT INTO authorities VALUES (2, 'ferki', 'usuario');
 
-INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 1, 'administrador1', 'cervezoides');
-INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com', 1, 'ferki', 'miligaFerki');
+INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'administrador1');
+INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com','ferki');
 
-INSERT INTO usuarios_ligas VALUES (1,1);
+
+INSERT INTO ligas VALUES (1, 'cervezoides', 'ferki');
+INSERT INTO ligas VALUES (2, 'informaticos futboleros', 'administrador1');
+INSERT INTO ligas VALUES (3, 'miligaFerki', 'administrador1');
+
 INSERT INTO usuarios_ligas VALUES (1,2);
-INSERT INTO usuarios_ligas VALUES (2,3);
+INSERT INTO usuarios_ligas VALUES (2,1);
+INSERT INTO usuarios_ligas VALUES (3,1);
+
+
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');

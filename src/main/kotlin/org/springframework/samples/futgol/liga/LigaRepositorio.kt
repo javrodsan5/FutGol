@@ -15,19 +15,19 @@
  */
 package org.springframework.samples.futgol.liga
 
-
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.Repository
-import org.springframework.samples.futgol.vet.Vet
+import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.transaction.annotation.Transactional
 
 interface LigaRepositorio : Repository<Liga, Int> {
 
-    @Transactional(readOnly = true)
-    @Cacheable("ligas")
-    fun findAll(): Collection<Liga>
 
     fun save(liga: Liga)
+
+    fun findLigaByName(nombre : String): Liga
+
+//    @Query("SELECT l.usuarios FROM Liga l where l.name = ?1")
+//    fun buscarUsuariosEnLiga(nombreLiga: String): Collection<Usuario>
+
 }

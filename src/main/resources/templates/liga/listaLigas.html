@@ -11,14 +11,20 @@
     <thead>
       <tr>
         <th>Nombre</th>
-          <th>Usuario</th>
+          <th>Administrador</th>
       </tr>
     </thead>
     <tbody>
+    <div th:if="${ligas}">
       <tr th:each="liga : ${ligas}">
-        <td th:text="${liga.name}"></td>
-          <td th:text="${usuario.email}"></td>
+         <td> <a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
+        <td th:text="${liga.admin}"></td>
       </tr>
+    </div>
+    <div th:unless="${ligas}">
+        <p> No tienes ninguna liga creada todavía</p>
+    </div>
+
     </tbody>
   </table>
 </body>

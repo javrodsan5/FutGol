@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'liga')}">
+
+<body>
+
+
+<h1 th:object="${liga}"><b th:text="*{name}"></b></h1>
+<h2><b>Administrador: </b><b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
+
+<ul>
+
+    <li th:object="${liga}"><b th:text="*{name}"> </li>
+</ul>
+</body>
+
+</html>

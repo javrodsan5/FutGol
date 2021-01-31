@@ -1,8 +1,10 @@
 package org.springframework.samples.futgol.liga
 
 
+import org.springframework.samples.futgol.owner.Owner
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioRepository
+import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
@@ -14,14 +16,14 @@ import javax.validation.Valid
 
 
 @Controller
-class LigaControlador (val ligaRepositorio: LigaRepositorio, val usuarioRepository: UsuarioRepository) {
+class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio) {
 
     private val VISTA_CREAR_LIGA = "liga/crearLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
 
     fun usuarioLogueado(principal: Principal): Usuario? {
         val username: String = principal.getName()
-        return usuarioRepository.buscarUsuarioPorNombreUsuario(username)
+        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
     }
 
     @GetMapping("/misligas")
@@ -30,7 +32,7 @@ class LigaControlador (val ligaRepositorio: LigaRepositorio, val usuarioReposito
         if (usuario != null) {
             model["usuario"] = usuario
         }
-        val ligas = usuario?.autoridad?.user?.username?.let { usuarioRepository.buscarLigasUsuario(it) }
+        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
             model["ligas"]= ligas
         }
@@ -38,22 +40,42 @@ class LigaControlador (val ligaRepositorio: LigaRepositorio, val usuarioReposito
     }
 
     @GetMapping("/liga/crear")
-    fun iniciarCreacion(model: Model, usuario: Usuario): String {
+    fun iniciarCreacion(model: MutableMap<String, Any>, principal: Principal): String {
         val liga = Liga()
-        usuario.addLiga(liga)
         model["liga"] = liga
         return VISTA_CREAR_LIGA
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, usuario: Usuario, result: BindingResult, model: Model): String {
-        usuario.addLiga(liga)
+    fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult): String {
         return if (result.hasErrors()) {
-            model["liga"] = liga
             VISTA_CREAR_LIGA
         } else {
-            this.ligaRepositorio.save(liga)
-            "redirect:/"
+            val  usuario: Usuario? = usuarioLogueado(principal)
+            liga.admin= usuario
+            usuario?.ligas?.add(liga)
+            this.ligaServicio.saveLiga(liga)
+            if (usuario != null) {
+                this.usuarioServicio.saveUsuario(usuario)
+            }
+            "redirect:/misligas"
         }
     }
+
+//    @GetMapping("/owners/new")
+//    fun initCreationForm(model: MutableMap<String, Any>): String {
+//        val owner = Owner()
+//        model["owner"] = owner
+//        return VIEWS_OWNER_CREATE_OR_UPDATE_FORM
+//    }
+//
+//    @PostMapping("/owners/new")
+//    fun processCreationForm(@Valid owner: Owner, result: BindingResult): String {
+//        return if (result.hasErrors()) {
+//            VIEWS_OWNER_CREATE_OR_UPDATE_FORM
+//        } else {
+//            owners.save(owner)
+//            "redirect:/owners/" + owner.id
+//        }
+//    }
 }

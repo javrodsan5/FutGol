@@ -22,12 +22,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     var dataSource: DataSource? = null
 
     override protected fun configure(http: HttpSecurity) {
-          http.authorizeRequests()
+          http.csrf().disable().authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/","/oups").permitAll()
-                .antMatchers("/owners/**").denyAll()
-                .antMatchers("/usuarios/**").permitAll()
-              .antMatchers("/liga/**").permitAll()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login.html")
@@ -36,7 +34,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .logout()
                 .logoutSuccessUrl("/")
 
-        http.csrf().ignoringAntMatchers("/h2-console/**");
+        http.csrf().ignoringAntMatchers("/**");
         http.headers().frameOptions().sameOrigin();
     }
 

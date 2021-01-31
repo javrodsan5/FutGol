@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import javax.validation.Valid
 
 @Controller
-class UsuarioController (val usuarioRepository: UsuarioRepository) {
+class UsuarioController (val usuarioServicio: UsuarioServicio) {
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
     private val VISTA_LISTADO_USUARIOS = "usuarios/usuariosList"
@@ -20,9 +20,11 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
 
 
     @GetMapping("/usuarios")
-    fun listarUsuarios(model: MutableMap<String, Any>): String {
-        val usuarios = usuarioRepository.findAll()
-        model["usuarios"]= usuarios
+    fun listarUsuarios(model: Model): String {
+        val usuarios = usuarioServicio.findAllUsuarios()
+        if (usuarios != null) {
+            model["usuarios"]= usuarios
+        }
         return VISTA_LISTADO_USUARIOS
     }
 
@@ -40,7 +42,7 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO
         } else {
-            this.usuarioRepository.save(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
             "redirect:/"
         }
     }

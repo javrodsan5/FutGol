@@ -11,11 +11,11 @@ interface UsuarioRepository : Repository<Usuario, Int> {
     fun findAll(): Collection<Usuario>
 
     @Transactional(readOnly = true)
-    @Query("SELECT u FROM Usuario u where u.autoridad.user.username = ?1")
+    @Query("SELECT u FROM Usuario u where u.user.username = ?1")
     fun buscarUsuarioPorNombreUsuario(nombreUsuario: String): Usuario
 
 
-    @Query("SELECT u.ligas FROM Usuario u where u.autoridad.user.username = ?1")
+    @Query("SELECT u.ligas FROM Usuario u where u.user.username = ?1")
     fun buscarLigasUsuario(nombreUsuario: String): Collection<Liga>
 
     fun save(usuario: Usuario)

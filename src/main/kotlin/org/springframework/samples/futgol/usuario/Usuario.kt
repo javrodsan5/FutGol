@@ -24,16 +24,11 @@ class Usuario : NamedEntity() {
     @NotBlank
     var email = ""
 
-    //HAY QUE BUSCAR ALGUNA FORMA DE ENLAZAR SI ES ADMIN DE UNA LIGA
-    @Column(name = "esAdmin")
-    @NotNull
-    var esAdmin = ""
-
     @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "authority_username", referencedColumnName = "username")
-    var autoridad: Authorities? = null
+    @JoinColumn(name = "username", referencedColumnName = "username")
+    var user: User? = null
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @ManyToMany( cascade = [CascadeType.ALL])
     @JoinTable(name = "usuarios_ligas", joinColumns = [JoinColumn(name = "usuario_id")], inverseJoinColumns = [JoinColumn(name = "liga_id")])
     var ligas: MutableSet<Liga> = HashSet()
 

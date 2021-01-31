@@ -6,18 +6,14 @@
   <h2>
    Nuevo Usuario
   </h2>
-  <form th:object="${usuario}" class="form-horizontal" method="post">
+  <form th:object="${usuario.user}" class="form-horizontal" method="post">
       <input type="hidden" name="esAdmin" th:value="false" />
     <div class="form-group has-feedback">
 
       <input
-        th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}" />
+        th:replace="~{fragments/inputField :: input ('Nombre', 'username', 'text')}" />
       <input
-        th:replace="~{fragments/inputField :: input ('Email', 'email', 'text')}" />
-        <input
-                th:replace="~{fragments/inputField :: input ('Nombre de usuario', 'user.username', 'text')}" />
-        <input
-                th:replace="~{fragments/inputField :: input ('Contraseña', 'user.password', 'text')}" />
+        th:replace="~{fragments/inputField :: input ('Email', 'password', 'text')}" />
 
     </div>
     <div class="form-group">

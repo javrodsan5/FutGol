@@ -49,7 +49,13 @@ ALTER TABLE usuarios ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (liga_name) REFE
 
 CREATE INDEX usuario_name ON usuarios (name);
 
+CREATE TABLE usuarios_ligas (
+    usuario_id INTEGER NOT NULL,
+    liga_id INTEGER NOT NULL
+);
 
+ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
+ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_ligas FOREIGN KEY (liga_id) REFERENCES ligas (id);
 
 
 CREATE TABLE vets (

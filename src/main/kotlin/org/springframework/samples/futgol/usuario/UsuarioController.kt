@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.usuario
 
 
+import org.springframework.samples.futgol.login.User
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
@@ -28,6 +29,7 @@ class UsuarioController (val usuarioRepository: UsuarioRepository) {
     @GetMapping("/usuarios/registro")
     fun iniciarCreacion(model: Model): String {
         val usuario = Usuario()
+        val user= User()
         model["usuario"] = usuario
         return VISTA_REGISTRO_USUARIO
     }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
+
+<body>
+
+  <h2>Mis ligas</h2>
+
+  <table id="ligas" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+          <th>Usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="liga : ${ligas}">
+        <td th:text="${liga.name}"></td>
+          <td th:text="${usuario.email}"></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

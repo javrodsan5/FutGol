@@ -26,13 +26,16 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/","/oups").permitAll()
                 .antMatchers("/owners/**").denyAll()
+                .antMatchers("/usuarios/**").permitAll()
+              .antMatchers("/liga/**").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login.html")
                 .failureUrl("/login-error")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+
         http.csrf().ignoringAntMatchers("/h2-console/**");
         http.headers().frameOptions().sameOrigin();
     }

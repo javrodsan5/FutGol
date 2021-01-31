@@ -61,6 +61,16 @@
                     <span>Home</span>
                 </li>
 
+                <li th:replace="::menuItem ('/misligas','liga','Mis ligas','th-list','Mis ligas')">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span>Mis ligas</span>
+                </li>
+
+                <li th:replace="::menuItem ('/liga/crear','liga','Crear liga','th-list','liga')">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span>Liga</span>
+                </li>
+
                 <li th:replace="::menuItem ('/owners/find','owners','find owners','search','Find owners')">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     <span>Find owners</span>

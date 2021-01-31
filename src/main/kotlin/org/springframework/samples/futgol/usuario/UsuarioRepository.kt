@@ -7,17 +7,14 @@ import org.springframework.transaction.annotation.Transactional
 
 interface UsuarioRepository : Repository<Usuario, Int> {
 
-    @Transactional(readOnly = true)
+
     fun findAll(): Collection<Usuario>
 
-    @Transactional(readOnly = true)
     @Query("SELECT u FROM Usuario u where u.user.username = ?1")
     fun buscarUsuarioPorNombreUsuario(nombreUsuario: String): Usuario
 
-    @Transactional(readOnly = true)
     @Query("SELECT u.ligas FROM Usuario u where u.user.username = ?1")
     fun buscarLigasUsuario(nombreUsuario: String): Collection<Liga>
 
-    @Transactional
     fun save(usuario: Usuario)
 }

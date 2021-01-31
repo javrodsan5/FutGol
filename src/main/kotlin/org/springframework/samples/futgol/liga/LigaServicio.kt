@@ -27,5 +27,9 @@ class LigaServicio {
         ligaRepositorio?.save(liga)
     }
 
+    @Transactional(readOnly = true)
+    fun findLigaByName(nombreLiga: String): Liga? {
+        return ligaRepositorio?.findLigaByName((nombreLiga))
+    }
 
 }

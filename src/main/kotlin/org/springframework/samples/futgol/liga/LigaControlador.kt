@@ -1,28 +1,28 @@
 package org.springframework.samples.futgol.liga
 
 
-import org.springframework.samples.futgol.owner.Owner
 import org.springframework.samples.futgol.usuario.Usuario
-import org.springframework.samples.futgol.usuario.UsuarioRepository
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.stereotype.Controller
 import java.security.Principal
 import javax.validation.Valid
 
 
 @Controller
-class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio) {
+class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio) {
 
     private val VISTA_CREAR_LIGA = "liga/crearLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
+    private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
 
     fun usuarioLogueado(principal: Principal): Usuario? {
-        val username: String = principal.getName()
+        val username: String = principal.name
         return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
     }
 
@@ -31,7 +31,7 @@ class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: Usua
         val usuario: Usuario? = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
-            model["ligas"]= ligas
+            model["ligas"] = ligas
         }
         return VISTA_LISTA_LIGAS
     }
@@ -48,8 +48,8 @@ class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: Usua
         return if (result.hasErrors()) {
             VISTA_CREAR_LIGA
         } else {
-            val  usuario: Usuario? = usuarioLogueado(principal)
-            liga.admin= usuario
+            val usuario: Usuario? = usuarioLogueado(principal)
+            liga.admin = usuario
             usuario?.ligas?.add(liga)
             this.ligaServicio.saveLiga(liga)
             if (usuario != null) {
@@ -59,20 +59,14 @@ class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: Usua
         }
     }
 
-//    @GetMapping("/owners/new")
-//    fun initCreationForm(model: MutableMap<String, Any>): String {
-//        val owner = Owner()
-//        model["owner"] = owner
-//        return VIEWS_OWNER_CREATE_OR_UPDATE_FORM
-//    }
-//
-//    @PostMapping("/owners/new")
-//    fun processCreationForm(@Valid owner: Owner, result: BindingResult): String {
-//        return if (result.hasErrors()) {
-//            VIEWS_OWNER_CREATE_OR_UPDATE_FORM
-//        } else {
-//            owners.save(owner)
-//            "redirect:/owners/" + owner.id
-//        }
-//    }
+    @GetMapping("liga/{nombreLiga}")
+    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
+        val liga = ligaServicio.findLigaByName(nombreLiga)
+        if (liga != null) {
+            model["liga"] = liga
+        }
+        return VISTA_DETALLES_LIGA
+    }
+
+
 }

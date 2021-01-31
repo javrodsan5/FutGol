@@ -23,7 +23,7 @@ class UsuarioController (val usuarioServicio: UsuarioServicio) {
 
     fun usuarioLogueado(principal: Principal): Usuario? {
         val username: String = principal.getName()
-        return usuarioRepository.buscarUsuarioPorNombreUsuario(username)
+        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
     }
 
     @GetMapping("/micuenta")

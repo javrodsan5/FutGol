@@ -5,16 +5,13 @@ DROP TABLE visits IF EXISTS;
 DROP TABLE pets IF EXISTS;
 DROP TABLE types IF EXISTS;
 DROP TABLE owners IF EXISTS;
-DROP TABLE users IF EXISTS;
-DROP TABLE authorities IF EXISTS;
+DROP TABLE usuarios_ligas IF EXISTS;
+DROP TABLE ligas IF EXISTS;
 DROP TABLE usuarios IF EXISTS;
+DROP TABLE authorities IF EXISTS;
+DROP TABLE users IF EXISTS;
 
-CREATE TABLE ligas (
-    id INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(30) NOT NULL
-);
 
-CREATE INDEX liga_name ON ligas (name);
 
 CREATE TABLE users (
     id       INTEGER IDENTITY PRIMARY KEY,
@@ -39,15 +36,21 @@ CREATE TABLE usuarios (
     id INTEGER IDENTITY PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     email  VARCHAR(255) NOT NULL,
-    es_admin BIT NOT NULL,
-    authority_username   VARCHAR(255) NOT NULL,
-    liga_name VARCHAR(255)
+    username   VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE usuarios ADD CONSTRAINT fk_authority_usuario FOREIGN KEY (authority_username) REFERENCES authorities (username);
-ALTER TABLE usuarios ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (liga_name) REFERENCES ligas (name);
+ALTER TABLE usuarios ADD CONSTRAINT fk_authority_usuario FOREIGN KEY (username) REFERENCES users (username);
 
 CREATE INDEX usuario_name ON usuarios (name);
+
+
+CREATE TABLE ligas (
+    id INTEGER IDENTITY PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    admin VARCHAR(255) NOT NULL
+);
+CREATE INDEX liga_name ON ligas (name);
+ALTER TABLE ligas ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (admin) REFERENCES users (username);
 
 CREATE TABLE usuarios_ligas (
     usuario_id INTEGER NOT NULL,

@@ -17,7 +17,7 @@
     <tbody>
       <tr th:each="liga : ${ligas}">
         <td th:text="${liga.name}"></td>
-          <td th:text="${usuario.email}"></td>
+          <td th:text="${usuario.user.username}"></td>
       </tr>
     </tbody>
   </table>

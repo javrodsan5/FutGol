@@ -28,7 +28,7 @@ class Usuario : NamedEntity() {
     @JoinColumn(name = "username", referencedColumnName = "username")
     var user: User? = null
 
-    @ManyToMany( cascade = [CascadeType.ALL])
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_ligas", joinColumns = [JoinColumn(name = "usuario_id")], inverseJoinColumns = [JoinColumn(name = "liga_id")])
     var ligas: MutableSet<Liga> = HashSet()
 

@@ -14,9 +14,10 @@ interface UsuarioRepository : Repository<Usuario, Int> {
     @Query("SELECT u FROM Usuario u where u.user.username = ?1")
     fun buscarUsuarioPorNombreUsuario(nombreUsuario: String): Usuario
 
-
+    @Transactional(readOnly = true)
     @Query("SELECT u.ligas FROM Usuario u where u.user.username = ?1")
     fun buscarLigasUsuario(nombreUsuario: String): Collection<Liga>
 
+    @Transactional
     fun save(usuario: Usuario)
 }

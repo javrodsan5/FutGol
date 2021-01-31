@@ -29,9 +29,6 @@ class LigaControlador (val ligaServicio: LigaServicio, val usuarioServicio: Usua
     @GetMapping("/misligas")
     fun listaLigas(model: Model, principal: Principal): String {
         val usuario: Usuario? = usuarioLogueado(principal)
-        if (usuario != null) {
-            model["usuario"] = usuario
-        }
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
             model["ligas"]= ligas

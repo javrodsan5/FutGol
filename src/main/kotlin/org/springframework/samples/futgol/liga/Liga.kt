@@ -15,7 +15,7 @@ import javax.persistence.*
 class Liga : NamedEntity() {
 
     @ManyToOne()
-    @JoinColumn(name = "username", referencedColumnName = "username")
+    @JoinColumn(name = "admin", referencedColumnName = "username")
     var admin: Usuario? = null
 
 

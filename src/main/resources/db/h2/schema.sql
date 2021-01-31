@@ -53,12 +53,11 @@ CREATE INDEX liga_name ON ligas (name);
 ALTER TABLE ligas ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (admin) REFERENCES users (username);
 
 CREATE TABLE usuarios_ligas (
-    usuario_id INTEGER NOT NULL,
-    liga_id INTEGER NOT NULL
+    liga_id INTEGER NOT NULL,
+    usuario_id INTEGER NOT NULL
 );
-
-ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
 ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_ligas FOREIGN KEY (liga_id) REFERENCES ligas (id);
+ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
 
 
 CREATE TABLE vets (

@@ -62,6 +62,7 @@ dependencies {
     implementation("org.webjars:bootstrap:$boostrapVersion")
     implementation("org.projectlombok:lombok:1.18.16")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")

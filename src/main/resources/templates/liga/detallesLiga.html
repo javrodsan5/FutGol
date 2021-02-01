@@ -10,11 +10,13 @@
 <h2><b>Administrador: </b><b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
 
 <ul>
-
     <li th:object="${liga}"><b th:text="*{name}"> </li>
+    <li th:object="${liga}">Usuarios:<b th:text="*{usuarios}"> </li>
 </ul>
 
-<a class="btn btn-default" <a th:href="@{/liga/editar/__${liga.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
+<a class="btn btn-default"  th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-user"></span>Buscar usuario</a>
+
+
 
 </body>
 

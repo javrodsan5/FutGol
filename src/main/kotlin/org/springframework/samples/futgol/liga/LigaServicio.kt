@@ -37,4 +37,9 @@ class LigaServicio {
         return ligaRepositorio?.buscarLigaPorId((idLiga))
     }
 
+    @Transactional(readOnly = true)
+    fun buscarUsuario(idLiga: Int): Liga? {
+        return ligaRepositorio?.buscarLigaPorId((idLiga))
+    }
+
 }

@@ -27,6 +27,9 @@ interface LigaRepositorio : Repository<Liga, Int> {
 
     fun findLigaByName(nombre : String): Liga
 
+    @Query("SELECT l FROM Liga l where l.id = ?1")
+    fun buscarLigaPorId(id: Int): Liga
+
 //    @Query("SELECT l.usuarios FROM Liga l where l.name = ?1")
 //    fun buscarUsuariosEnLiga(nombreLiga: String): Collection<Usuario>
 

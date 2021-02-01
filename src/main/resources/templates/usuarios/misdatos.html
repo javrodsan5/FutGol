@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'usuario')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'usuario')}">
 
-  <body>
-  
-  
-    <h2>Mi cuenta</h2>
-  
-  
-    <table class="table table-striped" th:object="${usuario}">
-      <tr>
+<body>
+
+
+<h2>Mi cuenta</h2>
+
+
+<table class="table table-striped" th:object="${usuario}">
+    <tr>
         <th>Nombre</th>
-        <td><b th:text="*{name}"></b></td>
-      </tr>
-      <tr>
+        <td th:text="*{name}"/></td>
+    </tr>
+    <tr>
         <th>Email</th>
         <td th:text="*{email}"/></td>
-      </tr>
-    </table>
+    </tr>
+    <tr>
+        <th>Usuario</th>
+        <td th:text="*{user.username}"/></td>
+    </tr>
 
-  </body>
+</table>
+
+<a class="btn btn-default" <a th:href="@{micuenta/editarDatos/__${usuario.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
+
+
+</body>
 
 </html>

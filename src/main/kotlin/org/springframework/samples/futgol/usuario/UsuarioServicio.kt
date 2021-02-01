@@ -32,7 +32,7 @@ class UsuarioServicio {
         usuario.user?.let {
             userService?.saveUser(it)
         }
-        usuario.user?.username?.let { authoritiesService?.saveAuthorities(it, "usuario") }
+//        usuario.user?.username?.let { authoritiesService?.saveAuthorities(it, "usuario") }
     }
 
     @Transactional(readOnly = true)
@@ -51,6 +51,12 @@ class UsuarioServicio {
     @Throws(DataAccessException::class)
     fun buscarLigasUsuario(username: String): Collection<Liga>? {
         return usuarioRepository?.buscarLigasUsuario(username)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscarUsuarioPorId(id: Int): Usuario? {
+        return usuarioRepository?.buscarUsuarioPorId(id)
     }
 
 }

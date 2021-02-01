@@ -15,7 +15,9 @@
       <div class="col-sm-offset-2 col-sm-10">
           <input type="hidden" name="ligaId" th:value="${liga.id}" />
           <button
-                  class="btn btn-default" type="submit" th:text="Crearliga">Crear liga</button>
+                  th:with="text=${liga['new']} ? 'Crear liga' : 'Editar'"
+                  class="btn btn-default" type="submit" th:text="${text}">Crear
+              Liga</button>
       </div>
     </div>
   </form>

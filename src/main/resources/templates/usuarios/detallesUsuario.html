@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'usuario')}">
+
+<body>
+
+
+<h2>Información de su cuenta</h2>
+
+
+<table class="table table-striped" th:object="${usuario}">
+    <tr>
+        <th>Nombre</th>
+        <td th:text="*{name}"/></td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td th:text="*{email}"/></td>
+    </tr>
+    <tr>
+        <th>Nombre de usuario</th>
+        <td th:text="*{user.username}"/></td>
+    </tr>
+</table>
+<h2>Ligas en las que participa</h2>
+<ul th:each="liga : ${ligas}">
+    <li th:text="*{liga.name}"> </li>
+</ul>
+
+
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Añadir usuario una de mis ligas
+        <span class="caret"></span>
+    </button>
+    <ul  class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li th:each="liga : ${ligasMias}"><a th:text="*{liga.name}" th:href="@{liga/__${liga.name}__/add/}"/></a></li>
+    </ul>
+</div>
+
+
+
+</body>
+
+</html>

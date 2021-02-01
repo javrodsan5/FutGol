@@ -13,6 +13,9 @@
 
     <li th:object="${liga}"><b th:text="*{name}"> </li>
 </ul>
+
+<a class="btn btn-default" <a th:href="@{/liga/editar/__${liga.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
+
 </body>
 
 </html>

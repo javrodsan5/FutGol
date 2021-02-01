@@ -32,4 +32,9 @@ class LigaServicio {
         return ligaRepositorio?.findLigaByName((nombreLiga))
     }
 
+    @Transactional(readOnly = true)
+    fun buscarLigaPorId(idLiga: Int): Liga? {
+        return ligaRepositorio?.buscarLigaPorId((idLiga))
+    }
+
 }

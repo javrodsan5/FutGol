@@ -1,6 +1,8 @@
 package org.springframework.samples.futgol.liga
 
 
+import org.springframework.samples.futgol.owner.Owner
+import org.springframework.samples.futgol.owner.Pet
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -17,7 +19,7 @@ import javax.validation.Valid
 @Controller
 class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio) {
 
-    private val VISTA_CREAR_LIGA = "liga/crearLiga"
+    private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
 
@@ -40,13 +42,13 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     fun iniciarCreacion(model: MutableMap<String, Any>, principal: Principal): String {
         val liga = Liga()
         model["liga"] = liga
-        return VISTA_CREAR_LIGA
+        return VISTA_CREAR_EDITAR_LIGA
     }
 
     @PostMapping("/liga/crear")
     fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult): String {
         return if (result.hasErrors()) {
-            VISTA_CREAR_LIGA
+            VISTA_CREAR_EDITAR_LIGA
         } else {
             val usuario: Usuario? = usuarioLogueado(principal)
             liga.admin = usuario
@@ -59,14 +61,35 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         }
     }
 
-    @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
-        val liga = ligaServicio.findLigaByName(nombreLiga)
+    @GetMapping("/liga/editar/{idLiga}")
+    fun initUpdateForm(@PathVariable idLiga: Int, model: Model): String {
+        val liga = this.ligaServicio.buscarLigaPorId(idLiga)
         if (liga != null) {
-            model["liga"] = liga
+            model.addAttribute(liga)
         }
-        return VISTA_DETALLES_LIGA
+        return VISTA_CREAR_EDITAR_LIGA
     }
 
+    @PostMapping("/liga/editar/{idLiga}")
+    fun procesoActualizacion(@Valid liga: Liga, principal: Principal, @PathVariable("idLiga") idLiga: Int, result: BindingResult, model: Model): String {
+        return if (result.hasErrors()) {
+            VISTA_CREAR_EDITAR_LIGA
+        } else {
+            val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
+            liga.id= idLiga
+            liga.admin= ligaAntigua?.admin
+            this.ligaServicio.saveLiga(liga)
+            "redirect:/misligas"
+        }
+    }
+
+        @GetMapping("liga/{nombreLiga}")
+        fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
+            val liga = ligaServicio.findLigaByName(nombreLiga)
+            if (liga != null) {
+                model["liga"] = liga
+            }
+            return VISTA_DETALLES_LIGA
+        }
 
 }

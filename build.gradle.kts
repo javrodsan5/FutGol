@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
-description = "Kotlin version of the Spring Petclinic application"
+description = "Versión de Kotlin de FútGol"
 group = "org.springframework.samples"
 // Align with Spring Version
 version = "2.4.0"
@@ -79,7 +79,6 @@ dependencies {
 
 jib {
     to {
-        image = "springcommunity/spring-petclinic-kotlin"
         tags = setOf(project.version.toString(), "latest")
     }
 }

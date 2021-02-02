@@ -18,15 +18,9 @@ package org.springframework.samples.futgol
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-/**
- * PetClinic Spring Boot Application.
- *
- * @author Dave Syer
- * @author Antoine Rey
- */
 @SpringBootApplication(proxyBeanMethods = false)
-class PetClinicApplication
+class FutGolApplication
 
 fun main(args: Array<String>) {
-    runApplication<PetClinicApplication>(*args)
+    runApplication<FutGolApplication>(*args)
 }

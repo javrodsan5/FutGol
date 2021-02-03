@@ -43,14 +43,6 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     }
 
 
-    @GetMapping("/usuarios")
-    fun listarUsuarios(model: Model): String {
-        val usuarios = usuarioServicio.findAllUsuarios()
-        if (usuarios != null) {
-            model["usuarios"]= usuarios
-        }
-        return VISTA_LISTADO_USUARIOS
-    }
 
     @GetMapping("/usuarios/registro")
     fun iniciarCreacion(model: Model): String {

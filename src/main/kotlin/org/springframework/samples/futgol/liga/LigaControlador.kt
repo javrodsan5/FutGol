@@ -1,9 +1,6 @@
 package org.springframework.samples.futgol.liga
 
 
-import org.springframework.samples.futgol.owner.Owner
-import org.springframework.samples.futgol.owner.Pet
-import org.springframework.samples.futgol.owner.PetValidator
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -25,6 +22,7 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
+    private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
 
 
     @InitBinder("liga")
@@ -81,25 +79,82 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @PostMapping("/liga/editar/{idLiga}")
-    fun procesoActualizacion(@Valid liga: Liga, principal: Principal, @PathVariable("idLiga") idLiga: Int, result: BindingResult, model: Model): String {
+    fun procesoActualizacion(
+        @Valid liga: Liga,
+        principal: Principal,
+        @PathVariable("idLiga") idLiga: Int,
+        result: BindingResult,
+        model: Model
+    ): String {
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
             val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
-            liga.id= idLiga
-            liga.admin= ligaAntigua?.admin
+            liga.id = idLiga
+            liga.admin = ligaAntigua?.admin
             this.ligaServicio.saveLiga(liga)
             "redirect:/misligas"
         }
     }
 
-        @GetMapping("liga/{nombreLiga}")
-        fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
-            val liga = ligaServicio.findLigaByName(nombreLiga)
-            if (liga != null) {
-                model["liga"] = liga
+    @GetMapping("liga/{nombreLiga}")
+    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
+        val liga = ligaServicio.findLigaByName(nombreLiga)
+        if (liga != null) {
+            model["liga"] = liga
+        }
+        return VISTA_DETALLES_LIGA
+    }
+
+    @GetMapping("usuarios/{username}")
+    fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
+        val usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
+        val ligas = usuarioServicio.buscarLigasUsuario(username)
+
+        val usuariologueado: Usuario? = usuarioLogueado(principal)
+        val ligasMias = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
+        if (usuario != null && ligas != null && ligasMias != null) {
+            model["usuario"] = usuario
+            model["ligas"] = ligas
+            model["ligasMias"] = ligasMias
+        }
+        return VISTA_DETALLES_USUARIO
+    }
+
+    @GetMapping("/usuarios/buscar")
+    fun initFindForm(model: MutableMap<String, Any>): String {
+        var usuario = Usuario()
+        model["usuario"] = usuario
+        return "usuarios/buscarUsuario"
+    }
+
+    @GetMapping("/usuarios")
+    fun buscarUsuarioparaLiga(usuario: Usuario, model: MutableMap<String, Any>): String {
+        var res = VISTA_DETALLES_LIGA
+        val usuario = usuario.user?.let { usuarioServicio.buscarUsuarioPorNombreUsuario(it.username) }
+        if (usuario != null) res = "redirect:/usuarios/" + (usuario.user?.username)
+        return res
+    }
+
+    @GetMapping("/liga/{nombreLiga}/add/{username}")
+    fun asociarUsuarioLiga(
+        @PathVariable username: String,
+        @PathVariable nombreLiga: String,
+        model: MutableMap<String, Any>
+    ): String {
+
+        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
+        var liga = ligaServicio.findLigaByName(nombreLiga)
+        if (usuario != null && liga != null) {
+            if (!usuario.ligas.contains(liga)) {
+                usuario.ligas.add(liga)
+                liga.usuarios.add(usuario)
+                model["mensaje"] = "Usuario añadido correctamente a la liga!"
+            } else {
+                model["mensaje"] = "El usuario ya pertenece a la liga"
             }
-            return VISTA_DETALLES_LIGA
         }
 
+        return VISTA_DETALLES_LIGA
+    }
 }

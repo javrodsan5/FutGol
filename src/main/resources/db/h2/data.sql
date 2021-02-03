@@ -13,6 +13,7 @@ INSERT INTO ligas VALUES (2, 'informaticos futboleros', 'administrador1');
 INSERT INTO ligas VALUES (3, 'miligaFerki', 'administrador1');
 
 INSERT INTO usuarios_ligas VALUES (1,2);
+INSERT INTO usuarios_ligas VALUES (2,2);
 INSERT INTO usuarios_ligas VALUES (2,1);
 INSERT INTO usuarios_ligas VALUES (3,1);
 

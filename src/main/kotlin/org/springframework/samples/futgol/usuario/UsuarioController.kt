@@ -68,7 +68,7 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     fun iniciarActualizacion(model: Model,  principal: Principal, @PathVariable("idUsuario") idUsuario: Int): String {
         val usuario = this.usuarioServicio.buscarUsuarioPorId(idUsuario)
         if (usuario != null) {
-            model.addAttribute(usuario)
+            model["usuario"] = usuario
         }
         return VISTA_EDITAR_USUARIO
     }
@@ -76,6 +76,7 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     @PostMapping("/micuenta/editarDatos/{idUsuario}")
     fun procesoActualizacion(@Valid usuario: Usuario, principal: Principal, @PathVariable("idUsuario") idUsuario: Int, result: BindingResult, model: Model): String {
         return if (result.hasErrors()) {
+            model["usuario"] = usuario
             VISTA_EDITAR_USUARIO
         } else {
             usuario.id= idUsuario
@@ -85,11 +86,6 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
 
             "redirect:/micuenta"
         }
-    }
-
-    @RequestMapping("/login/login")
-    fun login(): String{
-        return VISTA_LOGIN
     }
 
 }

@@ -30,4 +30,7 @@ class LoginController {
 
     @RequestMapping("/login")
     fun login(): String = "login"
+
+    @RequestMapping("/loginError")
+    fun loginError(): String = "login-error"
 }

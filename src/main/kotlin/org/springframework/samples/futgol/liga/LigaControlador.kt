@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
@@ -21,6 +23,12 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
+
+
+    @InitBinder("liga")
+    fun initLigaBinder(dataBinder: WebDataBinder) {
+        dataBinder.validator = LigaValidador()
+    }
 
     fun usuarioLogueado(principal: Principal): Usuario? {
         val username: String = principal.name
@@ -38,15 +46,16 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("/liga/crear")
-    fun iniciarCreacion(model: MutableMap<String, Any>, principal: Principal): String {
+    fun iniciarCreacion(model: Model, principal: Principal): String {
         val liga = Liga()
         model["liga"] = liga
         return VISTA_CREAR_EDITAR_LIGA
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult): String {
+    fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult, model: Model): String {
         return if (result.hasErrors()) {
+            model["liga"] = liga
             VISTA_CREAR_EDITAR_LIGA
         } else {
             val usuario: Usuario? = usuarioLogueado(principal)

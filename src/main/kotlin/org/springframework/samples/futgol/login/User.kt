@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.login
 import lombok.Getter
 import lombok.Setter
 import javax.persistence.*
+import javax.validation.constraints.NotBlank
 
 @Getter
 @Setter
@@ -11,8 +12,10 @@ import javax.persistence.*
 public class User{
 
     @Id
+    @NotBlank
     var username = ""
 
+    @NotBlank
     var password = ""
 
     var enabled = false

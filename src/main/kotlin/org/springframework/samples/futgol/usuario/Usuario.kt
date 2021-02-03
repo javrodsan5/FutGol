@@ -11,6 +11,7 @@ import org.springframework.samples.futgol.owner.Pet
 import org.springframework.samples.futgol.vet.Specialty
 import java.util.HashSet
 import javax.persistence.*
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -22,6 +23,7 @@ class Usuario : NamedEntity() {
 
     @Column(name = "email")
     @NotBlank
+    @Email
     var email = ""
 
     @OneToOne(cascade = [CascadeType.ALL])

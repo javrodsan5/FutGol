@@ -30,7 +30,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .and()
                 .formLogin()
                 .loginPage("/login.html")
-                .failureUrl("/login-error")
+                .failureUrl("/loginError")
                 .and()
               .logout()
               .logoutRequestMatcher(AntPathRequestMatcher("/logout"))

@@ -1,22 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'login')}">
 <head>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-    <script>$(document).on('click', '.toggle-password', function() {
 
-        $(this).toggleClass("fa-eye fa-eye-slash");
 
-        var input = $("#password");
-        input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
-    });
-    </script>
-
-    <title>Login page</title>
+    <title>Login</title>
 </head>
 <body>
-
+<center>
 <h1>Login page</h1>
 <p th:if="${loginError}" class="error">Wrong user or password</p>
 <form th:action="@{/login.html}" method="post">
@@ -24,9 +18,13 @@
     <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
     <label for="password">Password</label>:
     <input type="password" id="password" name="password" /> <br />
+
     <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password"></span>
+    <br>
     <input type="submit" value="Log in" />
 </form>
+    <br><br>
 <a th:href="@{/usuarios/registro}">¿Aún no te has registrado? Regístrate aquí</a>
+</center>
 </body>
 </html>

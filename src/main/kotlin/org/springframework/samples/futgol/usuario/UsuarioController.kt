@@ -2,10 +2,7 @@ package org.springframework.samples.futgol.usuario
 
 
 import org.springframework.samples.futgol.login.AuthoritiesServicio
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.login.UserServicio
-import org.springframework.samples.futgol.owner.Owner
-import org.springframework.samples.futgol.owner.Pet
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
@@ -80,7 +77,10 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         } else {
             usuario.id= idUsuario
             usuario.user = this.userServicio.findUser(principal.name)
-            //usuario?.user?.let { this.userServicio.saveUser(it) }
+            var usuarioUrl = this.usuarioServicio.findUsuarioById(idUsuario)
+            if (usuarioUrl != null) {
+                usuario.ligas = usuarioUrl.ligas
+            }
             this.usuarioServicio.saveUsuario(usuario)
 
             "redirect:/micuenta"

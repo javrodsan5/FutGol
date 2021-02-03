@@ -1,16 +1,20 @@
 INSERT INTO users VALUES (1, 'administrador1', 'password',TRUE);
 INSERT INTO users VALUES (2, 'ferki', 'ferki',TRUE);
+INSERT INTO users VALUES (3, 'javi', 'password',TRUE);
 
 INSERT INTO authorities VALUES (1, 'administrador1', 'usuario');
 INSERT INTO authorities VALUES (2, 'ferki', 'usuario');
+INSERT INTO authorities VALUES (3, 'javi', 'usuario');
 
 INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'administrador1');
 INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com','ferki');
+INSERT INTO usuarios VALUES (3, 'Javi2', 'javi2@gmail.com','javi');
 
 
 INSERT INTO ligas VALUES (1, 'cervezoides', 'ferki');
 INSERT INTO ligas VALUES (2, 'informaticos futboleros', 'administrador1');
 INSERT INTO ligas VALUES (3, 'miligaFerki', 'administrador1');
+INSERT INTO ligas VALUES (4, 'ligaConUnUsuario', 'javi');
 
 INSERT INTO usuarios_ligas VALUES (1,2);
 INSERT INTO usuarios_ligas VALUES (2,2);

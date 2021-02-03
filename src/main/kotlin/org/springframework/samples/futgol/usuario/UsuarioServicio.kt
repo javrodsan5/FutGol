@@ -35,10 +35,11 @@ class UsuarioServicio {
 //        usuario.user?.username?.let { authoritiesService?.saveAuthorities(it, "usuario") }
     }
 
+
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun findAllUsuarios(): Collection<Usuario?>? {
-        return usuarioRepository?.findAll()
+    fun findUsuarioById(idUsuario: Int): Usuario? {
+        return usuarioRepository?.findById(idUsuario)
     }
 
     @Transactional(readOnly = true)

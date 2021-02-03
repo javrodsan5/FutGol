@@ -52,9 +52,10 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
             val usuario: Usuario? = usuarioLogueado(principal)
             liga.admin = usuario
             usuario?.ligas?.add(liga)
-            this.ligaServicio.saveLiga(liga)
             if (usuario != null) {
-                this.usuarioServicio.saveUsuario(usuario)
+                liga.usuarios.add(usuario)
+                this.ligaServicio.saveLiga(liga)
+
             }
             "redirect:/misligas"
         }

@@ -20,8 +20,12 @@ class Liga : NamedEntity() {
     var admin: Usuario? = null
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "usuarios_ligas", joinColumns = [JoinColumn(name = "usuario_id")], inverseJoinColumns = [JoinColumn(name = "liga_id")])
+    @JoinTable(name = "usuarios_ligas", joinColumns = [JoinColumn(name = "liga_id")], inverseJoinColumns = [JoinColumn(name = "usuario_id")])
     var usuarios: MutableSet<Usuario> = HashSet()
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "invitaciones", joinColumns = [JoinColumn(name = "liga_id")], inverseJoinColumns = [JoinColumn(name = "usuario_id")])
+    var usuariosInvitados: MutableSet<Usuario> = HashSet()
 
 
 

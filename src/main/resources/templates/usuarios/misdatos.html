@@ -22,11 +22,16 @@
         <th>Usuario</th>
         <td th:text="*{user.username}"/></td>
     </tr>
+    <tr>
+        <th>Invitaciones</th>
+        <td th:text="*{invitaciones}"/></td>
+    </tr>
 
 </table>
 
-<a class="btn btn-default" <a th:href="@{micuenta/editarDatos/__${usuario.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
+<a class="btn btn-default"  th:href="@{micuenta/editarDatos/__${usuario.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
 
+<a class="btn btn-default"  th:href="@{micuenta/invitaciones}"><span class="glyphicon glyphicon-bullhorn"></span> Invitaciones</a>
 
 </body>
 

@@ -10,6 +10,8 @@ interface UsuarioRepository : Repository<Usuario, Int> {
 
     fun findAll(): Collection<Usuario>
 
+    fun findById(idUsuario: Int): Usuario
+
     @Query("SELECT u FROM Usuario u where u.user.username = ?1")
     fun buscarUsuarioPorNombreUsuario(nombreUsuario: String): Usuario
 

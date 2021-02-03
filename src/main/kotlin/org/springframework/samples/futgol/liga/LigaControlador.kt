@@ -61,9 +61,10 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
             val usuario: Usuario? = usuarioLogueado(principal)
             liga.admin = usuario
             usuario?.ligas?.add(liga)
-            this.ligaServicio.saveLiga(liga)
             if (usuario != null) {
-                this.usuarioServicio.saveUsuario(usuario)
+                liga.usuarios.add(usuario)
+                this.ligaServicio.saveLiga(liga)
+
             }
             "redirect:/misligas"
         }
@@ -89,9 +90,15 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
+
             val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
-            liga.id = idLiga
-            liga.admin = ligaAntigua?.admin
+            if (ligaAntigua != null) {
+                liga.id = idLiga
+                liga.admin = ligaAntigua?.admin
+                liga.usuariosInvitados = ligaAntigua.usuariosInvitados
+                liga.usuarios = ligaAntigua.usuarios
+            }
+
             this.ligaServicio.saveLiga(liga)
             "redirect:/misligas"
         }

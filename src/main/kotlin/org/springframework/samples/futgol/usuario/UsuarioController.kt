@@ -1,11 +1,9 @@
 package org.springframework.samples.futgol.usuario
 
 
+import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.login.UserServicio
-import org.springframework.samples.futgol.owner.Owner
-import org.springframework.samples.futgol.owner.Pet
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
@@ -18,11 +16,12 @@ import java.security.Principal
 import javax.validation.Valid
 
 @Controller
-class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio: UserServicio, val authoritiesServicio: AuthoritiesServicio) {
+class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio: UserServicio, val authoritiesServicio: AuthoritiesServicio, val ligaServicio: LigaServicio) {
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
     private val VISTA_LISTADO_USUARIOS = "usuarios/usuariosList"
     private val VISTA_MISDATOS = "usuarios/misdatos"
+    private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
 
 
@@ -42,7 +41,44 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         return VISTA_MISDATOS
     }
 
+    @GetMapping("/micuenta/invitaciones")
+    fun misInvitaciones(model: Model, principal: Principal): String {
+        val usuario: Usuario? = usuarioLogueado(principal)
+        var invitaciones = usuario?.invitaciones
+        if (invitaciones != null && usuario!= null ) {
+            model["invitaciones"] = invitaciones
+            model["usuario"] = usuario
+        }
+        return VISTA_INVITACIONES
+    }
 
+    @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
+    fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
+        val usuario: Usuario? = usuarioLogueado(principal)
+        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        if (usuario != null && liga!= null) {
+            usuario.ligas.add(liga)
+            liga.usuarios.add(usuario)
+            usuario.invitaciones.remove(liga)
+            liga.usuariosInvitados.remove(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
+
+        }
+        return VISTA_INVITACIONES
+    }
+
+    @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
+    fun rechazarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
+        val usuario: Usuario? = usuarioLogueado(principal)
+        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        if (usuario != null && liga!= null) {
+            usuario.invitaciones.remove(liga)
+            liga.usuariosInvitados.remove(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
+
+        }
+        return "redirect:/micuenta/invitaciones"
+    }
 
     @GetMapping("/usuarios/registro")
     fun iniciarCreacion(model: Model): String {
@@ -60,7 +96,7 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
             //usuario.user?.let {this.userServicio?.saveUser(it)}
             this.usuarioServicio.saveUsuario(usuario)
             usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
-            "redirect:/"
+            return "redirect:/"
         }
     }
 
@@ -81,7 +117,11 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         } else {
             usuario.id= idUsuario
             usuario.user = this.userServicio.findUser(principal.name)
-            //usuario?.user?.let { this.userServicio.saveUser(it) }
+            var usuarioUrl = this.usuarioServicio.findUsuarioById(idUsuario)
+            if (usuarioUrl != null) {
+                usuario.ligas = usuarioUrl.ligas
+                usuario.invitaciones = usuarioUrl.invitaciones
+            }
             this.usuarioServicio.saveUsuario(usuario)
 
             "redirect:/micuenta"

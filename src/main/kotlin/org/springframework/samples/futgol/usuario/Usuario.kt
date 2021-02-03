@@ -34,6 +34,11 @@ class Usuario : NamedEntity() {
     @JoinTable(name = "usuarios_ligas", joinColumns = [JoinColumn(name = "usuario_id")], inverseJoinColumns = [JoinColumn(name = "liga_id")])
     var ligas: MutableSet<Liga> = HashSet()
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "invitaciones", joinColumns = [JoinColumn(name = "usuario_id")], inverseJoinColumns = [JoinColumn(name = "liga_id")])
+    var invitaciones: MutableSet<Liga> = HashSet()
+
+
     fun addLiga(liga: Liga) {
         if (liga.isNew) {
             ligas.add(liga)

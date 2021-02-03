@@ -35,7 +35,14 @@
         <span class="caret"></span>
     </button>
     <ul  class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li th:each="liga : ${ligasMias}"><a th:text="*{liga.name}" th:href="@{liga/__${liga.name}__/add/}"/></a></li>
+
+        <li th:each="liga : ${ligasMias}"><a id= url th:text="*{liga.name}" th:href="@{/liga/{nombreLiga}/add/{nombreUsuario}(nombreLiga=${liga.name}, nombreUsuario=${usuario.user.username})}"/></a></li>
+        <script>
+            var nombreUsuario = '*{user.username}';
+            var link = document.getElementById('url');
+
+
+        </script>
     </ul>
 </div>
 

@@ -13,8 +13,9 @@
     <li th:object="${liga}"><b th:text="*{name}"> </li>
     <li th:object="${liga}">Usuarios:<b th:text="*{usuarios}"> </li>
 </ul>
-
 <a class="btn btn-default"  th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-user"></span>Buscar usuario</a>
+
+<a class="btn btn-default"  th:href="@{/liga/editar/{idLiga}(idLiga= ${liga.id})}"><span class="glyphicon glyphicon-user"></span>Editar liga</a>
 
 
 

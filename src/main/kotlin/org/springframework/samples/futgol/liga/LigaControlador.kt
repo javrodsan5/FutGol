@@ -81,9 +81,15 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
+
             val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
-            liga.id = idLiga
-            liga.admin = ligaAntigua?.admin
+            if (ligaAntigua != null) {
+                liga.id = idLiga
+                liga.admin = ligaAntigua?.admin
+                liga.usuariosInvitados = ligaAntigua.usuariosInvitados
+                liga.usuarios = ligaAntigua.usuarios
+            }
+
             this.ligaServicio.saveLiga(liga)
             "redirect:/misligas"
         }

@@ -21,6 +21,10 @@ INSERT INTO usuarios_ligas VALUES (2,2);
 INSERT INTO usuarios_ligas VALUES (2,1);
 INSERT INTO usuarios_ligas VALUES (3,1);
 
+INSERT INTO invitaciones VALUES (1,3);
+INSERT INTO invitaciones VALUES (2,3);
+INSERT INTO invitaciones VALUES (4,1);
+INSERT INTO invitaciones VALUES (4,2);
 
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');

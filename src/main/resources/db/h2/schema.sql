@@ -60,6 +60,14 @@ ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_ligas FOREIGN KEY (l
 ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
 
 
+CREATE TABLE invitaciones (
+    liga_id INTEGER NOT NULL,
+    usuario_id INTEGER NOT NULL
+);
+ALTER TABLE invitaciones ADD CONSTRAINT fk_invitaciones_ligas FOREIGN KEY (liga_id) REFERENCES ligas (id);
+ALTER TABLE invitaciones ADD CONSTRAINT fk_invitaciones_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
+
+
 CREATE TABLE vets (
   id         INTEGER IDENTITY PRIMARY KEY,
   first_name VARCHAR(30),

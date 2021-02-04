@@ -58,13 +58,13 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         var liga = this.ligaServicio.findLigaByName(nombreLiga)
         if (usuario != null && liga!= null) {
             usuario.ligas.add(liga)
-            liga.usuarios.add(usuario)
-            usuario.invitaciones.remove(liga)
-            liga.usuariosInvitados.remove(usuario)
+            usuario.invitaciones.removeIf { it.name == liga.name }
+            liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
             this.usuarioServicio.saveUsuario(usuario)
+            this.ligaServicio.saveLiga(liga)
 
         }
-        return VISTA_INVITACIONES
+        return "redirect:/micuenta/invitaciones"
     }
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
@@ -72,9 +72,10 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         val usuario: Usuario? = usuarioLogueado(principal)
         var liga = this.ligaServicio.findLigaByName(nombreLiga)
         if (usuario != null && liga!= null) {
-            usuario.invitaciones.remove(liga)
-            liga.usuariosInvitados.remove(usuario)
+            usuario.invitaciones.removeIf { it.name == liga.name }
+            liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
             this.usuarioServicio.saveUsuario(usuario)
+            this.ligaServicio.saveLiga(liga)
 
         }
         return "redirect:/micuenta/invitaciones"

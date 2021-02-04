@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.usuario
 
 
+import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import java.security.Principal
+import java.util.HashSet
 import javax.validation.Valid
 
 @Controller
@@ -23,6 +25,8 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     private val VISTA_MISDATOS = "usuarios/misdatos"
     private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
+    private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
+
 
 
     private val VISTA_LOGIN = "login/login"
@@ -73,8 +77,9 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
         var liga = this.ligaServicio.findLigaByName(nombreLiga)
         if (usuario != null && liga!= null) {
             usuario.invitaciones.remove(liga)
-            liga.usuariosInvitados.remove(usuario)
             this.usuarioServicio.saveUsuario(usuario)
+            liga.usuariosInvitados.remove(usuario)
+            this.ligaServicio.saveLiga(liga)
 
         }
         return "redirect:/micuenta/invitaciones"
@@ -93,11 +98,23 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO
         } else {
-            //usuario.user?.let {this.userServicio?.saveUser(it)}
             this.usuarioServicio.saveUsuario(usuario)
             usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
+    }
+
+    @GetMapping("/liga/{nombreLiga}/invitar/{nombreUsuario}")
+    fun invitarUsuario(model: Model, @PathVariable("nombreLiga") nombreLiga: String, @PathVariable("nombreUsuario") nombreUsuario: String): String {
+        var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
+        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        if (usuario != null && liga!= null) {
+            usuario.invitaciones.add(liga)
+            liga.usuariosInvitados.add(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
+
+        }
+        return VISTA_INVITACIONES
     }
 
     @GetMapping("/micuenta/editarDatos/{idUsuario}")
@@ -125,6 +142,31 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
 
             "redirect:/micuenta"
         }
+    }
+
+    @GetMapping("usuarios/{username}")
+    fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
+
+        var ligasNoUsuario: MutableList<Liga> = ArrayList()
+        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
+        var ligasUsuario = usuarioServicio.buscarLigasUsuario(username)
+
+        var usuariologueado = usuarioLogueado(principal)
+        var misLigas = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
+
+        if (misLigas != null && ligasUsuario != null) {
+            for(liga in misLigas) {
+                if(liga !in ligasUsuario) {
+                    ligasNoUsuario.add(liga)
+                }
+            }
+        }
+        if (usuario != null && ligasUsuario != null) {
+            model["usuario"] = usuario
+            model["ligasUsuario"] = ligasUsuario
+            model["ligasNoUsuario"] = ligasNoUsuario
+        }
+        return VISTA_DETALLES_USUARIO
     }
 
 }

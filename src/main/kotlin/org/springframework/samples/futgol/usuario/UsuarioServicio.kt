@@ -54,6 +54,8 @@ class UsuarioServicio {
         return usuarioRepository?.buscarLigasUsuario(username)
     }
 
+
+
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarUsuarioPorId(id: Int): Usuario? {

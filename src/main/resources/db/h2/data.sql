@@ -6,9 +6,9 @@ INSERT INTO authorities VALUES (1, 'administrador1', 'usuario');
 INSERT INTO authorities VALUES (2, 'ferki', 'usuario');
 INSERT INTO authorities VALUES (3, 'javi', 'usuario');
 
-INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'administrador1');
+INSERT INTO usuarios VALUES (1, 'Admin', 'emaildejavi@gmail.com', 'administrador1');
 INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com','ferki');
-INSERT INTO usuarios VALUES (3, 'Javi2', 'javi2@gmail.com','javi');
+INSERT INTO usuarios VALUES (3, 'Javi', 'javi2@gmail.com','javi');
 
 
 INSERT INTO ligas VALUES (1, 'cervezoides', 'ferki');

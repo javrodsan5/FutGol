@@ -104,12 +104,77 @@
 
     </div>
 </div>
+<div sec:authorize="isAuthenticated()">
+<div id='snav' class='en'>
+    <ul>
+        <li>
+            <a href='#'>
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-css3"></i>
+                <span>CSS3</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-camera"></i>
+                <span>My shots</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-circle-o-notch"></i>
+                <span>Latest Update</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-envelope"></i>
+                <span>Contact us</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-music"></i>
+                <span>Music</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-quote-right"></i>
+                <span>Quotes</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-rss"></i>
+                <span>RSS</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-html5"></i>
+                <span>HTML5</span>
+            </a>
+        </li>
+        <li>
+            <a href='#'>
+                <i class="fa fa-video-camera"></i>
+                <span>Videos</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
-<!-- eye -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
 

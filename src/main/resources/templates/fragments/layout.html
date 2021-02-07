@@ -1,5 +1,6 @@
 <!doctype html>
-<html th:fragment="layout (template, menu)">
+<html th:fragment="layout (template, menu)" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <dialect xmlns="http://www.thymeleaf.org/extras/dialect"
@@ -15,7 +16,12 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.png}" />
 
     <title>FutGol</title>
@@ -26,8 +32,6 @@
     <![endif]-->
 
     <link rel="stylesheet" th:href="@{/resources/css/futgol.css}"/>
-
-
 
 </head>
 
@@ -43,54 +47,64 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
+
+            <li style= "visibility:hidden" th:fragment="menuItem (path,active,title,glyph,text)" class="active">
+                <span th:text="${text}">Template</span>
+            </li>
         </div>
 
         <div class="navbar-collapse collapse" id="main-navbar">
 
             <div sec:authorize="isAuthenticated()">
-                <li th:fragment="menuItem (path,active,title,glyph,text)" class="active"
-                    th:class="${active==menu ? 'active' : ''}">
-                    <a th:href="@{__${path}__}" th:title="${title}">
-                        <span th:class="'glyphicon  glyphicon-'+${glyph}" class="glyphicon glyphicon-home"
-                              aria-hidden="true"></span>
-                        <span th:text="${text}">Template</span>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href='/'>
+                        <i class="fa fa-home"></i>
+                        <span>Inicio</span>
                     </a>
                 </li>
-            <ul class="nav navbar-nav navbar-right">
 
-                <li th:replace="::menuItem ('/','home','home page','home','Inicio')">
-                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                    <span>Home</span>
+                <li>
+                    <a href='/misligas'>
+                        <i class="fa fa-trophy"></i>
+                        <span>Mis ligas</span>
+                    </a>
                 </li>
 
-                <li th:replace="::menuItem ('/misligas','liga','Mis ligas','th-list','Mis ligas')">
-                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                    <span>Mis ligas</span>
+                <li>
+                    <a href='/micuenta'>
+                        <i class="fa fa-user-circle"></i>
+                        <span>Mi cuenta</span>
+                    </a>
                 </li>
 
-                <li th:replace="::menuItem ('/micuenta','user','Mi cuenta','th-list','Mi cuenta')">
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                    <span>Mi cuenta</span>
-                </li>
-
-                    <li th:replace="::menuItem ('/logout','logout','logout','logout','Cerrar sesión')">
-                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                <li>
+                    <a href='/logout'>
+                        <i class="fa fa-sign-out"></i>
                         <span>Logout</span>
-                    </li>
+                    </a>
+                </li>
+
             </ul>
             </div>
             <div sec:authorize="!isAuthenticated()">
             <ul class="nav navbar-nav navbar-right">
 
-                <li th:replace="::menuItem ('/usuarios/registro','registro','registro de usuarios','registro','Registro')">
-                    <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
-                    <span>Registro</span>
+                <li>
+                    <a href='/usuarios/registro'>
+                        <i class="fa fa-user-plus"></i>
+                        <span>Registro</span>
+                    </a>
                 </li>
 
-                <li th:replace="::menuItem ('/login','login','login','login','Iniciar sesión')">
-                    <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
-                    <span>Login</span>
+                <li>
+                    <a href='/login'>
+                        <i class="fa fa-sign-in"></i>
+                        <span>Login</span>
+                    </a>
                 </li>
+
             </ul>
                 </div>
         </div>
@@ -109,74 +123,38 @@
     <ul>
         <li>
             <a href='#'>
-                <i class="fa fa-home"></i>
-                <span>Home</span>
+                <i class="fa fa-futbol-o"></i>
+                <span>Mi equipo</span>
             </a>
         </li>
         <li>
             <a href='#'>
-                <i class="fa fa-css3"></i>
-                <span>CSS3</span>
+                <i class="fa fa-gavel"></i>
+                <span>Subastas</span>
             </a>
         </li>
         <li>
             <a href='#'>
-                <i class="fa fa-camera"></i>
-                <span>My shots</span>
+                <i class="fa fa-sort-amount-asc"></i>
+                <span>Clasificación</span>
             </a>
         </li>
         <li>
             <a href='#'>
-                <i class="fa fa-circle-o-notch"></i>
-                <span>Latest Update</span>
+                <i class="fa fa-users"></i>
+                <span>Movimientos</span>
             </a>
         </li>
         <li>
             <a href='#'>
-                <i class="fa fa-envelope"></i>
-                <span>Contact us</span>
+                <i class="fa-handshake"></i>
+                <span>Intercambios</span>
             </a>
         </li>
         <li>
-            <a href='#'>
-                <i class="fa fa-music"></i>
-                <span>Music</span>
-            </a>
-        </li>
-        <li>
-            <a href='#'>
-                <i class="fa fa-quote-right"></i>
-                <span>Quotes</span>
-            </a>
-        </li>
-        <li>
-            <a href='#'>
-                <i class="fa fa-rss"></i>
-                <span>RSS</span>
-            </a>
-        </li>
-        <li>
-            <a href='#'>
-                <i class="fa fa-html5"></i>
-                <span>HTML5</span>
-            </a>
-        </li>
-        <li>
-            <a href='#'>
-                <i class="fa fa-video-camera"></i>
-                <span>Videos</span>
-            </a>
-        </li>
     </ul>
 </div>
 </div>
-
-<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
 
 <script>$(document).on('click', '.toggle-password', function() {
 

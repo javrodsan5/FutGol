@@ -22,8 +22,6 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
-    private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
-
 
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
@@ -113,20 +111,6 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         return VISTA_DETALLES_LIGA
     }
 
-    @GetMapping("usuarios/{username}")
-    fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
-        val usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        val ligas = usuarioServicio.buscarLigasUsuario(username)
-
-        val usuariologueado: Usuario? = usuarioLogueado(principal)
-        val ligasMias = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
-        if (usuario != null && ligas != null && ligasMias != null) {
-            model["usuario"] = usuario
-            model["ligas"] = ligas
-            model["ligasMias"] = ligasMias
-        }
-        return VISTA_DETALLES_USUARIO
-    }
 
     @GetMapping("/usuarios/buscar")
     fun initFindForm(model: MutableMap<String, Any>): String {

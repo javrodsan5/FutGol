@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.usuario
 
 
+import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -23,6 +24,7 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     private val VISTA_MISDATOS = "usuarios/misdatos"
     private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
+    private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
 
 
     private val VISTA_LOGIN = "login/login"
@@ -127,6 +129,53 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
 
             "redirect:/micuenta"
         }
+    }
+
+    @GetMapping("/liga/{nombreLiga}/invitar/{nombreUsuario}")
+    fun invitarUsuario(model: Model, @PathVariable("nombreLiga") nombreLiga: String, @PathVariable("nombreUsuario") nombreUsuario: String): String {
+        var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
+        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        if (usuario != null && liga!= null) {
+            usuario.invitaciones.add(liga)
+            liga.usuariosInvitados.add(usuario)
+            this.usuarioServicio.saveUsuario(usuario)
+
+        }
+        return VISTA_INVITACIONES
+    }
+
+
+
+    @GetMapping("usuarios/{username}")
+    fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
+
+        var ligasNoUsuario: MutableList<Liga> = ArrayList()
+        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
+        var ligasUsuario = usuarioServicio.buscarLigasUsuario(username)
+
+        var usuariologueado = usuarioLogueado(principal)
+        var misLigas = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
+
+        if (misLigas != null && ligasUsuario != null) {
+            for(ligaM in misLigas) {
+                var res = true
+                for(ligaU in ligasUsuario) {
+                    if (ligaM.name.equals(ligaU.name)) {
+                        res = false
+                        break
+                    }
+                }
+                if(res) {
+                    ligasNoUsuario.add(ligaM)
+                }
+            }
+        }
+        if (usuario != null && ligasUsuario != null) {
+            model["usuario"] = usuario
+            model["ligasUsuario"] = ligasUsuario
+            model["ligasNoUsuario"] = ligasNoUsuario
+        }
+        return VISTA_DETALLES_USUARIO
     }
 
 }

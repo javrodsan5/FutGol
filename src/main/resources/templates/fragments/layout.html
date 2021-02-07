@@ -47,10 +47,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-
-            <li style= "visibility:hidden" th:fragment="menuItem (path,active,title,glyph,text)" class="active">
                 <span th:text="${text}">Template</span>
-            </li>
         </div>
 
         <div class="navbar-collapse collapse" id="main-navbar">
@@ -58,21 +55,21 @@
             <div sec:authorize="isAuthenticated()">
 
             <ul class="nav navbar-nav navbar-right">
-                <li>
+                <li th:class="${'home'==menu ? 'active' : ''}">
                     <a href='/'>
                         <i class="fa fa-home"></i>
                         <span>Inicio</span>
                     </a>
                 </li>
 
-                <li>
+                <li th:class="${'ligas'==menu ? 'active' : ''}">
                     <a href='/misligas'>
                         <i class="fa fa-trophy"></i>
                         <span>Mis ligas</span>
                     </a>
                 </li>
 
-                <li>
+                <li th:class="${'usuarios'==menu ? 'active' : ''}">
                     <a href='/micuenta'>
                         <i class="fa fa-user-circle"></i>
                         <span>Mi cuenta</span>
@@ -91,14 +88,14 @@
             <div sec:authorize="!isAuthenticated()">
             <ul class="nav navbar-nav navbar-right">
 
-                <li>
+                <li th:class="${'registro'==menu ? 'active' : ''}">
                     <a href='/usuarios/registro'>
                         <i class="fa fa-user-plus"></i>
                         <span>Registro</span>
                     </a>
                 </li>
 
-                <li>
+                <li th:class="${'login'==menu ? 'active' : ''}">
                     <a href='/login'>
                         <i class="fa fa-sign-in"></i>
                         <span>Login</span>

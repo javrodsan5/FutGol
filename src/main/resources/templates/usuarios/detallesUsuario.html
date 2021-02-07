@@ -24,7 +24,7 @@
     </tr>
 </table>
 <h2>Ligas en las que participa</h2>
-<ul th:each="liga : ${ligas}">
+<ul th:each="liga : ${ligasUsuario}">
     <li th:text="*{liga.name}"> </li>
 </ul>
 
@@ -36,13 +36,7 @@
     </button>
     <ul  class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
-        <li th:each="liga : ${ligasMias}"><a id= url th:text="*{liga.name}" th:href="@{/liga/{nombreLiga}/add/{nombreUsuario}(nombreLiga=${liga.name}, nombreUsuario=${usuario.user.username})}"/></a></li>
-        <script>
-            var nombreUsuario = '*{user.username}';
-            var link = document.getElementById('url');
-
-
-        </script>
+        <li th:each="liga : ${ligasNoUsuario}"><a id= url th:text="*{liga.name}" th:href="@{/liga/{nombreLiga}/invitar/{nombreUsuario}(nombreLiga=${liga.name}, nombreUsuario=${usuario.user.username})}"/></a></li>
     </ul>
 </div>
 

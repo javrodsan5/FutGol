@@ -116,6 +116,8 @@
     </div>
 </div>
 <div sec:authorize="isAuthenticated()">
+    <div th:if="${'ligas-login'==menu}">
+
 <div id='snav' class='en'>
     <ul>
         <li>
@@ -151,6 +153,7 @@
         <li>
     </ul>
 </div>
+    </div>
 </div>
 
 <script>$(document).on('click', '.toggle-password', function() {

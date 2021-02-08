@@ -22,16 +22,29 @@
         <th>Usuario</th>
         <td th:text="*{user.username}"/></td>
     </tr>
+    <div th:if="*{invitaciones!=null and !invitaciones.empty}">
     <tr>
         <th>Invitaciones</th>
         <td th:text="*{invitaciones}"/></td>
     </tr>
+    </div>
+    <div th:if="*{invitaciones==null or invitaciones.empty}">
+        <tr>
+            <th>Invitaciones</th>
+            <td> No tienes invitaciones </td>
+        </tr>
+    </div>
 
 </table>
 
 <a class="btn btn-default"  th:href="@{micuenta/editarDatos/__${usuario.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
 
+<div th th:object="${usuario}">
+    <div th:if="*{invitaciones!=null and !invitaciones.empty}">
+        <br><br>
 <a class="btn btn-default"  th:href="@{micuenta/invitaciones}"><span class="glyphicon glyphicon-bullhorn"></span> Invitaciones</a>
+</div>
+</div>
 
 </body>
 

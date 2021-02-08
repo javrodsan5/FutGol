@@ -7,6 +7,7 @@
 
   <h2>Mis ligas</h2>
 
+  <div th:if="${ligas!=null and !ligas.empty}">
   <table id="ligas" class="table table-striped">
     <thead>
       <tr>
@@ -15,18 +16,18 @@
       </tr>
     </thead>
     <tbody>
-    <div th:if="${ligas}">
       <tr th:each="liga : ${ligas}">
          <td> <a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
-        <td th:text="${liga.admin}"></td>
+        <td th:text="${liga.admin.user.username}"></td>
       </tr>
     </div>
-    <div th:unless="${ligas}">
-        <p> No tienes ninguna liga creada todavía</p>
-    </div>
-
     </tbody>
   </table>
+  <div th:if="${ligas==null or ligas.empty}">
+      <br>
+      <h4> No tienes ninguna liga creada todavía</h4>
+  </div>
+  <br>
   <a class="btn btn-default" th:href="@{/liga/crear}">Crear liga</a>
 </body>
 </html>

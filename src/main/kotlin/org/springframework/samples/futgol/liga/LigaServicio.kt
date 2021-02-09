@@ -42,4 +42,18 @@ class LigaServicio {
         return ligaRepositorio?.buscarLigaPorId((idLiga))
     }
 
+    @Transactional(readOnly = true)
+    fun checkLigaExists(nombreLiga: String?): Boolean {
+        var res = false
+        var ligas = ligaRepositorio?.findAll()
+        if (ligas != null) {
+            for (l in ligas) {
+                if (l.name.equals(nombreLiga)) {
+                    res = true
+                }
+            }
+        }
+        return res
+    }
+
 }

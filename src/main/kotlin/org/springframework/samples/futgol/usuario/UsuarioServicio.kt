@@ -1,11 +1,10 @@
 package org.springframework.samples.futgol.usuario
 
-import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.liga.Liga
-import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 
@@ -16,9 +15,6 @@ class UsuarioServicio {
 
     @Autowired
     private val userService: UserServicio? = null
-
-    @Autowired
-    private val authoritiesService: AuthoritiesServicio? = null
 
     @Autowired
     fun UsuarioServicio(usuarioRepository: UsuarioRepository?) {
@@ -32,7 +28,34 @@ class UsuarioServicio {
         usuario.user?.let {
             userService?.saveUser(it)
         }
-//        usuario.user?.username?.let { authoritiesService?.saveAuthorities(it, "usuario") }
+    }
+
+    @Transactional(readOnly = true)
+    fun checkUsuarioExists(nombreUsuario: String?): Boolean {
+        var res = false
+        var usuarios = usuarioRepository?.findAll()
+        if (usuarios != null) {
+            for (u in usuarios) {
+                if (u.user?.username.equals(nombreUsuario)) {
+                    res = true
+                }
+            }
+        }
+        return res
+    }
+
+    @Transactional(readOnly = true)
+    fun checkEmailExists(email: String?): Boolean {
+        var res = false
+        var usuarios = usuarioRepository?.findAll()
+        if (usuarios != null) {
+            for (u in usuarios) {
+                if (u.email.equals(email)) {
+                    res = true
+                }
+            }
+        }
+        return res
     }
 
 

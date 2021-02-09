@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.InitBinder
@@ -51,7 +52,11 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult, model: Model): String {
+    fun procesoCrear(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
+
+        if (ligaServicio.checkLigaExists(liga.name)) {
+            result.addError(FieldError("liga", "name", "Ya existe una liga con ese nombre"))
+        }
         return if (result.hasErrors()) {
             model["liga"] = liga
             VISTA_CREAR_EDITAR_LIGA
@@ -79,12 +84,15 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
 
     @PostMapping("/liga/editar/{idLiga}")
     fun procesoActualizacion(
-        @Valid liga: Liga,
-        principal: Principal,
-        @PathVariable("idLiga") idLiga: Int,
-        result: BindingResult,
+        liga: Liga, principal: Principal, @PathVariable("idLiga") idLiga: Int, result: BindingResult,
         model: Model
     ): String {
+        var ligaComparador = ligaServicio.buscarLigaPorId(idLiga)
+        if (ligaComparador != null) {
+            if (liga.name != ligaComparador.name && ligaServicio.checkLigaExists(liga.name)) {
+                result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
+            }
+        }
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {

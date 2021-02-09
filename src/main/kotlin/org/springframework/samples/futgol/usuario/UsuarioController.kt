@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
 import java.security.Principal
 import javax.validation.Valid
+import org.springframework.web.bind.WebDataBinder
+
+import org.springframework.web.bind.annotation.InitBinder
+
+
+
 
 @Controller
 class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio: UserServicio, val authoritiesServicio: AuthoritiesServicio, val ligaServicio: LigaServicio) {
@@ -27,7 +32,12 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
 
 
-    private val VISTA_LOGIN = "login/login"
+
+    @InitBinder("usuario")
+    fun initUsuarioBinder(dataBinder: WebDataBinder) {
+        dataBinder.validator = UsuarioValidador()
+    }
+
 
     fun usuarioLogueado(principal: Principal): Usuario? {
         val username: String = principal.getName()
@@ -96,7 +106,6 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO
         } else {
-            //usuario.user?.let {this.userServicio?.saveUser(it)}
             this.usuarioServicio.saveUsuario(usuario)
             usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
             return "redirect:/"
@@ -126,7 +135,6 @@ class UsuarioController (val usuarioServicio: UsuarioServicio, val userServicio:
                 usuario.invitaciones = usuarioUrl.invitaciones
             }
             this.usuarioServicio.saveUsuario(usuario)
-
             "redirect:/micuenta"
         }
     }

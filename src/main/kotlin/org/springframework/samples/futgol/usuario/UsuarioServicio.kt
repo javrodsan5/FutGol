@@ -1,11 +1,11 @@
 package org.springframework.samples.futgol.usuario
 
-import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 
@@ -32,9 +32,7 @@ class UsuarioServicio {
         usuario.user?.let {
             userService?.saveUser(it)
         }
-//        usuario.user?.username?.let { authoritiesService?.saveAuthorities(it, "usuario") }
     }
-
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)

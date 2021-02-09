@@ -20,20 +20,21 @@ import org.springframework.validation.Errors
 import org.springframework.validation.Validator
 
 class LigaValidador : Validator {
-    override fun validate(obj: Any, errors: Errors) {
-        val liga = obj as Liga
-        val name = liga.name
-        // name validation
+
+    private val REQUIRED = "Campo requerido."
+
+    override fun validate(target: Any, errors: Errors) {
+        var liga = target as Liga
+        var name = liga.name
+
         if (!StringUtils.hasLength(name)) {
             errors.rejectValue("name", REQUIRED, REQUIRED)
         }
     }
 
-    override fun supports(clazz: Class<*>)
-            = Liga::class.java.isAssignableFrom(clazz)
-
-    companion object {
-        const val REQUIRED = "required"
+    override fun supports(clazz: Class<*>): Boolean {
+        return Liga::class.java.isAssignableFrom(clazz)
     }
+
 
 }

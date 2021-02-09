@@ -51,7 +51,7 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, principal: Principal, result: BindingResult, model: Model): String {
+    fun procesoCrear(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
         return if (result.hasErrors()) {
             model["liga"] = liga
             VISTA_CREAR_EDITAR_LIGA

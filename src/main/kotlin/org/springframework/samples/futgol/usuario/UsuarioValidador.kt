@@ -3,10 +3,21 @@ package org.springframework.samples.futgol.usuario
 import org.springframework.util.StringUtils
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
+import java.util.regex.Pattern
 
 class UsuarioValidador : Validator {
 
     private val REQUIRED = "Campo requerido."
+
+    val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
+        "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                "\\@" +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                "(" +
+                "\\." +
+                "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                ")+"
+    )
 
     override fun validate(target: Any, errors: Errors) {
         var usuario = target as Usuario
@@ -22,7 +33,7 @@ class UsuarioValidador : Validator {
 
         when {
             !StringUtils.hasLength(email) -> errors.rejectValue("email", REQUIRED, REQUIRED);
-            !email.contains("@") or !email.contains(".")-> errors.rejectValue(
+            !EMAIL_ADDRESS_PATTERN.matcher(email).matches()-> errors.rejectValue(
                 "email",
                 "Tu email debe tener un formato correcto",
                 "Tu email debe tener un formato correcto"

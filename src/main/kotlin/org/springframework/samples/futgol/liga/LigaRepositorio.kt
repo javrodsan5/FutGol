@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 
 interface LigaRepositorio : Repository<Liga, Int> {
 
+    fun findAll(): Collection<Liga>
 
     fun save(liga: Liga)
 

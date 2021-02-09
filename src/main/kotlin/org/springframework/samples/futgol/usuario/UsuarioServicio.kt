@@ -30,6 +30,7 @@ class UsuarioServicio {
         }
     }
 
+    @Transactional(readOnly = true)
     fun checkUsuarioExists(nombreUsuario: String?): Boolean {
         var res = false
         var usuarios = usuarioRepository?.findAll()
@@ -43,6 +44,7 @@ class UsuarioServicio {
         return res
     }
 
+    @Transactional(readOnly = true)
     fun checkEmailExists(email: String?): Boolean {
         var res = false
         var usuarios = usuarioRepository?.findAll()

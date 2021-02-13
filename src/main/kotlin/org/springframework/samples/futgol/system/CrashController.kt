@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping
  * @author Michael Isvy
  * @author Antoine Rey
  * <p/>
- * Also see how a view that resolves to "5xx" has been added ("5xx.html").
+ * Also see how a view that resolves to "5xx" has been added ("error-503.html").
  */
 @Controller
 class CrashController {

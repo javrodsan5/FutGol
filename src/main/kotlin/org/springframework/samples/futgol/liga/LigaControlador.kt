@@ -23,6 +23,8 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
+    private val VISTA_ERROR_403 = "errores/error-403"
+
 
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
@@ -74,10 +76,17 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("/liga/editar/{idLiga}")
-    fun initUpdateForm(@PathVariable idLiga: Int, model: Model): String {
+    fun initUpdateForm(@PathVariable idLiga: Int, model: Model, principal: Principal): String {
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
-        if (liga != null) {
-            model.addAttribute(liga)
+        val usuario = usuarioLogueado(principal)
+        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
+        if (ligas != null) {
+            if (liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true } ) {
+                model.addAttribute(liga)
+            }
+            else{
+            return VISTA_ERROR_403
+            }
         }
         return VISTA_CREAR_EDITAR_LIGA
     }
@@ -111,14 +120,20 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String): String {
+    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
-        if (liga != null) {
-            model["liga"] = liga
+        val usuario = usuarioLogueado(principal)
+        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
+        if (ligas != null) {
+            if (liga != null && ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) } ) {
+                model["liga"] = liga
+            }
+            else{
+                return VISTA_ERROR_403
+            }
         }
         return VISTA_DETALLES_LIGA
     }
-
 
     @GetMapping("/usuarios/buscar")
     fun initFindForm(model: MutableMap<String, Any>): String {

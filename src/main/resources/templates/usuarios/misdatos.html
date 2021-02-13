@@ -37,7 +37,7 @@
 
 </table>
 
-<a class="btn btn-default"  th:href="@{micuenta/editarDatos/__${usuario.id}__/}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
+<a class="btn btn-default"  th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
 
 <div th th:object="${usuario}">
     <div th:if="*{invitaciones!=null and !invitaciones.empty}">

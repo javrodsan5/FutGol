@@ -150,7 +150,8 @@ class UsuarioController(
                 result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
             } else if (!EMAIL_ADDRESS_PATTERN.matcher(usuario.email).matches()) {
                 result.addError(FieldError("usuario", "email", "Tu email debe tener un formato correcto"))
-
+            } else if (!StringUtils.hasLength(usuario.name)) {
+                result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
             }
         }
         return if (result.hasErrors()) {

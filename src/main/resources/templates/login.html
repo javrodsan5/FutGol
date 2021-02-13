@@ -11,18 +11,20 @@
 </head>
 <body>
 <center>
-<h1>Inicio de sesión</h1><br>
-<form th:action="@{/login}" method="post">
-    <label for="username">Usuario</label>:
-    <input type="text" id="username" name="username" autofocus="autofocus" /><br><br>
-    <label for="password">Contraseña</label>:
-    <input type="password" id="password" name="password" />
-    <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password"></span>
+    <h1>Inicio de sesión</h1><br>
+
+    <form th:action="@{/login}" method="post">
+        <label for="username">Usuario</label>:
+        <input type="text" id="username" name="username" required="required" autofocus="autofocus"/><br><br>
+        <label for="password">Contraseña</label>:
+        <input type="password" id="password" required="required" name="password"/>
+        <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password"></span>
+        <br><br>
+        <input type="submit" class="btn btn-default" value="Iniciar sesión"/>
+    </form>
     <br><br>
-    <input type="submit" class="btn btn-default" value="Iniciar sesión" />
-</form>
-    <br><br>
-<a th:href="@{/usuarios/registro}">¿Aún no te has registrado? Regístrate aquí</a>
+    <a th:href="@{/usuarios/registro}">¿Aún no te has registrado? Regístrate aquí</a>
+
 </center>
 </body>
 </html>

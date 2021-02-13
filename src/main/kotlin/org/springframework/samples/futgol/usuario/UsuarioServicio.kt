@@ -6,6 +6,7 @@ import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.UserServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.stream.Collectors
 
 
 @Service
@@ -82,5 +83,12 @@ class UsuarioServicio {
     fun buscarUsuarioPorId(id: Int): Usuario? {
         return usuarioRepository?.buscarUsuarioPorId(id)
     }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscarTodosUsuarios(): MutableList<String?>? {
+        return usuarioRepository?.findAll()?.stream()?.map { x-> x.user?.username }?.collect(Collectors.toList())
+    }
+
 
 }

@@ -131,21 +131,18 @@ class UsuarioController(
         }
     }
 
-    @GetMapping("/micuenta/editarDatos/{idUsuario}")
-    fun iniciarActualizacion(model: Model, principal: Principal, @PathVariable("idUsuario") idUsuario: Int): String {
-        val usuario = this.usuarioServicio.buscarUsuarioPorId(idUsuario)
+    @GetMapping("/micuenta/editarmisdatos")
+    fun iniciarActualizacion(model: Model, principal: Principal): String {
+        val usuario = usuarioLogueado(principal)
         if (usuario != null) {
             model["usuario"] = usuario
         }
         return VISTA_EDITAR_USUARIO
     }
 
-    @PostMapping("/micuenta/editarDatos/{idUsuario}")
-    fun procesoActualizacion(
-        usuario: Usuario, result: BindingResult, principal: Principal, @PathVariable("idUsuario") idUsuario: Int,
-        model: Model
-    ): String {
-        var usuarioComparador = usuarioServicio.findUsuarioById(idUsuario)
+    @PostMapping("/micuenta/editarmisdatos")
+    fun procesoActualizacion(usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
+        var usuarioComparador = usuarioLogueado(principal)
         if (usuarioComparador != null) {
             if (usuario.email != usuarioComparador.email && usuarioServicio.checkEmailExists(usuario.email)) {
                 result.addError(FieldError("usuario", "email", "El email ya está en uso"))
@@ -158,15 +155,17 @@ class UsuarioController(
         }
         return if (result.hasErrors()) {
             model["usuario"] = usuario
+            print("hola")
+
             VISTA_EDITAR_USUARIO
         } else {
-            usuario.id = idUsuario
-            usuario.user = this.userServicio.findUser(principal.name)
-            usuario.user?.username = principal.name
-            var usuarioUrl = this.usuarioServicio.findUsuarioById(idUsuario)
-            if (usuarioUrl != null) {
-                usuario.ligas = usuarioUrl.ligas
-                usuario.invitaciones = usuarioUrl.invitaciones
+            if (usuarioComparador != null) {
+                usuario.id = usuarioComparador.id
+                usuario.ligas = usuarioComparador.ligas
+                usuario.invitaciones = usuarioComparador.invitaciones
+                usuario.user = this.userServicio.findUser(principal.name)
+                usuario.user?.username = principal.name
+
             }
             this.usuarioServicio.saveUsuario(usuario)
             "redirect:/micuenta"

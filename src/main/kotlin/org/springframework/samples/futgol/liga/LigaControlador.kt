@@ -146,7 +146,14 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     @GetMapping("/usuarios/buscar")
     fun initFindForm(model: MutableMap<String, Any>): String {
         var usuario = Usuario()
-        model["usuario"] = usuario
+        var usuarios = usuarioServicio.buscarTodosUsuarios()
+        var lista = mutableListOf<String>()
+        if(usuario!=null) {
+            model["usuario"] = usuario
+        }
+        if(usuarios!=null){
+            model["usuarios"] = usuarios
+        }
         return "usuarios/buscarUsuario"
     }
 

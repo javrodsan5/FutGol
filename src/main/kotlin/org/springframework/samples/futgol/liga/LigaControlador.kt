@@ -136,10 +136,10 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("/usuarios/buscar")
-    fun initFindForm(model: MutableMap<String, Any>): String {
+    fun iniciarBusquedaUsuarioLiga(model: MutableMap<String, Any>): String {
         var usuario = Usuario()
         var usuarios = usuarioServicio.buscarTodosUsuarios()
-        var lista = mutableListOf<String>()
+
         if(usuario!=null) {
             model["usuario"] = usuario
         }
@@ -150,9 +150,10 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("/usuarios")
-    fun buscarUsuarioparaLiga(usuario: Usuario, model: MutableMap<String, Any>): String {
+    fun procesoBusquedaUsuarioLiga(@Valid usuario: Usuario, result: BindingResult, model: MutableMap<String, Any>): String {
         var res = VISTA_DETALLES_LIGA
         val usuario = usuario.user?.let { usuarioServicio.buscarUsuarioPorNombreUsuario(it.username) }
+
         if (usuario != null) res = "redirect:/usuarios/" + (usuario.user?.username)
         return res
     }

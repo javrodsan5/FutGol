@@ -77,16 +77,18 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     @GetMapping("/liga/editar/{idLiga}")
     fun initUpdateForm(@PathVariable idLiga: Int, model: Model, principal: Principal): String {
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
-        val usuario = usuarioLogueado(principal)
-        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        if (ligas != null) {
-            if (liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true } ) {
-                model.addAttribute(liga)
-            }
-            else{
+        var adminLiga = liga?.admin?.user?.username
+        val usuario = usuarioLogueado(principal)?.user?.username
+        if (liga != null && usuario != null && adminLiga != usuario) {
             return VISTA_ERROR_403
-            }
         }
+        val ligas = usuario?.let { usuarioServicio.buscarLigasUsuario(it) }
+        if (ligas != null && liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true }) {
+            model.addAttribute(liga)
+        } else {
+            return VISTA_ERROR_403
+        }
+
         return VISTA_CREAR_EDITAR_LIGA
     }
 
@@ -121,14 +123,20 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
+        var soyAdmin = false
         val usuario = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
-            if (liga != null && ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) } ) {
+            if (liga != null && ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
                 model["liga"] = liga
-            }
-            else{
+            } else {
                 return VISTA_ERROR_403
+            }
+        }
+        if (liga != null && usuario != null) {
+            if (liga.admin?.user?.username.equals(usuario.user?.username)) {
+                soyAdmin = true
+                model["soyAdmin"] = soyAdmin
             }
         }
         return VISTA_DETALLES_LIGA

@@ -12,11 +12,12 @@
 <br>
 <h3 th:object="${liga}">Usuarios: <b th:text="*{usuarios}"></b> </h3>
 <br>
+<h2 th:if="${soyAdmin}">
 <a class="btn btn-default"  th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar usuario</a>
 
 <a class="btn btn-default"  th:href="@{/liga/editar/{idLiga}(idLiga= ${liga.id})}">
     <span class="glyphicon glyphicon-edit"></span> Editar liga</a>
-
+</h2>
 
 
 </body>

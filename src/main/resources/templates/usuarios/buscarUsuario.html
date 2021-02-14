@@ -5,7 +5,7 @@
 
 <script>
     $( function() {
-        var usuarios = [document.getElementById("usuarios").value].toString().replace("[", "").replace("]", "").split(",");
+        var usuarios = [document.getElementById("usuarios").value].toString().replace("[", "").replace("]", "").replace(/ /g, "").split(",");
 
         $( "#busqueda" ).autocomplete({
             source: usuarios

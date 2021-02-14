@@ -35,6 +35,8 @@ class UsuarioController(
     private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
+    private val VISTA_BUSCAR_USUARIO = "usuarios/buscarUsuario"
+
     val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +
@@ -221,6 +223,30 @@ class UsuarioController(
             model["ligasNoUsuario"] = ligasNoUsuario
         }
         return VISTA_DETALLES_USUARIO
+    }
+
+
+    @GetMapping("/usuarios/buscar")
+    fun iniciarBusquedaUsuarioLiga(model: Model): String {
+        var usuario = Usuario()
+        var usuarios = usuarioServicio.buscarTodosUsuarios()
+        model.addAttribute(usuario)
+        if (usuarios != null) {
+            model["usuarios"] = usuarios
+        }
+        return VISTA_BUSCAR_USUARIO
+    }
+
+    @GetMapping("/usuarios")
+    fun procesoBusquedaUsuarioLiga(@Valid usuario: Usuario, result: BindingResult, model: Model): String{
+        if (usuarioServicio.checkUsuarioExists(usuario?.user?.username)) {
+            return "redirect:/usuarios/" + usuario?.user?.username
+
+        } else if(result.hasFieldErrors()){
+            result.rejectValue("user.username", "notFound", "not found")
+            return "redirect:/usuarios/buscar"
+        }
+        return "redirect:/usuarios/buscar"
     }
 
 }

@@ -25,7 +25,6 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_ERROR_403 = "errores/error-403"
 
-
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
         dataBinder.validator = LigaValidador()
@@ -135,28 +134,6 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         return VISTA_DETALLES_LIGA
     }
 
-    @GetMapping("/usuarios/buscar")
-    fun iniciarBusquedaUsuarioLiga(model: MutableMap<String, Any>): String {
-        var usuario = Usuario()
-        var usuarios = usuarioServicio.buscarTodosUsuarios()
-
-        if(usuario!=null) {
-            model["usuario"] = usuario
-        }
-        if(usuarios!=null){
-            model["usuarios"] = usuarios
-        }
-        return "usuarios/buscarUsuario"
-    }
-
-    @GetMapping("/usuarios")
-    fun procesoBusquedaUsuarioLiga(@Valid usuario: Usuario, result: BindingResult, model: MutableMap<String, Any>): String {
-        var res = VISTA_DETALLES_LIGA
-        val usuario = usuario.user?.let { usuarioServicio.buscarUsuarioPorNombreUsuario(it.username) }
-
-        if (usuario != null) res = "redirect:/usuarios/" + (usuario.user?.username)
-        return res
-    }
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")
     fun asociarUsuarioLiga(

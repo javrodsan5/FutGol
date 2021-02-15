@@ -14,5 +14,8 @@ class LoginController {
     fun login(): String = "/login"
 
     @RequestMapping("/loginError")
-    fun loginError(): String = "login-error"
+    fun loginError(model: Model): String{
+        model.addAttribute("loginError",true)
+        return "/login"
+    }
 }

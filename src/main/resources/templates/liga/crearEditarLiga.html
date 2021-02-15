@@ -1,26 +1,28 @@
 <html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
 
 <body>
 
-  <h2>
+<h2>
     Nueva liga
-  </h2>
-  <form th:object="${liga}" class="form-horizontal" method="post">
+</h2>
+<form th:object="${liga}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">
-      <input
-        th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}" />
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <input
+                th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}"/>
     </div>
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-          <input type="hidden" name="ligaId" th:value="${liga.id}" />
-          <button
-                  th:with="text=${liga['new']} ? 'Crear liga' : 'Editar'"
-                  class="btn btn-default" type="submit" th:text="${text}">Crear
-              Liga</button>
-      </div>
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="hidden" name="ligaId" th:value="${liga.id}"/>
+            <button
+                    th:with="text=${liga['new']} ? 'Crear liga' : 'Editar'"
+                    class="btn btn-default" type="submit" th:text="${text}">Crear
+                Liga
+            </button>
+        </div>
     </div>
-  </form>
+</form>
 </body>
 
 </html>

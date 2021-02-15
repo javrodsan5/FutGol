@@ -79,15 +79,15 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
         var adminLiga = liga?.admin?.user?.username
         val usuario = usuarioLogueado(principal)?.user?.username
-        if (liga != null && usuario != null && adminLiga != usuario) {
-            return VISTA_ERROR_403
-        }
-        val ligas = usuario?.let { usuarioServicio.buscarLigasUsuario(it) }
-        if (ligas != null && liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true }) {
+        if (liga != null && usuario != null && adminLiga == usuario) {
             model.addAttribute(liga)
-        } else {
-            return VISTA_ERROR_403
         }
+//        val ligas = usuario?.let { usuarioServicio.buscarLigasUsuario(it) }
+//        if (ligas != null && liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true }) {
+//            model.addAttribute(liga)
+//        } else {
+//            return VISTA_ERROR_403
+//        }
 
         return VISTA_CREAR_EDITAR_LIGA
     }

@@ -30,7 +30,6 @@ class UsuarioController(
 ) {
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
-    private val VISTA_LISTADO_USUARIOS = "usuarios/usuariosList"
     private val VISTA_MISDATOS = "usuarios/misdatos"
     private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
@@ -46,6 +45,7 @@ class UsuarioController(
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                 ")+"
     )
+    val nombre_pattern: Pattern = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]")
 
     @InitBinder("usuario")
     fun initUsuarioBinder(dataBinder: WebDataBinder) {
@@ -146,20 +146,22 @@ class UsuarioController(
     fun procesoActualizacion(usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
         var usuarioComparador = usuarioLogueado(principal)
         if (usuarioComparador != null) {
-            if (usuario.email != usuarioComparador.email && usuarioServicio.checkEmailExists(usuario.email)) {
-                result.addError(FieldError("usuario", "email", "El email ya está en uso"))
-            } else if (!StringUtils.hasLength(usuario.email)) {
-                result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
-            } else if (!EMAIL_ADDRESS_PATTERN.matcher(usuario.email).matches()) {
-                result.addError(FieldError("usuario", "email", "Tu email debe tener un formato correcto"))
-            } else if (!StringUtils.hasLength(usuario.name)) {
-                result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
+            when {
+                usuario.email != usuarioComparador.email && usuarioServicio.checkEmailExists(usuario.email) ->
+                    result.addError(FieldError("usuario", "email", "El email ya está en uso"))
+                !StringUtils.hasLength(usuario.email) ->
+                    result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
+                !EMAIL_ADDRESS_PATTERN.matcher(usuario.email).matches() ->
+                    result.addError(FieldError("usuario", "email", "Tu email debe tener un formato correcto"))
+                !StringUtils.hasLength(usuario.name) ->
+                    result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
+                !nombre_pattern.matcher(usuario.name).matches() ->
+                    result.addError(FieldError("usuario", "name", "Tu nombre solo puede tener letras"))
+
             }
         }
         return if (result.hasErrors()) {
             model["usuario"] = usuario
-            print("hola")
-
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {
@@ -187,9 +189,8 @@ class UsuarioController(
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
             this.usuarioServicio.saveUsuario(usuario)
-
         }
-        return VISTA_INVITACIONES
+        return "redirect:/misligas"
     }
 
 
@@ -227,9 +228,11 @@ class UsuarioController(
 
 
     @GetMapping("/usuarios/buscar")
-    fun iniciarBusquedaUsuarioLiga(model: Model): String {
+    fun iniciarBusquedaUsuarioLiga(model: Model, principal: Principal): String {
         var usuario = Usuario()
         var usuarios = usuarioServicio.buscarTodosUsuarios()
+        usuarios?.removeIf { it == principal.name }
+
         model.addAttribute(usuario)
         if (usuarios != null) {
             model["usuarios"] = usuarios
@@ -238,13 +241,14 @@ class UsuarioController(
     }
 
     @GetMapping("/usuarios")
-    fun procesoBusquedaUsuarioLiga(@Valid usuario: Usuario, result: BindingResult, model: Model): String{
-        if (usuarioServicio.checkUsuarioExists(usuario?.user?.username)) {
-            return "redirect:/usuarios/" + usuario?.user?.username
+    fun procesoBusquedaUsuarioLiga(usuario: Usuario, result: BindingResult, model: Model): String {
+        var existeUsuario = usuarioServicio.checkUsuarioExists(usuario?.user?.username)
+        return if (existeUsuario) {
+            "redirect:/usuarios/" + usuario?.user?.username
 
-        } else if(result.hasFieldErrors()){
-            result.rejectValue("user.username", "notFound", "not found")
-            return "redirect:/usuarios/buscar"
+        } else {
+            result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")
+            "redirect:/usuarios/buscar"
         }
         return "redirect:/usuarios/buscar"
     }

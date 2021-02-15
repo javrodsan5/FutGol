@@ -4,13 +4,13 @@
 <body>
 
 <script>
-    $( function() {
+    $(function () {
         var usuarios = [document.getElementById("usuarios").value].toString().replace("[", "").replace("]", "").replace(/ /g, "").split(",");
 
-        $( "#busqueda" ).autocomplete({
+        $("#busqueda").autocomplete({
             source: usuarios
         });
-    } );
+    });
 
 </script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -20,16 +20,15 @@
 <h2>Buscar usuarios</h2>
 
 
-
 <form th:object="${usuario}" th:action="@{/usuarios}" method="get"
       class="form-horizontal" id="search-usuario-form">
-    <input type="hidden" id= "usuarios" name="usuarios" th:value="${usuarios}" />
+    <input type="hidden" id="usuarios" name="usuarios" th:value="${usuarios}"/>
     <div class="form-group">
         <div class="control-group" id="username">
             <label class="col-sm-2 control-label">Nombre de usuario </label>
             <div class="col-sm-10">
-                <input class="form-control" id= "busqueda" th:field="*{user.username}" size="30"
-                       maxlength="80" /> <span class="help-inline"><div
+                <input class="form-control" id="busqueda" th:field="*{user.username}" size="30"
+                       maxlength="80"/> <span class="help-inline"><div
                     th:if="${#fields.hasAnyErrors()}">
               <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
             </div></span>
@@ -44,7 +43,7 @@
 
 </form>
 
-<br />
+<br/>
 
 
 </body>

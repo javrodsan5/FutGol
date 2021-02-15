@@ -9,7 +9,7 @@
   <form th:object="${usuario}" class="form-horizontal" method="post">
 
     <div class="form-group has-feedback">
-
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
         <input
                 th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}" />
         <input

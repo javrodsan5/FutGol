@@ -5,16 +5,68 @@ DROP TABLE visits IF EXISTS;
 DROP TABLE pets IF EXISTS;
 DROP TABLE types IF EXISTS;
 DROP TABLE owners IF EXISTS;
+DROP TABLE usuarios_ligas IF EXISTS;
+DROP TABLE ligas IF EXISTS;
 DROP TABLE usuarios IF EXISTS;
+DROP TABLE authorities IF EXISTS;
+DROP TABLE users IF EXISTS;
+
+
+
+CREATE TABLE users (
+    id       INTEGER IDENTITY PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    enabled BOOLEAN NOT NULL
+);
+
+CREATE INDEX user_name ON users (username);
+
+CREATE TABLE authorities (
+    id INTEGER IDENTITY PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    authority VARCHAR(255) NOT NULL
+);
+
+ALTER TABLE authorities ADD CONSTRAINT fk_user_authority FOREIGN KEY (username) REFERENCES users (username);
+
+CREATE INDEX authority_name ON authorities (authority);
 
 CREATE TABLE usuarios (
     id INTEGER IDENTITY PRIMARY KEY,
-    name VARCHAR(30),
-    email  VARCHAR(255),
-    nombre_usuario    VARCHAR(255),
-    password       VARCHAR(80)
+    name VARCHAR(30) NOT NULL,
+    email  VARCHAR(255) NOT NULL,
+    username   VARCHAR(255) NOT NULL
 );
+
+ALTER TABLE usuarios ADD CONSTRAINT fk_authority_usuario FOREIGN KEY (username) REFERENCES users (username);
+
 CREATE INDEX usuario_name ON usuarios (name);
+
+
+CREATE TABLE ligas (
+    id INTEGER IDENTITY PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
+    admin VARCHAR(255) NOT NULL
+);
+CREATE INDEX liga_name ON ligas (name);
+ALTER TABLE ligas ADD CONSTRAINT fk_liga_usuario FOREIGN KEY (admin) REFERENCES users (username);
+
+CREATE TABLE usuarios_ligas (
+    liga_id INTEGER NOT NULL,
+    usuario_id INTEGER NOT NULL
+);
+ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_ligas FOREIGN KEY (liga_id) REFERENCES ligas (id);
+ALTER TABLE usuarios_ligas ADD CONSTRAINT fk_usuarios_ligas_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
+
+
+CREATE TABLE invitaciones (
+    liga_id INTEGER NOT NULL,
+    usuario_id INTEGER NOT NULL
+);
+ALTER TABLE invitaciones ADD CONSTRAINT fk_invitaciones_ligas FOREIGN KEY (liga_id) REFERENCES ligas (id);
+ALTER TABLE invitaciones ADD CONSTRAINT fk_invitaciones_usuarios FOREIGN KEY (usuario_id) REFERENCES usuarios (id);
+
 
 CREATE TABLE vets (
   id         INTEGER IDENTITY PRIMARY KEY,

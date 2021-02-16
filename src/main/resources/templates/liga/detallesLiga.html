@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+
+
+<h1 th:object="${liga}"><b th:text="*{name}"></b></h1>
+<h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
+
+<br>
+<h3 th:object="${liga}">Usuarios: <b th:text="*{usuarios}"></b> </h3>
+<br>
+<h2 th:if="${soyAdmin}">
+<a class="btn btn-default"  th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar usuario</a>
+
+<a class="btn btn-default"  th:href="@{/liga/editar/{idLiga}(idLiga= ${liga.id})}">
+    <span class="glyphicon glyphicon-edit"></span> Editar liga</a>
+</h2>
+
+
+</body>
+
+</html>

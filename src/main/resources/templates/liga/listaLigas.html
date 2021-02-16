@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
+
+<body>
+
+  <h2>Mis ligas</h2>
+
+  <div th:if="${ligas!=null and !ligas.empty}">
+  <table id="ligas" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+          <th>Administrador</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="liga : ${ligas}">
+         <td> <a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
+        <td th:text="${liga.admin.user.username}"></td>
+      </tr>
+    </div>
+    </tbody>
+  </table>
+  <div th:if="${ligas==null or ligas.empty}">
+      <br>
+      <h4> No tienes ninguna liga creada todavía</h4>
+  </div>
+  <br>
+  <a class="btn btn-default" th:href="@{/liga/crear}">Crear liga</a>
+</body>
+</html>

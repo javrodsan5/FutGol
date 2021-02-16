@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
-description = "Kotlin version of the Spring Petclinic application"
+description = "Versión de Kotlin de FútGol"
 group = "org.springframework.samples"
 // Align with Spring Version
 version = "2.4.0"
@@ -41,12 +41,17 @@ repositories {
 }
 
 dependencies {
+
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.security:spring-security-taglibs")
+    implementation("org.springframework.security:spring-security-test")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("javax.cache:cache-api")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -55,6 +60,8 @@ dependencies {
     implementation("org.webjars:jquery:$jQueryVersion")
     implementation("org.webjars:jquery-ui:$jQueryUIVersion")
     implementation("org.webjars:bootstrap:$boostrapVersion")
+    implementation("org.projectlombok:lombok:1.18.16")
+    implementation("org.jsoup:jsoup:1.13.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -69,7 +76,6 @@ dependencies {
 
 jib {
     to {
-        image = "springcommunity/spring-petclinic-kotlin"
         tags = setOf(project.version.toString(), "latest")
     }
 }

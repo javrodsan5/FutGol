@@ -1,6 +1,31 @@
+INSERT INTO users VALUES (1, 'administrador1', 'password',TRUE);
+INSERT INTO users VALUES (2, 'ferki', 'ferki',TRUE);
+INSERT INTO users VALUES (3, 'javi', 'password',TRUE);
 
-INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'javierito', 'passworsita');
-INSERT INTO usuarios VALUES (2, 'Fernando', 'emialdefernando@gmail.com', 'ferki', 'passworsitaFer');
+INSERT INTO authorities VALUES (1, 'administrador1', 'usuario');
+INSERT INTO authorities VALUES (2, 'ferki', 'usuario');
+INSERT INTO authorities VALUES (3, 'javi', 'usuario');
+
+INSERT INTO usuarios VALUES (1, 'Javi', 'emaildejavi@gmail.com', 'administrador1');
+INSERT INTO usuarios VALUES (2, 'Fernando', 'emaildefernando@gmail.com','ferki');
+INSERT INTO usuarios VALUES (3, 'Javi2', 'javi2@gmail.com','javi');
+
+
+INSERT INTO ligas VALUES (1, 'cervezoides', 'ferki');
+INSERT INTO ligas VALUES (2, 'informaticos futboleros', 'administrador1');
+INSERT INTO ligas VALUES (3, 'miligaFerki', 'administrador1');
+INSERT INTO ligas VALUES (4, 'ligaConUnUsuario', 'javi');
+
+INSERT INTO usuarios_ligas VALUES (1,2);
+INSERT INTO usuarios_ligas VALUES (2,2);
+INSERT INTO usuarios_ligas VALUES (2,1);
+INSERT INTO usuarios_ligas VALUES (3,1);
+
+INSERT INTO invitaciones VALUES (1,3);
+INSERT INTO invitaciones VALUES (2,3);
+INSERT INTO invitaciones VALUES (4,1);
+INSERT INTO invitaciones VALUES (4,2);
+
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');

@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'usuarioRepository')}">
+  th:replace="~{fragments/layout :: layout (~{::body},'registro')}">
 
 <body>
 
@@ -7,16 +7,17 @@
    Nuevo Usuario
   </h2>
   <form th:object="${usuario}" class="form-horizontal" method="post">
-    <div class="form-group has-feedback">
 
-      <input
-        th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}" />
-      <input
-        th:replace="~{fragments/inputField :: input ('Email', 'email', 'text')}" />
+    <div class="form-group has-feedback">
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
         <input
-                th:replace="~{fragments/inputField :: input ('Nombre de usuario', 'nombreUsuario', 'text')}" />
+                th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}" />
         <input
-                th:replace="~{fragments/inputField :: input ('Contraseña', 'password', 'text')}" />
+                th:replace="~{fragments/inputField :: input ('Email', 'email', 'text')}" />
+        <input
+                th:replace="~{fragments/inputField :: input ('Usuario', 'user.username', 'text')}" />
+        <input
+                th:replace="~{fragments/inputField :: input ('Contraseña', 'user.password', 'password')}" />
 
     </div>
     <div class="form-group">

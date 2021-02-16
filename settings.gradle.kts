@@ -1,4 +1,4 @@
-rootProject.name = "spring-petclinic-kotlin"
+rootProject.name = "futgol-kotlin"
 
 pluginManagement {
 	repositories {

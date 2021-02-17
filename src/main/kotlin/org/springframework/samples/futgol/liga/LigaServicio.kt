@@ -129,4 +129,31 @@ class LigaServicio {
 
 }
 
+    fun precio(){// tambien coger estado del jugador: lesionado, en forma...
+        val urlBase = "https://www.transfermarkt.es"
+        val doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
+        val linksEquipos= doc.select("div.box.tab-print td a.vereinprofil_tooltip").map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
+        for (linkEquipo in linksEquipos){
+            val doc2 = Jsoup.connect("$urlBase"+linkEquipo).get()
+            val linkPlantilla= doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
+            val doc3 = Jsoup.connect("$urlBase"+linkPlantilla[0]).get()
+            val nombresJugadores= doc3.select("div.responsive-table tbody tr td div.di.nowrap:first-of-type span a")
+            val precioJugadores= doc3.select("div.responsive-table tbody tr td.rechts.hauptlink")
+            for(n in 0 until nombresJugadores.size){
+                println((nombresJugadores[n].attr("title")))
+                var precio= (precioJugadores[n]).text()
+                var precioD =0.0
+                if(!precio.isEmpty()) {
+                    if(precio.contains("mill")){
+                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()
+                    }else{
+                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()/1000//pasar a millones
+                    }
+                }
+                println(precioD)
+
+            }
+        }
+    }
+
 }

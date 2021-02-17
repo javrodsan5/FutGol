@@ -62,14 +62,13 @@ dependencies {
     implementation("org.webjars:bootstrap:$boostrapVersion")
     implementation("org.projectlombok:lombok:1.18.16")
     implementation("org.jsoup:jsoup:1.13.1")
+    implementation( "org.xerial:sqlite-jdbc:3.30.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
-    runtimeOnly("com.h2database:h2")
-    runtimeOnly("mysql:mysql-connector-java")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 }

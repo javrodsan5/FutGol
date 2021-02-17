@@ -1,11 +1,17 @@
 package org.springframework.samples.futgol.jugador
 
+import lombok.Getter
+import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.model.NamedEntity
 import java.util.HashSet
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
+@Getter
+@Setter
+@Entity
+@Table(name = "jugadores")
 class Jugador: NamedEntity() {
 
 
@@ -42,7 +48,7 @@ class Jugador: NamedEntity() {
     var estadoLesion = ""
 
     @ManyToOne()
-    @JoinColumn(name = "club", referencedColumnName = "club")
+    @JoinColumn(name = "club", referencedColumnName = "id")
     var club: Equipo? = null
 
     @ManyToMany(fetch = FetchType.EAGER)

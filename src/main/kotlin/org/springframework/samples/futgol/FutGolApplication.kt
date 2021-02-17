@@ -1,14 +1,15 @@
 package org.springframework.samples.futgol
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.boot.jdbc.DataSourceBuilder
+import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import javax.sql.DataSource
 
 
 @SpringBootApplication(proxyBeanMethods = false)
 class FutGolApplication
+
 
 fun main(args: Array<String>) {
     runApplication<FutGolApplication>(*args)

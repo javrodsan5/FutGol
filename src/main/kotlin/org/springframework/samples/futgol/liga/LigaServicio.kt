@@ -65,6 +65,8 @@ class LigaServicio {
         val linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")
             .map { col -> col.attr("href") }.stream()
             .collect(Collectors.toList()) //todos los links de los equipos de la liga
+        val nombreEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a").text()
+        print(nombreEquipos)
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
             val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()

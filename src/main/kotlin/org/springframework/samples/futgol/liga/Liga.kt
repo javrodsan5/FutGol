@@ -2,12 +2,11 @@ package org.springframework.samples.futgol.liga
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.model.NamedEntity
 import org.springframework.samples.futgol.usuario.Usuario
 import java.util.HashSet
 import javax.persistence.*
-
+import javax.persistence.JoinColumn
 
 @Getter
 @Setter
@@ -26,7 +25,6 @@ class Liga : NamedEntity() {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "invitaciones", joinColumns = [JoinColumn(name = "liga_id")], inverseJoinColumns = [JoinColumn(name = "usuario_id")])
     var usuariosInvitados: MutableSet<Usuario> = HashSet()
-
 
 
 }

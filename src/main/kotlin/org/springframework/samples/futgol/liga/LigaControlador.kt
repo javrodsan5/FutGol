@@ -2,6 +2,7 @@ package org.springframework.samples.futgol.liga
 
 
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -28,6 +29,7 @@ class LigaControlador(
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
+    private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
     private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
@@ -147,6 +149,15 @@ class LigaControlador(
         return VISTA_DETALLES_LIGA
     }
 
+    @GetMapping("liga/{nombreLiga}/clasificacion")
+    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
+        var liga = ligaServicio.findLigaByName(nombreLiga)
+        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> x.puntos }
+        if (equiposLiga != null) {
+            model["equiposLiga"] = equiposLiga
+        }
+        return VISTA_CLASIFICACION_LIGA
+    }
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")
     fun asociarUsuarioLiga(

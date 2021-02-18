@@ -29,7 +29,7 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
-    fun findEquiposDeLigaPorId(idLiga: Int): Collection<Equipo>? {
+    fun buscaEquiposDeLigaPorId(idLiga: Int): Collection<Equipo>? {
         return equipoRepositorio?.buscarEquiposDeLigaPorId((idLiga))
     }
 
@@ -40,7 +40,7 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun buscaMiEquipoEnLiga(idLiga: Int, principal: Principal): Equipo {
-        var equiposLiga = findEquiposDeLigaPorId(idLiga)
+        var equiposLiga = buscaEquiposDeLigaPorId(idLiga)
         var usuario = usuarioServicio?.usuarioLogueado(principal)
         var miEquipo = Equipo()
         if (equiposLiga != null) {

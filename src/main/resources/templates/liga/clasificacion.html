@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'clasificacion')}">
+<body>
+
+<h2>Clasificación</h2>
+
+    <table id="clasificacion" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Puntos</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="equipo : ${equiposLiga}">
+            <td th:text="${equipo.usuario.username}"></td>
+            <td th:text="${equipo.puntos}"></td>
+        </tr>
+        </div>
+        </tbody>
+    </table>
+
+</body>
+</html>

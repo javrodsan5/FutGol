@@ -6,6 +6,7 @@ import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.UserServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.security.Principal
 import java.util.stream.Collectors
 
 
@@ -20,6 +21,11 @@ class UsuarioServicio {
     @Autowired
     fun UsuarioServicio(usuarioRepository: UsuarioRepository?) {
         this.usuarioRepository = usuarioRepository
+    }
+
+    fun usuarioLogueado(principal: Principal): Usuario? {
+        val username: String = principal.name
+        return buscarUsuarioPorNombreUsuario(username)
     }
 
     @Transactional

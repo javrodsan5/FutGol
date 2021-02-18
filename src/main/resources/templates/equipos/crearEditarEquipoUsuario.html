@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'equipos')}">
+
+<body>
+
+<h2>
+    Nuevo Equipo
+</h2>
+<form th:object="${equipo}" class="form-horizontal" method="post">
+    <div class="form-group has-feedback">
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <input
+                th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}"/>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="hidden" name="equipoId" th:value="${equipo.id}"/>
+            <button
+                    th:with="text=${equipo['new']} ? 'Crear equipo' : 'Editar'"
+                    class="btn btn-default" type="submit" th:text="${text}">Crear
+                Equipo
+            </button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

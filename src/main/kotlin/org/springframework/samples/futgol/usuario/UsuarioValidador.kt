@@ -91,7 +91,7 @@ class UsuarioValidador : Validator {
             errors.rejectValue(
                 "user.username",
                 "El nombre de usuario solo puede contener letras o números",
-                "El nombre de usuariosolo puede contener letras o números"
+                "El nombre de usuario solo puede contener letras o números"
             )
         }
 

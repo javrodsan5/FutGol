@@ -22,7 +22,7 @@ class Equipo() : NamedEntity() {
     @Column(name = "puntos")
     var puntos = 0
 
-    @Column(name = "dineroRestante")
+    @Column(name = "dinero_restante")
     var dineroRestante = 0
 
     @ManyToOne()

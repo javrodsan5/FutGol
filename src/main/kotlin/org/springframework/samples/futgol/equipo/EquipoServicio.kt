@@ -34,6 +34,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscaTodosEquipos(): Collection<Equipo>? {
+        return equipoRepositorio?.findAll()
+    }
+
+    @Transactional(readOnly = true)
     fun buscaMiEquipoEnLiga(idLiga: Int, principal: Principal): Equipo {
         var equiposLiga = findEquiposDeLigaPorId(idLiga)
         var usuario = usuarioServicio?.usuarioLogueado(principal)

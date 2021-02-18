@@ -15,10 +15,6 @@ import javax.persistence.JoinColumn
 @Table(name = "ligas")
 class Liga : NamedEntity() {
 
-    @OneToMany()
-    @JoinColumn(name = "equipos", referencedColumnName = "id")
-    var equipos: MutableSet<Equipo>? = HashSet()
-
     @ManyToOne()
     @JoinColumn(name = "admin", referencedColumnName = "username")
     var admin: Usuario? = null

@@ -19,7 +19,11 @@ import javax.validation.Valid
 
 
 @Controller
-class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio, val equipoServicio: EquipoServicio) {
+class LigaControlador(
+    val ligaServicio: LigaServicio,
+    val usuarioServicio: UsuarioServicio,
+    val equipoServicio: EquipoServicio
+) {
 
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
@@ -71,7 +75,7 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
                 this.ligaServicio.saveLiga(liga)
 
             }
-            "redirect:/liga/"+liga.name
+            "redirect:/liga/" + liga.name
         }
     }
 
@@ -115,26 +119,28 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String, principal: Principal): String {
+    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
         var soyAdmin = false
         val usuario = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        if (ligas != null) {
-            if (liga != null && ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
+        if (ligas != null && liga != null) {
+            if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
                 model["liga"] = liga
+                var equiposLiga = ligaServicio.buscaEquiposLiga(liga.id)
+                model["equipos"] = equiposLiga
             } else {
                 return VISTA_ERROR_403
             }
         }
-        if (liga != null && usuario != null) {
+        if (usuario != null && liga != null) {
             if (liga.admin?.user?.username.equals(usuario.user?.username)) {
                 soyAdmin = true
                 model["soyAdmin"] = soyAdmin
             }
             var noTengoEquipo = false
-            if(liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
-                noTengoEquipo=true
+            if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
+                noTengoEquipo = true
                 model["noTengoEquipo"] = noTengoEquipo
             }
         }

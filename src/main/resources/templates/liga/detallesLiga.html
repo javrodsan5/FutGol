@@ -10,11 +10,28 @@
 <h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
 
 <br>
-<h3 th:object="${liga}">Usuarios: <b th:text="*{usuarios}"></b></h3>
+<table id="usuarios" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Equipo</th>
+        <th>Usuario</th>
+        <th>Puntos</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="equipo : ${equipos}">
+        <td th:text="${equipo.name}"></td>
+        <td th:text="${equipo.usuario.username}"></td>
+        <td th:text="${equipo.puntos}"></td>
+    </tr>
+    </div>
+    </tbody>
+</table>
 <br>
 
 <h2 th:if="${noTengoEquipo}">
-    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo(idLiga= ${liga.id})}">
+    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
         <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
 </h2>
 

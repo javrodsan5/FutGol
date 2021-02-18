@@ -65,21 +65,21 @@ class EquipoControlador(
             equipo.usuario = usuario?.user
             equipo.dineroRestante = 25000000
             var liga = this.ligaServicio.buscarLigaPorId(idLiga)
-            equipo.liga = liga
-            this.equipoServicio.saveEquipo(equipo)
-            return VISTA_DETALLES_EQUIPOS
+            if (liga != null) {
+                equipo.liga = liga
+                this.equipoServicio.saveEquipo(equipo)
+            }
+            "redirect:/liga/$idLiga/miEquipo"
         }
     }
 
     @GetMapping("liga/{idLiga}/miEquipo")
     fun detallesEquipo(
-        model: MutableMap<String, Any>, @PathVariable("idLiga") idLiga: Int, principal: Principal
+        model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
     ): String {
         if (!equipoServicio.tengoEquipo(idLiga, principal)) {
-            print("loser")
-            model["equipo"] = Equipo()
-            "redirect:/liga/"+idLiga+"/nuevoEquipo"
-
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["SinEquipo"] = true
         } else {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true

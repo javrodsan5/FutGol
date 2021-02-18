@@ -5,10 +5,17 @@ import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
+import kotlin.collections.Collection
+import kotlin.collections.MutableList
+import kotlin.collections.map
 
 @Service
 class LigaServicio {
@@ -17,6 +24,9 @@ class LigaServicio {
 
     @Autowired
     private val usuarioServicio: UsuarioServicio? = null
+
+    @Autowired
+    private val equipoServicio: EquipoServicio? = null
 
     @Autowired
     fun LigaServicio(ligaRepositorio: LigaRepositorio) {
@@ -37,6 +47,20 @@ class LigaServicio {
     @Transactional(readOnly = true)
     fun buscarLigaPorId(idLiga: Int): Liga? {
         return ligaRepositorio?.buscarLigaPorId((idLiga))
+    }
+
+    @Transactional(readOnly = true)
+    fun buscaEquiposLiga(idLiga: Int?): Collection<Equipo> {
+        var todosEquipos = equipoServicio?.buscaTodosEquipos()
+        var equiposLiga = HashSet<Equipo>()
+        if (todosEquipos != null) {
+            for (e in todosEquipos) {
+                if (e.liga?.id == idLiga) {
+                    equiposLiga.add(e)
+                }
+            }
+        }
+        return equiposLiga
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +94,9 @@ class LigaServicio {
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
             val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
-            linksJug.addAll(doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
-                .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
+            linksJug.addAll(
+                doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
+                    .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
             )
             linksJug = linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
 

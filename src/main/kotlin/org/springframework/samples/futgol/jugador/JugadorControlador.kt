@@ -1,18 +1,16 @@
 package org.springframework.samples.futgol.jugador
 
 import org.jsoup.Jsoup
-import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.stream.Collectors
 
 @Controller
-class JugadorControlador(val equipoServicio: EquipoServicio, val jugadorServicio: JugadorServicio) {
+class JugadorControlador(val jugadorServicio: JugadorServicio) {
 
     private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
@@ -55,17 +53,17 @@ class JugadorControlador(val equipoServicio: EquipoServicio, val jugadorServicio
                 }
                 var precio = precioJugadores[n].text()
                 var precioD = 0.1
-                if (!precio.isEmpty()) {
-                    if (precio.contains("mill")) {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()
+                if (precio.isNotEmpty()) {
+                    precioD = if (precio.contains("mill")) {
+                        precio.substringBefore(" mil").replace(",", ".").toDouble()
                     } else {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
+                        precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
                     }
                 }
-                jugador.name=nombre
-                jugador.estadoLesion=estado
-                jugador.valor=precioD
-                jugador.foto=foto
+                jugador.name = nombre
+                jugador.estadoLesion = estado
+                jugador.valor = precioD
+                jugador.foto = foto
                 jugadorServicio.saveJugador(jugador)
             }
         }
@@ -80,5 +78,6 @@ class JugadorControlador(val equipoServicio: EquipoServicio, val jugadorServicio
         }
         return VISTA_DETALLES_JUGADOR
     }
+
 
 }

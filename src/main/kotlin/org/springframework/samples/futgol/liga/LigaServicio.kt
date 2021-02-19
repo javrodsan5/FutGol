@@ -176,4 +176,26 @@ class LigaServicio {
         }
     }
 
+    fun clasificacionLiga() {
+        var urlBase = "https://fbref.com"
+        var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
+        var datosClasificacionEq = doc.select("#results107311_overall:first-of-type tbody tr")
+        for(datosEq in datosClasificacionEq){
+            var posicion= datosEq.select("th").text().toInt()
+            var equipo = datosEq.select("td[data-stat=squad]").text()
+            var partidosJugados = datosEq.select("td[data-stat=games]").text().toInt()
+            var partidosGanados = datosEq.select("td[data-stat=wins]").text().toInt()
+            var partidosEmpatados = datosEq.select("td[data-stat=draws]").text().toInt()
+            var partidosPerdidos = datosEq.select("td[data-stat=losses]").text().toInt()
+            var golesAFavor = datosEq.select("td[data-stat=goals_for]").text().toInt()
+            var golesEnContra = datosEq.select("td[data-stat=goals_against]").text().toInt()
+            var diferenciaGoles = datosEq.select("td[data-stat=goal_diff]").text().toInt()
+            var puntos = datosEq.select("td[data-stat=points]").text().toInt()
+
+            println("#" + posicion + " " + equipo + " " + partidosJugados + " " + puntos + " " + partidosGanados + " " + partidosEmpatados + " "
+                    + partidosPerdidos + " " + golesAFavor + " " + golesEnContra + " " + diferenciaGoles)
+
+        }
+    }
+
 }

@@ -22,4 +22,10 @@ class JugadorServicio {
     fun saveJugador(jugador: Jugador) {
         jugadorRepositorio?.save(jugador)
     }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaJugadorPorId(idJugador: Int): Jugador? {
+        return jugadorRepositorio?.findById(idJugador)
+    }
 }

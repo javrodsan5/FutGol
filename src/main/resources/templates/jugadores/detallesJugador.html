@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
+
+<body>
+    <h1><b>Nombre: </b><b th:text="${jugador.name}"></b></h1>
+    <h2>Valor: <b th:text="${jugador.valor}"></b>000.000€</h2>
+    <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
+</body>
+
+</html>

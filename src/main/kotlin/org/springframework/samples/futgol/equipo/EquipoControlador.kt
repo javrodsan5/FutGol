@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.validation.BindingResult
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,7 +24,8 @@ class EquipoControlador(
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
     private val VISTA_WSEQUIPOS = "equipos/WScreaEquipos"
-    private val VISTA_DETALLES_EQUIPOS = "equipos/detallesEquipo"
+    private val VISTA_DETALLES_MIEQUIPO = "equipos/detallesMiEquipo"
+    private val VISTA_DETALLES_OTROS_EQUIPOS = "equipos/detallesOtroEquipo"
 
 
     @GetMapping("/WSEquipos")
@@ -56,7 +58,12 @@ class EquipoControlador(
         @Valid equipo: Equipo, result: BindingResult, @PathVariable(("idLiga")) idLiga: Int, principal: Principal,
         model: Model
     ): String {
-
+        var liga = this.ligaServicio.buscarLigaPorId(idLiga)
+        if (liga != null) {
+            if (liga.id?.let { equipoServicio.checkEquipoEnLigaExists(equipo.name, it) }!!) {
+                result.addError(FieldError("equipo", "name", "Ya existe una equipo con ese nombre en esta liga"))
+            }
+        }
         return if (result.hasErrors()) {
             model["equipo"] = equipo
             VISTA_CREAEQUIPOS
@@ -64,17 +71,14 @@ class EquipoControlador(
             val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
             equipo.usuario = usuario?.user
             equipo.dineroRestante = 25000000
-            var liga = this.ligaServicio.buscarLigaPorId(idLiga)
-            if (liga != null) {
-                equipo.liga = liga
-                this.equipoServicio.saveEquipo(equipo)
-            }
+            equipo.liga = liga
+            this.equipoServicio.saveEquipo(equipo)
             "redirect:/liga/$idLiga/miEquipo"
         }
     }
 
     @GetMapping("liga/{idLiga}/miEquipo")
-    fun detallesEquipo(
+    fun detallesMiEquipo(
         model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
     ): String {
         if (!equipoServicio.tengoEquipo(idLiga, principal)) {
@@ -85,8 +89,25 @@ class EquipoControlador(
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
         }
-        return VISTA_DETALLES_EQUIPOS
+        return VISTA_DETALLES_MIEQUIPO
     }
 
+    @GetMapping("liga/{nombreLiga}/equipos/{idEquipo}")
+    fun detallesEquipo(
+        model: Model, @PathVariable("nombreLiga") nombreLiga: String,
+        principal: Principal,
+        @PathVariable("idEquipo") idEquipo: Int
+    ): String {
+        var liga = ligaServicio.findLigaByName(nombreLiga)!!
+        model["liga"] = liga
+        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+        return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
+            model["equipo"] = equipo
+            VISTA_DETALLES_OTROS_EQUIPOS
+        } else {
+            model["equipo"] = equipo
+            "redirect:/liga/" + liga.id + "/miEquipo"
+        }
 
+    }
 }

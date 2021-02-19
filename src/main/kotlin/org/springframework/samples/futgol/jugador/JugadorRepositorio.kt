@@ -7,4 +7,6 @@ interface JugadorRepositorio : Repository<Jugador, Int> {
     fun findAll(): Collection<Jugador>
 
     fun save(jugador: Jugador)
+
+    fun findById(idJugador: Int): Jugador
 }

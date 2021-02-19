@@ -34,6 +34,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscaEquiposPorId(idEquipo: Int): Equipo? {
+        return equipoRepositorio?.buscaEquiposPorId(idEquipo)
+    }
+
+    @Transactional(readOnly = true)
     fun buscaTodosEquipos(): Collection<Equipo>? {
         return equipoRepositorio?.findAll()
     }
@@ -64,5 +69,17 @@ class EquipoServicio {
         return res
     }
 
-
+    @Transactional(readOnly = true)
+    fun checkEquipoEnLigaExists(nombreEquipo: String?, idLiga: Int): Boolean {
+        var res = false
+        var equipos = equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
+        if (equipos != null) {
+            for (e in equipos) {
+                if (e.name.equals(nombreEquipo)) {
+                    res = true
+                }
+            }
+        }
+        return res
+    }
 }

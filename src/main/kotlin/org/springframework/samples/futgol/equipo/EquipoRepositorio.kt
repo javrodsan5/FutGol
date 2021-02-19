@@ -13,4 +13,7 @@ interface EquipoRepositorio: Repository<Equipo, Int> {
     @Query("SELECT e FROM Equipo e where e.liga.id = ?1")
     fun buscarEquiposDeLigaPorId(id: Int): Collection<Equipo>
 
+    @Query("SELECT e FROM Equipo e where e.id = ?1")
+    fun buscaEquiposPorId(id: Int): Equipo
+
 }

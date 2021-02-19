@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.liga
 
 
 import org.springframework.samples.futgol.equipo.EquipoServicio
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.stream.Collectors
 import javax.validation.Valid
 
 
@@ -30,6 +30,7 @@ class LigaControlador(
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
+    private val VISTA_RANKING_USUARIOS= "usuarios/rankingUsuarios"
     private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
@@ -152,11 +153,25 @@ class LigaControlador(
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
         var liga = ligaServicio.findLigaByName(nombreLiga)
-        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> x.puntos }
+        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> -x.puntos }
+
         if (equiposLiga != null) {
+            var posiciones = equiposLiga.indices
+            model["posiciones"] = posiciones
             model["equiposLiga"] = equiposLiga
         }
         return VISTA_CLASIFICACION_LIGA
+    }
+
+    @GetMapping("topUsuarios")
+    fun clasificacionGeneral(model: Model): String {
+        var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
+        if (equipos != null) {
+            var posiciones = equipos.indices
+            model["equipos"] = equipos
+            model["posiciones"] = posiciones
+        }
+        return VISTA_RANKING_USUARIOS
     }
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")

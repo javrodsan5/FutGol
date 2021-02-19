@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'detallesOtroEquipo')}">
+
+<body>
+    <h1><b th:text="${equipo.name}"></b></h1>
+</body>
+
+</html>

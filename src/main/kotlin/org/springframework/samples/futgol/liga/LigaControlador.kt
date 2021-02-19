@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.liga
 
 
+import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -14,15 +15,22 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.stream.Collectors
 import javax.validation.Valid
 
 
 @Controller
-class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: UsuarioServicio) {
+class LigaControlador(
+    val ligaServicio: LigaServicio,
+    val usuarioServicio: UsuarioServicio,
+    val equipoServicio: EquipoServicio
+) {
 
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
+    private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
+    private val VISTA_RANKING_USUARIOS= "usuarios/rankingUsuarios"
     private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
@@ -70,25 +78,18 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
                 this.ligaServicio.saveLiga(liga)
 
             }
-            "redirect:/misligas"
+            "redirect:/liga/" + liga.name
         }
     }
 
     @GetMapping("/liga/editar/{idLiga}")
-    fun initUpdateForm(@PathVariable idLiga: Int, model: Model, principal: Principal): String {
+    fun initUpdateForm(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
         var adminLiga = liga?.admin?.user?.username
         val usuario = usuarioLogueado(principal)?.user?.username
         if (liga != null && usuario != null && adminLiga == usuario) {
             model.addAttribute(liga)
         }
-//        val ligas = usuario?.let { usuarioServicio.buscarLigasUsuario(it) }
-//        if (ligas != null && liga != null && ligas.stream().anyMatch { x -> x.id?.equals(idLiga) == true }) {
-//            model.addAttribute(liga)
-//        } else {
-//            return VISTA_ERROR_403
-//        }
-
         return VISTA_CREAR_EDITAR_LIGA
     }
 
@@ -121,27 +122,57 @@ class LigaControlador(val ligaServicio: LigaServicio, val usuarioServicio: Usuar
     }
 
     @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: MutableMap<String, Any>, @PathVariable nombreLiga: String, principal: Principal): String {
+    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
         var soyAdmin = false
         val usuario = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        if (ligas != null) {
-            if (liga != null && ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
+        if (ligas != null && liga != null) {
+            if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
                 model["liga"] = liga
+                var equiposLiga = ligaServicio.buscaEquiposLiga(liga.id)
+                model["equipos"] = equiposLiga
             } else {
                 return VISTA_ERROR_403
             }
         }
-        if (liga != null && usuario != null) {
+        if (usuario != null && liga != null) {
             if (liga.admin?.user?.username.equals(usuario.user?.username)) {
                 soyAdmin = true
                 model["soyAdmin"] = soyAdmin
+            }
+            var noTengoEquipo = false
+            if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
+                noTengoEquipo = true
+                model["noTengoEquipo"] = noTengoEquipo
             }
         }
         return VISTA_DETALLES_LIGA
     }
 
+    @GetMapping("liga/{nombreLiga}/clasificacion")
+    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
+        var liga = ligaServicio.findLigaByName(nombreLiga)
+        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> -x.puntos }
+
+        if (equiposLiga != null) {
+            var posiciones = equiposLiga.indices
+            model["posiciones"] = posiciones
+            model["equiposLiga"] = equiposLiga
+        }
+        return VISTA_CLASIFICACION_LIGA
+    }
+
+    @GetMapping("topUsuarios")
+    fun clasificacionGeneral(model: Model): String {
+        var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
+        if (equipos != null) {
+            var posiciones = equipos.indices
+            model["equipos"] = equipos
+            model["posiciones"] = posiciones
+        }
+        return VISTA_RANKING_USUARIOS
+    }
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")
     fun asociarUsuarioLiga(

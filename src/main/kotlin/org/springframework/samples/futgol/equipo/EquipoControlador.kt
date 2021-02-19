@@ -127,7 +127,6 @@ class EquipoControlador(
         @PathVariable idLiga: Int, @PathVariable idJugador: Int,
         model: Model, principal: Principal
     ): String {
-
         var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
         var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
         if (jugador != null) {
@@ -137,8 +136,6 @@ class EquipoControlador(
                     equipo.onceInicial.add(jugador)
                     equipoServicio.saveEquipo(equipo)
                     break
-                } else {
-                    return "redirect:/liga/$idLiga/miEquipo"
                 }
             }
         }
@@ -160,8 +157,6 @@ class EquipoControlador(
                     equipo.onceInicial.removeIf { it.name == jugador.name }
                     equipoServicio.saveEquipo(equipo)
                     break
-                } else {
-                    return "redirect:/liga/$idLiga/miEquipo"
                 }
             }
         }

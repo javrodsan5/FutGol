@@ -125,7 +125,7 @@ class LigaControlador(
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
-        var soyAdmin = false
+        var soyAdmin: Boolean
         val usuario = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null && liga != null) {
@@ -193,15 +193,15 @@ class LigaControlador(
                 model["mensaje"] = "El usuario ya pertenece a la liga"
             }
         }
-
         return VISTA_DETALLES_LIGA
     }
 
     @GetMapping("/liga/{idLiga}/subastas")
     fun jugadoresLibresSubasta(@PathVariable idLiga: Int, model: Model): String {
         var jugadoresSinEquipo =
-            ligaServicio.buscarJugadoresSinEquipoEnLiga(idLiga).shuffled().stream().limit(15).collect(Collectors.toList())
-        model["jugadoresSinEquipo"]= jugadoresSinEquipo
+            ligaServicio.buscarJugadoresSinEquipoEnLiga(idLiga).shuffled().stream().limit(15)
+                .collect(Collectors.toList())
+        model["jugadoresSinEquipo"] = jugadoresSinEquipo
         return VISTA_SUBASTA_LIGA
     }
 }

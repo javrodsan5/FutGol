@@ -192,7 +192,7 @@ class LigaServicio {
             var diferenciaGoles = datosEq.select("td[data-stat=goal_diff]").text().toInt()
             var puntos = datosEq.select("td[data-stat=points]").text().toInt()
 
-            println("#" + posicion + " " + equipo + " " + partidosJugados + " " + puntos + " " + partidosGanados + " " + partidosEmpatados + " "
+            println("# " + posicion + " " + equipo + " " + partidosJugados + " " + puntos + " " + partidosGanados + " " + partidosEmpatados + " "
                     + partidosPerdidos + " " + golesAFavor + " " + golesEnContra + " " + diferenciaGoles)
 
         }

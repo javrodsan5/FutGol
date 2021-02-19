@@ -67,7 +67,6 @@ class LigaServicio {
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
             val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
-            //linkPartidosJugador= doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 td.left.group_start a").attr("href"))
             linksJug.addAll(
                 doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
                     .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
@@ -76,57 +75,106 @@ class LigaServicio {
 
         }
         for(linkJugador in linksJug){
-            println(linkJugador)
             val doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
+            println("Nombre del jugador: " + doc3.select("h1[itemprop=name]").text())
             if(!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr").isEmpty()) {
                 var ultimaTemporada =
                     doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr").last()
                 var nombreUltimaTemporada = (ultimaTemporada.select("th").first().text()) //tiene que ser 2020-2021
                 var ligaUltimaTemporada = ultimaTemporada.select("td")[3].text()
                 var partidosUltimaTemporada = ultimaTemporada.select("td").last().select("a").attr("href")
-                if (nombreUltimaTemporada.equals("2020-2021") && ligaUltimaTemporada.contains("La Liga")) { //h
-                    val doc4 = Jsoup.connect("$urlBase" + partidosUltimaTemporada).get()
-                    var filtroCompeticiones= doc4.select("div.filter").first().select("a")
-                    var filtro = ""
-                    for(n in 0 until filtroCompeticiones.size){
-                        if(filtroCompeticiones[n].text()=="2020-2021 La Liga"){
-                            filtro = filtroCompeticiones[n].attr("href")
+                if (nombreUltimaTemporada.equals("2020-2021") && ligaUltimaTemporada.contains("La Liga")) {
+                    var doc4 = Jsoup.connect("$urlBase" + partidosUltimaTemporada).get()
+                    var doc5= doc4
+                    var filtro2 = ""
+
+                    if (doc4.select("div.filter").size >= 2) {
+
+                        var filtroCompeticiones = doc4.select("div.filter").first().select("a")
+                        var filtro = ""
+                        for (n in 0 until filtroCompeticiones.size) {
+                            if (filtroCompeticiones[n].text() == "2020-2021 La Liga") {
+                                filtro = filtroCompeticiones[n].attr("href")
+                            }
+                        }
+
+                        doc5 = Jsoup.connect("$urlBase" + filtro).get()
+
+                        var filtroRegistros = doc5.select("div.filter")[1].select("a")
+
+                        for (n in 0 until filtroRegistros.size) {
+
+                            if (filtroRegistros[n].text() == "Porteros") {
+                                filtro2 = filtroRegistros[n].attr("href")
+                            }
                         }
                     }
-                    val doc5 = Jsoup.connect("$urlBase" + filtro).get()
-                    var partidos= doc5.select("table.min_width.sortable.stats_table.shade_zero tbody tr")
 
-                    var filtroRegistros= doc4.select("div.filter")[1].select("a")
+                    var partidos = doc5.select("table.min_width.sortable.stats_table.shade_zero tbody tr")
+                        .stream().filter { x -> x.select("tr[class=unused_sub hidden]").isEmpty() }
+                        .filter { x -> x.select("tr[class=spacer partial_table]").isEmpty() }
+                        .filter { x -> x.select("tr[class=thead]").isEmpty() }.collect(Collectors.toList())
 
-                    var filtro2=""
-                    for(n in 0 until filtroRegistros.size){
-                        if(filtroRegistros[n].text()=="Porteros"){
-                            filtro2 = filtroCompeticiones[n].attr("href")
-                        }
-                    }
+                    for (n in 0 until partidos.size) {
+                        var equipoLocal= partidos[n].select("td[data-stat=squad]").text()
+                        var equipoVisitante = partidos[n].select("td[data-stat=opponent]").text()
+                        var fechaPartido= partidos[n].select("th[data-stat=date] a").text()
+                        var jornada = partidos[n].select("td[data-stat=round]").text()[7].toString().toInt()
+                        var resultado= partidos[n].select("td[data-stat=result]").text().substring(2)
+                        var fueTitular= partidos[n].select("td[data-stat=game_started]").text().replace("*", "")
+                        var minutosJ= partidos[n].select("td[data-stat=minutes]").text()
+                        var goles= partidos[n].select("td[data-stat=goals]").text().toInt()
+                        var asistencias= partidos[n].select("td[data-stat=assists]").text().toInt()
+                        var penaltisMar = partidos[n].select("td[data-stat=pens_made]").text().toInt()
+                        var penaltisInt= partidos[n].select("td[data-stat=pens_att]").text().toInt()
+                        var disparosT= partidos[n].select("td[data-stat=shots_total]").text().toInt()
+                        var disparosI= partidos[n].select("td[data-stat=shots_on_target]").text().toInt()
+                        var tarjetasA= partidos[n].select("td[data-stat=cards_yellow]").text().toInt()
+                        var tarjetasR= partidos[n].select("td[data-stat=cards_red]").text().toInt()
+                        var robos= partidos[n].select("td[data-stat=interceptions]").text().toInt()
+                        var bloqueos= partidos[n].select("td[data-stat=blocks]").text()
 
-                    for(n in 0 until partidos.size){
-                        println("Equipo local: " + partidos[n].select("td[data-stat=squad]").text())
-                        println("Equipo visitante: " + partidos[n].select("td[data-stat=opponent]").text())
-                        println("Fecha del partido: " + partidos[n].select("th[data-stat=date] a").text())
-                        println("Jornada: " + partidos[n].select("td[data-stat=round]").text())
-                        println("Resultado: " + partidos[n].select("td[data-stat=result]").text())
 
+                        println("Equipo local: " + equipoLocal)
+                        println("Equipo visitante: " + equipoVisitante)
+                        println("Fecha del partido: " + fechaPartido)
+                        println("Jornada: " + jornada)
+                        println("Resultado: " + resultado)
                         println("------- Mis estadísticas de ese partido -------")
-                        println("Minutos jugados: " + partidos[n].select("td[data-stat=minutes]").text())
-                        println("Goles: " + partidos[n].select("td[data-stat=goals]").text())
-                        println("Asistencias: " + partidos[n].select("td[data-stat=assists]").text())
-                        println("Penaltis marcados: " + partidos[n].select("td[data-stat=pens_made]").text())
-                        println("Penaltis lanzados: " + partidos[n].select("td[data-stat=pens_att]").text())
-                        println("Disparos totales: " + partidos[n].select("td[data-stat=shots_total]").text())
-                        println("Disparos a puerta: " + partidos[n].select("td[data-stat=shots_on_target]").text())
-                        println("Tarjetas amarillas: " + partidos[n].select("td[data-stat=cards_yellow]").text())
-                        println("Tarjetas rojas: " + partidos[n].select("td[data-stat=cards_red]").text())
-                        println("Robos: " + partidos[n].select("td[data-stat=interceptions]").text())
-                        println("Bloqueos: " + partidos[n].select("td[data-stat=blocks]").text())
-
+                        println("¿Fue titular? " + fueTitular)
+                        if(minutosJ!="") {
+                            println("Minutos jugados: " + minutosJ.toInt())
+                        }
+                        println("Goles: " + goles)
+                        println("Asistencias: " + asistencias)
+                        println("Penaltis marcados: " + penaltisMar)
+                        println("Penaltis lanzados: " + penaltisInt)
+                        println("Disparos totales: " + disparosT)
+                        println("Disparos a puerta: " + disparosI)
+                        println("Tarjetas amarillas: " + tarjetasA)
+                        println("Tarjetas rojas: " + tarjetasR)
+                        println("Robos: " + robos)
+                        if(bloqueos!=""){
+                            println(bloqueos.toInt())
+                        }
+                        if (!filtro2.isEmpty()) {
+                            var doc6 = Jsoup.connect("$urlBase" + filtro2).get()
+                            var partidos = doc6.select("table.min_width.sortable.stats_table.shade_zero tbody tr")
+                                .stream().filter { x -> x.select("tr[class=unused_sub hidden]").isEmpty() }
+                                .filter { x -> x.select("tr[class=spacer partial_table]").isEmpty() }
+                                .filter { x -> x.select("tr[class=thead]").isEmpty() }.collect(Collectors.toList())
+                            var salvadas= partidos[n].select("td[data-stat=saves]").text().toInt()
+                            var disparosRecibidos= partidos[n].select("td[data-stat=shots_on_target_against]").text().toInt()
+                            var golesRecibidos= partidos[n].select("td[data-stat=goals_against_gk]").text().toInt()
+                            println("Disparos a puerta recibidos: " + disparosRecibidos)
+                            println("Salvadas: " + salvadas)
+                            println("Goles recibidos: " + golesRecibidos)
+                        }
                         println("---------------------------------------------")
                     }
+                }
+                else{
+                    println("Este jugador no tiene estadísticas de LaLiga.")
 
                 }
             }else{

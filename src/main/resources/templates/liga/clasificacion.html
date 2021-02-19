@@ -17,7 +17,6 @@
     <tbody>
     <td th:each="posicion : ${posiciones}" th:text="${posicion}"></td>
     <tr th:each="equipo : ${equiposLiga}">
-
         <td th:text="${equipo.usuario.username}"></td>
         <td th:text="${equipo.puntos}"></td>
     </tr>

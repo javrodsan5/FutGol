@@ -47,10 +47,17 @@ class EquipoControlador(
     }
 
     @GetMapping("/liga/{idLiga}/nuevoEquipo")
-    fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: String): String {
-        val equipo = Equipo()
-        model["equipo"] = equipo
-        return VISTA_CREAEQUIPOS
+    fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: Int): String {
+        return if (equipoServicio.tengoEquipo(idLiga, principal)) {
+            var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            model["tengoEquipo"] = true
+            model["equipo"] = miEquipo
+            "redirect:/liga/$idLiga/miEquipo"
+        } else {
+            val equipo = Equipo()
+            model["equipo"] = equipo
+            VISTA_CREAEQUIPOS
+        }
     }
 
     @PostMapping("/liga/{idLiga}/nuevoEquipo")
@@ -88,6 +95,8 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
+            var jugadores = miEquipo.jugadores
+            model["jugadores"] = jugadores
         }
         return VISTA_DETALLES_MIEQUIPO
     }
@@ -101,13 +110,14 @@ class EquipoControlador(
         var liga = ligaServicio.findLigaByName(nombreLiga)!!
         model["liga"] = liga
         var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+        model["equipo"] = equipo
+        var jugadores = equipo.jugadores
+        model["jugadores"] = jugadores
         return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
-            model["equipo"] = equipo
             VISTA_DETALLES_OTROS_EQUIPOS
         } else {
-            model["equipo"] = equipo
             "redirect:/liga/" + liga.id + "/miEquipo"
         }
-
     }
+
 }

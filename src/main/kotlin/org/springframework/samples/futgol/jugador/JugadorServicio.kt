@@ -28,4 +28,10 @@ class JugadorServicio {
     fun buscaJugadorPorId(idJugador: Int): Jugador? {
         return jugadorRepositorio?.findById(idJugador)
     }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaTodosJugadores(): Collection<Jugador>? {
+        return jugadorRepositorio?.findAll()
+    }
 }

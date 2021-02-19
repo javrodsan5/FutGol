@@ -81,4 +81,6 @@ class JugadorControlador(val equipoServicio: EquipoServicio, val jugadorServicio
         return VISTA_DETALLES_JUGADOR
     }
 
+
+
 }

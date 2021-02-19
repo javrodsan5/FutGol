@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,7 +25,7 @@ class LigaServicio {
     private var ligaRepositorio: LigaRepositorio? = null
 
     @Autowired
-    private val usuarioServicio: UsuarioServicio? = null
+    private val jugadorServicio: JugadorServicio? = null
 
     @Autowired
     private val equipoServicio: EquipoServicio? = null
@@ -63,9 +65,38 @@ class LigaServicio {
         return equiposLiga
     }
 
+
     @Transactional(readOnly = true)
-    fun buscarUsuario(idLiga: Int): Liga? {
-        return ligaRepositorio?.buscarLigaPorId((idLiga))
+    fun buscarJugadoresEnLiga(idLiga: Int): Collection<Jugador>? {
+        var equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
+        var jugadoresLiga: MutableSet<Jugador> = HashSet()
+        if (equipos != null) {
+            for(e in equipos) {
+                for(j in e.jugadores) {
+                    if(j !in jugadoresLiga) {
+                        jugadoresLiga.add(j)
+                    }
+                }
+            }
+        }
+        return jugadoresLiga
+    }
+
+    @Transactional(readOnly = true)
+    fun buscarJugadoresSinEquipoEnLiga(idLiga: Int): MutableSet<Jugador> {
+        var todosJugadores = jugadorServicio?.buscaTodosJugadores()
+        var jugadoresConEquipo= buscarJugadoresEnLiga(idLiga)
+        var jugadoresSinEquipo: MutableSet<Jugador> = HashSet()
+        if (todosJugadores != null) {
+            for(tj in todosJugadores) {
+                if (tj != null) {
+                    if(!jugadoresConEquipo?.contains(tj)!!) {
+                        jugadoresSinEquipo.add(tj)
+                    }
+                }
+            }
+        }
+        return jugadoresSinEquipo
     }
 
     @Transactional(readOnly = true)

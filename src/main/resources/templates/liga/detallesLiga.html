@@ -32,6 +32,9 @@
 <a class="btn btn-default" th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
     <span class="glyphicon glyphicon-edit"></span> Clasificación</a>
 
+<a class="btn btn-default" th:href="@{/liga/{idLiga}/subastas (idLiga= ${liga.id})}">
+    <span class="glyphicon glyphicon-euro"></span> Subastas</a>
+
 <h2 th:if="${noTengoEquipo}">
     <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
         <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>

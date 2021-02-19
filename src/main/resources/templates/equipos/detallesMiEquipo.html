@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'detallesMiEquipo')}">
+
+<body>
+<h2 th:if="${tengoEquipo}">
+    <h1><b th:text="${equipo.name}"></b></h1>
+    <b th:each="jugador : ${jugadores}">
+        <a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+           th:text="${jugador.name}"/></a>
+    </b>
+</h2>
+<h2 th:if="${SinEquipo}">
+    <h1>Todavía no tienes un equipo creado en esta liga, pincha aquí para crearlo.</h1>
+    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
+        <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+</h2>
+</body>
+
+</html>

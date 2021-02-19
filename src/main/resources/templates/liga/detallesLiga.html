@@ -10,13 +10,38 @@
 <h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
 
 <br>
-<h3 th:object="${liga}">Usuarios: <b th:text="*{usuarios}"></b> </h3>
-<br>
-<h2 th:if="${soyAdmin}">
-<a class="btn btn-default"  th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar usuario</a>
+<table id="usuarios" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Equipo</th>
+        <th>Usuario</th>
+        <th>Puntos</th>
+    </tr>
+    </thead>
+    <tbody>
 
-<a class="btn btn-default"  th:href="@{/liga/editar/{idLiga}(idLiga= ${liga.id})}">
-    <span class="glyphicon glyphicon-edit"></span> Editar liga</a>
+    <tr th:each="equipo : ${equipos}">
+        <td><a th:href="@{/liga/{nombreLiga}/equipos/{idEquipo} (nombreLiga= ${liga.name}, idEquipo= ${equipo.id})}" th:text="${equipo.name}"/></a></td>
+        <td th:text="${equipo.usuario.username}"></td>
+        <td th:text="${equipo.puntos}"></td>
+    </tr>
+    </div>
+    </tbody>
+</table>
+<br>
+<a class="btn btn-default" th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
+    <span class="glyphicon glyphicon-edit"></span> Clasificación</a>
+
+<h2 th:if="${noTengoEquipo}">
+    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
+        <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+</h2>
+
+<h2 th:if="${soyAdmin}">
+    <a class="btn btn-default" th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar
+        usuario</a>
+
+    <a class="btn btn-default" th:href="@{/liga/editar/{idLiga}/nuevoEquipo(idLiga= ${liga.id})}">Editar liga</a>
 </h2>
 
 

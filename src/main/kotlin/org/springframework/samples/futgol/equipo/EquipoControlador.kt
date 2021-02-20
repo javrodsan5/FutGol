@@ -97,6 +97,7 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             var jugadores = miEquipo.jugadores
             model["jugadores"] = jugadores
         }

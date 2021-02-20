@@ -3,17 +3,16 @@ package org.springframework.samples.futgol.jugador
 import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.model.NamedEntity
 import java.util.HashSet
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Getter
 @Setter
 @Entity
 @Table(name = "jugadores")
 class Jugador: NamedEntity() {
-
 
     @Column(name = "pais")
     var pais = ""
@@ -46,4 +45,8 @@ class Jugador: NamedEntity() {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "equipo_jugadores", joinColumns = [JoinColumn(name = "equipo_id")], inverseJoinColumns = [JoinColumn(name = "jugador_id")])
     var equipos: MutableSet<Equipo> = HashSet()
+
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "jugador")
+    var estadisticas: MutableSet<EstadisticaJugador> = HashSet()
+
 }

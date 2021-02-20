@@ -38,6 +38,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscarEquipoPorNombre(nombre: String): Equipo? {
+        return equipoRepositorio?.buscarEquipoPorNombre(nombre)
+    }
+
+    @Transactional(readOnly = true)
     fun buscaEquiposPorId(idEquipo: Int): Equipo? {
         return equipoRepositorio?.buscaEquiposPorId(idEquipo)
     }

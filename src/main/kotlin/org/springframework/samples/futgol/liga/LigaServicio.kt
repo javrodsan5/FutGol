@@ -1,13 +1,13 @@
 package org.springframework.samples.futgol.liga
 
-import org.apache.tomcat.util.http.parser.HttpParser.isNumeric
 import org.jsoup.Jsoup
-import org.jsoup.select.Elements
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipo.EquipoServicio
-import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.partido.Partido
+import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -23,7 +23,7 @@ class LigaServicio {
     private var ligaRepositorio: LigaRepositorio? = null
 
     @Autowired
-    private val usuarioServicio: UsuarioServicio? = null
+    private val partidoServicio: PartidoServicio? = null
 
     @Autowired
     private val equipoServicio: EquipoServicio? = null
@@ -82,13 +82,13 @@ class LigaServicio {
         return res
     }
 
-    fun equiposYEstadisticasJugadores() {
-        val urlBase = "https://fbref.com"
-        val doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
-        val linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")
+    fun equiposPartidosEstadisticasJugadores() {
+        var urlBase = "https://fbref.com"
+        var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
+        var linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")
             .map { col -> col.attr("href") }.stream()
             .collect(Collectors.toList()) //todos los links de los equipos de la liga
-        val nombreEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a").text()
+        var nombreEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a").text()
         print(nombreEquipos)
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
@@ -101,8 +101,9 @@ class LigaServicio {
             linksJug = linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
 
         }
+        var listaPartidos: MutableSet<Partido> = HashSet()
         for(linkJugador in linksJug){
-            val doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
+            var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
             println("Nombre del jugador: " + doc3.select("h1[itemprop=name]").text())
             if(!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr").isEmpty()) {
                 var ultimaTemporada =
@@ -162,6 +163,19 @@ class LigaServicio {
                         var bloqueos= partidos[n].select("td[data-stat=blocks]").text()
 
 
+                        //INTRODUCIR TODOS LOS PARTIDOS SIN REPETIRSE (LOS EQUIPOS Y JUGADORES TIENEN QUE ESTAR CREADOS ANTES)
+                        if(listaPartidos.stream().noneMatch{ x-> x.equipoLocal?.name==equipoLocal && x.equipoVisitante?.name==equipoVisitante}){
+                            var p = Partido()
+                            p.equipoLocal= this.equipoServicio?.buscarEquipoPorNombre(equipoLocal)
+                            p.equipoVisitante= this.equipoServicio?.buscarEquipoPorNombre(equipoVisitante)
+                            p.fecha= fechaPartido
+                            p.jornada= jornada
+                            p.resultado= resultado
+
+                            listaPartidos.add(p)
+                            this.partidoServicio?.guardarPartido(p)
+                        }
+
                         println("Equipo local: " + equipoLocal)
                         println("Equipo visitante: " + equipoVisitante)
                         println("Fecha del partido: " + fechaPartido)
@@ -210,47 +224,6 @@ class LigaServicio {
         }
     }
 
-    fun precioEstadoYFoto() {// tambien coger estado del jugador: lesionado, en forma...
-        val urlBase = "https://www.transfermarkt.es"
-        val doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
-        val linksEquipos= doc.select("div.box.tab-print td a.vereinprofil_tooltip").map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
-        for (linkEquipo in linksEquipos){
-            val doc2 = Jsoup.connect("$urlBase"+linkEquipo).get()
-            val linkPlantilla= doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
-            val doc3 = Jsoup.connect("$urlBase"+linkPlantilla[0]).get()
-            val precioJugadores= doc3.select("div.responsive-table tbody tr td.rechts.hauptlink")
-            val jugadores= doc3.select("div#yw1.grid-view table.items tbody tr:first-of-type")
-            jugadores.removeAt(0)
-            for(n in 0 until jugadores.size){
-                var persona= jugadores[n].select("td div.di.nowrap:first-of-type span a")
-                var nombre = persona.attr("title")
-                var linkDetallePersona = persona.attr("href")
-                val doc4 = Jsoup.connect("$urlBase"+linkDetallePersona).get()
-                var foto= doc4.select("div.dataBild img").attr("src")
-                var estado= "En forma"
-                if(!jugadores[n].select("td span.verletzt-table").isEmpty()){
-                    estado= "Lesionado"
-                }else if(!jugadores[n].select("td span.ausfall-6-table").isEmpty()){
-                    estado= "Sancionado/No disponible"
-                }
-                var precio= precioJugadores[n].text()
-                var precioD =0.1
-                if(!precio.isEmpty()) {
-                    if(precio.contains("mill")){
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()
-                    }else{
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()/1000//pasar a millones
-                    }
-                }
-                println(nombre)
-                println(precioD)
-                println(estado)
-                println(foto)
-
-            }
-        }
-    }
-
     fun clasificacionLiga() {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
@@ -282,9 +255,6 @@ class LigaServicio {
         for (n in 0 until linksPartidos.size) {
             var doc2 = Jsoup.connect("$urlBase" + linksPartidos[n].attr("href")).get()
             var plantilla = doc2.select("div.matchLineupsValues")
-            var titularesConPuntuacion: List<Element> = ArrayList<Element>()
-            var suplentesConPuntuacionL: List<Element> = ArrayList<Element>()
-            var suplentesConPuntuacionV: List<Element> = ArrayList<Element>()
 
             if (!plantilla.isEmpty()) {
                 var titularesConPuntuacion =

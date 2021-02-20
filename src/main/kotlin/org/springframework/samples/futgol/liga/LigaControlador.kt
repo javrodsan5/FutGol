@@ -30,7 +30,8 @@ class LigaControlador(
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
-    private val VISTA_RANKING_USUARIOS= "usuarios/rankingUsuarios"
+    private val VISTA_SUBASTA_LIGA = "liga/subastas"
+    private val VISTA_RANKING_USUARIOS = "usuarios/rankingUsuarios"
     private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
@@ -124,7 +125,7 @@ class LigaControlador(
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
-        var soyAdmin = false
+        var soyAdmin: Boolean
         val usuario = usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null && liga != null) {
@@ -192,7 +193,15 @@ class LigaControlador(
                 model["mensaje"] = "El usuario ya pertenece a la liga"
             }
         }
-
         return VISTA_DETALLES_LIGA
+    }
+
+    @GetMapping("/liga/{idLiga}/subastas")
+    fun jugadoresLibresSubasta(@PathVariable idLiga: Int, model: Model): String {
+        var jugadoresSinEquipo =
+            ligaServicio.buscarJugadoresSinEquipoEnLiga(idLiga).shuffled().stream().limit(15)
+                .collect(Collectors.toList())
+        model["jugadoresSinEquipo"] = jugadoresSinEquipo
+        return VISTA_SUBASTA_LIGA
     }
 }

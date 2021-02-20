@@ -21,7 +21,8 @@
     <tbody>
 
     <tr th:each="equipo : ${equipos}">
-        <td><a th:href="@{/liga/{nombreLiga}/equipos/{idEquipo} (nombreLiga= ${liga.name}, idEquipo= ${equipo.id})}" th:text="${equipo.name}"/></a></td>
+        <td><a th:href="@{/liga/{nombreLiga}/equipos/{idEquipo} (nombreLiga= ${liga.name}, idEquipo= ${equipo.id})}"
+               th:text="${equipo.name}"/></a></td>
         <td th:text="${equipo.usuario.username}"></td>
         <td th:text="${equipo.puntos}"></td>
     </tr>
@@ -31,6 +32,12 @@
 <br>
 <a class="btn btn-default" th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
     <span class="glyphicon glyphicon-edit"></span> Clasificación</a>
+
+<a class="btn btn-default" th:href="@{/liga/{idLiga}/movimientos (idLiga= ${liga.id})}">
+    <span class="glyphicon glyphicon-signal"></span> Movimientos de la liga</a>
+
+<a class="btn btn-default" th:href="@{/liga/{idLiga}/subastas (idLiga= ${liga.id})}">
+    <span class="glyphicon glyphicon-euro"></span> Subastas</a>
 
 <h2 th:if="${noTengoEquipo}">
     <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
@@ -46,5 +53,4 @@
 
 
 </body>
-
 </html>

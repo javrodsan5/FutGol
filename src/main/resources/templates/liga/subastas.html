@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'subastas')}">
+
+<body>
+
+<h2>Mis ligas</h2>
+
+<table id="subastas" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jugador : ${jugadoresSinEquipo}">
+        <td><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+               th:text="${jugador.name}"/></a></td>
+        <td><h3><b th:text="${jugador.valor}"></b> mill. €</h3></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

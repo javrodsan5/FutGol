@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.equipo
 
 import org.jsoup.Jsoup
+import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
@@ -19,7 +20,8 @@ import javax.validation.Valid
 class EquipoControlador(
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
-    val usuarioServicio: UsuarioServicio
+    val usuarioServicio: UsuarioServicio,
+    val jugadorServicio: JugadorServicio
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
@@ -95,6 +97,7 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             var jugadores = miEquipo.jugadores
             model["jugadores"] = jugadores
         }
@@ -118,6 +121,47 @@ class EquipoControlador(
         } else {
             "redirect:/liga/" + liga.id + "/miEquipo"
         }
+    }
+
+    @GetMapping("liga/{idLiga}/miEquipo/once/add/{idJugador}")
+    fun meterOnceInicial(
+        @PathVariable idLiga: Int, @PathVariable idJugador: Int,
+        model: Model, principal: Principal
+    ): String {
+        var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        if (jugador != null) {
+            for (j in equipo.jugBanquillo) {
+                if (jugador.id == j.id) {
+                    equipo.jugBanquillo.removeIf { it.name == jugador.name }
+                    equipo.onceInicial.add(jugador)
+                    equipoServicio.saveEquipo(equipo)
+                    break
+                }
+            }
+        }
+        return "redirect:/liga/$idLiga/miEquipo"
+    }
+
+    @GetMapping("liga/{idLiga}/miEquipo/once/remove/{idJugador}")
+    fun retirarOnceInicial(
+        @PathVariable idLiga: Int, @PathVariable idJugador: Int,
+        model: Model, principal: Principal
+    ): String {
+
+        var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        if (jugador != null) {
+            for (j in equipo.onceInicial) {
+                if (jugador.id == j.id) {
+                    equipo.jugBanquillo.add(jugador)
+                    equipo.onceInicial.removeIf { it.name == jugador.name }
+                    equipoServicio.saveEquipo(equipo)
+                    break
+                }
+            }
+        }
+        return "redirect:/liga/$idLiga/miEquipo"
     }
 
 }

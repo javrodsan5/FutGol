@@ -2,11 +2,15 @@ package org.springframework.samples.futgol.equipo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.jugador.JugadorServicio
+import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
 import java.security.Principal
+import java.util.HashSet
 
 @Service
 class EquipoServicio {
@@ -87,4 +91,5 @@ class EquipoServicio {
         }
         return res
     }
+
 }

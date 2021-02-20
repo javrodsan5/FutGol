@@ -76,5 +76,10 @@ class JugadorServicio {
                 saveJugador(jugador)
             }
         }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaTodosJugadores(): Collection<Jugador>? {
+        return jugadorRepositorio?.findAll()
     }
 }

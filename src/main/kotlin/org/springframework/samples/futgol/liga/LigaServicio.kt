@@ -28,7 +28,7 @@ class LigaServicio {
 
     @Autowired
     private val partidoServicio: PartidoServicio? = null
-  
+
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
 
@@ -76,9 +76,9 @@ class LigaServicio {
         var equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
         var jugadoresLiga: MutableSet<Jugador> = HashSet()
         if (equipos != null) {
-            for(e in equipos) {
-                for(j in e.jugadores) {
-                    if(j !in jugadoresLiga) {
+            for (e in equipos) {
+                for (j in e.jugadores) {
+                    if (j !in jugadoresLiga) {
                         jugadoresLiga.add(j)
                     }
                 }
@@ -90,12 +90,12 @@ class LigaServicio {
     @Transactional(readOnly = true)
     fun buscarJugadoresSinEquipoEnLiga(idLiga: Int): MutableSet<Jugador> {
         var todosJugadores = jugadorServicio?.buscaTodosJugadores()
-        var jugadoresConEquipo= buscarJugadoresEnLiga(idLiga)
+        var jugadoresConEquipo = buscarJugadoresEnLiga(idLiga)
         var jugadoresSinEquipo: MutableSet<Jugador> = HashSet()
         if (todosJugadores != null) {
-            for(tj in todosJugadores) {
+            for (tj in todosJugadores) {
                 if (tj != null) {
-                    if(!jugadoresConEquipo?.contains(tj)!!) {
+                    if (!jugadoresConEquipo?.contains(tj)!!) {
                         jugadoresSinEquipo.add(tj)
                     }
                 }
@@ -138,10 +138,12 @@ class LigaServicio {
 
         }
         var listaPartidos: MutableSet<Partido> = HashSet()
-        for(linkJugador in linksJug){
+        for (linkJugador in linksJug) {
             var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
             println("Nombre del jugador: " + doc3.select("h1[itemprop=name]").text())
-            if(!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr").isEmpty()) {
+            if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")
+                    .isEmpty()
+            ) {
                 var ultimaTemporada =
                     doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr").last()
                 var nombreUltimaTemporada = (ultimaTemporada.select("th").first().text()) //tiene que ser 2020-2021
@@ -149,7 +151,7 @@ class LigaServicio {
                 var partidosUltimaTemporada = ultimaTemporada.select("td").last().select("a").attr("href")
                 if (nombreUltimaTemporada.equals("2020-2021") && ligaUltimaTemporada.contains("La Liga")) {
                     var doc4 = Jsoup.connect("$urlBase" + partidosUltimaTemporada).get()
-                    var doc5= doc4
+                    var doc5 = doc4
                     var filtro2 = ""
 
                     if (doc4.select("div.filter").size >= 2) {
@@ -180,33 +182,35 @@ class LigaServicio {
                         .filter { x -> x.select("tr[class=thead]").isEmpty() }.collect(Collectors.toList())
 
                     for (n in 0 until partidos.size) {
-                        var equipoLocal= partidos[n].select("td[data-stat=squad]").text()
+                        var equipoLocal = partidos[n].select("td[data-stat=squad]").text()
                         var equipoVisitante = partidos[n].select("td[data-stat=opponent]").text()
-                        var fechaPartido= partidos[n].select("th[data-stat=date] a").text()
+                        var fechaPartido = partidos[n].select("th[data-stat=date] a").text()
                         var jornada = partidos[n].select("td[data-stat=round]").text()[7].toString().toInt()
-                        var resultado= partidos[n].select("td[data-stat=result]").text().substring(2)
-                        var fueTitular= partidos[n].select("td[data-stat=game_started]").text().replace("*", "")
-                        var minutosJ= partidos[n].select("td[data-stat=minutes]").text()
-                        var goles= partidos[n].select("td[data-stat=goals]").text().toInt()
-                        var asistencias= partidos[n].select("td[data-stat=assists]").text().toInt()
+                        var resultado = partidos[n].select("td[data-stat=result]").text().substring(2)
+                        var fueTitular = partidos[n].select("td[data-stat=game_started]").text().replace("*", "")
+                        var minutosJ = partidos[n].select("td[data-stat=minutes]").text()
+                        var goles = partidos[n].select("td[data-stat=goals]").text().toInt()
+                        var asistencias = partidos[n].select("td[data-stat=assists]").text().toInt()
                         var penaltisMar = partidos[n].select("td[data-stat=pens_made]").text().toInt()
-                        var penaltisInt= partidos[n].select("td[data-stat=pens_att]").text().toInt()
-                        var disparosT= partidos[n].select("td[data-stat=shots_total]").text().toInt()
-                        var disparosI= partidos[n].select("td[data-stat=shots_on_target]").text().toInt()
-                        var tarjetasA= partidos[n].select("td[data-stat=cards_yellow]").text().toInt()
-                        var tarjetasR= partidos[n].select("td[data-stat=cards_red]").text().toInt()
-                        var robos= partidos[n].select("td[data-stat=interceptions]").text().toInt()
-                        var bloqueos= partidos[n].select("td[data-stat=blocks]").text()
+                        var penaltisInt = partidos[n].select("td[data-stat=pens_att]").text().toInt()
+                        var disparosT = partidos[n].select("td[data-stat=shots_total]").text().toInt()
+                        var disparosI = partidos[n].select("td[data-stat=shots_on_target]").text().toInt()
+                        var tarjetasA = partidos[n].select("td[data-stat=cards_yellow]").text().toInt()
+                        var tarjetasR = partidos[n].select("td[data-stat=cards_red]").text().toInt()
+                        var robos = partidos[n].select("td[data-stat=interceptions]").text().toInt()
+                        var bloqueos = partidos[n].select("td[data-stat=blocks]").text()
 
 
                         //INTRODUCIR TODOS LOS PARTIDOS SIN REPETIRSE (LOS EQUIPOS Y JUGADORES TIENEN QUE ESTAR CREADOS ANTES)
-                        if(listaPartidos.stream().noneMatch{ x-> x.equipoLocal?.name==equipoLocal && x.equipoVisitante?.name==equipoVisitante}){
+                        if (listaPartidos.stream()
+                                .noneMatch { x -> x.equipoLocal?.name == equipoLocal && x.equipoVisitante?.name == equipoVisitante }
+                        ) {
                             var p = Partido()
-                            p.equipoLocal= this.equipoServicio?.buscarEquipoPorNombre(equipoLocal)
-                            p.equipoVisitante= this.equipoServicio?.buscarEquipoPorNombre(equipoVisitante)
-                            p.fecha= fechaPartido
-                            p.jornada= jornada
-                            p.resultado= resultado
+                            p.equipoLocal = this.equipoServicio?.buscarEquipoPorNombre(equipoLocal)
+                            p.equipoVisitante = this.equipoServicio?.buscarEquipoPorNombre(equipoVisitante)
+                            p.fecha = fechaPartido
+                            p.jornada = jornada
+                            p.resultado = resultado
 
                             listaPartidos.add(p)
                             this.partidoServicio?.guardarPartido(p)
@@ -219,7 +223,7 @@ class LigaServicio {
                         println("Resultado: " + resultado)
                         println("------- Mis estadísticas de ese partido -------")
                         println("¿Fue titular? " + fueTitular)
-                        if(minutosJ!="") {
+                        if (minutosJ != "") {
                             println("Minutos jugados: " + minutosJ.toInt())
                         }
                         println("Goles: " + goles)
@@ -231,7 +235,7 @@ class LigaServicio {
                         println("Tarjetas amarillas: " + tarjetasA)
                         println("Tarjetas rojas: " + tarjetasR)
                         println("Robos: " + robos)
-                        if(bloqueos!=""){
+                        if (bloqueos != "") {
                             println(bloqueos.toInt())
                         }
                         if (!filtro2.isEmpty()) {
@@ -240,21 +244,21 @@ class LigaServicio {
                                 .stream().filter { x -> x.select("tr[class=unused_sub hidden]").isEmpty() }
                                 .filter { x -> x.select("tr[class=spacer partial_table]").isEmpty() }
                                 .filter { x -> x.select("tr[class=thead]").isEmpty() }.collect(Collectors.toList())
-                            var salvadas= partidos[n].select("td[data-stat=saves]").text().toInt()
-                            var disparosRecibidos= partidos[n].select("td[data-stat=shots_on_target_against]").text().toInt()
-                            var golesRecibidos= partidos[n].select("td[data-stat=goals_against_gk]").text().toInt()
+                            var salvadas = partidos[n].select("td[data-stat=saves]").text().toInt()
+                            var disparosRecibidos =
+                                partidos[n].select("td[data-stat=shots_on_target_against]").text().toInt()
+                            var golesRecibidos = partidos[n].select("td[data-stat=goals_against_gk]").text().toInt()
                             println("Disparos a puerta recibidos: " + disparosRecibidos)
                             println("Salvadas: " + salvadas)
                             println("Goles recibidos: " + golesRecibidos)
                         }
                         println("---------------------------------------------")
                     }
-                }
-                else{
+                } else {
                     println("Este jugador no tiene estadísticas de LaLiga.")
 
                 }
-            }else{
+            } else {
                 println("Este jugador no tiene estadísticas de esta temporada.")
             }
         }
@@ -264,8 +268,8 @@ class LigaServicio {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
         var datosClasificacionEq = doc.select("#results107311_overall:first-of-type tbody tr")
-        for(datosEq in datosClasificacionEq){
-            var posicion= datosEq.select("th").text().toInt()
+        for (datosEq in datosClasificacionEq) {
+            var posicion = datosEq.select("th").text().toInt()
             var equipo = datosEq.select("td[data-stat=squad]").text()
             var partidosJugados = datosEq.select("td[data-stat=games]").text().toInt()
             var partidosGanados = datosEq.select("td[data-stat=wins]").text().toInt()
@@ -276,13 +280,15 @@ class LigaServicio {
             var diferenciaGoles = datosEq.select("td[data-stat=goal_diff]").text().toInt()
             var puntos = datosEq.select("td[data-stat=points]").text().toInt()
 
-            println("#" + posicion + " " + equipo + " " + partidosJugados + " " + puntos + " " + partidosGanados + " " + partidosEmpatados + " "
-                    + partidosPerdidos + " " + golesAFavor + " " + golesEnContra + " " + diferenciaGoles)
+            println(
+                "#" + posicion + " " + equipo + " " + partidosJugados + " " + puntos + " " + partidosGanados + " " + partidosEmpatados + " "
+                        + partidosPerdidos + " " + golesAFavor + " " + golesEnContra + " " + diferenciaGoles
+            )
 
         }
     }
-    
-        fun puntuacionesPorPartido() {
+
+    fun puntuacionesPorPartido() {
         var urlBase = "https://es.fcstats.com/"
         var doc = Jsoup.connect("$urlBase/partidos,primera-division-espana,19,1.php").get()
         var linksPartidos =
@@ -297,14 +303,17 @@ class LigaServicio {
                     plantilla[1].select("div").filter { x -> !x.select("span.lineupRating").isEmpty() }
                 if (!titularesConPuntuacion.isEmpty()) {
                     var titularesLocal = titularesConPuntuacion[1].children()
-                    var nombresTL = titularesLocal.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
+                    var nombresTL =
+                        titularesLocal.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
                     var puntuacionesTL =
                         titularesLocal.stream().map { x -> x.select("span.lineupRating").text().toDouble() }
                             .collect(Collectors.toList())
-                    var titularesVis = titularesConPuntuacion[13].children().filter{x-> !x.select("span.lineupRating").isEmpty()}
+                    var titularesVis =
+                        titularesConPuntuacion[13].children().filter { x -> !x.select("span.lineupRating").isEmpty() }
                     var nombresTV = titularesVis.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
-                    var puntuacionesTV = titularesVis.stream().map { x -> x.select("span.lineupRating").text().toDouble() }
-                        .collect(Collectors.toList())
+                    var puntuacionesTV =
+                        titularesVis.stream().map { x -> x.select("span.lineupRating").text().toDouble() }
+                            .collect(Collectors.toList())
 
                     println("Titulares local: " + nombresTL + " " + nombresTL.size)
                     println("Puntuaciones titulares local: " + puntuacionesTL)
@@ -332,9 +341,11 @@ class LigaServicio {
                     println("No hay puntuaciones de suplentes locales")
                 }
                 if (!suplentesConPuntuacionV.isEmpty()) {
-                    var nombresSV = suplentesConPuntuacionV.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
-                    var puntuacionesSV = suplentesConPuntuacionV.stream().map { x -> x.select("span.lineupRating").text().toDouble() }
-                        .collect(Collectors.toList())
+                    var nombresSV =
+                        suplentesConPuntuacionV.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
+                    var puntuacionesSV =
+                        suplentesConPuntuacionV.stream().map { x -> x.select("span.lineupRating").text().toDouble() }
+                            .collect(Collectors.toList())
                     println("Suplentes visitante: " + nombresSV + " " + nombresSV.size)
                     println("Puntuaciones suplentes visitante: " + puntuacionesSV)
                 } else {
@@ -345,5 +356,5 @@ class LigaServicio {
         }
     }
 
-
 }
+

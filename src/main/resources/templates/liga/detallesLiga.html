@@ -33,6 +33,9 @@
 <a class="btn btn-default" th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
     <span class="glyphicon glyphicon-edit"></span> Clasificación</a>
 
+<a class="btn btn-default" th:href="@{/liga/{idLiga}/movimientos (idLiga= ${liga.id})}">
+    <span class="glyphicon glyphicon-signal"></span> Movimientos de la liga</a>
+
 <a class="btn btn-default" th:href="@{/liga/{idLiga}/subastas (idLiga= ${liga.id})}">
     <span class="glyphicon glyphicon-euro"></span> Subastas</a>
 

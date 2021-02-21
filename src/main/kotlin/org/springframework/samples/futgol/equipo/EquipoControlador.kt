@@ -116,6 +116,9 @@ class EquipoControlador(
         model["equipo"] = equipo
         var jugadores = equipo.jugadores
         model["jugadores"] = jugadores
+        if (jugadores.size > 5) {
+            model["top5Jugadores"] = liga.id?.let { equipoServicio.topJugadoresEquipo(equipo.name, it) }!!
+        }
         return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
             VISTA_DETALLES_OTROS_EQUIPOS
         } else {

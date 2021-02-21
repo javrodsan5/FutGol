@@ -20,6 +20,9 @@ class Jugador: NamedEntity() {
     @Column(name = "valor")
     var valor = 0.0
 
+    @Column(name = "puntos")
+    var puntos = 0
+
     @Column(name = "foto")
     var foto = ""
 

@@ -9,6 +9,16 @@
         <a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
            th:text="${jugador.name}"/></a>
     </b>
+
+    <br/>
+    <br/>
+
+    <b>Top 5 jugadores -> </b>
+    <b th:each="jugador : ${top5Jugadores}">
+        <a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+           th:text="${jugador.name}"/></a>
+        <b th:text="${jugador.puntos}"></b>
+    </b>
 </body>
 
 </html>

@@ -2,6 +2,8 @@ package org.springframework.samples.futgol.equipo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,6 +22,9 @@ class EquipoServicio {
 
     @Autowired
     private var usuarioServicio: UsuarioServicio? = null
+
+    @Autowired
+    private var ligaServicio: LigaServicio? = null
 
 
     @Transactional()
@@ -105,5 +110,24 @@ class EquipoServicio {
             }
         }
         return valorEquipo
+    }
+
+    @Transactional(readOnly = true)
+    fun buscaEquiposEnListaEquipos(equipos: MutableSet<Equipo>, nombreEquipo: String?): Equipo {
+        var equipo = Equipo()
+        for (e in equipos) {
+            if(e.name == nombreEquipo) {
+                return e
+            }
+        }
+        return equipo
+    }
+
+    @Transactional(readOnly = true)
+    fun topJugadoresEquipo(nombreEquipo: String?, idLiga: Int): List<Jugador>? {
+        var equipos = ligaServicio?.buscarLigaPorId(idLiga)?.equipos
+        var equipo = equipos?.let { buscaEquiposEnListaEquipos(it, nombreEquipo) }
+        return equipo?.jugadores?.sortedBy { j -> -j.puntos }?.subList(0, 4)
+
     }
 }

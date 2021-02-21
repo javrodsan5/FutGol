@@ -23,7 +23,7 @@
     <tr th:each="equipo : ${equipos}">
         <td><a th:href="@{/liga/{nombreLiga}/equipos/{idEquipo} (nombreLiga= ${liga.name}, idEquipo= ${equipo.id})}"
                th:text="${equipo.name}"/></a></td>
-        <td th:text="${equipo.usuario.username}"></td>
+        <td th:text="${equipo.usuario.user.username}"></td>
         <td th:text="${equipo.puntos}"></td>
     </tr>
     </div>
@@ -48,7 +48,7 @@
     <a class="btn btn-default" th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar
         usuario</a>
 
-    <a class="btn btn-default" th:href="@{/liga/editar/{idLiga}/nuevoEquipo(idLiga= ${liga.id})}">Editar liga</a>
+    <a class="btn btn-default" th:href="@{/liga/editar/{idLiga}/(idLiga= ${liga.id})}">Editar liga</a>
 </h2>
 
 

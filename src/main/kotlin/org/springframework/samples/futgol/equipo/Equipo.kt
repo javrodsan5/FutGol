@@ -6,6 +6,7 @@ import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.model.NamedEntity
+import org.springframework.samples.futgol.usuario.Usuario
 import java.util.*
 import javax.persistence.*
 
@@ -27,7 +28,7 @@ class Equipo() : NamedEntity() {
 
     @ManyToOne()
     @JoinColumn(name = "usuario", referencedColumnName = "username")
-    var usuario: User? = null
+    var usuario: Usuario? = null
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

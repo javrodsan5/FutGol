@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.movimientos
 
+import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -16,8 +17,8 @@ class MovimientoControlador(
     private val VISTA_MOVIMIENTOS_USUARIO = "movimiento/movimientosUsuario"
 
 
-    fun buscaVendedores(movimientos: Collection<Movimiento>?): MutableList<org.springframework.samples.futgol.login.User> {
-        var vendedores: MutableList<org.springframework.samples.futgol.login.User> = ArrayList()
+    fun buscaVendedores(movimientos: Collection<Movimiento>?): MutableList<Usuario> {
+        var vendedores: MutableList<Usuario> = ArrayList()
         if (movimientos != null) {
             for (m in movimientos) {
                 var vendedor = m.jugador?.name?.let { movimientoServicio.buscaVendedor(it) }

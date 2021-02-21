@@ -16,7 +16,7 @@
     </thead>
     <tbody>
     <tr th:each="equipo : ${equipos}">
-        <td th:text="${equipo.usuario.username}"></td>
+        <td th:text="${equipo.usuario.user.username}"></td>
         <td th:text="${equipo.puntos}"></td>
         <td th:each="valor : ${valores}" th:text="${valor}"></td>
     </tr>

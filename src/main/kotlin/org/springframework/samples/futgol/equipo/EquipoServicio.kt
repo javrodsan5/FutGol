@@ -56,7 +56,7 @@ class EquipoServicio {
         if (equiposLiga != null) {
             for (e in equiposLiga) {
                 if (usuario != null) {
-                    if (e.usuario!!.username == usuario.user!!.username) {
+                    if (e.usuario!!.user?.username  == usuario.user!!.username) {
                         miEquipo = e
                     }
                 }

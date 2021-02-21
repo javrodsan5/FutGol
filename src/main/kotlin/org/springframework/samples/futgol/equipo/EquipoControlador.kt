@@ -78,7 +78,7 @@ class EquipoControlador(
             VISTA_CREAEQUIPOS
         } else {
             val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-            equipo.usuario = usuario?.user
+            equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga
             this.equipoServicio.saveEquipo(equipo)

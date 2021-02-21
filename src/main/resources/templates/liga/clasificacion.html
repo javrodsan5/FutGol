@@ -19,7 +19,7 @@
     <td th:each="posicion : ${posiciones}" th:text="${posicion}"></td>
     <td th:each="valor : ${valores}" th:text="${valor}"></td>
     <tr th:each="equipo : ${equiposLiga}">
-        <td th:text="${equipo.usuario.username}"></td>
+        <td th:text="${equipo.usuario.user.username}"></td>
         <td th:text="${equipo.puntos}"></td>
     </tr>
     </div>

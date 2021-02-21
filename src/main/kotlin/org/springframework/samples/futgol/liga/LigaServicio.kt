@@ -57,21 +57,6 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscaEquiposLiga(idLiga: Int?): Collection<Equipo> {
-        var todosEquipos = equipoServicio?.buscaTodosEquipos()
-        var equiposLiga = HashSet<Equipo>()
-        if (todosEquipos != null) {
-            for (e in todosEquipos) {
-                if (e.liga?.id == idLiga) {
-                    equiposLiga.add(e)
-                }
-            }
-        }
-        return equiposLiga
-    }
-
-
-    @Transactional(readOnly = true)
     fun buscarJugadoresEnLiga(idLiga: Int): Collection<Jugador>? {
         var equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
         var jugadoresLiga: MutableSet<Jugador> = HashSet()

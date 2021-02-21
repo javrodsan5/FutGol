@@ -126,7 +126,7 @@ class LigaControlador(
         if (ligas != null && liga != null) {
             if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
                 model["liga"] = liga
-                var equiposLiga = ligaServicio.buscaEquiposLiga(liga.id)
+                var equiposLiga = liga.equipos
                 model["equipos"] = equiposLiga
             } else {
                 return VISTA_ERROR_403
@@ -149,7 +149,7 @@ class LigaControlador(
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
         var liga = ligaServicio.findLigaByName(nombreLiga)
-        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> -x.puntos }
+        var equiposLiga = liga?.equipos?.sortedBy { x -> -x.puntos }
 
         if (equiposLiga != null) {
             var posiciones = equiposLiga.indices

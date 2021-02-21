@@ -43,7 +43,7 @@ class EquipoControlador(
             var equipo = Equipo()
             var nombre = nombres[n].select("td:first-of-type a").text()
             equipo.name = nombre
-            equipoServicio.saveEquipo(equipo)
+            equipoServicio.guardarEquipo(equipo)
         }
         return VISTA_WSEQUIPOS
     }
@@ -69,7 +69,7 @@ class EquipoControlador(
     ): String {
         var liga = this.ligaServicio.buscarLigaPorId(idLiga)
         if (liga != null) {
-            if (liga.id?.let { equipoServicio.checkEquipoEnLigaExists(equipo.name, it) }!!) {
+            if (liga.id?.let { equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) }!!) {
                 result.addError(FieldError("equipo", "name", "Ya existe una equipo con ese nombre en esta liga"))
             }
         }
@@ -81,7 +81,7 @@ class EquipoControlador(
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga
-            this.equipoServicio.saveEquipo(equipo)
+            this.equipoServicio.guardarEquipo(equipo)
             "redirect:/liga/$idLiga/miEquipo"
         }
     }
@@ -110,7 +110,7 @@ class EquipoControlador(
         principal: Principal,
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
-        var liga = ligaServicio.findLigaByName(nombreLiga)!!
+        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
         model["liga"] = liga
         var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
         model["equipo"] = equipo
@@ -138,7 +138,7 @@ class EquipoControlador(
                 if (jugador.id == j.id) {
                     equipo.jugBanquillo.removeIf { it.name == jugador.name }
                     equipo.onceInicial.add(jugador)
-                    equipoServicio.saveEquipo(equipo)
+                    equipoServicio.guardarEquipo(equipo)
                     break
                 }
             }
@@ -159,7 +159,7 @@ class EquipoControlador(
                 if (jugador.id == j.id) {
                     equipo.jugBanquillo.add(jugador)
                     equipo.onceInicial.removeIf { it.name == jugador.name }
-                    equipoServicio.saveEquipo(equipo)
+                    equipoServicio.guardarEquipo(equipo)
                     break
                 }
             }

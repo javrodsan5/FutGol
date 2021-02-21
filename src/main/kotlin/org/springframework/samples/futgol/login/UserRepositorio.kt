@@ -4,9 +4,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
 import org.springframework.samples.futgol.usuario.Usuario
 
-
-
-
 interface UserRepositorio  : Repository<User, Int> {
 
     fun save(user: User)

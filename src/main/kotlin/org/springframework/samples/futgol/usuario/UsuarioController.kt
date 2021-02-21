@@ -1,6 +1,5 @@
 package org.springframework.samples.futgol.usuario
 
-
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
@@ -20,7 +19,6 @@ import java.security.Principal
 import java.util.regex.Pattern
 import javax.validation.Valid
 
-
 @Controller
 class UsuarioController(
     val usuarioServicio: UsuarioServicio,
@@ -36,7 +34,7 @@ class UsuarioController(
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
     private val VISTA_BUSCAR_USUARIO = "usuarios/buscarUsuario"
 
-    val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
+    val PATRON_EMAIL: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
@@ -45,7 +43,7 @@ class UsuarioController(
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                 ")+"
     )
-    val nombre_pattern: Pattern = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]")
+    val PATRON_NOMBRE: Pattern = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]")
 
     @InitBinder("usuario")
     fun initUsuarioBinder(dataBinder: WebDataBinder) {
@@ -75,13 +73,13 @@ class UsuarioController(
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
     fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (usuario != null && liga != null) {
             usuario.ligas.add(liga)
             usuario.invitaciones.removeIf { it.name == liga.name }
             liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
-            this.usuarioServicio.saveUsuario(usuario)
-            this.ligaServicio.saveLiga(liga)
+            this.usuarioServicio.guardarUsuario(usuario)
+            this.ligaServicio.guardarLiga(liga)
 
         }
         return "redirect:/micuenta/invitaciones"
@@ -90,12 +88,12 @@ class UsuarioController(
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
     fun rechazarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (usuario != null && liga != null) {
             usuario.invitaciones.removeIf { it.name == liga.name }
             liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
-            this.usuarioServicio.saveUsuario(usuario)
-            this.ligaServicio.saveLiga(liga)
+            this.usuarioServicio.guardarUsuario(usuario)
+            this.ligaServicio.guardarLiga(liga)
 
         }
         return "redirect:/micuenta/invitaciones"
@@ -112,16 +110,16 @@ class UsuarioController(
     fun procesoCreacion(@Valid usuario: Usuario, result: BindingResult, model: Model): String {
 
         when {
-            usuarioServicio.checkUsuarioExists(usuario.user?.username) ->
+            usuarioServicio.comprobarSiNombreUsuarioExiste(usuario.user?.username) ->
                 result.addError(FieldError("usuario", "user.username", "El nombre de usuario ya está en uso"))
-            usuarioServicio.checkEmailExists(usuario.email) ->
+            usuarioServicio.comprobarSiEmailExiste(usuario.email) ->
                 result.addError(FieldError("usuario", "email", "El email ya está en uso"))
         }
         return if (result.hasErrors()) {
             model["usuario"] = usuario
             VISTA_REGISTRO_USUARIO
         } else {
-            this.usuarioServicio.saveUsuario(usuario)
+            this.usuarioServicio.guardarUsuario(usuario)
             usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
@@ -141,15 +139,15 @@ class UsuarioController(
         var usuarioComparador = usuarioServicio.usuarioLogueado(principal)
         if (usuarioComparador != null) {
             when {
-                usuario.email != usuarioComparador.email && usuarioServicio.checkEmailExists(usuario.email) ->
+                usuario.email != usuarioComparador.email && usuarioServicio.comprobarSiEmailExiste(usuario.email) ->
                     result.addError(FieldError("usuario", "email", "El email ya está en uso"))
                 !StringUtils.hasLength(usuario.email) ->
                     result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
-                !EMAIL_ADDRESS_PATTERN.matcher(usuario.email).matches() ->
+                !PATRON_EMAIL.matcher(usuario.email).matches() ->
                     result.addError(FieldError("usuario", "email", "Tu email debe tener un formato correcto"))
                 !StringUtils.hasLength(usuario.name) ->
                     result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
-                !nombre_pattern.matcher(usuario.name).matches() ->
+                !PATRON_NOMBRE.matcher(usuario.name).matches() ->
                     result.addError(FieldError("usuario", "name", "Tu nombre solo puede tener letras"))
 
             }
@@ -166,7 +164,7 @@ class UsuarioController(
                 usuario.user?.username = principal.name
 
             }
-            this.usuarioServicio.saveUsuario(usuario)
+            this.usuarioServicio.guardarUsuario(usuario)
             "redirect:/micuenta"
         }
     }
@@ -178,11 +176,11 @@ class UsuarioController(
         @PathVariable("nombreUsuario") nombreUsuario: String
     ): String {
         var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
-        var liga = this.ligaServicio.findLigaByName(nombreLiga)
+        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (usuario != null && liga != null) {
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
-            this.usuarioServicio.saveUsuario(usuario)
+            this.usuarioServicio.guardarUsuario(usuario)
         }
         return "redirect:/misligas"
     }
@@ -236,7 +234,7 @@ class UsuarioController(
 
     @GetMapping("/usuarios")
     fun procesoBusquedaUsuarioLiga(usuario: Usuario, result: BindingResult, model: Model): String {
-        var existeUsuario = usuarioServicio.checkUsuarioExists(usuario?.user?.username)
+        var existeUsuario = usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username)
         return if (existeUsuario) {
             "redirect:/usuarios/" + usuario?.user?.username
 

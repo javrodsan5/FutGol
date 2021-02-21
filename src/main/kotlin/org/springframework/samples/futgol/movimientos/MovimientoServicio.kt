@@ -1,6 +1,5 @@
 package org.springframework.samples.futgol.movimientos
 
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.login.User

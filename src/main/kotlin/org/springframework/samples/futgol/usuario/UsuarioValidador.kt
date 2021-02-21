@@ -7,9 +7,9 @@ import java.util.regex.Pattern
 
 class UsuarioValidador : Validator {
 
-    private val REQUIRED = "Campo requerido."
+    private val REQUERIDO = "Campo requerido."
 
-    private val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
+    private val PATRON_EMAIL: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
@@ -63,7 +63,7 @@ class UsuarioValidador : Validator {
 
 
         if (!StringUtils.hasLength(name)) {
-            errors.rejectValue("name", REQUIRED, REQUIRED)
+            errors.rejectValue("name", REQUERIDO, REQUERIDO)
         }
 
         if (name?.let { soloLetrasNombre(it) } == false) {
@@ -75,8 +75,8 @@ class UsuarioValidador : Validator {
         }
 
         when {
-            !StringUtils.hasLength(email) -> errors.rejectValue("email", REQUIRED, REQUIRED)
-            !EMAIL_ADDRESS_PATTERN.matcher(email).matches() -> errors.rejectValue(
+            !StringUtils.hasLength(email) -> errors.rejectValue("email", REQUERIDO, REQUERIDO)
+            !PATRON_EMAIL.matcher(email).matches() -> errors.rejectValue(
                 "email",
                 "Tu email debe tener un formato correcto",
                 "Tu email debe tener un formato correcto"
@@ -84,7 +84,7 @@ class UsuarioValidador : Validator {
 
         }
         if (!StringUtils.hasLength(username)) {
-            errors.rejectValue("user.username", REQUIRED, REQUIRED)
+            errors.rejectValue("user.username", REQUERIDO, REQUERIDO)
         }
 
         if (username?.let { soloLetrasNumeros(it) } == false) {
@@ -97,7 +97,7 @@ class UsuarioValidador : Validator {
 
         if (password != null) {
             when {
-                !StringUtils.hasLength(password) -> errors.rejectValue("user.password", REQUIRED, REQUIRED)
+                !StringUtils.hasLength(password) -> errors.rejectValue("user.password", REQUERIDO, REQUERIDO)
                 password.length < 5 -> errors.rejectValue(
                     "user.password",
                     "La contraseña debe tener más de 5 caracteres",

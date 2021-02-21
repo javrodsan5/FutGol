@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
 import java.util.stream.Collectors
 
-
 @Service
 class UsuarioServicio {
 
@@ -30,7 +29,7 @@ class UsuarioServicio {
 
     @Transactional
     @Throws(DataAccessException::class)
-    fun saveUsuario(usuario: Usuario) {
+    fun guardarUsuario(usuario: Usuario) {
         usuarioRepository?.save(usuario)
         usuario.user?.let {
             userService?.saveUser(it)
@@ -38,7 +37,7 @@ class UsuarioServicio {
     }
 
     @Transactional(readOnly = true)
-    fun checkUsuarioExists(nombreUsuario: String?): Boolean {
+    fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean {
         var res = false
         var usuarios = usuarioRepository?.findAll()
         if (usuarios != null) {
@@ -52,7 +51,7 @@ class UsuarioServicio {
     }
 
     @Transactional(readOnly = true)
-    fun checkEmailExists(email: String?): Boolean {
+    fun comprobarSiEmailExiste(email: String?): Boolean {
         var res = false
         var usuarios = usuarioRepository?.findAll()
         if (usuarios != null) {
@@ -65,10 +64,9 @@ class UsuarioServicio {
         return res
     }
 
-
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun findUsuarioById(idUsuario: Int): Usuario? {
+    fun buscarUsuarioPorId(idUsuario: Int): Usuario? {
         return usuarioRepository?.findById(idUsuario)
     }
 
@@ -86,15 +84,8 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarUsuarioPorId(id: Int): Usuario? {
-        return usuarioRepository?.buscarUsuarioPorId(id)
-    }
-
-    @Transactional(readOnly = true)
-    @Throws(DataAccessException::class)
     fun buscarTodosUsuarios(): MutableList<String?>? {
         return usuarioRepository?.findAll()?.stream()?.map { x-> x.user?.username }?.collect(Collectors.toList())
     }
-
 
 }

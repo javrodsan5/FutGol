@@ -57,9 +57,9 @@ class LigaControlador(
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
+    fun procesoCreacion(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
 
-        if (ligaServicio.checkLigaExists(liga.name)) {
+        if (ligaServicio.comprobarSiExisteLiga(liga.name)) {
             result.addError(FieldError("liga", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
@@ -71,7 +71,7 @@ class LigaControlador(
             usuario?.ligas?.add(liga)
             if (usuario != null) {
                 liga.usuarios.add(usuario)
-                this.ligaServicio.saveLiga(liga)
+                this.ligaServicio.guardarLiga(liga)
 
             }
             "redirect:/liga/" + liga.name
@@ -79,7 +79,7 @@ class LigaControlador(
     }
 
     @GetMapping("/liga/editar/{idLiga}")
-    fun initUpdateForm(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
+    fun iniciarActualizacion(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
         var adminLiga = liga?.admin?.user?.username
         val usuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
@@ -96,7 +96,7 @@ class LigaControlador(
     ): String {
         var ligaComparador = ligaServicio.buscarLigaPorId(idLiga)
         if (ligaComparador != null) {
-            if (liga.name != ligaComparador.name && ligaServicio.checkLigaExists(liga.name)) {
+            if (liga.name != ligaComparador.name && ligaServicio.comprobarSiExisteLiga(liga.name)) {
                 result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
             }
         }
@@ -112,14 +112,14 @@ class LigaControlador(
                 liga.usuarios = ligaAntigua.usuarios
             }
 
-            this.ligaServicio.saveLiga(liga)
+            this.ligaServicio.guardarLiga(liga)
             "redirect:/misligas"
         }
     }
 
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
-        val liga = ligaServicio.findLigaByName(nombreLiga)
+        val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
         var soyAdmin: Boolean
         val usuario = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
@@ -148,7 +148,7 @@ class LigaControlador(
 
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
-        var liga = ligaServicio.findLigaByName(nombreLiga)
+        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
         var equiposLiga = liga?.equipos?.sortedBy { x -> -x.puntos }
 
         if (equiposLiga != null) {
@@ -188,7 +188,7 @@ class LigaControlador(
     ): String {
 
         var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        var liga = ligaServicio.findLigaByName(nombreLiga)
+        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (usuario != null && liga != null) {
             if (!usuario.ligas.contains(liga)) {
                 usuario.ligas.add(liga)

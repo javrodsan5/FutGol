@@ -52,15 +52,9 @@ class UsuarioController(
         dataBinder.validator = UsuarioValidador()
     }
 
-
-    fun usuarioLogueado(principal: Principal): Usuario? {
-        val username: String = principal.getName()
-        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-    }
-
     @GetMapping("/micuenta")
     fun miCuenta(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         if (usuario != null) {
             model["usuario"] = usuario
         }
@@ -69,7 +63,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/invitaciones")
     fun misInvitaciones(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         var invitaciones = usuario?.invitaciones
         if (invitaciones != null && usuario != null) {
             model["invitaciones"] = invitaciones
@@ -80,7 +74,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
     fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         var liga = this.ligaServicio.findLigaByName(nombreLiga)
         if (usuario != null && liga != null) {
             usuario.ligas.add(liga)
@@ -95,7 +89,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
     fun rechazarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         var liga = this.ligaServicio.findLigaByName(nombreLiga)
         if (usuario != null && liga != null) {
             usuario.invitaciones.removeIf { it.name == liga.name }
@@ -135,7 +129,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/editarmisdatos")
     fun iniciarActualizacion(model: Model, principal: Principal): String {
-        val usuario = usuarioLogueado(principal)
+        val usuario = usuarioServicio.usuarioLogueado(principal)
         if (usuario != null) {
             model["usuario"] = usuario
         }
@@ -144,7 +138,7 @@ class UsuarioController(
 
     @PostMapping("/micuenta/editarmisdatos")
     fun procesoActualizacion(usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
-        var usuarioComparador = usuarioLogueado(principal)
+        var usuarioComparador = usuarioServicio.usuarioLogueado(principal)
         if (usuarioComparador != null) {
             when {
                 usuario.email != usuarioComparador.email && usuarioServicio.checkEmailExists(usuario.email) ->
@@ -201,7 +195,7 @@ class UsuarioController(
         var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
         var ligasUsuario = usuarioServicio.buscarLigasUsuario(username)
 
-        var usuariologueado = usuarioLogueado(principal)
+        var usuariologueado = usuarioServicio.usuarioLogueado(principal)
         var misLigas = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
 
         if (misLigas != null && ligasUsuario != null) {

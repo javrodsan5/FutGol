@@ -39,14 +39,9 @@ class LigaControlador(
         dataBinder.validator = LigaValidador()
     }
 
-    fun usuarioLogueado(principal: Principal): Usuario? {
-        val username: String = principal.name
-        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-    }
-
     @GetMapping("/misligas")
     fun listaLigas(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
             model["ligas"] = ligas
@@ -71,7 +66,7 @@ class LigaControlador(
             model["liga"] = liga
             VISTA_CREAR_EDITAR_LIGA
         } else {
-            val usuario: Usuario? = usuarioLogueado(principal)
+            val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
             liga.admin = usuario
             usuario?.ligas?.add(liga)
             if (usuario != null) {
@@ -87,7 +82,7 @@ class LigaControlador(
     fun initUpdateForm(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
         val liga = this.ligaServicio.buscarLigaPorId(idLiga)
         var adminLiga = liga?.admin?.user?.username
-        val usuario = usuarioLogueado(principal)?.user?.username
+        val usuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
         if (liga != null && usuario != null && adminLiga == usuario) {
             model.addAttribute(liga)
         }
@@ -126,7 +121,7 @@ class LigaControlador(
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
         val liga = ligaServicio.findLigaByName(nombreLiga)
         var soyAdmin: Boolean
-        val usuario = usuarioLogueado(principal)
+        val usuario = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null && liga != null) {
             if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
@@ -160,6 +155,11 @@ class LigaControlador(
             var posiciones = equiposLiga.indices
             model["posiciones"] = posiciones
             model["equiposLiga"] = equiposLiga
+            var valores: MutableList<Double> = ArrayList()
+            for (e in equiposLiga) {
+                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+            }
+            model["valores"] = valores
         }
         return VISTA_CLASIFICACION_LIGA
     }
@@ -170,6 +170,11 @@ class LigaControlador(
         if (equipos != null) {
             var posiciones = equipos.indices
             model["equipos"] = equipos
+            var valores: MutableList<Double> = ArrayList()
+            for (e in equipos) {
+                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+            }
+            model["valores"] = valores
             model["posiciones"] = posiciones
         }
         return VISTA_RANKING_USUARIOS

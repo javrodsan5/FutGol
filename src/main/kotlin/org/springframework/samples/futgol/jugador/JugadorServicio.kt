@@ -3,8 +3,6 @@ package org.springframework.samples.futgol.jugador
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipo.Equipo
-import org.springframework.samples.futgol.equipo.EquipoRepositorio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -21,7 +19,7 @@ class JugadorServicio {
 
     @Transactional()
     @Throws(DataAccessException::class)
-    fun saveJugador(jugador: Jugador) {
+    fun guardarJugador(jugador: Jugador) {
         jugadorRepositorio?.save(jugador)
     }
 
@@ -29,6 +27,12 @@ class JugadorServicio {
     @Throws(DataAccessException::class)
     fun buscaJugadorPorId(idJugador: Int): Jugador? {
         return jugadorRepositorio?.findById(idJugador)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaJugadorPorNombre(nombre: String): Jugador? {
+        return jugadorRepositorio?.buscarJugadorPorNombre(nombre)
     }
 
     fun webScrapingJugadores() {
@@ -73,7 +77,7 @@ class JugadorServicio {
                 jugador.estadoLesion = estado
                 jugador.valor = precioD
                 jugador.foto = foto
-                saveJugador(jugador)
+                guardarJugador(jugador)
             }
         }
     }

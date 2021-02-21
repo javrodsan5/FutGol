@@ -1,17 +1,15 @@
 package org.springframework.samples.futgol.liga
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.partido.Partido
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
-import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -36,18 +34,21 @@ class LigaServicio {
     private val equipoServicio: EquipoServicio? = null
 
     @Autowired
+    private val estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
+
+    @Autowired
     fun LigaServicio(ligaRepositorio: LigaRepositorio) {
         this.ligaRepositorio = ligaRepositorio
     }
 
     @Transactional()
     @Throws(DataAccessException::class)
-    fun saveLiga(liga: Liga) {
+    fun guardarLiga(liga: Liga) {
         ligaRepositorio?.save(liga)
     }
 
     @Transactional(readOnly = true)
-    fun findLigaByName(nombreLiga: String): Liga? {
+    fun buscarLigaPorNombre(nombreLiga: String): Liga? {
         return ligaRepositorio?.findLigaByName((nombreLiga))
     }
 
@@ -90,7 +91,7 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun checkLigaExists(nombreLiga: String?): Boolean {
+    fun comprobarSiExisteLiga(nombreLiga: String?): Boolean {
         var res = false
         var ligas = ligaRepositorio?.findAll()
         if (ligas != null) {
@@ -125,7 +126,7 @@ class LigaServicio {
         var listaPartidos: MutableSet<Partido> = HashSet()
         for (linkJugador in linksJug) {
             var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
-            println("Nombre del jugador: " + doc3.select("h1[itemprop=name]").text())
+            var nombreJugador= doc3.select("h1[itemprop=name]").text()
             if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")
                     .isEmpty()
             ) {
@@ -173,24 +174,26 @@ class LigaServicio {
                         var jornada = partidos[n].select("td[data-stat=round]").text()[7].toString().toInt()
                         var resultado = partidos[n].select("td[data-stat=result]").text().substring(2)
                         var fueTitular = partidos[n].select("td[data-stat=game_started]").text().replace("*", "")
-                        var minutosJ = partidos[n].select("td[data-stat=minutes]").text()
+                        var minutosJTexto = partidos[n].select("td[data-stat=minutes]").text()
+                        var minutosJ = 0
                         var goles = partidos[n].select("td[data-stat=goals]").text().toInt()
                         var asistencias = partidos[n].select("td[data-stat=assists]").text().toInt()
                         var penaltisMar = partidos[n].select("td[data-stat=pens_made]").text().toInt()
                         var penaltisInt = partidos[n].select("td[data-stat=pens_att]").text().toInt()
-                        var disparosT = partidos[n].select("td[data-stat=shots_total]").text().toInt()
-                        var disparosI = partidos[n].select("td[data-stat=shots_on_target]").text().toInt()
+                        var disparosTotal = partidos[n].select("td[data-stat=shots_total]").text().toInt()
+                        var disparosPuerta = partidos[n].select("td[data-stat=shots_on_target]").text().toInt()
                         var tarjetasA = partidos[n].select("td[data-stat=cards_yellow]").text().toInt()
                         var tarjetasR = partidos[n].select("td[data-stat=cards_red]").text().toInt()
                         var robos = partidos[n].select("td[data-stat=interceptions]").text().toInt()
-                        var bloqueos = partidos[n].select("td[data-stat=blocks]").text()
-
+                        var bloqueosTexto = partidos[n].select("td[data-stat=blocks]").text()
+                        var bloqueos = 0
 
                         //INTRODUCIR TODOS LOS PARTIDOS SIN REPETIRSE (LOS EQUIPOS Y JUGADORES TIENEN QUE ESTAR CREADOS ANTES)
+                        //INTRODUCIR LAS ESTADISTICAS DE JUGADORES EN UN PARTIDO (LOS JUGADORES TIENEN QUE ESTAR CREADOS ANTES)
+                        var p = Partido()
                         if (listaPartidos.stream()
                                 .noneMatch { x -> x.equipoLocal?.name == equipoLocal && x.equipoVisitante?.name == equipoVisitante }
                         ) {
-                            var p = Partido()
                             p.equipoLocal = this.equipoServicio?.buscarEquipoPorNombre(equipoLocal)
                             p.equipoVisitante = this.equipoServicio?.buscarEquipoPorNombre(equipoVisitante)
                             p.fecha = fechaPartido
@@ -199,6 +202,8 @@ class LigaServicio {
 
                             listaPartidos.add(p)
                             this.partidoServicio?.guardarPartido(p)
+                        }else{
+                            p= this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal,equipoVisitante)!!
                         }
 
                         println("Equipo local: " + equipoLocal)
@@ -208,21 +213,39 @@ class LigaServicio {
                         println("Resultado: " + resultado)
                         println("------- Mis estadísticas de ese partido -------")
                         println("¿Fue titular? " + fueTitular)
-                        if (minutosJ != "") {
-                            println("Minutos jugados: " + minutosJ.toInt())
+                        var titular= false
+                        if(fueTitular=="Sí"){
+                            titular=true
+                        }
+                        if (minutosJTexto != "") {
+                            minutosJ= minutosJTexto.toInt()
                         }
                         println("Goles: " + goles)
                         println("Asistencias: " + asistencias)
                         println("Penaltis marcados: " + penaltisMar)
                         println("Penaltis lanzados: " + penaltisInt)
-                        println("Disparos totales: " + disparosT)
-                        println("Disparos a puerta: " + disparosI)
+                        println("Disparos totales: " + disparosTotal)
+                        println("Disparos a puerta: " + disparosPuerta)
                         println("Tarjetas amarillas: " + tarjetasA)
                         println("Tarjetas rojas: " + tarjetasR)
                         println("Robos: " + robos)
-                        if (bloqueos != "") {
-                            println(bloqueos.toInt())
+                        if (bloqueosTexto != "") {
+                            bloqueos= bloqueosTexto.toInt()
                         }
+                        var j= this.jugadorServicio?.buscaJugadorPorNombre(nombreJugador)
+                        var est= EstadisticaJugador()
+                        est.fueTitular= titular
+                        est.minutosJugados= minutosJ
+                        est.asistencias= asistencias
+                        est.goles= goles
+                        est.penaltisLanzados= penaltisInt
+                        est.penaltisMarcados= penaltisMar
+                        est.disparosPuerta= disparosPuerta
+                        est.disparosTotales= disparosTotal
+                        est.tarjetasAmarillas= tarjetasA
+                        est.tarjetasRojas= tarjetasR
+                        est.bloqueos= bloqueos
+                        est.robos= robos
                         if (!filtro2.isEmpty()) {
                             var doc6 = Jsoup.connect("$urlBase" + filtro2).get()
                             var partidos = doc6.select("table.min_width.sortable.stats_table.shade_zero tbody tr")
@@ -233,11 +256,18 @@ class LigaServicio {
                             var disparosRecibidos =
                                 partidos[n].select("td[data-stat=shots_on_target_against]").text().toInt()
                             var golesRecibidos = partidos[n].select("td[data-stat=goals_against_gk]").text().toInt()
+                            est.disparosRecibidos= disparosRecibidos
+                            est.golesRecibidos= golesRecibidos
+                            est.salvadas= salvadas
                             println("Disparos a puerta recibidos: " + disparosRecibidos)
                             println("Salvadas: " + salvadas)
                             println("Goles recibidos: " + golesRecibidos)
                         }
                         println("---------------------------------------------")
+                        est.partido= p
+                        est.jugador= j
+                        this.estadisticaJugadorServicio?.guardarEstadistica(est)
+
                     }
                 } else {
                     println("Este jugador no tiene estadísticas de LaLiga.")

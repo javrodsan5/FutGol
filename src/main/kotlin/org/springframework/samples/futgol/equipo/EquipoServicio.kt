@@ -24,7 +24,7 @@ class EquipoServicio {
 
     @Transactional()
     @Throws(DataAccessException::class)
-    fun saveEquipo(equipo: Equipo) {
+    fun guardarEquipo(equipo: Equipo) {
         equipoRepositorio?.save(equipo)
     }
 
@@ -75,7 +75,7 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
-    fun checkEquipoEnLigaExists(nombreEquipo: String?, idLiga: Int): Boolean {
+    fun comprobarSiExisteEquipoLiga(nombreEquipo: String?, idLiga: Int): Boolean {
         var res = false
         var equipos = equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
         if (equipos != null) {

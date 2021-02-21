@@ -21,14 +21,14 @@ import org.springframework.validation.Validator
 
 class LigaValidador : Validator {
 
-    private val REQUIRED = "Campo requerido."
+    private val REQUERIDO = "Campo requerido."
 
     override fun validate(target: Any, errors: Errors) {
         var liga = target as Liga
         var name = liga.name
 
         if (!StringUtils.hasLength(name)) {
-            errors.rejectValue("name", REQUIRED, REQUIRED)
+            errors.rejectValue("name", REQUERIDO, REQUERIDO)
         }
     }
 

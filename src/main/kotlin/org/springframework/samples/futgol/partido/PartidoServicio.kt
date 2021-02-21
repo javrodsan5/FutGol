@@ -26,4 +26,9 @@ class PartidoServicio {
     fun buscarTodosPartidos(): Collection<Partido>? {
         return partidoRepositorio?.findAll()
     }
+
+    @Transactional(readOnly = true)
+    fun buscarPartidoPorNombresEquipos(equipoLocal: String, equipoVisitante:String): Partido? {
+        return partidoRepositorio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
+    }
 }

@@ -3,7 +3,9 @@ package org.springframework.samples.futgol.jugador
 import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
+import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.model.NamedEntity
 import java.util.HashSet
 import javax.persistence.*
@@ -43,7 +45,7 @@ class Jugador: NamedEntity() {
 
     @ManyToOne()
     @JoinColumn(name = "club", referencedColumnName = "id")
-    var club: Equipo? = null
+    var club: EquipoReal? = null
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "equipo_jugadores", joinColumns = [JoinColumn(name = "equipo_id")], inverseJoinColumns = [JoinColumn(name = "jugador_id")])

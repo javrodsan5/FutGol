@@ -9,7 +9,7 @@ interface PartidoRepositorio : Repository<Partido, Int> {
 
     fun save(partido: Partido)
 
-    @Query("SELECT p FROM Partido p where p.equipoLocal = ?1 AND p.equipoVisitante = ?2")
+    @Query("SELECT p FROM Partido p where p.equipoLocal.name = ?1 AND p.equipoVisitante.name = ?2")
     fun buscarPartidoPorNombresEquipos(equipoLocal: String, equipoVisitante:String): Partido
 
 }

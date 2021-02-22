@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank
 @Getter
 @Setter
 @Entity
-@Table(name = "estadisticas_jugadores_partidos")
+@Table(name = "estadisticas_jugadores")
 class EstadisticaJugador: BaseEntity() {
 
     @Column(name = "fue_titular")

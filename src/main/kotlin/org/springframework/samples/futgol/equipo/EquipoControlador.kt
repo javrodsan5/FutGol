@@ -1,6 +1,5 @@
 package org.springframework.samples.futgol.equipo
 
-import org.jsoup.Jsoup
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.Usuario
@@ -20,33 +19,15 @@ import javax.validation.Valid
 class EquipoControlador(
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
-    val usuarioServicio: UsuarioServicio,
-    val jugadorServicio: JugadorServicio
+    val jugadorServicio: JugadorServicio,
+    val usuarioServicio: UsuarioServicio
+
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
-    private val VISTA_WSEQUIPOS = "equipos/WScreaEquipos"
     private val VISTA_DETALLES_MIEQUIPO = "equipos/detallesMiEquipo"
     private val VISTA_DETALLES_OTROS_EQUIPOS = "equipos/detallesOtroEquipo"
 
-
-    @GetMapping("/WSEquipos")
-    fun iniciaWSEquipos(model: Model): String {
-        return VISTA_WSEQUIPOS
-    }
-
-    @PostMapping("/WSEquipos")
-    fun creaWSEquipos(model: Model): String {
-        val doc = Jsoup.connect("https://fbref.com/es/comps/12/Estadisticas-de-La-Liga").get()
-        val nombres = doc.select("#results107311_overall:first-of-type tbody tr")
-        for (n in 0 until nombres.size) {
-            var equipo = Equipo()
-            var nombre = nombres[n].select("td:first-of-type a").text()
-            equipo.name = nombre
-            equipoServicio.guardarEquipo(equipo)
-        }
-        return VISTA_WSEQUIPOS
-    }
 
     @GetMapping("/liga/{idLiga}/nuevoEquipo")
     fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: Int): String {

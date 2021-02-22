@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.jugador
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -11,6 +12,9 @@ import java.util.stream.Collectors
 class JugadorServicio {
 
     private var jugadorRepositorio: JugadorRepositorio? = null
+
+    @Autowired
+    private val equipoRealServicio: EquipoRealServicio? = null
 
     @Autowired
     fun JugadorServicio(jugadorRepositorio: JugadorRepositorio) {
@@ -35,6 +39,28 @@ class JugadorServicio {
         return jugadorRepositorio?.buscarJugadorPorNombre(nombre)
     }
 
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaJugadorPorNombreYEquipo(nombreJugador: String, nombreEquipo: String): Jugador? {
+        return jugadorRepositorio?.buscarJugadorPorNombreyEquipo(nombreJugador, nombreEquipo)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeJugador(nombreJugador: String): Boolean? {
+        var res = false
+        var jugadores = jugadorRepositorio?.findAll()
+        if (jugadores != null) {
+            for (j in jugadores) {
+                if (j.name == nombreJugador) {
+                    res = true
+                    break
+                }
+            }
+        }
+        return res
+    }
+
     fun webScrapingJugadores() {
         var urlBase = "https://www.transfermarkt.es"
         var doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
@@ -43,6 +69,13 @@ class JugadorServicio {
                 .distinct().collect(Collectors.toList())
         for (linkEquipo in linksEquipos) {
             var doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
+            var nombreEquipo =
+                doc2.select("div.dataName h1 span").text().replace("Atlético de Madrid", "Atlético Madrid")
+                    .replace("CF", "").replace("FC", "").replace("SD", "")
+                    .replace("Real Betis Balompié", "Betis").replace("Deportivo", "")
+                    .replace("Real Valladolid", "Valladolid")
+                    .replace("CA", "").replace("UD", "").replace("RC Celta de Vigo", "Celta Vigo").trim()
+            println(nombreEquipo)
             var linkPlantilla =
                 doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct()
                     .collect(Collectors.toList())
@@ -67,16 +100,19 @@ class JugadorServicio {
                 var precio = precioJugadores[n].text()
                 var precioD = 0.1
                 if (!precio.isEmpty()) {
-                    if (precio.contains("mill")) {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()
+                    precioD = if (precio.contains("mill")) {
+                        precio.substringBefore(" mil").replace(",", ".").toDouble()
                     } else {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
+                        precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
                     }
                 }
                 jugador.name = nombre
                 jugador.estadoLesion = estado
                 jugador.valor = precioD
                 jugador.foto = foto
+
+                var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
+                jugador.club = equipoReal
                 guardarJugador(jugador)
             }
         }
@@ -87,5 +123,4 @@ class JugadorServicio {
     fun buscaTodosJugadores(): Collection<Jugador>? {
         return jugadorRepositorio?.findAll()
     }
-
 }

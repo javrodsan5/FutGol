@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.partido
 import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.model.BaseEntity
 import java.util.*
@@ -16,11 +17,11 @@ class Partido() : BaseEntity() {
 
     @ManyToOne()
     @JoinColumn(name = "equipo_local", referencedColumnName = "id")
-    var equipoLocal: Equipo? = null
+    var equipoLocal: EquipoReal? = null
 
     @ManyToOne()
     @JoinColumn(name = "equipo_visitante", referencedColumnName = "id")
-    var equipoVisitante: Equipo? = null
+    var equipoVisitante: EquipoReal? = null
 
     @Column(name = "jornada")
     var jornada = 0

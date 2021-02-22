@@ -141,19 +141,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href='#'>
+                    <a th:href="@{/liga/{idLiga}/subastas (idLiga= ${liga.id})}">
                         <i class="fa fa-gavel"></i>
                         <span>Subastas</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'>
+                    <a th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
                         <i class="fa fa-sort-amount-asc"></i>
                         <span>Clasificación</span>
                     </a>
                 </li>
                 <li>
-                    <a href='#'>
+                    <a th:href="@{/liga/{idLiga}/movimientos (idLiga= ${liga.id})}">
                         <i class="fa fa-users"></i>
                         <span>Movimientos</span>
                     </a>

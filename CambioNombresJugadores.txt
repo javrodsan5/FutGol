@@ -47,7 +47,6 @@ Cifu,Miguel Cifuentes
 Dimitris Siovas,Dimitrios Siovas
 Javier Ontiveros,Javi Ontiveros
 Pedro López Muñoz,Pedro López
-Nacho,Nacho Martínez
 Maranhão,Marcos André
 Míchel,Míchel Herrero
 Junior Firpo,Júnior Firpo
@@ -57,7 +56,6 @@ Tomás Vaclík,Tomas Vaclik
 Óscar Rodríguez Arnaiz,Óscar
 Yassine Bounou,Bono
 Fernando,Fernando Reges
-Nacho,Nacho Fernández
 Dani Carvajal,Daniel Carvajal
 Mariano,Mariano Díaz
 Nikola Vukčević,Nikola Vukcevic

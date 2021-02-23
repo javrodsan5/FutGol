@@ -9,6 +9,14 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.text.Normalizer
 import java.util.stream.Collectors
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
+
+import java.util.ArrayList
+
+
+
 
 @Service
 class EstadisticaJugadorServicio {
@@ -39,6 +47,8 @@ class EstadisticaJugadorServicio {
         estadisticaJugadorRepositorio?.save(estadisticaJugador)
     }
 
+
+
     fun equiposPartidosEstadisticasJugadores() {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
@@ -58,10 +68,24 @@ class EstadisticaJugadorServicio {
                 linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
 
         }
+
+        var l: List<String?> = ArrayList()
+        try {
+            l = Files.lines(Paths.get("CambioNombresJugadores.txt")).collect(Collectors.toList())
+        } catch (e: IOException) {
+            println("No se puede leer el fichero de nombres.")
+        }
+
         for (linkJugador in linksJug) {
-            print(linkJugador)
             var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().replace("ć", "c").replace("Š", "S").trim()
+            for(n in 0 until l.size){
+                var linea = l[n]?.split(",")
+                if(linea?.get(0).equals(nombreJugador)){
+                    nombreJugador= linea?.get(1).toString()
+                }
+            }
+
             if (jugadorServicio?.existeJugador(nombreJugador) == true) {
                 var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
                 if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")

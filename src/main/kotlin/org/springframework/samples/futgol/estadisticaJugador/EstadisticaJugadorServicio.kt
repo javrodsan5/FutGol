@@ -7,12 +7,14 @@ import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.Normalizer
 import java.util.stream.Collectors
 
 @Service
 class EstadisticaJugadorServicio {
 
     private var estadisticaJugadorRepositorio: EstadisticaJugadorRepositorio? = null
+    private val QUITAACENTOS = "\\p{InCombiningDiacriticalMarks}+".toRegex()
 
     @Autowired
     private val partidoServicio: PartidoServicio? = null
@@ -23,6 +25,12 @@ class EstadisticaJugadorServicio {
     @Autowired
     fun EstadisticaJugadorServicio(estadisticaJugadorRepositorio: EstadisticaJugadorRepositorio) {
         this.estadisticaJugadorRepositorio = estadisticaJugadorRepositorio
+    }
+
+
+    fun quitaTildes(nombre: String): String {
+        val temp = Normalizer.normalize(nombre, Normalizer.Form.NFD)
+        return QUITAACENTOS.replace(temp, "")
     }
 
     @Transactional()

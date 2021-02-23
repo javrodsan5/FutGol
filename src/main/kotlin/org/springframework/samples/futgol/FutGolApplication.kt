@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import java.text.Normalizer
 import javax.sql.DataSource
 
 
@@ -22,3 +23,6 @@ fun dataSource(): DataSource? {
     dataSourceBuilder.url("jdbc:sqlite:your.db")
     return dataSourceBuilder.build()
 }
+
+
+

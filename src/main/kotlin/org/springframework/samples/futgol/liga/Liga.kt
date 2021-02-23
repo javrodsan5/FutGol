@@ -27,4 +27,7 @@ class Liga : NamedEntity() {
     @JoinTable(name = "invitaciones", joinColumns = [JoinColumn(name = "liga_id")], inverseJoinColumns = [JoinColumn(name = "usuario_id")])
     var usuariosInvitados: MutableSet<Usuario> = HashSet()
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "liga")
+    var equipos: MutableSet<Equipo> = HashSet()
+
 }

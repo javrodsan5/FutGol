@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+
+<h2>Últimos movimientos de la liga</h2>
+
+<ul>
+    <li th:each="movimiento : ${movimientos}">
+        <p>Has comprado a </p>
+        <p th:text="${movimiento.jugador.name}"> de </p>
+    </li>
+    <li th:each="vendedor : ${vendedores}">
+        <p th:text="${vendedor.user.username}"></p>
+    </li>
+</ul>
+</body>
+</html>

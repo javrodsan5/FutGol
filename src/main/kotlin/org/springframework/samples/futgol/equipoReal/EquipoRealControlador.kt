@@ -36,6 +36,8 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
         var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
         model["equipo"] = equipo
         var jugadores = equipo.jugadores
+        model["partidosLocal"] = equipo.partidosLocal
+        model["partidosVisitante"] = equipo.partidosVisitante
         model["jugadores"] = jugadores
         if (jugadores.size > 5) {
             model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)

@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.partido
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.jornadas.Jornada
@@ -24,13 +23,9 @@ class Partido() : BaseEntity() {
     @JoinColumn(name = "equipo_visitante", referencedColumnName = "id")
     var equipoVisitante: EquipoReal? = null
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "jornadas_partidos",
-        joinColumns = [JoinColumn(name = "partido_id")],
-        inverseJoinColumns = [JoinColumn(name = "jornada_id")]
-    )
-    var jornadas: MutableSet<Jornada> = HashSet()
+    @ManyToOne()
+    @JoinColumn(name = "jornada", referencedColumnName = "id")
+    var jornada: Jornada? = null
 
     @Column(name = "fecha")
     var fecha = ""

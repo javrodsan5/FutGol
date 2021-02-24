@@ -24,7 +24,8 @@ class JornadaControlador(val jornadaServicio: JornadaServicio) {
         var jornada = jornadaServicio.buscarJornadaPorId(jornadaId)
         if (jornada != null) {
             model["jornada"] = jornada
-            model["jugadores"] = jornada.jugadores
+            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
+            model["jugadores"] = jornadaServicio.onceIdealJornada(jornadaId)!!
             model["partidos"] = jornada.partidos
         }
         return VISTA_DETALLES_JORNADA

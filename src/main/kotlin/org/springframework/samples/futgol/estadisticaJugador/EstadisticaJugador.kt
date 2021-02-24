@@ -53,6 +53,9 @@ class EstadisticaJugador: BaseEntity() {
     @Column(name = "bloqueos")
     var bloqueos = 0
 
+    @Column(name = "puntos")
+    var puntos = 0
+
     //portero--
     @Column(name = "disparos_recibidos")
     var disparosRecibidos = 0

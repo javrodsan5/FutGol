@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'detallesOtroEquipo')}">
+
+<body>
+<h1><b th:text="${equipo.name}"></b></h1>
+<b th:each="jugador : ${jugadores}">
+    <a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+       th:text="${jugador.name}"/></a>
+</b>
+
+<br/>
+<br/>
+
+<b>Top 5 jugadores</b>
+<ul th:each="jugador : ${top5Jugadores}">
+    <li><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+           th:text="${jugador.name}"/><b th:text="${jugador.puntos}"></b></li>
+</ul>
+
+<h2><b>Partidos como local</b></h2>
+<table id="partidos" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Jornada</th>
+        <th>Equipo Local</th>
+        <th>Equipo Visitante</th>
+        <th>Resultado</th>
+        <th>Fecha</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="partido : ${partidosLocal}">
+        <td th:text="${partido.jornada.id}"/>
+        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})}"
+               th:text="${partido.equipoLocal.name}"/>
+        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})} "
+               th:text="${partido.equipoVisitante.name}"/></td>
+        <td th:text="${partido.resultado}"/>
+        <td th:text="${partido.fecha}"/>
+    </tr>
+    </tbody>
+</table>
+
+<h2><b>Partidos como visitante</b></h2>
+<table id="partidos" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Jornada</th>
+        <th>Equipo Local</th>
+        <th>Equipo Visitante</th>
+        <th>Resultado</th>
+        <th>Fecha</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="partido : ${partidosVisitante}">
+        <td th:text="${partido.jornada.id}"/>
+        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})}"
+               th:text="${partido.equipoLocal.name}"/></td>
+        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})} "
+               th:text="${partido.equipoVisitante.name}"/></td>
+        <td th:text="${partido.resultado}"/>
+        <td th:text="${partido.fecha}"/>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'equiposReales')}">
+
+<body>
+<br>
+<table id="equiposReales" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Escudo</th>
+        <th>Equipo</th>
+        <th>PJ</th>
+        <th>G</th>
+        <th>E</th>
+        <th>P</th>
+        <th>Goles</th>
+        <th>Puntos</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="equipo : ${equiposReales}">
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${equipo.name})}"/><img th:src="${equipo.escudo}"/></td>
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${equipo.name})}" th:text="${equipo.name}"/></td>
+        <td th:text="${equipo.partidosJugados}"></td>
+        <td th:text="${equipo.partidosGanados}"></td>
+        <td th:text="${equipo.partidosEmpatados}"></td>
+        <td th:text="${equipo.partidosPerdidos}"></td>
+        <td th:text="${equipo.diferenciaGoles}" ></td>
+        <td th:text="${equipo.puntos}"></td>
+
+
+    </tr>
+    </div>
+    </tbody>
+</table>
+<br>
+
+
+</body>
+</html>

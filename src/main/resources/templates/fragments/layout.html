@@ -76,6 +76,13 @@
                         </a>
                     </li>
 
+                    <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                        <a href='/equiposLiga'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Equipos</span>
+                        </a>
+                    </li>
+
                     <li th:class="${'ligas'==menu ? 'active' : ''}">
                         <a href='/misligas'>
                             <i class="fa fa-trophy"></i>
@@ -109,10 +116,24 @@
                         </a>
                     </li>
 
+                    <li th:class="${'rankingUsuarios'==menu ? 'active' : ''}">
+                        <a href='/topUsuarios'>
+                            <i class="fa fa-trophy"></i>
+                            <span>Rankings</span>
+                        </a>
+                    </li>
+
                     <li th:class="${'jornadas'==menu ? 'active' : ''}">
                         <a href='/jornadas'>
                             <i class="fa fa-futbol-o"></i>
                             <span>Jornadas</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                        <a href='/equiposLiga'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Equipos</span>
                         </a>
                     </li>
 

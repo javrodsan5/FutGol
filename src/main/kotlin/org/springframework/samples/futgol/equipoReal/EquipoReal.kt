@@ -2,11 +2,10 @@ package org.springframework.samples.futgol.equipoReal
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.model.NamedEntity
-import org.springframework.samples.futgol.usuario.Usuario
-import java.util.HashSet
+import org.springframework.samples.futgol.partido.Partido
+import java.util.*
 import javax.persistence.*
 
 @Getter
@@ -47,5 +46,11 @@ class EquipoReal : NamedEntity() {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "club")
     var jugadores: MutableSet<Jugador> = HashSet()
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "equipoLocal")
+    var partidosLocal: MutableSet<Partido> = HashSet()
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "equipoVisitante")
+    var partidosVisitante: MutableSet<Partido> = HashSet()
 
 }

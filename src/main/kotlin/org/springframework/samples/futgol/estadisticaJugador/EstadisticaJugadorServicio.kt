@@ -32,7 +32,6 @@ class EstadisticaJugadorServicio {
         this.estadisticaJugadorRepositorio = estadisticaJugadorRepositorio
     }
 
-
     fun quitaTildes(nombre: String): String {
         val temp = Normalizer.normalize(nombre, Normalizer.Form.NFD)
         return QUITAACENTOS.replace(temp, "")
@@ -90,8 +89,8 @@ class EstadisticaJugadorServicio {
                 }
             }
 
-            if (jugadorServicio?.existeJugador(nombreJugador) == true) {
-
+            if (jugadorServicio?.existeJugador(nombreJugador, equipo) == true) {
+                println(nombreJugador)
                 if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")
                         .isEmpty()
                 ) {
@@ -130,10 +129,12 @@ class EstadisticaJugadorServicio {
 
                         for (n in 0 until partidos.size) {
                             var est = EstadisticaJugador()
-                            var equipoLocal = partidos[n].select("td[data-stat=squad]").text()
-                            var equipoVisitante = partidos[n].select("td[data-stat=opponent]").text()
+                            var equipoLocal = partidos[n].select("td[data-stat=squad]").text().replace("Betis", "Real Betis")
+                            var equipoVisitante = partidos[n].select("td[data-stat=opponent]").text().replace("Betis", "Real Betis")
+
                             var partido =
                                 this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
+
                             var fueTitular = partidos[n].select("td[data-stat=game_started]").text().replace("*", "")
                             var minutosJTexto = partidos[n].select("td[data-stat=minutes]").text()
                             var minutosJ = 0
@@ -154,7 +155,6 @@ class EstadisticaJugadorServicio {
                             if (equipo == equipoLocal || equipo == equipoVisitante) {
 
                                 var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
-
                                 est.fueTitular = titular
                                 est.minutosJugados = minutosJ
                                 est.asistencias = partidos[n].select("td[data-stat=assists]").text().toInt()
@@ -167,6 +167,9 @@ class EstadisticaJugadorServicio {
                                 est.tarjetasRojas = partidos[n].select("td[data-stat=cards_red]").text().toInt()
                                 est.bloqueos = bloqueos
                                 est.robos = partidos[n].select("td[data-stat=interceptions]").text().toInt()
+                                est.jugador = j
+                                println(est.jugador?.name)
+
                                 if (filtro2.isNotEmpty()) {
                                     var doc6 = Jsoup.connect("$urlBase" + filtro2).get()
                                     var partidos =
@@ -181,9 +184,69 @@ class EstadisticaJugadorServicio {
                                         partidos[n].select("td[data-stat=goals_against_gk]").text().toInt()
                                     est.salvadas = partidos[n].select("td[data-stat=saves]").text().toInt()
                                 }
+                                var puntosPorPartido= 0
                                 est.partido = partido
-                                est.jugador = j
-                                println(est.jugador?.name)
+
+                                if(est.jugador?.posicion=="PO"){
+                                    println("PO")
+                                    puntosPorPartido+= est.goles*6
+                                    puntosPorPartido+= est.asistencias*3
+                                    if(est.minutosJugados>75 && est.golesRecibidos==0) {
+                                        puntosPorPartido += 3
+                                    }else if (est.minutosJugados>75 && est.golesRecibidos==1) {
+                                        puntosPorPartido += 2
+                                    }
+
+                                    puntosPorPartido -= est.golesRecibidos
+                                    if(est.disparosRecibidos>2 && est.salvadas>0){
+                                        var porcentajeDS= ((est.salvadas.toFloat()/est.disparosRecibidos.toFloat()))
+                                        println(porcentajeDS)
+                                        when{
+                                            porcentajeDS>=0.7 -> puntosPorPartido+= 4
+                                            porcentajeDS<0.5 -> puntosPorPartido -= 2
+                                        }
+                                    }
+                                    puntosPorPartido+= est.salvadas
+
+                                }else if(j?.posicion?.substring(0,2)=="DF"){
+                                    puntosPorPartido+= est.goles*5
+                                    puntosPorPartido+= est.asistencias*3
+                                    puntosPorPartido+= (est.robos*0.5).toInt()
+                                    puntosPorPartido+= (est.bloqueos*0.5).toInt()
+
+                                }else if(j?.posicion?.substring(0,2)=="CC"){
+                                    puntosPorPartido+= est.goles*4
+                                    puntosPorPartido+= est.asistencias*2
+                                    if(est.disparosTotales>3 && est.disparosPuerta>0){
+                                        var porcentajeTP= (est.disparosPuerta.toFloat()/est.disparosTotales.toFloat())
+                                        when{
+                                            porcentajeTP>=0.6 -> puntosPorPartido+= 2
+                                            porcentajeTP<0.4 -> puntosPorPartido -= 1
+                                        }
+                                    }
+                                    puntosPorPartido+= (est.robos*0.25).toInt()
+                                    puntosPorPartido+= (est.bloqueos*0.25).toInt()
+
+                                }else{
+                                    puntosPorPartido+= est.goles*3
+                                    puntosPorPartido+= est.asistencias*1
+                                    if(est.disparosTotales>3 && est.disparosPuerta>0){
+                                        var porcentajeTP= (est.disparosPuerta.toFloat()/est.disparosTotales.toFloat())
+                                        when{
+                                            porcentajeTP>=0.7 -> puntosPorPartido+= 2
+                                            porcentajeTP<0.5 -> puntosPorPartido -= 1
+                                        }
+                                    }
+                                }
+                                if(est.tarjetasRojas==1){
+                                    puntosPorPartido-= est.tarjetasRojas*5
+                                }else{
+                                    puntosPorPartido-= est.tarjetasAmarillas*3
+                                }
+                                est.puntos= puntosPorPartido
+                                est.jugador?.puntos = puntosPorPartido + est.jugador?.puntos!!
+                                j?.puntos=puntosPorPartido + j?.puntos!!
+                                this.jugadorServicio.guardarJugador(j)
                                 guardarEstadistica(est)
                             }
                         }

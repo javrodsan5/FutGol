@@ -1,11 +1,17 @@
 package org.springframework.samples.futgol.jugador
 
+import org.apache.tomcat.util.http.parser.HttpParser.isNumeric
 import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.ArrayList
 import java.util.stream.Collectors
 
 @Service
@@ -47,9 +53,9 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun existeJugador(nombreJugador: String): Boolean? {
+    fun existeJugador(nombreJugador: String, equipo: String): Boolean? {
         var res = false
-        var jugadores = jugadorRepositorio?.findAll()
+        var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
         if (jugadores != null) {
             for (j in jugadores) {
                 if (j.name == nombreJugador) {
@@ -61,7 +67,7 @@ class JugadorServicio {
         return res
     }
 
-    fun webScrapingJugadores() {
+    fun webScrapingJugadoresTransfermarkt() {
         var urlBase = "https://www.transfermarkt.es"
         var doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
         var linksEquipos =
@@ -72,7 +78,7 @@ class JugadorServicio {
             var nombreEquipo =
                 doc2.select("div.dataName h1 span").text().replace("Atlético de Madrid", "Atlético Madrid")
                     .replace("CF", "").replace("FC", "").replace("SD", "")
-                    .replace("Real Betis Balompié", "Betis").replace("Deportivo", "")
+                    .replace("Real Betis Balompié", "Real Betis").replace("Deportivo", "")
                     .replace("Real Valladolid", "Valladolid")
                     .replace("CA", "").replace("UD", "").replace("RC Celta de Vigo", "Celta Vigo").trim()
             println(nombreEquipo)
@@ -116,6 +122,91 @@ class JugadorServicio {
                 guardarJugador(jugador)
             }
         }
+
+    }
+
+    fun webScrapingJugadoresFbref() {
+        var urlBase = "https://fbref.com"
+        var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
+        var linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")
+            .map { col -> col.attr("href") }.stream()
+            .collect(Collectors.toList()) //todos los links de los equipos de la liga
+        var linksJug: MutableList<String> = ArrayList()
+        for (linkEquipo in linksEquipos) {
+
+            val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
+
+            linksJug.addAll(
+                doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
+                    .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
+            )
+            linksJug =
+                linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
+
+        }
+
+        var l: List<String?> = ArrayList()
+        try {
+            l = Files.lines(Paths.get("CambioNombresJugadores.txt")).collect(Collectors.toList())
+        } catch (e: IOException) {
+            println("No se puede leer el fichero de nombres.")
+        }
+
+        for (linkJugador in linksJug) {
+            var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
+            var nombreJugador = doc3.select("h1[itemprop=name]").text().trim()
+            var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
+            if (equipoRealServicio?.existeEquipoReal(equipo) == true){
+                for (n in 0 until l.size) {
+                    var linea = l[n]?.split(",")
+                    if (linea?.size!! >= 3) {
+                        if (linea?.get(2).equals(equipo) && linea?.get(0).equals(nombreJugador)) {
+                            nombreJugador = linea?.get(1).toString()
+                        }
+                    } else {
+                        if (linea?.get(0).equals(nombreJugador)) {
+                            nombreJugador = linea?.get(1).toString()
+                        }
+                    }
+                }
+            if (this.existeJugador(nombreJugador, equipo) == true) {
+                println(nombreJugador)
+                var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
+                var element: Elements? = doc3.select("div.players#info div#meta p")
+                if (j != null) {
+                    for (n in 0 until element?.size!!) {
+                        if (element[n].text().contains("Posición:")) {
+                            j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0,2)
+                            println(j.posicion)
+                        }
+                        if (element[n].text().contains("Pie primario:")) {
+                            if (element[n].text().contains("%")) {
+                                j.piePrimario =
+                                    element[n].text().split("▪")[1].substringAfter("% ").replace("*", "") //pie primario
+
+                            } else {
+                                j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
+                            }
+                            println(j.piePrimario)
+                        }
+                        if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
+                            j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
+                            println(j.altura)
+                        }
+                        if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
+                            j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
+                            println(j.peso)
+                        }
+                        if (element[n].text().contains("Nacimiento:")) {
+                            j.lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
+                            println(j.lugarFechaNacimiento)
+                        }
+                    }
+                    this.guardarJugador(j)
+                }
+            }
+        }
+    }
     }
 
     @Transactional(readOnly = true)

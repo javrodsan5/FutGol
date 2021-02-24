@@ -15,6 +15,20 @@ import javax.persistence.*
 @Table(name = "jugadores")
 class Jugador : NamedEntity() {
 
+    @Column(name = "altura")
+    var altura = 0.0
+
+    @Column(name = "peso")
+    var peso = 0.0
+
+    @Column(name = "posicion")
+    var posicion = ""
+
+    @Column(name = "pie")
+    var piePrimario = ""
+
+    @Column(name = "lugar_fecha_nacimiento")
+    var lugarFechaNacimiento = ""
 
     @Column(name = "valor")
     var valor = 0.0

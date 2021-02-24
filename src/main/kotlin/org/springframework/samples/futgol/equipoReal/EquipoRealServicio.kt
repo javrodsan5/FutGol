@@ -17,6 +17,22 @@ class EquipoRealServicio {
         this.equipoRealRepositorio = equipoRealRepositorio
     }
 
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeEquipoReal(nombreEquipo: String): Boolean? {
+        var res = false
+        var equipos = equipoRealRepositorio?.findAll()
+        if (equipos != null) {
+            for (e in equipos) {
+                if (e.name == nombreEquipo) {
+                    res = true
+                    break
+                }
+            }
+        }
+        return res
+    }
+
     @Transactional()
     @Throws(DataAccessException::class)
     fun guardarEquipo(equipo: EquipoReal) {
@@ -48,7 +64,7 @@ class EquipoRealServicio {
         equipo.golesEnContra = nombres[n].select("td[data-stat=goals_against]").text().toInt()
         equipo.diferenciaGoles = nombres[n].select("td[data-stat=goal_diff]").text().toInt()
         equipo.puntos = nombres[n].select("td[data-stat=points]").text().toInt()
-        equipo.name = nombres[n].select("td:first-of-type a").text()
+        equipo.name = nombres[n].select("td:first-of-type a").text().replace("Betis", "Real Betis")
 
         var linkEquipo = nombres[n].select("td:first-of-type a").attr("href")
         var doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()

@@ -62,3 +62,5 @@ Nikola Vukčević,Nikola Vukcevic
 Ivan Rakitić,Ivan Rakitic
 Luka Modrić,Luka Modric
 Vinicius Júnior,Vinícius Júnior
+Nacho,Nacho Martínez,Valladolid
+Nacho,Nacho Fernández,Real Madrid

@@ -26,9 +26,15 @@ class PartidoServicio {
         partidoRepositorio?.save(partido)
     }
 
+
     @Transactional(readOnly = true)
-    fun buscarTodosPartidos(): Collection<Partido>? {
-        return partidoRepositorio?.findAll()
+    fun buscarTodosPartidosPorJornada(jornada: Int): Collection<Partido>? {
+        return partidoRepositorio?.buscarPartidoPorJornada(jornada)
+    }
+
+    @Transactional(readOnly = true)
+    fun buscarJornadas(): Collection<Int>? {
+        return partidoRepositorio?.buscarJornadas()
     }
 
     @Transactional(readOnly = true)

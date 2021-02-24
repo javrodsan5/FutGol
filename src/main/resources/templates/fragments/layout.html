@@ -62,6 +62,13 @@
                         </a>
                     </li>
 
+                    <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                        <a href='/jornadas'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Jornadas</span>
+                        </a>
+                    </li>
+
                     <li th:class="${'rankingUsuarios'==menu ? 'active' : ''}">
                         <a href='/topUsuarios'>
                             <i class="fa fa-trophy"></i>
@@ -99,6 +106,13 @@
                         <a href='/'>
                             <i class="fa fa-home"></i>
                             <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                        <a href='/jornadas'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Jornadas</span>
                         </a>
                     </li>
 

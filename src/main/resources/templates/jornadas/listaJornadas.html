@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'jornadas')}">
+
+<body>
+
+<h2>Jornadas</h2>
+
+<table id="jornadas" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jornada : ${jornadas}">
+        <td><a th:href="@{jornada/{idJornada} (idJornada= ${jornada.id})}" th:text="${jornada.id}"/></a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -28,16 +28,6 @@ class PartidoServicio {
 
 
     @Transactional(readOnly = true)
-    fun buscarTodosPartidosPorJornada(jornada: Int): Collection<Partido>? {
-        return partidoRepositorio?.buscarPartidoPorJornada(jornada)
-    }
-
-    @Transactional(readOnly = true)
-    fun buscarJornadas(): Collection<Int>? {
-        return partidoRepositorio?.buscarJornadas()
-    }
-
-    @Transactional(readOnly = true)
     fun buscarPartidoPorNombresEquipos(equipoLocal: String, equipoVisitante: String): Partido? {
         return partidoRepositorio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
     }
@@ -55,7 +45,7 @@ class PartidoServicio {
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text()
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
             p.fecha = partido.select("td[data-stat=date] a").text()
-            p.jornada = partido.select("th[data-stat=gameweek]").text().toInt()
+            //p.jornada = partido.select("th[data-stat=gameweek]").text().toInt()
             p.resultado = partido.select("td[data-stat=score] a").text()
             this.guardarPartido(p)
         }

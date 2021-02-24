@@ -5,6 +5,7 @@ import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
+import org.springframework.samples.futgol.jornadas.Jornada
 import org.springframework.samples.futgol.model.NamedEntity
 import java.util.*
 import javax.persistence.*
@@ -42,5 +43,13 @@ class Jugador : NamedEntity() {
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "jugador")
     var estadisticas: MutableSet<EstadisticaJugador> = HashSet()
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "jornadas_jugadores",
+        joinColumns = [JoinColumn(name = "jugador_id")],
+        inverseJoinColumns = [JoinColumn(name = "jornada_id")]
+    )
+    var jornadas: MutableSet<Jornada> = HashSet()
 
 }

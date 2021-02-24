@@ -15,9 +15,6 @@ import java.nio.file.Paths
 
 import java.util.ArrayList
 
-
-
-
 @Service
 class EstadisticaJugadorServicio {
 
@@ -46,7 +43,6 @@ class EstadisticaJugadorServicio {
     fun guardarEstadistica(estadisticaJugador: EstadisticaJugador) {
         estadisticaJugadorRepositorio?.save(estadisticaJugador)
     }
-
 
 
     fun equiposPartidosEstadisticasJugadores() {
@@ -79,15 +75,23 @@ class EstadisticaJugadorServicio {
         for (linkJugador in linksJug) {
             var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().replace("ć", "c").replace("Š", "S").trim()
+            var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
+
             for(n in 0 until l.size){
                 var linea = l[n]?.split(",")
+                if(linea?.size!! >=3){
+                    if(linea?.get(2).equals(equipo) && linea?.get(0).equals(nombreJugador)){
+                        nombreJugador= linea?.get(1).toString()
+                    }
+                }else{
                 if(linea?.get(0).equals(nombreJugador)){
                     nombreJugador= linea?.get(1).toString()
+                }
                 }
             }
 
             if (jugadorServicio?.existeJugador(nombreJugador) == true) {
-                var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
+
                 if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")
                         .isEmpty()
                 ) {
@@ -148,6 +152,7 @@ class EstadisticaJugadorServicio {
                                 bloqueos = bloqueosTexto.toInt()
                             }
                             if (equipo == equipoLocal || equipo == equipoVisitante) {
+
                                 var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
 
                                 est.fueTitular = titular

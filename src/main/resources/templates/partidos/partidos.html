@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'jornadas')}">
+
+<body>
+
+  <h2>Partidos</h2>
+
+  <div th:if="${partidos!=null and !partidos.empty}">
+  <table id="partidos" class="table table-striped">
+    <thead>
+      <tr>
+          <th>Equipo Local</th>
+          <th>Equipo Visitante</th>
+          <th>Resultado</th>
+          <th>Jornada</th>
+          <th>Fecha</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="partido : ${partidos}">
+         <td th:text="${partido.equipoLocal}"> </td>
+        <td th:text="${partido.equipoVisitante}"></td>
+          <td th:text="${partido.resultado}"> </td>
+          <td th:text="${partido.jornada}"></td>
+          <td th:text="${partido.fecha}"></td>
+
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div th:if="${partidos==null or partidos.empty}">
+      <br>
+      <h4> No hay ningún partido todavía</h4>
+  </div>
+
+</body>
+</html>

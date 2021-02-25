@@ -52,7 +52,7 @@ Míchel,Míchel Herrero
 Junior Firpo,Júnior Firpo
 Francisco Trincão,Trincão
 Iñaki,Iñaki Peña
-Tomás Vaclík,Tomas Vaclik
+Tomás Vaclík,Tomas Vaclík
 Óscar Rodríguez Arnaiz,Óscar
 Yassine Bounou,Bono
 Fernando,Fernando Reges
@@ -64,3 +64,5 @@ Luka Modrić,Luka Modric
 Vinicius Júnior,Vinícius Júnior
 Nacho,Nacho Martínez,Valladolid
 Nacho,Nacho Fernández,Real Madrid
+Stefan Savić,Stefan Savic
+Šime Vrsaljko,Sime Vrsaljko

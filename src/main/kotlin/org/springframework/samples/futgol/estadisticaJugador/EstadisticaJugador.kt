@@ -67,9 +67,6 @@ class EstadisticaJugador: BaseEntity() {
     var salvadas = 0
     //--
 
-    @Column(name = "puntos")
-    var puntos = 0
-    //--
 
     @ManyToOne()
     @JoinColumn(name = "jugador", referencedColumnName = "id")

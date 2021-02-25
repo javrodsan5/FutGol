@@ -47,9 +47,6 @@ class Jugador : NamedEntity() {
     @JoinColumn(name = "club", referencedColumnName = "id")
     var club: EquipoReal? = null
 
-    @Column(name = "posicion")
-    var posicion = ""
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "equipo_jugadores",

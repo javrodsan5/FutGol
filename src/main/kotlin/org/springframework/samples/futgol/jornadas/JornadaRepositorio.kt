@@ -9,4 +9,6 @@ interface JornadaRepositorio : Repository<Jornada, Int> {
     fun save(jornada: Jornada)
 
     fun findJornadaById(id: Int): Jornada
+
+    fun findJornadaByNumeroJornada(id: Int): Jornada
 }

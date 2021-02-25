@@ -62,7 +62,7 @@ class Jugador : NamedEntity() {
     @JoinTable(
         name = "jornadas_jugadores",
         joinColumns = [JoinColumn(name = "jugador_id")],
-        inverseJoinColumns = [JoinColumn(name = "jornada_id")]
+        inverseJoinColumns = [JoinColumn(name = "numero_jornada")]
     )
     var jornadas: MutableSet<Jornada> = HashSet()
 

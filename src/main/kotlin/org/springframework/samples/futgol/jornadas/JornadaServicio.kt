@@ -14,9 +14,6 @@ class JornadaServicio {
 
     private var jornadaRepositorio: JornadaRepositorio? = null
 
-    @Autowired
-    private val equipoRealServicio: EquipoRealServicio? = null
-
 
     @Autowired
     fun JornadaServicio(jornadaRepositorio: JornadaRepositorio) {
@@ -32,6 +29,11 @@ class JornadaServicio {
     @Transactional(readOnly = true)
     fun buscarJornadaPorId(idJornada: Int): Jornada? {
         return jornadaRepositorio?.findJornadaById(idJornada)
+    }
+
+    @Transactional(readOnly = true)
+    fun buscarJornadaPorNumeroJornada(idJornada: Int): Jornada? {
+        return jornadaRepositorio?.findJornadaByNumeroJornada(idJornada)
     }
 
     @Transactional(readOnly = true)

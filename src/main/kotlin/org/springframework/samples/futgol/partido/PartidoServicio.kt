@@ -4,6 +4,7 @@ import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
+import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,6 +15,9 @@ class PartidoServicio {
 
     @Autowired
     private val equipoRealServicio: EquipoRealServicio? = null
+
+    @Autowired
+    private val jornadaServicio: JornadaServicio? = null
 
     @Autowired
     fun LigaServicio(partidoRepositorio: PartidoRepositorio) {
@@ -53,8 +57,9 @@ class PartidoServicio {
             println(equipoVisitante)
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
             p.fecha = partido.select("td[data-stat=date] a").text()
-            //p.jornada = partido.select("th[data-stat=gameweek]").text().toInt()
+            p.jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(partido.select("th[data-stat=gameweek]").text().toInt())
             p.resultado = partido.select("td[data-stat=score] a").text()
+            print(partido.select("td[data-stat=score] a").text())
             this.guardarPartido(p)
         }
     }

@@ -14,13 +14,17 @@ import javax.persistence.*
 @Table(name = "jornadas")
 class Jornada : BaseEntity() {
 
+
+    @Column(name = "numero_jornada")
+    var numeroJornada = 0
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
     var partidos: MutableSet<Partido> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "jornadas_jugadores",
-        joinColumns = [JoinColumn(name = "jornada_id")],
+        joinColumns = [JoinColumn(name = "numero_jornada")],
         inverseJoinColumns = [JoinColumn(name = "jugador_id")]
     )
     var jugadores: MutableSet<Jugador> = HashSet()

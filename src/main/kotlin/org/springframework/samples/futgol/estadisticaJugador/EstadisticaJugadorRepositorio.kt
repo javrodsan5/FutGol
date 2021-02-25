@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.estadisticaJugador
 
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
 
 interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
@@ -7,5 +8,9 @@ interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
     fun findAll(): Collection<EstadisticaJugador>
 
     fun save(estadisticaJugador: EstadisticaJugador)
+
+    @Query("SELECT e FROM EstadisticaJugador e where e.jugador.name = ?1 AND e.jugador.club.name = ?2 AND e.partido.id = ?3")
+    fun buscarEstadisticaPorJugadorPartido(jugador: String, equipo: String, idPartido: Int): EstadisticaJugador
+
 
 }

@@ -55,6 +55,7 @@ class JugadorServicio {
     @Throws(DataAccessException::class)
     fun existeJugador(nombreJugador: String, equipo: String): Boolean? {
         var res = false
+        if(equipo!="" && equipoRealServicio?.existeEquipoReal(equipo) == true){
         var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
         if (jugadores != null) {
             for (j in jugadores) {
@@ -63,6 +64,7 @@ class JugadorServicio {
                     break
                 }
             }
+        }
         }
         return res
     }

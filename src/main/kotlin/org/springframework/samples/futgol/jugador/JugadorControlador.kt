@@ -1,18 +1,38 @@
 package org.springframework.samples.futgol.jugador
 
+import org.springframework.samples.futgol.clausula.Clausula
+import org.springframework.samples.futgol.clausula.ClausulaServicio
+import org.springframework.samples.futgol.clausula.ClausulaValidador
+import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import java.security.Principal
+import javax.validation.Valid
+
 
 @Controller
-class JugadorControlador(val jugadorServicio: JugadorServicio) {
+class JugadorControlador(
+    val jugadorServicio: JugadorServicio,
+    val equipoServicio: EquipoServicio,
+    val clausulaServicio: ClausulaServicio, val usuarioServicio: UsuarioServicio
+) {
 
     private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
+    private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
 
+    @InitBinder("clausula")
+    fun initClausulaBinder(dataBinder: WebDataBinder) {
+        dataBinder.validator = ClausulaValidador()
+    }
 
     @GetMapping("/WSJugadores")
     fun iniciaWSJugadores(model: Model): String {
@@ -27,13 +47,69 @@ class JugadorControlador(val jugadorServicio: JugadorServicio) {
     }
 
     @GetMapping("/jugador/{idJugador}")
-    fun detallesJugador(model: Model, @PathVariable("idJugador") idJugador: Int): String {
-        var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
-        if (jugador != null) {
-            model["jugador"] = jugador
-        }
+    fun detallesJugadorCualquiera(model: Model, @PathVariable("idJugador") idJugador: Int): String {
+        model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
         return VISTA_DETALLES_JUGADOR
     }
 
 
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}")
+    fun detallesJugadorEquipo(
+        model: Model,
+        @PathVariable("idEquipo") idEquipo: Int,
+        @PathVariable("idJugador") idJugador: Int, principal: Principal?
+    ): String {
+        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+        if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)
+            && equipo!!.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }
+        ) {
+            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["equipo"] = equipo
+            model["loTengoEnMiEquipo"] = true
+            model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+        } else {
+            return "redirect:/"
+        }
+        return VISTA_DETALLES_JUGADOR
+    }
+
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
+    fun clausulaJugador(
+        model: Model,
+        @PathVariable("idJugador") idJugador: Int,
+        @PathVariable("idEquipo") idEquipo: Int, principal: Principal?
+    ): String {
+        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)
+        var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
+        if (usuario != null) {
+            if (equipo!!.usuario?.user?.username == usuario.user?.username) {
+                if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
+                    model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+                }
+            } else {
+                return "redirect:/jugador/" + idJugador
+            }
+        }
+        return VISTA_CLAUSULA_JUGADOR
+    }
+
+    @PostMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
+    fun actualizarClausulaJugador(
+        @Valid clausula: Clausula,
+        result: BindingResult,
+        model: Model,
+        @PathVariable("idEquipo") idEquipo: Int,
+        @PathVariable("idJugador") idJugador: Int
+    ): String {
+
+        if (result.hasErrors()) {
+            model["clausula"] = clausula
+            return VISTA_CLAUSULA_JUGADOR
+        } else {
+            clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
+            clausula.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+            clausulaServicio.guardarClausula(clausula)
+        }
+        return "redirect:/equipo/$idEquipo/jugador/" + idJugador
+    }
 }

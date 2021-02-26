@@ -48,6 +48,7 @@ class EquipoRealServicio {
     fun buscarEquipoRealPorNombre(nombre: String): EquipoReal? {
         return equipoRealRepositorio?.buscarEquipoRealPorNombre(nombre)
     }
+
     @Transactional()
     fun webScrapingEquipos(){
     var urlBase = "https://fbref.com/"

@@ -5,6 +5,7 @@ import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,6 +22,12 @@ class JugadorServicio {
 
     @Autowired
     private val equipoRealServicio: EquipoRealServicio? = null
+
+    @Autowired
+    private val equipoServicio: EquipoServicio? = null
+
+    @Autowired
+    private val jugadorServicio: JugadorServicio? = null
 
     @Autowired
     fun JugadorServicio(jugadorRepositorio: JugadorRepositorio) {
@@ -67,6 +74,18 @@ class JugadorServicio {
         }
         }
         return res
+    }
+
+    fun checkJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {
+        var estaEnEquipo = false
+        var equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
+        var jugador = jugadorServicio?.buscaJugadorPorId(idJugador)!!
+        for (j in equipo!!.jugadores) {
+            if (j.name == jugador.name) {
+                estaEnEquipo = true
+            }
+        }
+        return estaEnEquipo
     }
 
     fun webScrapingJugadoresTransfermarkt() {

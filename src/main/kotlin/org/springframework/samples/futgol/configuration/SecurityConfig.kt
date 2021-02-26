@@ -24,6 +24,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         http.csrf().disable().authorizeRequests()
             .antMatchers("/h2-console/**", "/usuarios/registro").permitAll()
             .antMatchers("/misligas/**", "/liga/**", "/usuarios/buscar", "/micuenta/**").authenticated()
+            .antMatchers("/equipo/**").authenticated()
             .anyRequest().permitAll()
             .and()
             .formLogin()

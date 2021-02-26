@@ -65,7 +65,6 @@ class EstadisticaJugadorServicio {
             )
             linksJug =
                 linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
-
         }
 
         var l: List<String?> = ArrayList()
@@ -78,12 +77,6 @@ class EstadisticaJugadorServicio {
         for (n in 0 until linksJug.size) {
             var doc3 = Jsoup.connect("$urlBase" + linksJug[n]).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().trim()
-//            if (nombreJugador.contains("�")) {
-//                for (c in 0 until nombreJugador.length) {
-//                    nombreJugador[c]
-//                }
-//            }
-
 
             var textoEquipo = doc3.select("div#meta p").last().text()
             var equipo= ""
@@ -103,7 +96,6 @@ class EstadisticaJugadorServicio {
                     }
                 }
             }
-            println(equipo)
                 if (jugadorServicio?.existeJugador(nombreJugador, equipo) == true) {
                     println(nombreJugador)
                     if (!doc3.select("table#stats_standard_dom_lg.min_width.sortable.stats_table.shade_zero tbody tr")

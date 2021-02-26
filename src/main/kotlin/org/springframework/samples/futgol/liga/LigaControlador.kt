@@ -74,7 +74,7 @@ class LigaControlador(
                 this.ligaServicio.guardarLiga(liga)
 
             }
-            "redirect:/liga/" + liga.name
+            "redirect:/liga/" + liga.id + "/nuevoEquipo"
         }
     }
 

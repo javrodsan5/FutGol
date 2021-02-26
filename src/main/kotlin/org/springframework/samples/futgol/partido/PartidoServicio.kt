@@ -30,10 +30,30 @@ class PartidoServicio {
         partidoRepositorio?.save(partido)
     }
 
+    @Transactional(readOnly = true)
+    fun buscarTodosPartidos(): Collection<Partido>? {
+        return partidoRepositorio?.findAll()
+    }
 
     @Transactional(readOnly = true)
     fun buscarPartidoPorNombresEquipos(equipoLocal: String, equipoVisitante: String): Partido? {
         return partidoRepositorio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existePartido(equipoLocal: String, equipoVisitante: String): Boolean? {
+        var res = false
+            var partidos = this.buscarTodosPartidos()
+            if (partidos != null) {
+                for (p in partidos) {
+                    if (p.equipoLocal?.name==equipoLocal && p.equipoVisitante?.name==equipoVisitante) {
+                        res = true
+                        break
+                    }
+                }
+            }
+        return res
     }
 
     @Transactional
@@ -45,16 +65,10 @@ class PartidoServicio {
         for (partido in partidos) {
             var p = Partido()
             var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
-                .replace("C�diz", "Cádiz")
-                .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
-            println(equipoLocal)
+
             p.equipoLocal = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoLocal)
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
-                .replace("C�diz", "Cádiz")
-                .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
-            println(equipoVisitante)
+
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
             p.fecha = partido.select("td[data-stat=date] a").text()
             p.jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(partido.select("th[data-stat=gameweek]").text().toInt())

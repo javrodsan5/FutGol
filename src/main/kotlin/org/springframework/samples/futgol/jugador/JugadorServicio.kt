@@ -83,7 +83,6 @@ class JugadorServicio {
                     .replace("Real Betis Balompié", "Real Betis").replace("Deportivo", "")
                     .replace("Real Valladolid", "Valladolid")
                     .replace("CA", "").replace("UD", "").replace("RC Celta de Vigo", "Celta Vigo").trim()
-            println(nombreEquipo)
             var linkPlantilla =
                 doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct()
                     .collect(Collectors.toList())
@@ -172,15 +171,14 @@ class JugadorServicio {
                     }
                 }
             if (this.existeJugador(nombreJugador, equipo) == true) {
-                println(nombreJugador)
                 var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                 var element: Elements? = doc3.select("div.players#info div#meta p")
                 if (j != null) {
                     for (n in 0 until element?.size!!) {
                         if (element[n].text().contains("Posición:")) {
                             j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0,2)
-                            println(j.posicion)
                         }
+
                         if (element[n].text().contains("Pie primario:")) {
                             if (element[n].text().contains("%")) {
                                 j.piePrimario =
@@ -189,20 +187,24 @@ class JugadorServicio {
                             } else {
                                 j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
                             }
-                            println(j.piePrimario)
                         }
+                        if(j.piePrimario== ""){
+                            j.piePrimario = "Derecha"
+                        }
+
                         if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
                             j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
-                            println(j.altura)
                         }
+
                         if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
                             j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
-                            println(j.peso)
                         }
+
                         if (element[n].text().contains("Nacimiento:")) {
-                            j.lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
-                            println(j.lugarFechaNacimiento)
+                            var lugarFechaNacimiento= element[n].text().substringAfter("Nacimiento: ")
+                            j.lugarFechaNacimiento=  lugarFechaNacimiento.substring(0,j.lugarFechaNacimiento.length-3)
                         }
+
                     }
                     this.guardarJugador(j)
                 }

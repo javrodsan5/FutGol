@@ -16,9 +16,10 @@ class EstadisticaJugadorControlador(val estadisticaJugadorServicio: EstadisticaJ
     }
 
     @PostMapping("/WSEstadisticas")
-    fun creaWSJugadores(model: Model): String {
-        this.estadisticaJugadorServicio.equiposPartidosEstadisticasJugadores()
+    fun creaEstadisticasJugadoresWS(model: Model): String {
+        //this.estadisticaJugadorServicio.equiposPartidosEstadisticasJugadores()
         //this.estadisticaJugadorServicio.valoraciones()
+        this.estadisticaJugadorServicio.wsEstadisticas()
         return VISTA_WSESTADISTICA
     }
 

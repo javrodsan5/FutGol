@@ -5,18 +5,17 @@ Yan Brice Eteki,Yan Eteki
 Rober,Rober Pier
 Mickael Malsa,Mickaël Malsa
 Emerson,Emerson Royal
-Rodrigo, Rodri
+Rodrigo,Rodri
 Daniel Martín,Dani Martín
 Daniel Parejo,Dani Parejo
 Fernando Niño,Fer Niño
-Yeremi Piño,Yeremy
+Yeremi Pino,Yeremy
 Alejandro Baena,Álex Baena
 Joseba Zaldúa,Joseba Zaldua
 Nemanja Maksimović,Nemanja Maksimovic
-Xabier Etxeita,Xabi Etxeita
 Sofian Chakla,Soufiane Chakla
 Jens Jønsson,Jens Jönsson
-Isaac Carcelen,Iza Carcelen
+Isaac Carcelen,Iza Carcelén
 Cala,Juan Cala
 Salvi,Salvi Sánchez
 Anthony Lozano,Choco Lozano
@@ -52,7 +51,6 @@ Míchel,Míchel Herrero
 Junior Firpo,Júnior Firpo
 Francisco Trincão,Trincão
 Iñaki,Iñaki Peña
-Tomás Vaclík,Tomas Vaclík
 Óscar Rodríguez Arnaiz,Óscar
 Yassine Bounou,Bono
 Fernando,Fernando Reges
@@ -66,3 +64,22 @@ Nacho,Nacho Martínez,Valladolid
 Nacho,Nacho Fernández,Real Madrid
 Stefan Savić,Stefan Savic
 Šime Vrsaljko,Sime Vrsaljko
+Ivo Grbić,Ivo Grbic
+Konrad De La Fuente,Konrad de la Fuente
+Tomáš Vaclík,Tomas Vaclík
+Javier Díaz,Javi Díaz
+Gerónimo Rulli,Gero Rulli
+José Sánchez,Pepe Sánchez
+Cristian,Cristian Rivero
+Francisco Reis Ferreira,Ferro
+Alejandro Blanco,Álex Blanco
+Rubén,Rubén Martínez
+Darko Brašanac,Darko Brasanac
+Ivan Šaponjić,Ivan Saponjic
+Xabier Etxeita,Xabi Etxeita
+Mathías Olivera,Mathí­as Olivera
+John Patrick,John Joe Patrick Finn
+Yoel,Yoel Rodríguez
+Quique,Quique González
+Raúl García,Raúl Carnero
+Juan Carlos,Juan Carlos Real

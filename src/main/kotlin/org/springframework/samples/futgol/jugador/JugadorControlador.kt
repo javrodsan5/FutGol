@@ -28,6 +28,7 @@ class JugadorControlador(
     private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
+    private val VISTA_DETALLES_JUGADOR_EQUIPO = "jugadores/detallesJugadorEquipo"
 
     @InitBinder("clausula")
     fun initClausulaBinder(dataBinder: WebDataBinder) {
@@ -60,17 +61,17 @@ class JugadorControlador(
         @PathVariable("idJugador") idJugador: Int, principal: Principal?
     ): String {
         var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-        if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)
-            && equipo!!.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }
-        ) {
+        if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
             model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["equipo"] = equipo
-            model["loTengoEnMiEquipo"] = true
             model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            if (equipo!!.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
+                model["loTengoEnMiEquipo"] = true
+            }
         } else {
             return "redirect:/"
         }
-        return VISTA_DETALLES_JUGADOR
+        return VISTA_DETALLES_JUGADOR_EQUIPO
     }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")

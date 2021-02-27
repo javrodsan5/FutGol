@@ -7,15 +7,7 @@
 <h1><b>Nombre: </b><b th:text="${jugador.name}"></b></h1>
 <h2>Valor: <b th:text="${jugador.valor}"></b>000.000€</h2>
 <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
-<h2>Clausula: <b th:text="${clausula.valorClausula}"></b>€</h2>
-<br>
-<h2 th:if="${loTengoEnMiEquipo}">
-    <div>
-        <a class="btn btn-default"
-           th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
-            clausula</a>
-    </div>
-</h2>
+
 </body>
 
 </html>

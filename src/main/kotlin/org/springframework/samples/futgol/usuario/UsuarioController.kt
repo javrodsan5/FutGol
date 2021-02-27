@@ -127,10 +127,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/editarmisdatos")
     fun iniciarActualizacion(model: Model, principal: Principal): String {
-        val usuario = usuarioServicio.usuarioLogueado(principal)
-        if (usuario != null) {
-            model["usuario"] = usuario
-        }
+            model["usuario"] = usuarioServicio.usuarioLogueado(principal)!!
         return VISTA_EDITAR_USUARIO
     }
 
@@ -149,7 +146,6 @@ class UsuarioController(
                     result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
                 !PATRON_NOMBRE.matcher(usuario.name).matches() ->
                     result.addError(FieldError("usuario", "name", "Tu nombre solo puede tener letras"))
-
             }
         }
         return if (result.hasErrors()) {

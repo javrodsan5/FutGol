@@ -203,7 +203,7 @@ class EstadisticaJugadorServicio {
         }
     }
 
-    fun wsEstadisticas() {
+fun wsEstadisticas() {
         var urlBase = "https://fbref.com/"
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()
         var partidos = doc.select("table#sched_ks_10731_1 tbody tr")

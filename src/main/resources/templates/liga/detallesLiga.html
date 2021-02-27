@@ -30,10 +30,11 @@
     </tbody>
 </table>
 <br>
-
-<h2 th:if="${noTengoEquipo}">
-    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
-        <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+<h2 th:if="${limiteEquipos}">
+    <h2 th:if="${noTengoEquipo}">
+        <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
+            <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+    </h2>
 </h2>
 
 <h2 th:if="${soyAdmin}">

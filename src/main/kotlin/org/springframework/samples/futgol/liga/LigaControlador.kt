@@ -43,8 +43,22 @@ class LigaControlador(
     fun listaLigas(model: Model, principal: Principal): String {
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
+        var valores: MutableList<Double> = ArrayList()
+        var posiciones: MutableList<Int> = ArrayList()
         if (ligas != null) {
             model["ligas"] = ligas
+            for (l in ligas) {
+                l.id?.let {
+                    if (equipoServicio.tengoEquipo(it, principal)) {
+                        var equipo = l.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal) }
+                        l.id?.let { ligaServicio.calculaPosicionLiga(it, principal)?.let { posiciones.add(it) } }
+                        l.id?.let { equipoServicio.calcularValorEquipo(equipo?.name, it) }?.let { valores.add(it) }
+                    }
+                }
+            }
+            model["posiciones"] = posiciones
+            model["valores"] = valores
+
         }
         return VISTA_LISTA_LIGAS
     }
@@ -123,14 +137,19 @@ class LigaControlador(
         var soyAdmin: Boolean
         val usuario = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
+        var limiteEquipos = true
         if (ligas != null && liga != null) {
             if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
                 model["liga"] = liga
                 var equiposLiga = liga.equipos
                 model["equipos"] = equiposLiga
+                if (liga!!.equipos.size >= 8) {
+                    limiteEquipos = false
+                }
             } else {
                 return VISTA_ERROR_403
             }
+            model["limiteEquipos"] = limiteEquipos
         }
         if (usuario != null && liga != null) {
             if (liga.admin?.user?.username.equals(usuario.user?.username)) {

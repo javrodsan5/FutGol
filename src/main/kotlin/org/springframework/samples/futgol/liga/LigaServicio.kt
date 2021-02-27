@@ -1,6 +1,5 @@
 package org.springframework.samples.futgol.liga
 
-import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
@@ -8,8 +7,8 @@ import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.security.Principal
 import java.util.*
-import java.util.stream.Collectors
 
 @Service
 class LigaServicio {
@@ -57,6 +56,19 @@ class LigaServicio {
             }
         }
         return jugadoresLiga
+    }
+
+    @Transactional(readOnly = true)
+    fun calculaPosicionLiga(idLiga: Int, principal: Principal): Int? {
+        var equipo = equipoServicio?.buscaMiEquipoEnLiga(idLiga, principal)
+        var liga = buscarLigaPorId(idLiga)
+        var equiposOrdenadosPuntos = liga?.equipos?.sortedBy { x -> -x.puntos }
+        for (e in 0 until equiposOrdenadosPuntos!!.size) {
+            if(equiposOrdenadosPuntos[e].name == equipo!!.name) {
+                return e+1
+            }
+        }
+        return 1000
     }
 
     @Transactional(readOnly = true)

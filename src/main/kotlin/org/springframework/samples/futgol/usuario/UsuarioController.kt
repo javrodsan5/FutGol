@@ -127,7 +127,7 @@ class UsuarioController(
 
     @GetMapping("/micuenta/editarmisdatos")
     fun iniciarActualizacion(model: Model, principal: Principal): String {
-            model["usuario"] = usuarioServicio.usuarioLogueado(principal)!!
+        model["usuario"] = usuarioServicio.usuarioLogueado(principal)!!
         return VISTA_EDITAR_USUARIO
     }
 
@@ -173,6 +173,9 @@ class UsuarioController(
     ): String {
         var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
         var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
+        if (liga!!.equipos.size >= 8) {
+            "redirect:/misligas"
+        }
         if (usuario != null && liga != null) {
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
@@ -180,7 +183,6 @@ class UsuarioController(
         }
         return "redirect:/misligas"
     }
-
 
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
@@ -201,7 +203,7 @@ class UsuarioController(
                         break
                     }
                 }
-                if (res) {
+                if (res && ligaM.equipos.size <= 8) {
                     ligasNoUsuario.add(ligaM)
                 }
             }

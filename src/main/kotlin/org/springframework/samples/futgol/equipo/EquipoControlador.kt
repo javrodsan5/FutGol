@@ -37,9 +37,14 @@ class EquipoControlador(
             model["equipo"] = miEquipo
             "redirect:/liga/$idLiga/miEquipo"
         } else {
-            val equipo = Equipo()
-            model["equipo"] = equipo
-            VISTA_CREAEQUIPOS
+            var liga = ligaServicio.buscarLigaPorId(idLiga)
+            if (liga!!.equipos.size >= 8) {
+                "redirect:/misligas"
+            } else {
+                val equipo = Equipo()
+                model["equipo"] = equipo
+                VISTA_CREAEQUIPOS
+            }
         }
     }
 
@@ -59,9 +64,9 @@ class EquipoControlador(
             VISTA_CREAEQUIPOS
         } else {
             val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-            var misJugadores= jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
+            var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
 
-            equipo.jugadores= misJugadores
+            equipo.jugadores = misJugadores
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga

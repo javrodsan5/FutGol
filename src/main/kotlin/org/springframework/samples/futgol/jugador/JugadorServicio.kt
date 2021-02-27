@@ -48,8 +48,53 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscaJugadorPorNombre(nombre: String): Jugador? {
-        return jugadorRepositorio?.buscarJugadorPorNombre(nombre)
+    fun buscarTodosJugadores(): Collection<Jugador>? {
+        return jugadorRepositorio?.findAll()
+    }
+
+    fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
+        var jugadores = this.buscaTodosJugadores()
+        var listaPosiblesJugador = ArrayList<Jugador>()
+        if (jugadores != null) {
+            for (jugador in jugadores) {
+                if (jugador.equipos.stream().noneMatch { x -> x.liga?.id == idLiga }) {
+                    listaPosiblesJugador.add(jugador)
+                }
+            }
+        }
+        return listaPosiblesJugador
+    }
+
+    fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador>{
+        var jugadoresAsignables= this.jugadoresAsignablesLiga(idLiga)
+        var porterosA= ArrayList<Jugador>()
+        var defensasA= ArrayList<Jugador>()
+        var centrocamA= ArrayList<Jugador>()
+        var delanterosA= ArrayList<Jugador>()
+        var misJugadores= HashSet<Jugador>()
+
+        if (jugadoresAsignables != null) {
+            for(jugador in jugadoresAsignables){
+                if(jugador.posicion=="PO"){
+                    porterosA.add(jugador)
+                }else if(jugador.posicion=="DF"){
+                    defensasA.add(jugador)
+                }else if(jugador.posicion=="CC"){
+                    centrocamA.add(jugador)
+                }else{
+                    delanterosA.add(jugador)
+                }
+            }
+        }
+        var porteros= porterosA.shuffled().subList(0,2)
+        var defensas= defensasA.shuffled().subList(0,6)
+        var centrocam= centrocamA.shuffled().subList(0,6)
+        var delanteros= delanterosA.shuffled().subList(0,4)
+        misJugadores.addAll(porteros)
+        misJugadores.addAll(defensas)
+        misJugadores.addAll(centrocam)
+        misJugadores.addAll(delanteros)
+        return misJugadores
     }
 
     @Transactional(readOnly = true)

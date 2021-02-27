@@ -59,6 +59,9 @@ class EquipoControlador(
             VISTA_CREAEQUIPOS
         } else {
             val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
+            var misJugadores= jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
+
+            equipo.jugadores= misJugadores
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga

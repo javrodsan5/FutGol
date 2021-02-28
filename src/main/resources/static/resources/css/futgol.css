@@ -7231,3 +7231,172 @@ hr {
     color: #000000;
     text-align: center;
 }
+
+/* This is just a reset */
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* This is very important for the responsivity of the field, you can assign a value in px, em, vw, %, whatever you need to properly fit the page. This variable controls the size of every player and the grid cells width and height. */
+:root {
+    --gridcell: 5vmin;
+}
+
+/* field */
+.field {
+    display: grid;
+    width: max-content;
+    grid-template-rows: repeat(10, var(--gridcell));
+    grid-template-columns: repeat(16, var(--gridcell));
+    background-color: #158247;
+    padding: 20px;
+}
+
+.grass {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+}
+
+/* Map */
+.map {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-rows: repeat(10, var(--gridcell));
+    grid-template-columns: repeat(16, var(--gridcell));
+    place-items: center;
+}
+
+.outline {
+    border: 4px solid #fff;
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    height: 100%;
+    width: 100%;
+}
+
+.midline {
+    height: 100%;
+    width: 4px;
+    background-color: #fff;
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+}
+
+.midcircle {
+    border: 4px solid #fff;
+    grid-column: 8 / 10;
+    grid-row: 5 / 7;
+    width: 140%;
+    height: 140%;
+    border-radius: 100%;
+}
+
+.leftgoals {
+    border: 4px solid #fff;
+    grid-column: 1 / 4;
+    grid-row: 4 / 8;
+    height: 110%;
+    width: 80%;
+    justify-self: start;
+}
+
+.rightgoals {
+    border: 4px solid #fff;
+    grid-column: 14 / -1;
+    grid-row: 4 / 8;
+    height: 110%;
+    width: 80%;
+    justify-self: end;
+}
+
+/* Base rules for a player dot. Position is relative so a hidden element could be positioned absolute inside.*/
+.player {
+    position: relative;
+    width: var(--gridcell);
+    height: var(--gridcell);
+    background-color: crimson;
+    border-radius: 100%;
+    place-self: center;
+    transition: all 0.2s;
+    cursor: crosshair;
+}
+
+/* Now let's specifically place our team on the field! Some of them just get one cell, some span through more to get a nicer alignment. They are all centered within the area they occupy. */
+.p1 {
+    grid-column: 1 / 3;
+    grid-row: 5 / 7;
+}
+.p2 {
+    grid-column: 4 / 5;
+    grid-row: 4 / 5;
+}
+.p3 {
+    grid-column: 4 / 5;
+    grid-row: 7 / 8;
+}
+.p4 {
+    grid-column: 5 / 6;
+    grid-row: 1 / 3;
+}
+.p5 {
+    grid-column: 5 / 6;
+    grid-row: 9 / 11;
+}
+.p6 {
+    grid-column: 8 / 10;
+    grid-row: 4 / 5;
+}
+.p7 {
+    grid-column: 8 / 10;
+    grid-row: 7 / 8;
+}
+.p8 {
+    grid-column: 9 / 11;
+    grid-row: 1 / 3;
+}
+.p9 {
+    grid-column: 9 / 11;
+    grid-row: 9 / 11;
+}
+.p10 {
+    grid-column: 13 / 14;
+    grid-row: 4 / 5;
+}
+.p11 {
+    grid-column: 13 / 14;
+    grid-row: 7 / 8;
+}
+
+/* Some basics for the info box */
+.info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    background-color: #ffffffbb;
+    color: #222;
+    box-shadow: 1px 2px 3px #22222288;
+    padding: 12px;
+    z-index: 10;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.player:hover {
+    background-color: orange;
+}
+
+.player:hover .info {
+    visibility: visible;
+    opacity: 1;
+}
+

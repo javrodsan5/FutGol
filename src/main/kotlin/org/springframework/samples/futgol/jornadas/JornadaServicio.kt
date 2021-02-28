@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -14,6 +16,8 @@ class JornadaServicio {
 
     private var jornadaRepositorio: JornadaRepositorio? = null
 
+    @Autowired
+    private var estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
 
     @Autowired
     fun JornadaServicio(jornadaRepositorio: JornadaRepositorio) {
@@ -58,50 +62,36 @@ class JornadaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun onceIdealJornada(idJornada: Int): Collection<Jugador>? {
-        var jugadores: MutableSet<Jugador> = HashSet()
-        var defensas: MutableSet<Jugador> = HashSet()
-        var centrocampistas: MutableSet<Jugador> = HashSet()
-        var delanteros: MutableSet<Jugador> = HashSet()
+    fun onceIdealJornada(idJornada: Int): MutableList<Jugador?> {
+        var jugadores: MutableList<Jugador?> = ArrayList()
+        var defensas: MutableList<Jugador?> = ArrayList()
+        var centrocampistas: MutableList<Jugador?> = ArrayList()
+        var delanteros: MutableList<Jugador?> = ArrayList()
         var portero = Jugador()
-        var jugadoresSortPuntos = ordenaJugadoresPuntosJornada(idJornada)
+        //var jugadoresSortPuntos = ordenaJugadoresPuntosJornada(idJornada)
+        //PROVISIONAL--
+        var jugadoresSortPuntos= this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+            ?.stream()?.filter { x-> x.partido?.jornada?.id == idJornada}
+            ?.sorted(Comparator.comparing { x-> x.puntos })
+            ?.map { x-> x.jugador }?.collect(Collectors.toList())?.reversed()
+
+        //--
         if (jugadoresSortPuntos != null) {
-            for (jugador in jugadoresSortPuntos) {
-                if (jugador != null) {
-                    var posicion = jugador?.posicion
-                    if (posicion == "PO") {
-                        if (portero.name == "") {
-                            portero = jugador
-                        }
-                    } else if (posicion == "DF") {
-                        if (defensas.size < 4) {
-                            defensas.add(jugador)
-                        }
-                    } else if (posicion == "CC") {
-                        if (centrocampistas.size < 4) {
-                            centrocampistas.add(jugador)
-                        }
-                    } else if (posicion == "DL") {
-                        if (delanteros.size < 4) {
-                            delanteros.add(jugador)
-                        }
-                    }
-                }
-                if (defensas.size >= 4 && centrocampistas.size >= 4 && delanteros.size >= 2 && portero.name != "") {
-                    break
-                }
-            }
-        }
-        for (j in defensas) {
-            jugadores.add(j)
-        }
-        for (j in centrocampistas) {
-            jugadores.add(j)
-        }
-        for (j in delanteros) {
-            jugadores.add(j)
+
+            portero = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
+            defensas = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                .subList(0, 4)
+            centrocampistas =
+                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                    .subList(0, 4)
+            delanteros = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                .subList(0, 2)
+
         }
         jugadores.add(portero)
+        jugadores.addAll(defensas)
+        jugadores.addAll(centrocampistas)
+        jugadores.addAll(delanteros)
 
         return jugadores
     }

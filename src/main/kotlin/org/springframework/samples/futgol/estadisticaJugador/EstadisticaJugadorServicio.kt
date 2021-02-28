@@ -215,23 +215,57 @@ fun wsEstadisticas() {
             println("No se puede leer el fichero de nombres.")
         }
 
-        for (partido in partidos) {
-            var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
+        for (n in 0 until 1) {
+            var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
                 .replace("Atl�tico Madrid", "Atlético Madrid")
                 .replace("Alav�s","Alavés")
-            var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
+            var equipoVisitante = partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
                 .replace("Atl�tico Madrid", "Atlético Madrid")
                 .replace("Alav�s","Alavés")
 
             if(this.partidoServicio?.existePartido(equipoLocal,equipoVisitante)==true) {
                 var p= this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal,equipoVisitante)
-                var linkPartido = partido.select("td[data-stat=score] a").attr("href")
-                var ultimaEstadistica= this.buscarTodasEstadisticas()?.last()
-                var ultimaEPId= ultimaEstadistica?.partido?.id
+                var linkPartido = partidos[n].select("td[data-stat=score] a").attr("href")
+                var ultimaEPId= 0
+                var ultimaEstadistica= EstadisticaJugador()
+                if(this.buscarTodasEstadisticas()?.isEmpty() ==false) {
+                    ultimaEstadistica = this.buscarTodasEstadisticas()?.last()!!
+                    ultimaEPId = ultimaEstadistica?.partido?.id!!
+                }
                 if (ultimaEstadistica != null) {
                     if (p?.id!! >= ultimaEPId!!) { //intentar poner de otra forma
 
                         var doc2 = Jsoup.connect("$urlBase" + linkPartido).get()
+                        var alineaciones= doc2.select("div.lineup tbody")
+                        var titularesLocal= alineaciones[0].select("tr").subList(1,12)
+                            .stream().map { x-> x.select("td a").text() }.collect(Collectors.toList())
+                        var titularesV= alineaciones[1].select("tr").subList(1,12)
+                            .stream().map { x-> x.select("td a").text() }.collect(Collectors.toList())
+
+                        for (k in 0 until l.size) {
+                            var linea = l[k]?.split(",")
+                            for(j in 0 until titularesLocal.size){
+                                if (linea?.size!! >= 3) {
+                                    if (linea?.get(2).equals(equipoLocal) && linea?.get(0).equals(titularesLocal[j])) {
+                                        titularesLocal.removeAt(j)
+                                        titularesLocal.add(linea?.get(1).toString())
+                                    }else if(linea?.get(2).equals(equipoVisitante) && linea?.get(0).equals(titularesV[j])){
+                                        titularesV.removeAt(j)
+                                        titularesV.add(linea?.get(1).toString())
+                                    }
+                                } else {
+                                    if (linea?.get(0).equals(titularesLocal[j])) {
+                                        titularesLocal.removeAt(j)
+                                        titularesLocal.add(linea?.get(1).toString())
+                                    }else if(linea?.get(0).equals(titularesV[j])){
+                                        titularesV.removeAt(j)
+                                        titularesV.add(linea?.get(1).toString())
+                                    }
+                            }
+                            }
+                        }
+
+
                         var tablas = doc2.select("div.table_wrapper").subList(0, 4)
                         for (n in 0 until tablas.size) {
                             var equipo = tablas[n].select("h2").first().text().substringBefore("Estadísticas de").trim()
@@ -259,15 +293,20 @@ fun wsEstadisticas() {
                                 }
                                 if (jugadorServicio?.existeJugador(nombreJugador, equipo) == true) {
                                     var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
-                                    if (existeEstadisticaJugador(nombreJugador, equipo, p?.id) == false) {
-
-                                        var est = EstadisticaJugador()
+                                    var est = EstadisticaJugador()
+                                    if (existeEstadisticaJugador(nombreJugador, equipo, p?.id) == true) {
+                                        est= this.buscarEstadisticaPorJugadorPartido(nombreJugador,equipo, p.id!!)!!
+                                    }
                                         println(nombreJugador)
 
                                         var minutosJTexto = jugador.select("td[data-stat=minutes]").text()
                                         var minutosJ = 0
 
-                                        var titular = true
+                                        var titular = false
+                                        if(titularesLocal.contains(nombreJugador) || titularesV.contains(nombreJugador)){
+                                            titular=true
+                                        }
+
                                         if (minutosJTexto != "") {
                                             minutosJ = minutosJTexto.toInt()
                                         }
@@ -406,7 +445,6 @@ fun wsEstadisticas() {
 
             }
         }
-    }
 }
 
 

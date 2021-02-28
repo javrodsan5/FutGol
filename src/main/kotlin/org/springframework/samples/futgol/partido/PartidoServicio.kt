@@ -65,15 +65,18 @@ class PartidoServicio {
         for (partido in partidos) {
             var p = Partido()
             var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
-
+                .replace("C�diz", "Cádiz")
+                .replace("Atl�tico Madrid", "Atlético Madrid")
+                .replace("Alav�s","Alavés")
             p.equipoLocal = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoLocal)
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
-
+                .replace("C�diz", "Cádiz")
+                .replace("Atl�tico Madrid", "Atlético Madrid")
+                .replace("Alav�s","Alavés")
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
             p.fecha = partido.select("td[data-stat=date] a").text()
             p.jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(partido.select("th[data-stat=gameweek]").text().toInt())
             p.resultado = partido.select("td[data-stat=score] a").text()
-            print(partido.select("td[data-stat=score] a").text())
             this.guardarPartido(p)
         }
     }

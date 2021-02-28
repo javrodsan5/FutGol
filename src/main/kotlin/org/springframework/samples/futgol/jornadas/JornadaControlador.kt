@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.jornadas
 
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,7 +12,9 @@ import java.time.LocalDate
 import java.util.stream.Collectors
 
 @Controller
-class JornadaControlador(val jornadaServicio: JornadaServicio, val partidoServicio: PartidoServicio) {
+class JornadaControlador(val jornadaServicio: JornadaServicio,
+                         val partidoServicio: PartidoServicio,
+                         val estadisticaJugadorServicio: EstadisticaJugadorServicio) {
 
     private val VISTA_DETALLES_JORNADA = "jornadas/detallesJornada"
 

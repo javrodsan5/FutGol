@@ -5,7 +5,10 @@
 
 <body>
 
-<h2>Jornadas</h2>
+<div th:if="${ultimaJornada}">
+    <h1>Última jornada:</h1>
+</div>
+<h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
 
 <div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"

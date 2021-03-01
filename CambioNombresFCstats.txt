@@ -1,0 +1,45 @@
+Stefan Savić,Stefan Savic
+Diego Costa, no está
+Ivo Grbić, Ivo Grbic
+Thomas Partey, sale pero abajo
+Anssumane Fati,Ansu Fati
+Francisco Trincão,Trincão
+Luka Modrić,Luka Modric
+Fernando,Fernando Reges
+Carlos Fernández Luna,Carlos Fernández
+Tomáš Vaclík,T. Vaclík
+Ivan Rakitić,I. Rakitic
+Emerson,Emerson Royal
+Raba,Dani Raba
+Fernando Niño,Fer Niño
+Róber Pier,Rober Pier
+Nikola Vukčević,Nikola Vukcevic
+Jorge De Frutos Sebastian,Jorge De Frutos
+Íñigo Lekue,Iñigo Lekue
+Iñigo Cordoba,Iñigo Córdoba
+Fran Beltran,Fran Beltrán
+Néstor Araujo,Néstor Araújo
+Okay Yokuşlu,Okay Yokuslu
+Xabier Etxeita,Xabi Etxeita
+Mathias Olivera,Mathías Olivera
+Nemanja Maksimović,Nemanja Maksimovic
+Cucho Hernández,Cucho
+José Luis Gayà,José Gayà
+Maximiliano Gómez,Maxi Gómez
+Uroš Račić,Uros Racic
+Alberto,Alberto Perea
+Isaac Carcelén,Iza Carcelén
+Jens Jønsson,Jens Jönsson
+Salvi,Salvi Sánchez
+Filip Malbašić,Filip Malbasic
+Marko Dmitrović,Marko Dmitrovic
+Róber,Roberto Correa
+Papakouli Diop,Pape Diop
+Kike,Kike García
+Damian Kądzior,Damian Kadzior
+Roberto Jiménez,Roberto
+Waldo Rubio Marin,Waldo Rubio
+Pablo Hervias,Pablo Hervías
+Jose Morente,Tete Morente
+Juan Carlos,Juan Carlos Real
+

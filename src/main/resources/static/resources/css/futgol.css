@@ -7245,6 +7245,9 @@ hr {
     grid-template-columns: repeat(16, var(--gridcell));
     background-color: #047938;
     padding: 20px;
+    /*transform:rotate(90deg);
+    -ms-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);  Opera, Chrome, and Safari */
 }
 
 .grass {
@@ -7287,6 +7290,7 @@ hr {
     border-radius: 100%;
 }
 
+
 .spot_center{
     border: 6px solid #fff;
     grid-column: 8 / 10;
@@ -7309,6 +7313,24 @@ hr {
     grid-row:  4 / 8;
     border-radius: 100%;
 
+}
+
+.left_goals_little {
+    border: 4px solid #fff;
+    grid-column: 1 / 2;
+    grid-row: 7 / 5;
+    height: 110%;
+    width: 80%;
+    justify-self: start;
+}
+
+.right_goals_little {
+    border: 4px solid #fff;
+    grid-column: -1 / -2;
+    grid-row: 5 / 7;
+    height: 110%;
+    width: 80%;
+    justify-self: start;
 }
 
 .leftgoals {
@@ -7402,6 +7424,9 @@ hr {
     visibility: hidden;
     opacity: 0;
     transition: all 0.2s;
+    /*transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg); */
 }
 
 .player:hover {
@@ -7413,3 +7438,22 @@ hr {
     opacity: 1;
 }
 
+.message-container--player {
+
+    box-shadow: 1px 2px 3px #22222288;
+    background-color: #3c3834;
+    border-radius: 5px;
+    padding: 6px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+
+}
+
+.message--player {
+    font-size: 13px;
+    font-weight: 1000;
+    color: #ffffff;
+    text-align: center;
+    word-wrap: break-word;
+
+}

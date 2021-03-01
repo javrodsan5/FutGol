@@ -34,15 +34,20 @@
         <div class="midcircle"></div>
         <div class="leftgoals"></div>
         <div class="rightgoals"></div>
+        <div class="spot_center"></div>
+        <div class="spot_left"></div>
+        <div class="spot_right"></div>
+
+
     </div>
 
-
-    <div class="player p1">
+    <div class="player p1" style="background-image: url("th:src="${jugadores[0].foto}"")">
         <div class="info">
             <div th:object="${jugadores[0]}">
-                <h2 th:text="*{name}"></h2>
+            <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+                <img th:src="*{foto}" width="30%" height="30%">
 
             </div>
         </div>
@@ -53,7 +58,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -63,7 +68,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -73,7 +78,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -83,7 +88,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -93,7 +98,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -103,7 +108,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -113,7 +118,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -123,7 +128,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -133,7 +138,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>
@@ -143,7 +148,7 @@
                 <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-
+                <img th:src="*{foto}" width="30%" height="30%">
             </div>
         </div>
     </div>

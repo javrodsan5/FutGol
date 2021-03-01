@@ -1,13 +1,10 @@
 package org.springframework.samples.futgol.estadisticaJugador
 
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.jugador.JugadorServicio
-import org.springframework.samples.futgol.partido.Partido
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,7 +12,6 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.text.Normalizer
-import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 
@@ -216,12 +212,8 @@ fun wsEstadisticas() {
         }
 
         for (n in 0 until 1) {
-            var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
-                .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
-            var equipoVisitante = partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis").replace("C�diz", "Cádiz")
-                .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
+            var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
+            var equipoVisitante = partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
 
             if(this.partidoServicio?.existePartido(equipoLocal,equipoVisitante)==true) {
                 var p= this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal,equipoVisitante)
@@ -407,8 +399,11 @@ fun wsEstadisticas() {
                                             if (est.tarjetasRojas == 1) {
                                                 puntosPorPartido -= est.tarjetasRojas * 3
                                             } else {
-                                                est.tarjetasAmarillas * 1
+                                                puntosPorPartido -= est.tarjetasAmarillas * 1
                                             }
+
+                                            puntosPorPartido-= (est.penaltisLanzados-est.penaltisMarcados)*2
+
                                         } else {
                                             if (est.jugador?.posicion == "PO") {
                                                 puntosPorPartido += est.goles * 6

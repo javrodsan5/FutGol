@@ -25,23 +25,6 @@ class PartidoControlador(val partidoServicio: PartidoServicio) {
     @PostMapping("/WSPartidos")
     fun creaWSPartidos(model: Model): String {
 
-        // SQLite connection string
-        var url = "jdbc:sqlite:sqlite.db"
-        var conn: Connection  ?= null
-        try {
-            conn = DriverManager.getConnection(url)
-        } catch (e: SQLException) {
-            println(e.message);
-        }
-
-        var sql = "DELETE FROM Partidos"
-        try{
-            var pstmt: PreparedStatement? = conn?.prepareStatement(sql)
-            pstmt?.executeUpdate()
-
-        } catch (e: SQLException) {
-            println(e.message);
-        }
 
         this.partidoServicio.wsPartidos()
         return VISTA_WSPARTIDOS

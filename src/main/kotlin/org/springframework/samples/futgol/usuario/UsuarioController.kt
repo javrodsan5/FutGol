@@ -1,6 +1,5 @@
 package org.springframework.samples.futgol.usuario
 
-import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -186,32 +185,13 @@ class UsuarioController(
 
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
-
-        var ligasNoUsuario: MutableList<Liga> = ArrayList()
         var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
         var ligasUsuario = usuarioServicio.buscarLigasUsuario(username)
 
-        var usuariologueado = usuarioServicio.usuarioLogueado(principal)
-        var misLigas = usuariologueado?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
-
-        if (misLigas != null && ligasUsuario != null) {
-            for (ligaM in misLigas) {
-                var res = true
-                for (ligaU in ligasUsuario) {
-                    if (ligaM.name.equals(ligaU.name)) {
-                        res = false
-                        break
-                    }
-                }
-                if (res && ligaM.equipos.size <= 8) {
-                    ligasNoUsuario.add(ligaM)
-                }
-            }
-        }
         if (usuario != null && ligasUsuario != null) {
             model["usuario"] = usuario
             model["ligasUsuario"] = ligasUsuario
-            model["ligasNoUsuario"] = ligasNoUsuario
+            model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
         }
         return VISTA_DETALLES_USUARIO
     }

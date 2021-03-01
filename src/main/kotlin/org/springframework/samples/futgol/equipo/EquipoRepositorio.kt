@@ -15,7 +15,6 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
     @Query("SELECT e FROM Equipo e where e.id = ?1")
     fun buscaEquiposPorId(id: Int): Equipo
 
-
     //REVISAR
     @Query("SELECT e FROM Equipo e where e.name = ?1")
     fun buscarEquipoPorNombre(nombre: String): Equipo

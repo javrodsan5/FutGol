@@ -88,4 +88,28 @@ class UsuarioServicio {
         return usuarioRepository?.findAll()?.stream()?.map { x -> x.user?.username }?.collect(Collectors.toList())
     }
 
+    @Transactional(readOnly = true)
+    fun ligasAInvitar(username: String, principal: Principal): MutableList<Liga> {
+        var ligasUsuario = buscarLigasUsuario(username)
+        var ligasNoUsuario: MutableList<Liga> = ArrayList()
+        var usuariologueado = usuarioLogueado(principal)
+        var misLigas = usuariologueado?.user?.let { buscarLigasUsuario(it.username) }
+
+        if (misLigas != null && ligasUsuario != null) {
+            for (ligaM in misLigas) {
+                var res = true
+                for (ligaU in ligasUsuario) {
+                    if (ligaM.name.equals(ligaU.name)) {
+                        res = false
+                        break
+                    }
+                }
+                if (res && ligaM.equipos.size <= 8) {
+                    ligasNoUsuario.add(ligaM)
+                }
+            }
+        }
+        return ligasNoUsuario
+    }
+
 }

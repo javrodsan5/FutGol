@@ -55,7 +55,17 @@ class EquipoRealServicio {
     var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
     var nombres = doc.select("#results107311_overall:first-of-type tbody tr")
     for (n in 0 until nombres.size) {
+        var nombreEquipo = nombres[n].select("td:first-of-type a").text().replace("Betis", "Real Betis")
         var equipo = EquipoReal()
+        if(this.existeEquipoReal(nombreEquipo)==true){
+            equipo= this.buscarEquipoRealPorNombre(nombreEquipo)!!
+
+        }else{
+            equipo.name= nombreEquipo
+            var linkEquipo = nombres[n].select("td:first-of-type a").attr("href")
+            var doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
+            equipo.escudo = doc2.select("div.media-item.logo img").attr("src")
+        }
         equipo.posicion = nombres[n].select("th").text().toInt()
         equipo.partidosJugados = nombres[n].select("td[data-stat=games]").text().toInt()
         equipo.partidosGanados = nombres[n].select("td[data-stat=wins]").text().toInt()
@@ -65,12 +75,6 @@ class EquipoRealServicio {
         equipo.golesEnContra = nombres[n].select("td[data-stat=goals_against]").text().toInt()
         equipo.diferenciaGoles = nombres[n].select("td[data-stat=goal_diff]").text().toInt()
         equipo.puntos = nombres[n].select("td[data-stat=points]").text().toInt()
-        equipo.name = nombres[n].select("td:first-of-type a").text().replace("Betis", "Real Betis")
-
-        var linkEquipo = nombres[n].select("td:first-of-type a").attr("href")
-        var doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
-        equipo.escudo = doc2.select("div.media-item.logo img").attr("src")
-
         this.guardarEquipo(equipo)
     }
     }

@@ -66,10 +66,14 @@ class PartidoServicio {
         for (partido in partidos) {
             var p = Partido()
             var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
-
+                .replace("C�diz", "Cádiz")
+                .replace("Atl�tico Madrid", "Atlético Madrid")
+                .replace("Alav�s","Alavés")
             p.equipoLocal = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoLocal)
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
-
+                .replace("C�diz", "Cádiz")
+                .replace("Atl�tico Madrid", "Atlético Madrid")
+                .replace("Alav�s","Alavés")
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
 
             var resultadoTexto = partido.select("td[data-stat=score] a").text()

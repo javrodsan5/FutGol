@@ -27,7 +27,7 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
 
     @GetMapping("/equiposLiga")
     fun listaEquiposReales(model: Model): String {
-        model["equiposReales"] = equipoRealServicio.buscarTodosEquiposReales()!!
+        model["equiposReales"] = equipoRealServicio.buscarTodosEquiposReales()!!.sortedBy { x-> x.posicion }
         return VISTA_LISTA_EQUIPOSREALES
     }
 

@@ -22,160 +22,163 @@
                                                th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"/></li>
     </ul>
 </div>
-
-<br><br><br>
-<div class="field" style="float: left">
+<br><br>
+<div th:if="${noOnce}">
+    <h1>No existe todavía once ideal de esta jornada.</h1>
+</div>
+<div>
+<div style="display: inline-block;float: right;width: 55%;">
+<div th:if="${!noOnce}" class="field">
     <div class="grass"></div>
     <div class="map">
         <div class="outline"></div>
         <div class="midline"></div>
         <div class="midcircle"></div>
-        <div class="leftgoals"></div>
-        <div class="rightgoals"></div>
-        <div class="left_goals_little"></div>
-        <div class="right_goals_little"></div>
         <div class="spot_center"></div>
+        <div class="leftgoals"></div>
+        <div class="left_goal"></div>
+        <div class="left_circle-area"></div>
+        <div class="left_goals_little"></div>
         <div class="spot_left"></div>
+        <div class="right_goal"></div>
+        <div class="rightgoals"></div>
+        <div class="right_circle-area"></div>
+        <div class="right_goals_little"></div>
         <div class="spot_right"></div>
     </div>
 
-    <div class="player p1">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[0].name}"></p></div>
+    <div class="player p1" th:object="${jugadores[0]}">
+        <img th:src="*{foto}" class="image--cover img-responsive">
+        <br>
+        <div class="message-container--player"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[0]}">
             <h2 th:text="*{name}"></h2>
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
-
-            </div>
         </div>
     </div>
-    <div class="player p2">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[1].name}"></p></div>
+    <div class="player p2" th:object="${jugadores[1]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[1]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p3">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[2].name}"></p></div>
+    <div class="player p3" th:object="${jugadores[2]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[2]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p4">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[3].name}"></p></div>
+    <div class="player p4" th:object="${jugadores[3]}">
+        <div style="display: inline-block;">
+        <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[3]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p5">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[4].name}"></p></div>
+    <div class="player p5" th:object="${jugadores[4]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[4]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p6">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[5].name}"></p></div>
+    <div class="player p6" th:object="${jugadores[5]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[5]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p7">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[6].name}"></p></div>
+    <div class="player p7" th:object="${jugadores[6]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[6]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p8">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[7].name}"></p></div>
+    <div class="player p8" th:object="${jugadores[7]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[7]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p9">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[8].name}"></p></div>
+    <div class="player p9" th:object="${jugadores[8]}">
+        <div style="display: inline-block;">
+            <img th:src="*{foto}" class="image--cover img-responsive">
+        </div>
+        <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[8]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p10">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[9].name}"></p></div>
+    <div class="player p10" th:object="${jugadores[9]}">
+        <img th:src="*{foto}" class="image--cover img-responsive">
+        <br>
+        <div class="message-container--player"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[9]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
-    <div class="player p11">
-        <br><br><br>
-        <div class="message-container--player"><p class="message--player" th:text="${jugadores[10].name}"></p></div>
+    <div class="player p11" th:object="${jugadores[10]}">
+        <img th:src="*{foto}" class="image--cover img-responsive">
+        <br>
+        <div class="message-container--player"><p class="message--player" th:text="*{name}"></p></div>
         <div class="info">
-            <div th:object="${jugadores[10]}">
-                <h2 th:text="*{name}"></h2>
-                <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
-                <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
-                <img th:src="*{foto}" width="30%" height="30%">
-            </div>
+            <h2 th:text="*{name}"></h2>
+            <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
+            <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
+            <img th:src="*{foto}" width="30%" height="30%">
         </div>
     </div>
 </div>
-
-<br><br><br>        <br><br><br>
-
+    </div>
+<div style="display: inline-block;float: left;">
 <table id="partidos" class="table table-striped">
     <thead>
     <tr>
@@ -196,5 +199,7 @@
     </tbody>
 
 </table>
+</div>
+</div>
 </body>
 </html>

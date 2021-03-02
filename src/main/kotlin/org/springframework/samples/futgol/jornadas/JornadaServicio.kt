@@ -74,9 +74,8 @@ class JornadaServicio {
             ?.stream()?.filter { x-> x.partido?.jornada?.id == idJornada}
             ?.sorted(Comparator.comparing { x-> x.puntos })
             ?.map { x-> x.jugador }?.collect(Collectors.toList())?.reversed()
-
         //--
-        if (jugadoresSortPuntos != null) {
+        if (jugadoresSortPuntos != null && !jugadoresSortPuntos.isEmpty()) {
 
             portero = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
             defensas = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
@@ -86,12 +85,12 @@ class JornadaServicio {
                     .subList(0, 4)
             delanteros = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                 .subList(0, 2)
-
+            jugadores.add(portero)
+            jugadores.addAll(defensas)
+            jugadores.addAll(centrocampistas)
+            jugadores.addAll(delanteros)
         }
-        jugadores.add(portero)
-        jugadores.addAll(defensas)
-        jugadores.addAll(centrocampistas)
-        jugadores.addAll(delanteros)
+
 
         return jugadores
     }

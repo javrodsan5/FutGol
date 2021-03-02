@@ -18,11 +18,9 @@ class JornadaControlador(val jornadaServicio: JornadaServicio,
 
     private val VISTA_DETALLES_JORNADA = "jornadas/detallesJornada"
 
-
     @GetMapping("/jornadas")
     fun ultimaJornadaJugada(model: Model): String {
         model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-
         var partidosJugados= partidoServicio.buscarTodosPartidos()
             ?.stream()?.filter { x-> x.resultado != ""}?.collect(Collectors.toList())
         var ultimaJornada= partidosJugados?.stream()
@@ -39,7 +37,13 @@ class JornadaControlador(val jornadaServicio: JornadaServicio,
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            model["jugadores"] = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+            var jugadores= jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+            if(jugadores.isEmpty()){
+               model["noOnce"]= true
+            }else{
+                model["jugadores"] = jugadores
+                model["noOnce"]= false
+            }
             model["partidos"] = this.partidoServicio.buscarTodosPartidos()
                 ?.stream()?.filter { x-> x.jornada?.id==jornada.id}?.collect(Collectors.toList())!!
             model["ultimaJornada"]=true
@@ -53,7 +57,14 @@ class JornadaControlador(val jornadaServicio: JornadaServicio,
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            model["jugadores"] = jornadaServicio.onceIdealJornada(jornadaId)!!
+            var jugadores= jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+            if(jugadores.isEmpty()){
+                model["noOnce"]= true
+            }else{
+                model["jugadores"] = jugadores
+                model["noOnce"]= false
+            }
+            //PROVISIONAL
             model["partidos"] = this.partidoServicio.buscarTodosPartidos()
                 ?.stream()?.filter { x-> x.jornada?.id==jornadaId}?.collect(Collectors.toList())!!
         }

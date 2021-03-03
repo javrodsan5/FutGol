@@ -263,12 +263,11 @@ class JugadorServicio {
                         if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
                             j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
                         }
-
                         if (element[n].text().contains("Nacimiento:")) {
                             var lugarFechaNacimiento= element[n].text().substringAfter("Nacimiento: ")
-                            j.lugarFechaNacimiento=  lugarFechaNacimiento.substring(0,j.lugarFechaNacimiento.length-3)
+                            var x= lugarFechaNacimiento.length -3
+                            j.lugarFechaNacimiento=  lugarFechaNacimiento.substring(0,x)
                         }
-
                     }
                     this.guardarJugador(j)
                 }

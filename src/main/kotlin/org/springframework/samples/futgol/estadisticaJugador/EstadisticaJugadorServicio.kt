@@ -211,7 +211,7 @@ fun wsEstadisticas() {
             println("No se puede leer el fichero de nombres.")
         }
 
-        for (n in 0 until 1) {
+        for (n in 0 until partidos.size) {
             var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
             var equipoVisitante = partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
 
@@ -298,16 +298,11 @@ fun wsEstadisticas() {
                                         if(titularesLocal.contains(nombreJugador) || titularesV.contains(nombreJugador)){
                                             titular=true
                                         }
-
                                         if (minutosJTexto != "") {
                                             minutosJ = minutosJTexto.toInt()
                                         }
-
-                                        println(minutosJ)
                                         if (j?.posicion == "PO") {
-                                            if (!jugador.select("td[data-stat=shots_on_target_against]").text()
-                                                    .isEmpty()
-                                            ) {
+                                            if (n%2!=0) {
                                                 est = p?.id?.let {
                                                     this.buscarEstadisticaPorJugadorPartido(
                                                         nombreJugador,
@@ -315,14 +310,16 @@ fun wsEstadisticas() {
                                                         it
                                                     )
                                                 }!!
+                                                println(jugador.select("td[data-stat=shots_on_target_against]").text())
+
                                                 est.disparosRecibidos =
                                                     jugador.select("td[data-stat=shots_on_target_against]").text()
                                                         .toInt()
+                                                println(est.disparosRecibidos)
                                                 est.golesRecibidos =
                                                     jugador.select("td[data-stat=goals_against_gk]").text().toInt()
-                                                est.salvadas = jugador.select("td[data-stat=saves]").text().toInt()
-                                                println(est.disparosRecibidos)
                                                 println(est.golesRecibidos)
+                                                est.salvadas = jugador.select("td[data-stat=saves]").text().toInt()
                                                 println(est.salvadas)
                                             }
                                         } else {
@@ -410,9 +407,11 @@ fun wsEstadisticas() {
                                                 puntosPorPartido += est.asistencias * 3
                                                 if (est.minutosJugados > 75 && est.golesRecibidos == 0) {
                                                     puntosPorPartido += 3
+
                                                 } else if (est.minutosJugados > 60 && est.golesRecibidos == 1) {
                                                     puntosPorPartido += 2
                                                 }
+
                                                 puntosPorPartido -= est.golesRecibidos
                                                 if (est.disparosRecibidos > 2 && est.salvadas > 0) {
                                                     var porcentajeDS =
@@ -428,8 +427,8 @@ fun wsEstadisticas() {
                                         }
                                         est.puntos = puntosPorPartido
                                         est.jugador?.puntos = puntosPorPartido + est.jugador?.puntos!!
-                                        //                                j?.puntos = puntosPorPartido + j?.puntos!!
-                                        //                                this.jugadorServicio.guardarJugador(j)
+                                        j?.puntos = puntosPorPartido + j?.puntos!!
+                                        this.jugadorServicio.guardarJugador(j)
                                         this.guardarEstadistica(est)
                                     }
                                 }

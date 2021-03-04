@@ -37,6 +37,11 @@ class PartidoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscarPartidoPorID(id: Int): Partido? {
+        return partidoRepositorio?.findById(id)
+    }
+
+    @Transactional(readOnly = true)
     fun buscarPartidoPorNombresEquipos(equipoLocal: String, equipoVisitante: String): Partido? {
         return partidoRepositorio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
     }

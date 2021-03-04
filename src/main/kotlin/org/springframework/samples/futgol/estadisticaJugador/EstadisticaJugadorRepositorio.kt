@@ -12,5 +12,7 @@ interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
     @Query("SELECT e FROM EstadisticaJugador e where e.jugador.name = ?1 AND e.jugador.club.name = ?2 AND e.partido.id = ?3")
     fun buscarEstadisticaPorJugadorPartido(jugador: String, equipo: String, idPartido: Int): EstadisticaJugador
 
+    @Query("SELECT e FROM EstadisticaJugador e WHERE e.id= (SELECT MAX(id) FROM EstadisticaJugador)")
+    fun buscarUltimaEstadistica(): EstadisticaJugador
 
 }

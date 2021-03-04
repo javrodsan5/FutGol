@@ -155,36 +155,53 @@ class JugadorServicio {
             var jugadores = doc3.select("div#yw1.grid-view table.items tbody tr:first-of-type")
             jugadores.removeAt(0)
             for (n in 0 until jugadores.size) {
-                var jugador = Jugador()
+                var j = Jugador()
                 var persona = jugadores[n].select("td div.di.nowrap:first-of-type span a")
                 var nombre = persona.attr("title")
 
-                var linkDetallePersona = persona.attr("href")
-                var doc4 = Jsoup.connect("$urlBase" + linkDetallePersona).get()
-                var foto = doc4.select("div.dataBild img").attr("src")
-                var estado = "En forma"
-                if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
-                    estado = "Lesionado"
-                } else if (!jugadores[n].select("td span.ausfall-6-table").isEmpty()) {
-                    estado = "Sancionado/No disponible"
-                }
-                var precio = precioJugadores[n].text()
-                var precioD = 0.1
-                if (!precio.isEmpty()) {
-                    precioD = if (precio.contains("mill")) {
-                        precio.substringBefore(" mil").replace(",", ".").toDouble()
-                    } else {
-                        precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
+                    var linkDetallePersona = persona.attr("href")
+                    var doc4 = Jsoup.connect("$urlBase" + linkDetallePersona).get()
+                    var estado = "En forma"
+                    if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
+                        estado = "Lesionado"
+                    } else if (!jugadores[n].select("td span.ausfall-6-table").isEmpty()) {
+                        estado = "Sancionado/No disponible"
                     }
-                }
-                jugador.name = nombre
-                jugador.estadoLesion = estado
-                jugador.valor = precioD
-                jugador.foto = foto
 
-                var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
-                jugador.club = equipoReal
-                guardarJugador(jugador)
+                    var precio = precioJugadores[n].text()
+                    var precioD = 0.1
+
+                    var foto = doc4.select("div.dataBild img").attr("src")
+
+                    if (!precio.isEmpty()) {
+                        precioD = if (precio.contains("mill")) {
+                            precio.substringBefore(" mil").replace(",", ".").toDouble()
+                        } else {
+                            precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
+                        }
+                    }
+                    var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
+
+                if (this.existeJugador(nombre, nombreEquipo) == true) {
+                    println("Existe " + nombre)
+                    j = this.buscaJugadorPorNombreYEquipo(nombre, nombreEquipo)!!
+                    if(estado!=j.estadoLesion || precioD!=j.valor || j.club?.id!=equipoReal?.id){
+                        println("Cambiamos algún atributo")
+                        j.estadoLesion=estado
+                        j.valor= precioD
+                        j.club= equipoReal
+                        guardarJugador(j)
+                    }
+                }else{
+                    println("No existe " + nombre)
+                    j.name = nombre
+                    j.estadoLesion = estado
+                    j.valor = precioD
+                    j.foto = foto
+                    j.club= equipoReal
+                    guardarJugador(j)
+                }
+
             }
         }
 

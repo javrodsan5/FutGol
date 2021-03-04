@@ -103,7 +103,7 @@ class EstadisticaJugadorServicio {
                         .collect(Collectors.toList())
                 for (n in 0 until nombresTL.size) {
                     println(nombresTL[n])
-                    if (this.jugadorServicio?.existeJugador(nombresTL[n], equipoLocal) == true) {
+                    if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[n], equipoLocal) == true) {
                         var pId = this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                         if (pId != null) {
                             var e = this.buscarEstadisticaPorJugadorPartido(nombresTL[n], equipoLocal, pId)
@@ -123,7 +123,7 @@ class EstadisticaJugadorServicio {
 
                 for (n in 0 until nombresTV.size) {
                     println(nombresTV[n])
-                    if (this.jugadorServicio?.existeJugador(nombresTV[n], equipoLocal) == true) {
+                    if (this.jugadorServicio?.existeJugadorEquipo(nombresTV[n], equipoLocal) == true) {
                         var pId = this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                         if (pId != null) {
                             var e = this.buscarEstadisticaPorJugadorPartido(nombresTV[n], equipoLocal, pId)
@@ -157,7 +157,7 @@ class EstadisticaJugadorServicio {
 
                 for (n in 0 until nombresSL.size) {
                     println(nombresSL[n])
-                    if (this.jugadorServicio?.existeJugador(nombresSL[n], equipoLocal) == true) {
+                    if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[n], equipoLocal) == true) {
                         var pId = this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                         if (pId != null) {
                             var e = this.buscarEstadisticaPorJugadorPartido(nombresSL[n], equipoLocal, pId)
@@ -181,7 +181,7 @@ class EstadisticaJugadorServicio {
 
                 for (n in 0 until nombresSV.size) {
                     println(nombresSV[n])
-                    if (this.jugadorServicio?.existeJugador(nombresSV[n], equipoLocal) == true) {
+                    if (this.jugadorServicio?.existeJugadorEquipo(nombresSV[n], equipoLocal) == true) {
                         var pId = this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                         if (pId != null) {
                             var e = this.buscarEstadisticaPorJugadorPartido(nombresSV[n], equipoLocal, pId)
@@ -283,7 +283,7 @@ fun wsEstadisticas() {
                                         }
                                     }
                                 }
-                                if (jugadorServicio?.existeJugador(nombreJugador, equipo) == true) {
+                                if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
                                     var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                                     var est = EstadisticaJugador()
                                     if (existeEstadisticaJugador(nombreJugador, equipo, p?.id) == true) {

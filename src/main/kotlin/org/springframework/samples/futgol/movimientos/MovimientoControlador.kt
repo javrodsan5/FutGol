@@ -22,10 +22,7 @@ class MovimientoControlador(
         var vendedores: MutableList<Usuario> = ArrayList()
         if (movimientos != null) {
             for (m in movimientos) {
-                var vendedor = m.jugador?.name?.let { movimientoServicio.buscaVendedor(it) }
-                if (vendedor != null) {
-                    vendedores.add(vendedor)
-                }
+                m.jugador?.name?.let { movimientoServicio.buscaVendedor(it) }?.let { vendedores.add(it) }
             }
         }
         return vendedores

@@ -196,8 +196,7 @@ class UsuarioController(
 
     @GetMapping("/usuarios")
     fun procesoBusquedaUsuarioLiga(usuario: Usuario, result: BindingResult, model: Model): String {
-        var existeUsuario = usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username)
-        return if (existeUsuario) {
+        return if (usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username)) {
             "redirect:/usuarios/" + usuario?.user?.username
         } else {
             result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")

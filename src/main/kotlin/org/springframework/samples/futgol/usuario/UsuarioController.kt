@@ -42,7 +42,7 @@ class UsuarioController(
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                 ")+"
     )
-    val PATRON_NOMBRE: Pattern = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]")
+    val PATRON_NOMBRE: Pattern = Pattern.compile("^[\\p{L} .'-]+$")
 
     @InitBinder("usuario")
     fun initUsuarioBinder(dataBinder: WebDataBinder) {
@@ -51,21 +51,15 @@ class UsuarioController(
 
     @GetMapping("/micuenta")
     fun miCuenta(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        if (usuario != null) {
-            model["usuario"] = usuario
-        }
+        model["usuario"] = usuarioServicio.usuarioLogueado(principal)!!
         return VISTA_MISDATOS
     }
 
     @GetMapping("/micuenta/invitaciones")
     fun misInvitaciones(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        var invitaciones = usuario?.invitaciones
-        if (invitaciones != null && usuario != null) {
-            model["invitaciones"] = invitaciones
-            model["usuario"] = usuario
-        }
+        val usuario = usuarioServicio.usuarioLogueado(principal)
+        model["invitaciones"] = usuario?.invitaciones!!
+        model["usuario"] = usuario!!
         return VISTA_INVITACIONES
     }
 
@@ -79,7 +73,6 @@ class UsuarioController(
             liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
             this.usuarioServicio.guardarUsuario(usuario)
             this.ligaServicio.guardarLiga(liga)
-
         }
         return "redirect:/micuenta/invitaciones"
     }
@@ -93,21 +86,18 @@ class UsuarioController(
             liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
             this.usuarioServicio.guardarUsuario(usuario)
             this.ligaServicio.guardarLiga(liga)
-
         }
         return "redirect:/micuenta/invitaciones"
     }
 
     @GetMapping("/usuarios/registro")
     fun iniciarCreacion(model: Model): String {
-        val usuario = Usuario()
-        model["usuario"] = usuario
+        model["usuario"] = Usuario()
         return VISTA_REGISTRO_USUARIO
     }
 
     @PostMapping("/usuarios/registro")
     fun procesoCreacion(@Valid usuario: Usuario, result: BindingResult, model: Model): String {
-
         when {
             usuarioServicio.comprobarSiNombreUsuarioExiste(usuario.user?.username) ->
                 result.addError(FieldError("usuario", "user.username", "El nombre de usuario ya está en uso"))
@@ -185,17 +175,11 @@ class UsuarioController(
 
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
-        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        var ligasUsuario = usuarioServicio.buscarLigasUsuario(username)
-
-        if (usuario != null && ligasUsuario != null) {
-            model["usuario"] = usuario
-            model["ligasUsuario"] = ligasUsuario
-            model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
-        }
+        model["usuario"] = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
+        model["ligasUsuario"] = usuarioServicio.buscarLigasUsuario(username)!!
+        model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
         return VISTA_DETALLES_USUARIO
     }
-
 
     @GetMapping("/usuarios/buscar")
     fun iniciarBusquedaUsuarioLiga(model: Model, principal: Principal): String {
@@ -215,12 +199,10 @@ class UsuarioController(
         var existeUsuario = usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username)
         return if (existeUsuario) {
             "redirect:/usuarios/" + usuario?.user?.username
-
         } else {
             result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")
             "redirect:/usuarios/buscar"
         }
         return "redirect:/usuarios/buscar"
     }
-
 }

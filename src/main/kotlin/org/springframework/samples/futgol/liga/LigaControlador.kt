@@ -61,7 +61,6 @@ class LigaControlador(
             }
             model["posiciones"] = posiciones
             model["valores"] = valores
-
         }
         return VISTA_LISTA_LIGAS
     }

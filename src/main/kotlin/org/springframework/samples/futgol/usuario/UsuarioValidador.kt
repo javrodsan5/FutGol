@@ -21,7 +21,7 @@ class UsuarioValidador : Validator {
 
     private fun soloLetrasNombre(nombre: String): Boolean {
         var res = false
-        val sonSoloLetras: Boolean = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]").matcher(nombre).find()
+        val sonSoloLetras: Boolean = Pattern.compile("^[\\p{L} .'-]+$").matcher(nombre).find()
         if (sonSoloLetras) {
             res = true
         }

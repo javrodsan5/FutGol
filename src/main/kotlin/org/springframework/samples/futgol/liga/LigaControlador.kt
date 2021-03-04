@@ -53,12 +53,14 @@ class LigaControlador(
                         var equipo = l.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal) }
                         l.id?.let { ligaServicio.calculaPosicionLiga(it, principal)?.let { posiciones.add(it) } }
                         l.id?.let { equipoServicio.calcularValorEquipo(equipo?.name, it) }?.let { valores.add(it) }
+                    } else {
+                        valores.add(0.0)
+                        posiciones.add(0)
                     }
                 }
             }
             model["posiciones"] = posiciones
             model["valores"] = valores
-
         }
         return VISTA_LISTA_LIGAS
     }
@@ -72,7 +74,6 @@ class LigaControlador(
 
     @PostMapping("/liga/crear")
     fun procesoCreacion(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
-
         if (ligaServicio.comprobarSiExisteLiga(liga.name)) {
             result.addError(FieldError("liga", "name", "Ya existe una liga con ese nombre"))
         }
@@ -92,40 +93,38 @@ class LigaControlador(
         }
     }
 
-    @GetMapping("/liga/editar/{idLiga}")
-    fun iniciarActualizacion(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
-        val liga = this.ligaServicio.buscarLigaPorId(idLiga)
-        var adminLiga = liga?.admin?.user?.username
-        val usuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
-        if (liga != null && usuario != null && adminLiga == usuario) {
-            model.addAttribute(liga)
+    @GetMapping("/liga/editar/{nombreLiga}")
+    fun iniciarActualizacion(
+        @PathVariable("nombreLiga") nombreLiga: String, model: Model, principal: Principal
+    ): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            val nombreUsuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
+            if (liga?.admin?.user?.username == nombreUsuario) {
+                model.addAttribute(liga!!)
+            }
+        } else {
+            return "redirect:/misligas"
         }
         return VISTA_CREAR_EDITAR_LIGA
     }
 
-    @PostMapping("/liga/editar/{idLiga}")
+    @PostMapping("/liga/editar/{nombreLiga}")
     fun procesoActualizacion(
-        liga: Liga, principal: Principal, @PathVariable("idLiga") idLiga: Int, result: BindingResult,
+        liga: Liga, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String, result: BindingResult,
         model: Model
     ): String {
-        var ligaComparador = ligaServicio.buscarLigaPorId(idLiga)
-        if (ligaComparador != null) {
-            if (liga.name != ligaComparador.name && ligaServicio.comprobarSiExisteLiga(liga.name)) {
-                result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
-            }
+        var ligaComparador = ligaServicio.buscarLigaPorNombre(nombreLiga)
+        if (liga.name != ligaComparador!!.name && ligaServicio.comprobarSiExisteLiga(liga.name)) {
+            result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
-
-            val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
-            if (ligaAntigua != null) {
-                liga.id = idLiga
-                liga.admin = ligaAntigua?.admin
-                liga.usuariosInvitados = ligaAntigua.usuariosInvitados
-                liga.usuarios = ligaAntigua.usuarios
-            }
-
+            liga.id = ligaComparador?.id
+            liga.admin = ligaComparador?.admin
+            liga.usuariosInvitados = ligaComparador.usuariosInvitados
+            liga.usuarios = ligaComparador.usuarios
             this.ligaServicio.guardarLiga(liga)
             "redirect:/misligas"
         }

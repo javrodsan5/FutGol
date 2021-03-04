@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
+import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
@@ -17,6 +18,9 @@ class LigaServicio {
 
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
+
+    @Autowired
+    private val usuarioServicio: UsuarioServicio? = null
 
     @Autowired
     private val equipoServicio: EquipoServicio? = null
@@ -100,6 +104,13 @@ class LigaServicio {
             }
         }
         return res
+    }
+
+    @Transactional(readOnly = true)
+    fun estoyEnLiga(nombreLiga: String, principal: Principal?): Boolean {
+        val liga = buscarLigaPorNombre(nombreLiga)
+        val nombreUsuario = usuarioServicio?.usuarioLogueado(principal!!)?.user?.username
+        return liga!!.usuarios.stream().anyMatch { x -> x.user?.username == nombreUsuario }
     }
 
 }

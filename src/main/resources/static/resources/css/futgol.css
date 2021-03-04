@@ -7243,7 +7243,8 @@ hr {
     width: max-content;
     grid-template-rows: repeat(10, var(--gridcell));
     grid-template-columns: repeat(16, var(--gridcell));
-    background-color: #047938;
+    background-color:transparent;
+    background-image: url("../images/cesped.png");
     padding: 20px;
     /*transform:rotate(90deg);
     -ms-transform:rotate(90deg);

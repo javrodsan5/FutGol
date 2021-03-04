@@ -132,37 +132,33 @@ class LigaControlador(
     }
 
     @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
-        val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
-        var soyAdmin: Boolean
-        val usuario = usuarioServicio.usuarioLogueado(principal)
-        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        var limiteEquipos = true
-        if (ligas != null && liga != null) {
-            if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
-                model["liga"] = liga
-                var equiposLiga = liga.equipos
-                model["equipos"] = equiposLiga
-                if (liga!!.equipos.size >= 8) {
-                    limiteEquipos = false
-                }
-            } else {
-                return VISTA_ERROR_403
+    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            val nombreUsuario = usuarioServicio.usuarioLogueado(principal!!)?.user?.username
+            var soyAdmin: Boolean
+            var noLimiteEquipos = true
+            model["liga"] = liga!!
+            var equiposLiga = liga.equipos
+            model["equipos"] = equiposLiga
+            if (liga!!.equipos.size >= 8) {
+                noLimiteEquipos = false
             }
-            model["limiteEquipos"] = limiteEquipos
-        }
-        if (usuario != null && liga != null) {
-            if (liga.admin?.user?.username.equals(usuario.user?.username)) {
+            model["noLimiteEquipos"] = noLimiteEquipos
+
+            if (liga.admin?.user?.username.equals(nombreUsuario)) {
                 soyAdmin = true
                 model["soyAdmin"] = soyAdmin
             }
-            var noTengoEquipo = false
+            var noTengoEquipo: Boolean
             if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
                 noTengoEquipo = true
                 model["noTengoEquipo"] = noTengoEquipo
             }
+            return VISTA_DETALLES_LIGA
+        } else {
+            return "redirect:/misligas"
         }
-        return VISTA_DETALLES_LIGA
     }
 
     @GetMapping("liga/{nombreLiga}/clasificacion")

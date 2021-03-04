@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.stream.Collectors
 import javax.validation.Valid
 
 @Controller
@@ -86,9 +87,31 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
+            model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            var jugadores = miEquipo.jugadores
-            model["jugadores"] = jugadores
+            //CAMBIAR A ONCE INICIAL CUANDO ESTÉ PUESTO Y PONER TB LOS JUGADORES DEL BANQUILLO
+            var portero = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+            model["portero"] = portero!!
+            var defensas = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "DF" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            model["defensas"] = defensas!!
+            var centrocampistas = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "CC" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            model["centrocampistas"] = centrocampistas!!
+            var delanteros = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "DL" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(2)
+                ?.collect(Collectors.toList())
+            model["delanteros"] = delanteros!!
         }
         return VISTA_DETALLES_MIEQUIPO
     }
@@ -105,6 +128,7 @@ class EquipoControlador(
         model["equipo"] = equipo
         var jugadores = equipo.jugadores
         model["jugadores"] = jugadores
+        model["valorEquipo"] = liga.id?.let { equipoServicio.calcularValorEquipo(equipo.name, it) }!!
         if (jugadores.size > 5) {
             model["top5Jugadores"] = liga.id?.let { equipoServicio.topJugadoresEquipo(equipo.name, it) }!!
         }

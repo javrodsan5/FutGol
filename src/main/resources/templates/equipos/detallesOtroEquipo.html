@@ -4,7 +4,13 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesOtroEquipo')}">
 
 <body>
+<div>
     <h1><b th:text="${equipo.name}"></b></h1>
+    <div style="display: inline-block">Valor del equipo: <b th:text="${valorEquipo}"></b> mill. €</div>
+    <div style="display: inline-block">Numero de jugadores: <b th:text="${equipo.jugadores.size}"></b>/24</div>
+    <div style="display: inline-block">Puntos: <b th:text="${equipo.puntos}"></b></div>
+
+</div>
     <b th:each="jugador : ${jugadores}">
         <a th:href="@{/equipo/{idEquipo}/jugador/{idJugador} (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}"
            th:text="${jugador.name}"/></a>

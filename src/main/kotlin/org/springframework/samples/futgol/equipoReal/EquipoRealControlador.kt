@@ -36,7 +36,6 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
     fun detallesEquipoReal(model: Model, @PathVariable("nombreEquipo") nombreEquipo: String): String {
         var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
         model["equipo"] = equipo
-        var jugadores = equipo.jugadores
         var portero = equipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }.filter{x->x.estadoLesion=="En forma"}
             .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
         model["portero"] = portero!!
@@ -57,8 +56,7 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
         model["delanteros"] = delanteros!!
         model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
         model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
-        model["jugadores"] = jugadores
-        if (jugadores.size > 5) {
+        if (equipo.jugadores.size > 5) {
             model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)
         }
         return VISTA_DETALLES_EQUIPOREAL

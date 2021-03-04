@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
 @Controller
-class EstadisticaJugadorControlador(val estadisticaJugadorServicio: EstadisticaJugadorServicio,
-                                    val partidoServicio: PartidoServicio,
-                                    val jugadorServicio: JugadorServicio,
-                                    val equipoRealServicio: EquipoRealServicio) {
+class EstadisticaJugadorControlador(
+    val estadisticaJugadorServicio: EstadisticaJugadorServicio,
+    val partidoServicio: PartidoServicio,
+    val jugadorServicio: JugadorServicio,
+    val equipoRealServicio: EquipoRealServicio
+) {
 
     private val VISTA_WSESTADISTICA = "estadisticaJugador/wsEstadistica"
 

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank
 @Setter
 @Entity
 @Table(name = "estadisticas_jugadores")
-class EstadisticaJugador: BaseEntity() {
+class EstadisticaJugador : BaseEntity() {
 
     @Column(name = "fue_titular")
     var fueTitular = false
@@ -66,7 +66,6 @@ class EstadisticaJugador: BaseEntity() {
     @Column(name = "salvadas")
     var salvadas = 0
     //--
-
 
     @ManyToOne()
     @JoinColumn(name = "jugador", referencedColumnName = "id")

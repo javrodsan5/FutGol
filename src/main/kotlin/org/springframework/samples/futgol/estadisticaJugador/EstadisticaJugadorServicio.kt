@@ -282,7 +282,7 @@ fun wsEstadisticas() {
                                 }
                             }
                             println("womazo")
-                            if (jugadorServicio?.existeJugador(nombreJugador, equipo) == true) {
+                            if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
                                 var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                                 var est = EstadisticaJugador()
                                 if (existeEstadisticaJugador(nombreJugador, equipo, idPartido) == true) {

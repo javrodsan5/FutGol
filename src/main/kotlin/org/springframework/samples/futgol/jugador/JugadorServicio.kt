@@ -184,7 +184,7 @@ class JugadorServicio {
                     }
                     var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
 
-                if (this.existeJugador(nombre, nombreEquipo) == true) {
+                if (this.existeJugadorEquipo(nombre, nombreEquipo) == true) {
                     println("Existe " + nombre)
                     j = this.buscaJugadorPorNombreYEquipo(nombre, nombreEquipo)!!
                     if(estado!=j.estadoLesion || precioD!=j.valor || j.club?.id!=equipoReal?.id){
@@ -253,7 +253,7 @@ fun webScrapingJugadoresFbref() {
                         }
                     }
                 }
-            if (this.existeJugador(nombreJugador, equipo) == true) {
+            if (this.existeJugadorEquipo(nombreJugador, equipo) == true) {
                 var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                 var element: Elements? = doc3.select("div.players#info div#meta p")
                 if (j != null) {

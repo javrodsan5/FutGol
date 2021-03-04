@@ -4,6 +4,7 @@ import org.springframework.samples.futgol.clausula.Clausula
 import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.clausula.ClausulaValidador
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,7 +22,7 @@ import javax.validation.Valid
 @Controller
 class JugadorControlador(
     val jugadorServicio: JugadorServicio,
-    val equipoServicio: EquipoServicio,
+    val equipoServicio: EquipoServicio, val equipoRealServicio: EquipoRealServicio,
     val clausulaServicio: ClausulaServicio, val usuarioServicio: UsuarioServicio
 ) {
 
@@ -29,6 +30,7 @@ class JugadorControlador(
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
     private val VISTA_DETALLES_JUGADOR_EQUIPO = "jugadores/detallesJugadorEquipo"
+    private val VISTA_BUSCAR_JUGADOR = "jugadores/buscaJugador"
 
     @InitBinder("clausula")
     fun initClausulaBinder(dataBinder: WebDataBinder) {
@@ -49,10 +51,29 @@ class JugadorControlador(
 
     @GetMapping("/jugador/{idJugador}")
     fun detallesJugadorCualquiera(model: Model, @PathVariable("idJugador") idJugador: Int): String {
-        model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+        if (jugadorServicio.existeJugador(idJugador) == true) {
+            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+        } else {
+            return "redirect:/"
+        }
         return VISTA_DETALLES_JUGADOR
     }
 
+    @GetMapping("/topJugadores")
+    fun buscaJugador(model: Model): String {
+        model["jugador"] = Jugador()
+        return VISTA_BUSCAR_JUGADOR
+    }
+
+    @GetMapping("/jugadores")
+    fun procesoBusquedaJugador(jugador: Jugador, result: BindingResult, model: Model): String {
+        return if (jugador.id?.let { jugadorServicio.existeJugador(it) } == true) {
+            "redirect:/jugadores/" + jugador.id
+        } else {
+            result.rejectValue("jugador.name", "no se ha encontrado", "no se ha encontrado")
+            "redirect:/jugadores"
+        }
+    }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}")
     fun detallesJugadorEquipo(

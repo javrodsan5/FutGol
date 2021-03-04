@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.ArrayList
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.HashSet
 
 @Service
 class JugadorServicio {
@@ -48,8 +49,8 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarTodosJugadores(): Collection<Jugador>? {
-        return jugadorRepositorio?.findAll()
+    fun existeJugador(idJugador: Int): Boolean? {
+        return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.id == idJugador }
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
@@ -65,31 +66,31 @@ class JugadorServicio {
         return listaPosiblesJugador
     }
 
-    fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador>{
-        var jugadoresAsignables= this.jugadoresAsignablesLiga(idLiga)
-        var porterosA= ArrayList<Jugador>()
-        var defensasA= ArrayList<Jugador>()
-        var centrocamA= ArrayList<Jugador>()
-        var delanterosA= ArrayList<Jugador>()
-        var misJugadores= HashSet<Jugador>()
+    fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador> {
+        var jugadoresAsignables = this.jugadoresAsignablesLiga(idLiga)
+        var porterosA = ArrayList<Jugador>()
+        var defensasA = ArrayList<Jugador>()
+        var centrocamA = ArrayList<Jugador>()
+        var delanterosA = ArrayList<Jugador>()
+        var misJugadores = HashSet<Jugador>()
 
         if (jugadoresAsignables != null) {
-            for(jugador in jugadoresAsignables){
-                if(jugador.posicion=="PO"){
+            for (jugador in jugadoresAsignables) {
+                if (jugador.posicion == "PO") {
                     porterosA.add(jugador)
-                }else if(jugador.posicion=="DF"){
+                } else if (jugador.posicion == "DF") {
                     defensasA.add(jugador)
-                }else if(jugador.posicion=="CC"){
+                } else if (jugador.posicion == "CC") {
                     centrocamA.add(jugador)
-                }else{
+                } else {
                     delanterosA.add(jugador)
                 }
             }
         }
-        var porteros= porterosA.shuffled().subList(0,2)
-        var defensas= defensasA.shuffled().subList(0,6)
-        var centrocam= centrocamA.shuffled().subList(0,6)
-        var delanteros= delanterosA.shuffled().subList(0,4)
+        var porteros = porterosA.shuffled().subList(0, 2)
+        var defensas = defensasA.shuffled().subList(0, 6)
+        var centrocam = centrocamA.shuffled().subList(0, 6)
+        var delanteros = delanterosA.shuffled().subList(0, 4)
         misJugadores.addAll(porteros)
         misJugadores.addAll(defensas)
         misJugadores.addAll(centrocam)
@@ -105,18 +106,18 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun existeJugador(nombreJugador: String, equipo: String): Boolean? {
+    fun existeJugadorEquipo(nombreJugador: String, equipo: String): Boolean? {
         var res = false
-        if(equipo!="" && equipoRealServicio?.existeEquipoReal(equipo) == true){
-        var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
-        if (jugadores != null) {
-            for (j in jugadores) {
-                if (j.name == nombreJugador) {
-                    res = true
-                    break
+        if (equipo != "" && equipoRealServicio?.existeEquipoReal(equipo) == true) {
+            var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
+            if (jugadores != null) {
+                for (j in jugadores) {
+                    if (j.name == nombreJugador) {
+                        res = true
+                        break
+                    }
                 }
             }
-        }
         }
         return res
     }
@@ -128,6 +129,7 @@ class JugadorServicio {
         for (j in equipo!!.jugadores) {
             if (j.name == jugador.name) {
                 estaEnEquipo = true
+                break
             }
         }
         return estaEnEquipo
@@ -221,7 +223,7 @@ class JugadorServicio {
             var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().trim()
             var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
-            if (equipoRealServicio?.existeEquipoReal(equipo) == true){
+            if (equipoRealServicio?.existeEquipoReal(equipo) == true) {
                 for (n in 0 until l.size) {
                     var linea = l[n]?.split(",")
                     if (linea?.size!! >= 3) {
@@ -234,47 +236,49 @@ class JugadorServicio {
                         }
                     }
                 }
-            if (this.existeJugador(nombreJugador, equipo) == true) {
-                var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
-                var element: Elements? = doc3.select("div.players#info div#meta p")
-                if (j != null) {
-                    for (n in 0 until element?.size!!) {
-                        if (element[n].text().contains("Posición:")) {
-                            j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0,2)
-                        }
-
-                        if (element[n].text().contains("Pie primario:")) {
-                            if (element[n].text().contains("%")) {
-                                j.piePrimario =
-                                    element[n].text().split("▪")[1].substringAfter("% ").replace("*", "") //pie primario
-
-                            } else {
-                                j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
+                if (this.existeJugadorEquipo(nombreJugador, equipo) == true) {
+                    var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
+                    var element: Elements? = doc3.select("div.players#info div#meta p")
+                    if (j != null) {
+                        for (n in 0 until element?.size!!) {
+                            if (element[n].text().contains("Posición:")) {
+                                j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0, 2)
                             }
-                        }
-                        if(j.piePrimario== ""){
-                            j.piePrimario = "Derecha"
-                        }
 
-                        if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
-                            j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
-                        }
+                            if (element[n].text().contains("Pie primario:")) {
+                                if (element[n].text().contains("%")) {
+                                    j.piePrimario =
+                                        element[n].text().split("▪")[1].substringAfter("% ")
+                                            .replace("*", "") //pie primario
 
-                        if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
-                            j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
-                        }
+                                } else {
+                                    j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
+                                }
+                            }
+                            if (j.piePrimario == "") {
+                                j.piePrimario = "Derecha"
+                            }
 
-                        if (element[n].text().contains("Nacimiento:")) {
-                            var lugarFechaNacimiento= element[n].text().substringAfter("Nacimiento: ")
-                            j.lugarFechaNacimiento=  lugarFechaNacimiento.substring(0,j.lugarFechaNacimiento.length-3)
-                        }
+                            if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
+                                j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
+                            }
 
+                            if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
+                                j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
+                            }
+
+                            if (element[n].text().contains("Nacimiento:")) {
+                                var lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
+                                j.lugarFechaNacimiento =
+                                    lugarFechaNacimiento.substring(0, j.lugarFechaNacimiento.length - 3)
+                            }
+
+                        }
+                        this.guardarJugador(j)
                     }
-                    this.guardarJugador(j)
                 }
             }
         }
-    }
     }
 
     @Transactional(readOnly = true)

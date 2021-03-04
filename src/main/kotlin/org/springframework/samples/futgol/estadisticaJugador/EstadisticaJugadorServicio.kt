@@ -63,11 +63,11 @@ class EstadisticaJugadorServicio {
     @Throws(DataAccessException::class)
     fun existeEstadisticaJugador(nombreJugador: String, nombreEquipo: String, idPartido: Int?): Boolean? {
         var res = false
-        if(nombreEquipo!="" && equipoRealServicio?.existeEquipoReal(nombreEquipo) == true){
+        if (nombreEquipo != "" && equipoRealServicio?.existeEquipoReal(nombreEquipo) == true) {
             var estadisticas = this.buscarTodasEstadisticas()
             if (estadisticas != null || estadisticas?.isEmpty() == false) {
                 for (e in estadisticas) {
-                    if (e.jugador?.name == nombreJugador && e.partido?.id==idPartido && e.jugador?.club?.name==nombreEquipo) {
+                    if (e.jugador?.name == nombreJugador && e.partido?.id == idPartido && e.jugador?.club?.name == nombreEquipo) {
                         res = true
                         break
                     }
@@ -200,8 +200,7 @@ class EstadisticaJugadorServicio {
         }
     }
 
-fun wsEstadisticas() {
-        var estaVacioEstadisticas= this.buscarTodasEstadisticas()?.isEmpty()
+    fun wsEstadisticas() {
         var urlBase = "https://fbref.com/"
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()
         var partidos = doc.select("table#sched_ks_10731_1 tbody tr")
@@ -212,6 +211,12 @@ fun wsEstadisticas() {
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }
+        var estaVacioEstadisticas = this.buscarTodasEstadisticas()?.isEmpty()
+
+        var ultimaEPId = 0
+        if (estaVacioEstadisticas == false) {
+            ultimaEPId = this.buscarUltimaEstadistica()?.partido?.id!!
+        }
 
         for (n in 0 until partidos.size) {
             var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
@@ -220,10 +225,7 @@ fun wsEstadisticas() {
             if (this.partidoServicio?.existePartido(equipoLocal, equipoVisitante) == true) {
                 var idPartido = this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                 var linkPartido = partidos[n].select("td[data-stat=score] a").attr("href")
-                var ultimaEPId = 0
-                if (estaVacioEstadisticas == false) {
-                    ultimaEPId = this.buscarUltimaEstadistica()?.partido?.id!! ////
-                }
+
                 if (idPartido!! >= ultimaEPId!!) {
                     var doc2 = Jsoup.connect("$urlBase" + linkPartido).get()
                     var alineaciones = doc2.select("div.lineup tbody")
@@ -281,7 +283,7 @@ fun wsEstadisticas() {
                                     }
                                 }
                             }
-                            println("womazo")
+
                             if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
                                 var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                                 var est = EstadisticaJugador()
@@ -292,7 +294,7 @@ fun wsEstadisticas() {
 
                                 var puntosPorPartido = 0
 
-                                if(n%2==0){
+                                if (n % 2 == 0) {
                                     var minutosJTexto = jugador.select("td[data-stat=minutes]").text()
                                     var minutosJ = 0
                                     if (minutosJTexto != "") {
@@ -369,9 +371,10 @@ fun wsEstadisticas() {
 
                                     puntosPorPartido -= (est.penaltisLanzados - est.penaltisMarcados) * 2
 
-                                }else {
+                                } else {
                                     if (j?.posicion == "PO") {
-                                        est = this.buscarEstadisticaPorJugadorPartido(nombreJugador, equipo, idPartido)!!
+                                        est =
+                                            this.buscarEstadisticaPorJugadorPartido(nombreJugador, equipo, idPartido)!!
 
                                         est.disparosRecibidos =
                                             jugador.select("td[data-stat=shots_on_target_against]").text()
@@ -409,8 +412,6 @@ fun wsEstadisticas() {
                                     titular = true
                                 }
 
-                                println("woma2")
-
                                 est.fueTitular = titular
                                 est.partido = this.partidoServicio.buscarPartidoPorID(idPartido)
                                 est.puntos = puntosPorPartido
@@ -426,7 +427,7 @@ fun wsEstadisticas() {
             }
         }
 
-}
+    }
 }
 
 

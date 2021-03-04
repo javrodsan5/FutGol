@@ -44,8 +44,8 @@ class JugadorControlador(
 
     @PostMapping("/WSJugadores")
     fun creaWSJugadores(model: Model): String {
-        this.jugadorServicio.webScrapingJugadoresTransfermarkt()
-        //this.jugadorServicio.webScrapingJugadoresFbref()
+        //this.jugadorServicio.webScrapingJugadoresTransfermarkt()
+        this.jugadorServicio.webScrapingJugadoresFbref()
         return VISTA_WSJUGADORES
     }
 

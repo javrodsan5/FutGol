@@ -60,15 +60,4 @@ class Jugador : NamedEntity() {
     )
     var equipos: MutableSet<Equipo> = HashSet()
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "jugador")
-    var estadisticas: MutableSet<EstadisticaJugador> = HashSet()
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "jornadas_jugadores",
-        joinColumns = [JoinColumn(name = "jugador_id")],
-        inverseJoinColumns = [JoinColumn(name = "numero_jornada")]
-    )
-    var jornadas: MutableSet<Jornada> = HashSet()
-
 }

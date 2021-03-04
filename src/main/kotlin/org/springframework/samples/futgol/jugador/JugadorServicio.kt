@@ -255,40 +255,44 @@ fun webScrapingJugadoresFbref() {
                 }
             if (this.existeJugadorEquipo(nombreJugador, equipo) == true) {
                 var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
-                var element: Elements? = doc3.select("div.players#info div#meta p")
-                if (j != null) {
-                    for (n in 0 until element?.size!!) {
-                        if (element[n].text().contains("Posición:")) {
-                            j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0,2)
-                        }
+                if(j?.posicion=="") {
+                    println(nombreJugador)
+                    var element: Elements? = doc3.select("div.players#info div#meta p")
+                    if (j != null) {
+                        for (n in 0 until element?.size!!) {
+                            if (element[n].text().contains("Posición:")) {
+                                j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0, 2)
+                            }
 
-                        if (element[n].text().contains("Pie primario:")) {
-                            if (element[n].text().contains("%")) {
-                                j.piePrimario =
-                                    element[n].text().split("▪")[1].substringAfter("% ").replace("*", "") //pie primario
+                            if (element[n].text().contains("Pie primario:")) {
+                                if (element[n].text().contains("%")) {
+                                    j.piePrimario =
+                                        element[n].text().split("▪")[1].substringAfter("% ")
+                                            .replace("*", "") //pie primario
 
-                            } else {
-                                j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
+                                } else {
+                                    j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
+                                }
+                            }
+                            if (j.piePrimario == "") {
+                                j.piePrimario = "Derecha"
+                            }
+
+                            if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
+                                j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
+                            }
+
+                            if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
+                                j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
+                            }
+                            if (element[n].text().contains("Nacimiento:")) {
+                                var lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
+                                var x = lugarFechaNacimiento.length - 3
+                                j.lugarFechaNacimiento = lugarFechaNacimiento.substring(0, x)
                             }
                         }
-                        if(j.piePrimario== ""){
-                            j.piePrimario = "Derecha"
-                        }
-
-                        if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
-                            j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
-                        }
-
-                        if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
-                            j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
-                        }
-                        if (element[n].text().contains("Nacimiento:")) {
-                            var lugarFechaNacimiento= element[n].text().substringAfter("Nacimiento: ")
-                            var x= lugarFechaNacimiento.length -3
-                            j.lugarFechaNacimiento=  lugarFechaNacimiento.substring(0,x)
-                        }
+                        this.guardarJugador(j)
                     }
-                    this.guardarJugador(j)
                 }
             }
         }

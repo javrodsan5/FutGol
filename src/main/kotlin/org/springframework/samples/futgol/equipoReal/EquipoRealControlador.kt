@@ -34,30 +34,38 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
 
     @GetMapping("/equiposLiga/{nombreEquipo}")
     fun detallesEquipoReal(model: Model, @PathVariable("nombreEquipo") nombreEquipo: String): String {
-        var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
-        model["equipo"] = equipo
-        var portero = equipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }.filter{x->x.estadoLesion=="En forma"}
-            .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
-        model["portero"] = portero!!
-        var defensas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DF" }.filter{x->x.estadoLesion=="En forma"}
-            .sorted(Comparator.comparing { x -> -x.valor })
-            ?.limit(4)
-            ?.collect(Collectors.toList())
-        model["defensas"] = defensas!!
-        var centrocampistas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "CC" }.filter{x->x.estadoLesion=="En forma"}
-            .sorted(Comparator.comparing { x -> -x.valor })
-            ?.limit(4)
-            ?.collect(Collectors.toList())
-        model["centrocampistas"] = centrocampistas!!
-        var delanteros = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DL" }.filter{x->x.estadoLesion=="En forma"}
-            .sorted(Comparator.comparing { x -> -x.valor })
-            ?.limit(2)
-            ?.collect(Collectors.toList())
-        model["delanteros"] = delanteros!!
-        model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
-        model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
-        if (equipo.jugadores.size > 5) {
-            model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)
+        if (equipoRealServicio.existeEquipoReal(nombreEquipo) == true) {
+            var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
+            model["equipo"] = equipo
+            var portero = equipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+            model["portero"] = portero!!
+            var defensas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DF" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            model["defensas"] = defensas!!
+            var centrocampistas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "CC" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            model["centrocampistas"] = centrocampistas!!
+            var delanteros = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DL" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(2)
+                ?.collect(Collectors.toList())
+            model["delanteros"] = delanteros!!
+            model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
+            model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
+            if (equipo.jugadores.size > 5) {
+                model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)
+            }
+        }else {
+            return "redirect:/equiposLiga"
         }
         return VISTA_DETALLES_EQUIPOREAL
     }

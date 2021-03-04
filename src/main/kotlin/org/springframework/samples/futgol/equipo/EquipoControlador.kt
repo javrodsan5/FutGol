@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.equipo
 
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
-import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -64,13 +63,13 @@ class EquipoControlador(
             model["equipo"] = equipo
             VISTA_CREAEQUIPOS
         } else {
-            val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
+            val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
-
             equipo.jugadores = misJugadores
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga
+
             this.equipoServicio.guardarEquipo(equipo)
             "redirect:/liga/$idLiga/miEquipo"
         }

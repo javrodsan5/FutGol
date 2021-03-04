@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.ArrayList
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.HashSet
 
 @Service
 class JugadorServicio {
@@ -48,8 +49,8 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarTodosJugadores(): Collection<Jugador>? {
-        return jugadorRepositorio?.findAll()
+    fun existeJugador(idJugador: Int): Boolean? {
+        return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.id == idJugador }
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
@@ -65,31 +66,31 @@ class JugadorServicio {
         return listaPosiblesJugador
     }
 
-    fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador>{
-        var jugadoresAsignables= this.jugadoresAsignablesLiga(idLiga)
-        var porterosA= ArrayList<Jugador>()
-        var defensasA= ArrayList<Jugador>()
-        var centrocamA= ArrayList<Jugador>()
-        var delanterosA= ArrayList<Jugador>()
-        var misJugadores= HashSet<Jugador>()
+    fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador> {
+        var jugadoresAsignables = this.jugadoresAsignablesLiga(idLiga)
+        var porterosA = ArrayList<Jugador>()
+        var defensasA = ArrayList<Jugador>()
+        var centrocamA = ArrayList<Jugador>()
+        var delanterosA = ArrayList<Jugador>()
+        var misJugadores = HashSet<Jugador>()
 
         if (jugadoresAsignables != null) {
-            for(jugador in jugadoresAsignables){
-                if(jugador.posicion=="PO"){
+            for (jugador in jugadoresAsignables) {
+                if (jugador.posicion == "PO") {
                     porterosA.add(jugador)
-                }else if(jugador.posicion=="DF"){
+                } else if (jugador.posicion == "DF") {
                     defensasA.add(jugador)
-                }else if(jugador.posicion=="CC"){
+                } else if (jugador.posicion == "CC") {
                     centrocamA.add(jugador)
-                }else{
+                } else {
                     delanterosA.add(jugador)
                 }
             }
         }
-        var porteros= porterosA.shuffled().subList(0,2)
-        var defensas= defensasA.shuffled().subList(0,6)
-        var centrocam= centrocamA.shuffled().subList(0,6)
-        var delanteros= delanterosA.shuffled().subList(0,4)
+        var porteros = porterosA.shuffled().subList(0, 2)
+        var defensas = defensasA.shuffled().subList(0, 6)
+        var centrocam = centrocamA.shuffled().subList(0, 6)
+        var delanteros = delanterosA.shuffled().subList(0, 4)
         misJugadores.addAll(porteros)
         misJugadores.addAll(defensas)
         misJugadores.addAll(centrocam)
@@ -105,18 +106,18 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun existeJugador(nombreJugador: String, equipo: String): Boolean? {
+    fun existeJugadorEquipo(nombreJugador: String, equipo: String): Boolean? {
         var res = false
-        if(equipo!="" && equipoRealServicio?.existeEquipoReal(equipo) == true){
-        var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
-        if (jugadores != null) {
-            for (j in jugadores) {
-                if (j.name == nombreJugador) {
-                    res = true
-                    break
+        if (equipo != "" && equipoRealServicio?.existeEquipoReal(equipo) == true) {
+            var jugadores = equipoRealServicio?.buscarEquipoRealPorNombre(equipo)?.jugadores
+            if (jugadores != null) {
+                for (j in jugadores) {
+                    if (j.name == nombreJugador) {
+                        res = true
+                        break
+                    }
                 }
             }
-        }
         }
         return res
     }
@@ -128,6 +129,7 @@ class JugadorServicio {
         for (j in equipo!!.jugadores) {
             if (j.name == jugador.name) {
                 estaEnEquipo = true
+                break
             }
         }
         return estaEnEquipo
@@ -207,7 +209,7 @@ class JugadorServicio {
 
     }
 
-    fun webScrapingJugadoresFbref() {
+fun webScrapingJugadoresFbref() {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
         var linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")

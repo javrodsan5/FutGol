@@ -246,6 +246,8 @@ th {
     border: 1px solid #ddd !important;
   }
 }
+
+
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.eot');

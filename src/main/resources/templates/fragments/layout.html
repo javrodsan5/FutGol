@@ -69,28 +69,12 @@
                         </a>
                     </li>
 
-                    <li>
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Rankings
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li>
-                                    <a href='/topUsuarios'>
-                                        <i class="fa fa-trophy"></i>
-                                        <span>Ranking usuarios</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href='/topJugadores'>
-                                        <i class="fa fa-trophy"></i>
-                                        <span>Ranking jugadores</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                    <li class="nav-item dropdown" data-hover="dropdown">
+                        <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown">  Rankings </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/topUsuarios"> Top Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/topJugadores"> Top Jugadores </a></li>
+                        </ul>
                     </li>
 
                     <li th:class="${'equiposReales'==menu ? 'active' : ''}">
@@ -133,11 +117,28 @@
                         </a>
                     </li>
 
-                    <li th:class="${'rankingUsuarios'==menu ? 'active' : ''}">
-                        <a href='/topUsuarios'>
-                            <i class="fa fa-trophy"></i>
-                            <span>Rankings</span>
-                        </a>
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Rankings
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" data-hover="dropdown">
+                                <li>
+                                    <a href='/topUsuarios'>
+                                        <i class="fa fa-trophy"></i>
+                                        <span>Ranking usuarios</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href='/topJugadores'>
+                                        <i class="fa fa-trophy"></i>
+                                        <span>Ranking jugadores</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
 
                     <li th:class="${'jornadas'==menu ? 'active' : ''}">

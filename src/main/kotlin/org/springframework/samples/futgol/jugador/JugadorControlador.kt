@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.stream.Collectors
 import javax.validation.Valid
 
 
@@ -51,7 +52,7 @@ class JugadorControlador(
 
     @GetMapping("/jugador/{idJugador}")
     fun detallesJugadorCualquiera(model: Model, @PathVariable("idJugador") idJugador: Int): String {
-        if (jugadorServicio.existeJugador(idJugador) == true) {
+        if (jugadorServicio.existeJugadorId(idJugador) == true) {
             model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
         } else {
             return "redirect:/"
@@ -61,17 +62,25 @@ class JugadorControlador(
 
     @GetMapping("/topJugadores")
     fun buscaJugador(model: Model): String {
-        model["jugador"] = Jugador()
+        model["jugadores"] =
+            jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })?.limit(5)
+                ?.collect(Collectors.toList())!!
+        model.addAttribute(Jugador())
         return VISTA_BUSCAR_JUGADOR
     }
 
     @GetMapping("/jugadores")
     fun procesoBusquedaJugador(jugador: Jugador, result: BindingResult, model: Model): String {
-        return if (jugador.id?.let { jugadorServicio.existeJugador(it) } == true) {
-            "redirect:/jugadores/" + jugador.id
+        return if (jugador.name?.let { jugadorServicio.existeJugadorNombre(it) } == true) {
+            var jug = jugadorServicio.buscaJugadorPorNombre(jugador.name!!)
+            "redirect:/jugador/" + jug!!.id
         } else {
-            result.rejectValue("jugador.name", "no se ha encontrado", "no se ha encontrado")
-            "redirect:/jugadores"
+            result.rejectValue("name", "no se ha encontrado", "no se ha encontrado")
+            model["jugadores"] =
+                jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })
+                    ?.limit(5)
+                    ?.collect(Collectors.toList())!!
+            VISTA_BUSCAR_JUGADOR
         }
     }
 

@@ -11,6 +11,8 @@ interface JugadorRepositorio : Repository<Jugador, Int> {
 
     fun findById(idJugador: Int): Jugador
 
+    fun findByName(nombreJugador: String): Jugador
+
     @Query("SELECT j FROM Jugador j where j.name = ?1 AND j.club.name = ?2")
     fun buscarJugadorPorNombreyEquipo(nombreJugador: String, nombreEquipo: String): Jugador
 

@@ -2,9 +2,27 @@
       th:replace="~{fragments/layout :: layout (~{::body},'jugadores')}">
 
 <body>
-<h2>Buscar jugadores</h2>
+<h2>Top 5 jugadores</h2>
 
-<form th:object="${jugador}" method="get"
+<table id="clasificacionJugadores" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Jugador</th>
+        <th>Puntos</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="jugador : ${jugadores}">
+        <td th:text="${jugador.name}"></td>
+        <td th:text="${jugador.puntos}"></td>
+    </tr>
+    </div>
+    </tbody>
+</table>
+
+<h2>Buscar jugador</h2>
+
+<form th:object="${jugador}" th:action="@{/jugadores}" method="get"
       class="form-horizontal" id="search-jugador-form">
     <div class="form-group">
         <div class="control-group" id="name">
@@ -25,7 +43,6 @@
     </div>
 </form>
 
-<br/>
 
 </body>
 </html>

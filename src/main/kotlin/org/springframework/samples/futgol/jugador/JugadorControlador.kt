@@ -5,6 +5,7 @@ import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.clausula.ClausulaValidador
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
+import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.stream.Collectors
 import javax.validation.Valid
 
 
@@ -61,7 +63,11 @@ class JugadorControlador(
 
     @GetMapping("/topJugadores")
     fun buscaJugador(model: Model): String {
-        model["jugador"] = Jugador()
+        model["jugadores"] =
+            jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })?.limit(5)
+                ?.collect(Collectors.toList())!!
+        var jugador = Jugador()
+        model.addAttribute(jugador)
         return VISTA_BUSCAR_JUGADOR
     }
 
@@ -73,6 +79,7 @@ class JugadorControlador(
             result.rejectValue("jugador.name", "no se ha encontrado", "no se ha encontrado")
             "redirect:/jugadores"
         }
+        return "redirect:/topJugadores"
     }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}")

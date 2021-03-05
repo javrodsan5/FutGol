@@ -51,13 +51,13 @@ class JugadorControlador(
     }
 
     @GetMapping("/jugador/{idJugador}")
-    fun detallesJugadorCualquiera(model: Model, @PathVariable("idJugador") idJugador: Int): String {
-        if (jugadorServicio.existeJugadorId(idJugador) == true) {
+    fun detallesJugadorCualquiera(model: Model, @PathVariable idJugador: Int): String {
+        return if (jugadorServicio.existeJugadorId(idJugador) == true) {
             model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            VISTA_DETALLES_JUGADOR
         } else {
-            return "redirect:/"
+             "redirect:/"
         }
-        return VISTA_DETALLES_JUGADOR
     }
 
     @GetMapping("/topJugadores")

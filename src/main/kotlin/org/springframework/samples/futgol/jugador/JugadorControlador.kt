@@ -5,7 +5,6 @@ import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.clausula.ClausulaValidador
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
-import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -53,7 +52,7 @@ class JugadorControlador(
 
     @GetMapping("/jugador/{idJugador}")
     fun detallesJugadorCualquiera(model: Model, @PathVariable("idJugador") idJugador: Int): String {
-        if (jugadorServicio.existeJugador(idJugador) == true) {
+        if (jugadorServicio.existeJugadorId(idJugador) == true) {
             model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
         } else {
             return "redirect:/"
@@ -66,20 +65,23 @@ class JugadorControlador(
         model["jugadores"] =
             jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })?.limit(5)
                 ?.collect(Collectors.toList())!!
-        var jugador = Jugador()
-        model.addAttribute(jugador)
+        model.addAttribute(Jugador())
         return VISTA_BUSCAR_JUGADOR
     }
 
     @GetMapping("/jugadores")
     fun procesoBusquedaJugador(jugador: Jugador, result: BindingResult, model: Model): String {
-        return if (jugador.id?.let { jugadorServicio.existeJugador(it) } == true) {
-            "redirect:/jugadores/" + jugador.id
+        return if (jugador.name?.let { jugadorServicio.existeJugadorNombre(it) } == true) {
+            var jug = jugadorServicio.buscaJugadorPorNombre(jugador.name!!)
+            "redirect:/jugador/" + jug!!.id
         } else {
-            result.rejectValue("jugador.name", "no se ha encontrado", "no se ha encontrado")
-            "redirect:/jugadores"
+            result.rejectValue("name", "no se ha encontrado", "no se ha encontrado")
+            model["jugadores"] =
+                jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })
+                    ?.limit(5)
+                    ?.collect(Collectors.toList())!!
+            VISTA_BUSCAR_JUGADOR
         }
-        return "redirect:/topJugadores"
     }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}")

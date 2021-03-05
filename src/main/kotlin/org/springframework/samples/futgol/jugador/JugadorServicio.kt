@@ -49,8 +49,20 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun existeJugador(idJugador: Int): Boolean? {
+    fun existeJugadorId(idJugador: Int): Boolean? {
         return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.id == idJugador }
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeJugadorNombre(nombreJugador: String): Boolean? {
+        return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.name == nombreJugador }
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaJugadorPorNombre(nombreJugador: String): Jugador? {
+        return jugadorRepositorio?.findByName(nombreJugador)
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {

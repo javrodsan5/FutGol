@@ -81,5 +81,5 @@ Mathías Olivera,Mathí­as Olivera
 John Patrick,John Joe Patrick Finn
 Yoel,Yoel Rodríguez
 Quique,Quique González
-Raúl García,Raúl Carnero
+Raúl García,Raúl Carnero,Valladolid
 Juan Carlos,Juan Carlos Real

@@ -33,7 +33,6 @@ Jens Jønsson,Jens Jönsson
 Salvi,Salvi Sánchez
 Filip Malbašić,Filip Malbasic
 Marko Dmitrović,Marko Dmitrovic
-Róber,Roberto Correa
 Papakouli Diop,Pape Diop
 Kike,Kike García
 Damian Kądzior,Damian Kadzior
@@ -42,3 +41,8 @@ Waldo Rubio Marin,Waldo Rubio
 Pablo Hervias,Pablo Hervías
 Jose Morente,Tete Morente
 Juan Carlos,Juan Carlos Real
+Róber,Roberto Correa
+Anthony Lozano,Choco Lozano
+Álex Fernandez,Álex Fernández
+Enrique Barja Alfonso,Kike Barja
+Aridane Hernandez,Aridane Hernández

@@ -85,7 +85,7 @@ class EstadisticaJugadorServicio {
                 .filter { x -> x.text() != "17:00" }
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("CambioNombresJugadores.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("CambioNombresFCstats.txt")).collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }
@@ -119,8 +119,8 @@ class EstadisticaJugadorServicio {
                         titularesLocal.stream().map { x -> x.select("span.lineupRating").text() }
                             .collect(Collectors.toList())
                     var puntuacionesTL= ArrayList<Double>()
+                    var puntuacion= 6.0
                     for(p in puntuacionesTLString){
-                        var puntuacion= 0.0
                         if(!p.isEmpty()){
                            puntuacion= p.toDouble()
                         }
@@ -163,7 +163,6 @@ class EstadisticaJugadorServicio {
                             .collect(Collectors.toList())
                     var puntuacionesTV= ArrayList<Double>()
                     for(p in puntuacionesTVString){
-                        var puntuacion= 0.0
                         if(!p.isEmpty()){
                             puntuacion= p.toDouble()
                         }
@@ -221,7 +220,7 @@ class EstadisticaJugadorServicio {
                             .collect(Collectors.toList())
                     var puntuacionesSL= ArrayList<Double>()
                     for(p in puntuacionesSLString){
-                        var puntuacion= 0.0
+                        var puntuacion= 6.0
                         if(!p.isEmpty()){
                             puntuacion= p.toDouble()
                         }
@@ -272,7 +271,7 @@ class EstadisticaJugadorServicio {
                             .collect(Collectors.toList())
                     var puntuacionesSV= ArrayList<Double>()
                     for(p in puntuacionesSVString){
-                        var puntuacion= 0.0
+                        var puntuacion= 6.0
                         if(!p.isEmpty()){
                             puntuacion= p.toDouble()
                         }

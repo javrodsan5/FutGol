@@ -77,7 +77,7 @@ class EstadisticaJugadorServicio {
         return res
     }
 
-    fun valoraciones() {
+    fun wsValoraciones() {
         var urlBase = "https://es.fcstats.com/"
         var doc = Jsoup.connect("$urlBase/partidos,primera-division-espana,19,1.php").get()
         var linksPartidos =

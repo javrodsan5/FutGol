@@ -96,21 +96,21 @@ class EstadisticaJugadorServicio {
             if (!plantilla.isEmpty()) {
                 var equipos = doc2.select("div#pageTitle h1").text().split("-")
                 var equipoLocal = equipos[0].trim()
-                    .replace("FC Barcelona","Barcelona")
-                    .replace("Athletic Bilbao","Athletic Club")
+                    .replace("FC Barcelona", "Barcelona")
+                    .replace("Athletic Bilbao", "Athletic Club")
                     .replace("Celta de Vigo", "Celta Vigo")
                     .replace("Deportivo Alavés", "Alavés")
-                    .replace("Real Valladolid","Valladolid")
+                    .replace("Real Valladolid", "Valladolid")
                 var equipoVisitante = equipos[1].trim()
-                    .replace("FC Barcelona","Barcelona")
-                    .replace("Athletic Bilbao","Athletic Club")
+                    .replace("FC Barcelona", "Barcelona")
+                    .replace("Athletic Bilbao", "Athletic Club")
                     .replace("Celta de Vigo", "Celta Vigo")
                     .replace("Deportivo Alavés", "Alavés")
-                    .replace("Real Valladolid","Valladolid")
+                    .replace("Real Valladolid", "Valladolid")
                 println(equipoLocal)
                 println(equipoVisitante)
                 var titularesConPuntuacion =
-                    plantilla[1].select("div").filter { x -> !x.select("span.lineupRating").isEmpty() }
+                    plantilla[1].select("div")
                 if (!titularesConPuntuacion.isEmpty()) {
                     var titularesLocal = titularesConPuntuacion[1].children()
                     var nombresTL =
@@ -118,13 +118,15 @@ class EstadisticaJugadorServicio {
                     var puntuacionesTLString =
                         titularesLocal.stream().map { x -> x.select("span.lineupRating").text() }
                             .collect(Collectors.toList())
-                    var puntuacionesTL= ArrayList<Double>()
-                    var puntuacion= 6.0
-                    for(p in puntuacionesTLString){
-                        if(!p.isEmpty()){
-                           puntuacion= p.toDouble()
+                    var puntuacionesTL = ArrayList<Double>()
+                    var puntuacion: Double
+                    for (p in puntuacionesTLString) {
+                        if (p != "") {
+                            puntuacion = p.toDouble()
+                            puntuacionesTL.add(puntuacion)
+                        } else {
+                            puntuacionesTL.add(6.0)
                         }
-                        puntuacionesTL.add(puntuacion)
                     }
                     for (n in 0 until nombresTL.size) {
                         for (k in 0 until l.size) {
@@ -141,32 +143,38 @@ class EstadisticaJugadorServicio {
                                 }
                             }
                         }
-
+                        println(nombresTL[n])
                         if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[n], equipoLocal) == true) {
                             var pId =
                                 this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
                             if (pId != null) {
-                                var e = this.buscarEstadisticaPorJugadorPartido(nombresTL[n], equipoLocal, pId)
-                                if (e != null && e.valoracion == 0.0) {
-                                    e?.puntos = e.puntos + (puntuacionesTL[n] / 1.5).toInt()
-                                    e?.valoracion = puntuacionesTL[n]
-                                    this.guardarEstadistica(e)
+                                if (this.existeEstadisticaJugador(nombresTL[n], equipoLocal, pId) == true) {
+                                    var e = this.buscarEstadisticaPorJugadorPartido(nombresTL[n], equipoLocal, pId)
+                                    if (e != null && e.valoracion == 0.0) {
+                                        e?.puntos = e.puntos + (puntuacionesTL[n] / 1.5).toInt()
+                                        e?.valoracion = puntuacionesTL[n]
+                                        this.guardarEstadistica(e)
+                                    }
                                 }
                             }
                         }
                     }
                     var titularesVis =
-                        titularesConPuntuacion[13].children().filter { x -> !x.select("span.lineupRating").isEmpty() }
-                    var nombresTV = titularesVis.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
+                        titularesConPuntuacion[13].children()
+                    var nombresTV =
+                        titularesVis.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
                     var puntuacionesTVString =
-                        titularesVis.stream().map { x -> x.select("span.lineupRating").text()}
+                        titularesVis.stream().map { x -> x.select("span.lineupRating").text() }
                             .collect(Collectors.toList())
-                    var puntuacionesTV= ArrayList<Double>()
-                    for(p in puntuacionesTVString){
-                        if(!p.isEmpty()){
-                            puntuacion= p.toDouble()
+                    var puntuacionesTV = ArrayList<Double>()
+
+                    for (p in puntuacionesTVString) {
+                        if (p != "") {
+                            puntuacion = p.toDouble()
+                            puntuacionesTV.add(puntuacion)
+                        } else {
+                            puntuacionesTV.add(6.0)
                         }
-                        puntuacionesTV.add(puntuacion)
                     }
 
                     for (n in 0 until nombresTV.size) {
@@ -187,13 +195,19 @@ class EstadisticaJugadorServicio {
                         println(nombresTV[n])
                         if (this.jugadorServicio?.existeJugadorEquipo(nombresTV[n], equipoVisitante) == true) {
                             var pId =
-                                this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
+                                this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                    equipoLocal,
+                                    equipoVisitante
+                                )?.id
                             if (pId != null) {
-                                var e = this.buscarEstadisticaPorJugadorPartido(nombresTV[n], equipoVisitante, pId)
-                                if (e != null && e.valoracion == 0.0) {
-                                    e?.puntos = e.puntos + (puntuacionesTV[n] / 1.5).toInt()
-                                    e?.valoracion = puntuacionesTV[n]
-                                    this.guardarEstadistica(e)
+                                if (this.existeEstadisticaJugador(nombresTV[n], equipoVisitante, pId) == true) {
+                                    var e =
+                                        this.buscarEstadisticaPorJugadorPartido(nombresTV[n], equipoVisitante, pId)
+                                    if (e != null && e.valoracion == 0.0) {
+                                        e?.puntos = e.puntos + (puntuacionesTV[n] / 1.5).toInt()
+                                        e?.valoracion = puntuacionesTV[n]
+                                        this.guardarEstadistica(e)
+                                    }
                                 }
                             }
                         }
@@ -208,23 +222,24 @@ class EstadisticaJugadorServicio {
                 var suplentes = plantilla[2].select("div")
                 var nombresSLTamaño = suplentes[1].children().size
                 var suplentesConPuntuacionL =
-                    suplentes[1].children().filter { x -> !x.select("span.lineupRating").isEmpty() }
+                    suplentes[1].children().filter { x -> x.select("span.lineupRating").text().isNotEmpty() }
                 var n = nombresSLTamaño
                 var suplentesConPuntuacionV =
-                    suplentes[n + 2].children().filter { x -> !x.select("span.lineupRating").isEmpty() }
+                    suplentes[n + 2].children().filter { x -> x.select("span.lineupRating").text().isNotEmpty() }
                 if (!suplentesConPuntuacionL.isEmpty()) {
                     var nombresSL =
-                        suplentesConPuntuacionL.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
-                    var puntuacionesSLString =
-                        suplentesConPuntuacionL.stream().map { x -> x.select("span.lineupRating").text()}
+                        suplentesConPuntuacionL.stream().map { x -> x.select("a").text() }
                             .collect(Collectors.toList())
-                    var puntuacionesSL= ArrayList<Double>()
-                    for(p in puntuacionesSLString){
-                        var puntuacion= 6.0
-                        if(!p.isEmpty()){
-                            puntuacion= p.toDouble()
+                    var puntuacionesSLString =
+                        suplentesConPuntuacionL.stream().map { x -> x.select("span.lineupRating").text() }
+                            .collect(Collectors.toList())
+                    var puntuacionesSL = ArrayList<Double>()
+                    for (p in puntuacionesSLString) {
+                        var puntuacion: Double
+                        if (p != "") {
+                            puntuacion = p.toDouble()
+                            puntuacionesSL.add(puntuacion)
                         }
-                        puntuacionesSL.add(puntuacion)
                     }
 
                     for (n in 0 until nombresSL.size) {
@@ -247,41 +262,49 @@ class EstadisticaJugadorServicio {
                         println(nombresSL[n])
                         if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[n], equipoLocal) == true) {
                             var pId =
-                                this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
+                                this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                    equipoLocal,
+                                    equipoVisitante
+                                )?.id
                             if (pId != null) {
-                                var e = this.buscarEstadisticaPorJugadorPartido(nombresSL[n], equipoLocal, pId)
-                                if (e != null && e.valoracion == 0.0 ) {
-                                    e?.puntos = e.puntos + (puntuacionesSL[n] / 1.5).toInt()
-                                    e?.valoracion = puntuacionesSL[n]
+                                if (this.existeEstadisticaJugador(nombresSL[n], equipoLocal, pId) == true) {
+                                    var e = this.buscarEstadisticaPorJugadorPartido(nombresSL[n], equipoLocal, pId)
+                                    if (e != null && e.valoracion == 0.0) {
+                                        e?.puntos = e.puntos + (puntuacionesSL[n] / 1.5).toInt()
+                                        e?.valoracion = puntuacionesSL[n]
 
-                                    this.guardarEstadistica(e)
+                                        this.guardarEstadistica(e)
+                                    }
                                 }
                             }
                         }
                     }
-
                     println("Suplentes local: " + nombresSL + " " + nombresSL.size)
                     println("Puntuaciones suplentes local: " + puntuacionesSL)
                 }
                 if (!suplentesConPuntuacionV.isEmpty()) {
                     var nombresSV =
-                        suplentesConPuntuacionV.stream().map { x -> x.select("a").text() }.collect(Collectors.toList())
+                        suplentesConPuntuacionV.stream().map { x -> x.select("a").text() }
+                            .collect(Collectors.toList())
                     var puntuacionesSVString =
                         suplentesConPuntuacionV.stream().map { x -> x.select("span.lineupRating").text() }
                             .collect(Collectors.toList())
-                    var puntuacionesSV= ArrayList<Double>()
-                    for(p in puntuacionesSVString){
-                        var puntuacion= 6.0
-                        if(!p.isEmpty()){
-                            puntuacion= p.toDouble()
+                    var puntuacionesSV = ArrayList<Double>()
+                    for (p in puntuacionesSVString) {
+                        var puntuacion: Double
+                        if (p != "") {
+                            puntuacion = p.toDouble()
+                            puntuacionesSV.add(puntuacion)
                         }
-                        puntuacionesSV.add(puntuacion)
                     }
+
                     for (n in 0 until nombresSV.size) {
                         for (k in 0 until l.size) {
                             var linea = l[k]?.split(",")
                             if (linea?.size!! >= 3) {
-                                if (linea?.get(2).equals(equipoVisitante) && linea?.get(0).equals(nombresSV[n])) {
+                                if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
+                                        .equals(nombresSV[n])
+                                ) {
                                     nombresSV.removeAt(n)
                                     nombresSV.add(linea?.get(1))
                                 }
@@ -295,13 +318,22 @@ class EstadisticaJugadorServicio {
                         println(nombresSV[n])
                         if (this.jugadorServicio?.existeJugadorEquipo(nombresSV[n], equipoVisitante) == true) {
                             var pId =
-                                this.partidoServicio?.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
+                                this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                    equipoLocal,
+                                    equipoVisitante
+                                )?.id
                             if (pId != null) {
-                                var e = this.buscarEstadisticaPorJugadorPartido(nombresSV[n], equipoVisitante, pId)
-                                if (e != null && e.valoracion == 0.0) {
-                                    e?.puntos = e.puntos + (puntuacionesSV[n] / 1.5).toInt()
-                                    e?.valoracion = puntuacionesSV[n]
-                                    this.guardarEstadistica(e)
+                                if (this.existeEstadisticaJugador(nombresSV[n], equipoVisitante, pId) == true) {
+                                    var e = this.buscarEstadisticaPorJugadorPartido(
+                                        nombresSV[n],
+                                        equipoVisitante,
+                                        pId
+                                    )
+                                    if (e != null && e.valoracion == 0.0) {
+                                        e?.puntos = e.puntos + (puntuacionesSV[n] / 1.5).toInt()
+                                        e?.valoracion = puntuacionesSV[n]
+                                        this.guardarEstadistica(e)
+                                    }
                                 }
                             }
                         }
@@ -314,10 +346,11 @@ class EstadisticaJugadorServicio {
         }
     }
 
+
     fun wsEstadisticas() {
         var urlBase = "https://fbref.com/"
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()
-        var partidos = doc.select("table#sched_ks_10731_1 tbody tr")
+        var partidos = doc.select("table#sched_10731_1 tbody tr")
             .filter { x -> x.select("tr.spacer.partial_table.result_all").isEmpty() }
         var l: List<String?> = ArrayList()
         try {
@@ -331,10 +364,10 @@ class EstadisticaJugadorServicio {
         if (estaVacioEstadisticas == false) {
             ultimaEPId = this.buscarUltimaEstadistica()?.partido?.id!!
         }
-
         for (n in 0 until partidos.size) {
             var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
-            var equipoVisitante = partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
+            var equipoVisitante =
+                partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
 
             if (this.partidoServicio?.existePartido(equipoLocal, equipoVisitante) == true) {
                 var idPartido =
@@ -353,7 +386,9 @@ class EstadisticaJugadorServicio {
                         var linea = l[k]?.split(",")
                         for (j in 0 until titularesLocal.size) {
                             if (linea?.size!! >= 3) {
-                                if (linea?.get(2).equals(equipoLocal) && linea?.get(0).equals(titularesLocal[j])) {
+                                if (linea?.get(2).equals(equipoLocal) && linea?.get(0)
+                                        .equals(titularesLocal[j])
+                                ) {
                                     titularesLocal.removeAt(j)
                                     titularesLocal.add(linea?.get(1).toString())
                                 } else if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
@@ -376,8 +411,9 @@ class EstadisticaJugadorServicio {
 
                     var tablas = doc2.select("div.table_wrapper").subList(0, 4)
                     for (n in 0 until tablas.size) {
-                        var equipo = tablas[n].select("h2").first().text().substringBefore("Estadísticas de").trim()
-                            .replace("Betis", "Real Betis")
+                        var equipo =
+                            tablas[n].select("h2").first().text().substringBefore("Estadísticas de").trim()
+                                .replace("Betis", "Real Betis")
                         var jugadores = tablas[n].select("tbody tr")
                         var tamanyo = jugadores.size
                         if (n % 2 == 0) {
@@ -400,11 +436,16 @@ class EstadisticaJugadorServicio {
                             }
 
                             if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
-                                var j = this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
+                                var j =
+                                    this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                                 var est = EstadisticaJugador()
                                 if (existeEstadisticaJugador(nombreJugador, equipo, idPartido) == true) {
                                     est =
-                                        this.buscarEstadisticaPorJugadorPartido(nombreJugador, equipo, idPartido)!!
+                                        this.buscarEstadisticaPorJugadorPartido(
+                                            nombreJugador,
+                                            equipo,
+                                            idPartido
+                                        )!!
                                 }
                                 println(nombreJugador)
 
@@ -549,6 +590,7 @@ class EstadisticaJugadorServicio {
 
     }
 }
+
 
 
 

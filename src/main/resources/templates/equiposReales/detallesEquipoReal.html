@@ -164,8 +164,12 @@
 </div>
 </div>
 
-<br/>
-<br/>
+<b>Banquillo</b>
+<div style="display: inline-block" th:each="jugador : ${banquillo}">
+    <div><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"><img
+            th:src="${jugador.foto}"/></a></div>
+    <div><b th:text="${jugador.puntos}"/> puntos</div>
+</div>
 
 <b>Top 5 jugadores</b>
 </br>
@@ -193,9 +197,9 @@
     <tbody>
     <tr th:each="partido : ${partidosLocal}">
         <td th:text="${partido.jornada.id}"/>
-        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})}"
-               th:text="${partido.equipoLocal.name}"/>
-        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})} "
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
+               th:text="${partido.equipoLocal.name}"/></td>
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
                th:text="${partido.equipoVisitante.name}"/></td>
         <td th:text="${partido.resultado}"/>
         <td th:text="${partido.fecha}"/>
@@ -217,15 +221,16 @@
     <tbody>
     <tr th:each="partido : ${partidosVisitante}">
         <td th:text="${partido.jornada.id}"/>
-        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})}"
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
                th:text="${partido.equipoLocal.name}"/></td>
-        <td><a th:href="@{/equiposLiga/{idEquipo} (idEquipo= ${partido.equipoLocal.id})} "
+        <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
                th:text="${partido.equipoVisitante.name}"/></td>
         <td th:text="${partido.resultado}"/>
         <td th:text="${partido.fecha}"/>
     </tr>
     </tbody>
 </table>
+
 </body>
 
 </html>

@@ -66,7 +66,7 @@ class PartidoServicio {
     fun wsPartidos() {
         var urlBase = "https://fbref.com/"
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()
-        var partidos = doc.select("table#sched_ks_10731_1 tbody tr")
+        var partidos = doc.select("table#sched_10731_1 tbody tr")
             .filter { x -> x.select("tr.spacer.partial_table.result_all").isEmpty() }
         for (partido in partidos) {
             var p = Partido()

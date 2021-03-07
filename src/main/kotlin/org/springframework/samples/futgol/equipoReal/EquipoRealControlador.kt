@@ -64,6 +64,13 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
             if (equipo.jugadores.size > 5) {
                 model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)
             }
+            var banquillo= equipo.jugadores
+            banquillo.removeAll(delanteros)
+            banquillo.removeAll(centrocampistas)
+            banquillo.removeAll(defensas)
+            banquillo.remove(portero)
+            model["banquillo"] = banquillo
+
         }else {
             return "redirect:/equiposLiga"
         }

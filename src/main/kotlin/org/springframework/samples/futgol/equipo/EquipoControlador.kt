@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.equipo
 
+import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
@@ -66,6 +67,45 @@ class EquipoControlador(
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
             equipo.jugadores = misJugadores
+
+            var portero = misJugadores.stream()?.filter { x -> x?.posicion == "PO" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+            var defensas = misJugadores.stream()?.filter { x -> x?.posicion == "DF" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            var centrocampistas = misJugadores.stream()?.filter { x -> x?.posicion == "CC" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            var delanteros = misJugadores.stream()?.filter { x -> x?.posicion == "DL" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(2)
+                ?.collect(Collectors.toList())
+            var onceInicial= HashSet<Jugador>()
+            if (portero != null) {
+                onceInicial.add(portero)
+            }
+            if (defensas != null) {
+                onceInicial.addAll(defensas)
+            }
+            if (centrocampistas != null) {
+                onceInicial.addAll(centrocampistas)
+            }
+            if (delanteros!= null){
+                onceInicial.addAll(delanteros)
+            }
+
+            var banquillo: MutableSet<Jugador> = HashSet<Jugador>()
+            banquillo.addAll(equipo.jugadores)
+            banquillo.removeAll(onceInicial)
+            equipo.onceInicial= onceInicial
+            equipo.jugBanquillo= banquillo
+
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga
@@ -86,26 +126,30 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
+            model["banquillo"]= miEquipo.jugBanquillo
+            println(miEquipo.jugadores)
+            println(miEquipo.jugadores.size)
+
             model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             //CAMBIAR A ONCE INICIAL CUANDO ESTÉ PUESTO Y PONER TB LOS JUGADORES DEL BANQUILLO
-            var portero = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }
+            var portero = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
             model["portero"] = portero!!
-            var defensas = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "DF" }
+            var defensas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DF" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(4)
                 ?.collect(Collectors.toList())
             model["defensas"] = defensas!!
-            var centrocampistas = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "CC" }
+            var centrocampistas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "CC" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(4)
                 ?.collect(Collectors.toList())
             model["centrocampistas"] = centrocampistas!!
-            var delanteros = miEquipo.jugadores.stream()?.filter { x -> x?.posicion == "DL" }
+            var delanteros = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DL" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(2)

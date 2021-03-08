@@ -1,14 +1,12 @@
 Stefan Savić,Stefan Savic
-Diego Costa, no está
 Ivo Grbić, Ivo Grbic
-Thomas Partey, sale pero abajo
 Anssumane Fati,Ansu Fati
 Francisco Trincão,Trincão
 Luka Modrić,Luka Modric
 Fernando,Fernando Reges
 Carlos Fernández Luna,Carlos Fernández
-Tomáš Vaclík,T. Vaclík
-Ivan Rakitić,I. Rakitic
+Tomáš Vaclík,Tomas Vaclík
+Ivan Rakitić,Ivan Rakitic
 Emerson,Emerson Royal
 Raba,Dani Raba
 Fernando Niño,Fer Niño
@@ -46,3 +44,20 @@ Anthony Lozano,Choco Lozano
 Álex Fernandez,Álex Fernández
 Enrique Barja Alfonso,Kike Barja
 Aridane Hernandez,Aridane Hernández
+José Giménez,José María Giménez
+Šime Vrsaljko,Sime Vrsaljko
+Oscar Mingueza,Óscar Mingueza
+Junior Firpo,Júnior Firpo
+Sergio Arribas Calvo,Sergio Arribas
+Óscar Rodríguez,Óscar
+Alejandro Gómez,Papu Gómez
+Joseba Zaldúa,Joseba Zaldua
+Rodrigo Sánchez,Rodri
+Yeremi Pino santos,Yeremy
+Yan Brice,Yan Eteki
+Luis Javier Suárez,Luis Suárez,Granada
+Rubén Vezo,Rúben Vezo
+Jorge De Frutos Sebastian,Jorge de Frutos
+Ruben Rochina,Rubén Rochina
+Alex Berenguer,Álex Berenguer
+Aarón Martin Caricol,Aarón Martín

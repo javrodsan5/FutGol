@@ -12,15 +12,15 @@
         <thead>
         <tr>
             <th>Nombre</th>
-            <th>Posición</th>
-            <th>Valor del mi equipo</th>
+            <th>Administrador</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="liga : ${ligas}">
             <td><a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
-            <td th:each="posicion : ${posiciones}" th:text="${posicion}"></td>
-            <td th:each="valor : ${valores}" th:text="${valor}"></td>
+            <td><a th:href="@{/usuarios/{username} (username= ${liga.admin.user.username})}"
+                   th:text="${liga.admin.user.username}"/></a></td>
+
         </tr>
 </div>
 </tbody>

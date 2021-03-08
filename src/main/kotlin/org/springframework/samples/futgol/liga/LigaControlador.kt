@@ -1,6 +1,8 @@
 package org.springframework.samples.futgol.liga
 
 
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
@@ -39,6 +41,7 @@ class LigaControlador(
         dataBinder.validator = LigaValidador()
     }
 
+    @CachePut("ligas")
     @GetMapping("/misligas")
     fun listaLigas(model: Model, principal: Principal): String {
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
@@ -114,6 +117,7 @@ class LigaControlador(
         }
     }
 
+    @CachePut("detallesLiga")
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
         if (ligaServicio.comprobarSiExisteLiga(nombreLiga) && ligaServicio.estoyEnLiga(nombreLiga, principal)) {

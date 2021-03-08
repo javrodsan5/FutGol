@@ -62,7 +62,10 @@ dependencies {
     implementation("org.webjars:bootstrap:$boostrapVersion")
     implementation("org.projectlombok:lombok:1.18.16")
     implementation("org.jsoup:jsoup:1.13.1")
-    implementation( "org.xerial:sqlite-jdbc:3.30.1")
+    implementation("org.xerial:sqlite-jdbc:3.30.1")
+    implementation("org.springframework:spring-context-support:5.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-cache:2.4.0")
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")

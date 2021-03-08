@@ -175,7 +175,11 @@ class UsuarioController(
 
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
-        model["usuario"] = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
+        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
+        if(usuario.user?.username == usuarioServicio.usuarioLogueado(principal)!!.user?.username ) {
+            return "redirect:/micuenta"
+        }
+        model["usuario"] =usuario
         model["ligasUsuario"] = usuarioServicio.buscarLigasUsuario(username)!!
         model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
         return VISTA_DETALLES_USUARIO

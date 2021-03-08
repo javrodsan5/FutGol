@@ -43,24 +43,8 @@ class LigaControlador(
     fun listaLigas(model: Model, principal: Principal): String {
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        var valores: MutableList<Double> = ArrayList()
-        var posiciones: MutableList<Int> = ArrayList()
         if (ligas != null) {
             model["ligas"] = ligas
-            for (l in ligas) {
-                l.id?.let {
-                    if (equipoServicio.tengoEquipo(it, principal)) {
-                        var equipo = l.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal) }
-                        l.id?.let { ligaServicio.calculaPosicionLiga(it, principal)?.let { posiciones.add(it) } }
-                        l.id?.let { equipoServicio.calcularValorEquipo(equipo?.name, it) }?.let { valores.add(it) }
-                    } else {
-                        valores.add(0.0)
-                        posiciones.add(0)
-                    }
-                }
-            }
-            model["posiciones"] = posiciones
-            model["valores"] = valores
         }
         return VISTA_LISTA_LIGAS
     }

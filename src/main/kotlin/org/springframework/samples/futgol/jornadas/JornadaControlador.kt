@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.jornadas
 
+import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Controller
@@ -18,6 +19,7 @@ class JornadaControlador(val jornadaServicio: JornadaServicio,
 
     private val VISTA_DETALLES_JORNADA = "jornadas/detallesJornada"
 
+    @CachePut("jornadas")
     @GetMapping("/jornadas")
     fun ultimaJornadaJugada(model: Model): String {
         model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!

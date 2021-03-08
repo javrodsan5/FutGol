@@ -47,7 +47,7 @@ class LigaControlador(
         val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
-            model["ligas"] = ligas
+            model["ligas"] = ligas.sortedBy { x -> x.name }
         }
         return VISTA_LISTA_LIGAS
     }
@@ -126,7 +126,7 @@ class LigaControlador(
             var soyAdmin: Boolean
             var noLimiteEquipos = true
             model["liga"] = liga!!
-            var equiposLiga = liga.equipos
+            var equiposLiga = liga.equipos.sortedBy { x -> x.name }
             model["equipos"] = equiposLiga
             if (liga!!.equipos.size >= 8) {
                 noLimiteEquipos = false

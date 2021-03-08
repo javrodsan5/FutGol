@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.usuario
 
+import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -173,6 +174,7 @@ class UsuarioController(
         return "redirect:/misligas"
     }
 
+    @CachePut("detallesUsuario")
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
         var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!

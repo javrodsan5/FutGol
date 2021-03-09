@@ -8,6 +8,47 @@
 <h2>Valor: <b th:text="${jugador.valor}"></b>000.000€</h2>
 <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
 
+
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        Jornadas
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+        <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                               th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
+        </li>
+    </ul>
+</div>
+<div th:if="${tieneEstadistica}">
+    <ul>
+        <li>Jornada: <b th:text="${est.partido.jornada.numeroJornada}"></b></li>
+        <li>Minutos jugados: <b th:text="${est.minutosJugados}"></b></li>
+        <li>Goles: <b th:text="${est.goles}"></b></li>
+        <li>Asistencias: <b th:text="${est.asistencias}"></b></li>
+        <li>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></li>
+        <li>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></li>
+        <li>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></li>
+        <li>Disparos totales: <b th:text="${est.disparosTotales}"></b></li>
+        <li>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></li>
+        <li>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></li>
+        <li>Robos: <b th:text="${est.robos}"></b></li>
+        <li>Bloqueos: <b th:text="${est.bloqueos}"></b></li>
+        <li>Puntos: <b th:text="${est.puntos}"></b></li>
+        <div th:if="${esPortero}">
+            <li>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></li>
+            <li>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></li>
+            <li>Salvadas: <b th:text="${est.salvadas}"></b></li>
+        </div>
+        <li>Valoración: <b th:text="${est.valoracion}"></b></li>
+    </ul>
+</div>
+<div th:if="${tieneEstadistica== false}">
+    <h1>El jugador no participó en esta jornada.</h1>
+</div>
+
 </body>
 
 </html>

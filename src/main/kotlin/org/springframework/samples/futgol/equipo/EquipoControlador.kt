@@ -86,7 +86,7 @@ class EquipoControlador(
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(2)
                 ?.collect(Collectors.toList())
-            var onceInicial= HashSet<Jugador>()
+            var onceInicial = HashSet<Jugador>()
             if (portero != null) {
                 onceInicial.add(portero)
             }
@@ -96,15 +96,15 @@ class EquipoControlador(
             if (centrocampistas != null) {
                 onceInicial.addAll(centrocampistas)
             }
-            if (delanteros!= null){
+            if (delanteros != null) {
                 onceInicial.addAll(delanteros)
             }
 
             var banquillo: MutableSet<Jugador> = HashSet<Jugador>()
             banquillo.addAll(equipo.jugadores)
             banquillo.removeAll(onceInicial)
-            equipo.onceInicial= onceInicial
-            equipo.jugBanquillo= banquillo
+            equipo.onceInicial = onceInicial
+            equipo.jugBanquillo = banquillo
 
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
@@ -126,10 +126,7 @@ class EquipoControlador(
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
-            model["banquillo"]= miEquipo.jugBanquillo
-            println(miEquipo.jugadores)
-            println(miEquipo.jugadores.size)
-
+            model["banquillo"] = miEquipo.jugBanquillo
             model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             //CAMBIAR A ONCE INICIAL CUANDO ESTÉ PUESTO Y PONER TB LOS JUGADORES DEL BANQUILLO

@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.text.Normalizer
 import java.util.stream.Collectors
-import kotlin.collections.ArrayList
 
 @Service
 class EstadisticaJugadorServicio {
@@ -49,6 +47,12 @@ class EstadisticaJugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun buscarEstadisticasPorJugadorJornada(idJugador: Int, numeroJornada: Int): EstadisticaJugador? {
+        return estadisticaJugadorRepositorio?.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscarUltimaEstadistica(): EstadisticaJugador? {
         return estadisticaJugadorRepositorio?.buscarUltimaEstadistica()
     }
@@ -77,6 +81,22 @@ class EstadisticaJugadorServicio {
                         res = true
                         break
                     }
+                }
+            }
+        }
+        return res
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeEstadisticaJugadorJornada(idJugador: Int, numeroJornada: Int): Boolean? {
+        var res = false
+        var estadisticas = this.buscarTodasEstadisticas()
+        if (estadisticas != null || estadisticas?.isEmpty() == false) {
+            for (e in estadisticas) {
+                if (e.jugador?.id == idJugador && e.partido?.jornada?.numeroJornada == numeroJornada) {
+                    res = true
+                    break
                 }
             }
         }
@@ -127,7 +147,7 @@ class EstadisticaJugadorServicio {
                     if (num != null) {
                         var titularesConPuntuacion =
                             plantilla[1].select("div")
-                        var existeTitulares= titularesConPuntuacion.select("span").size!=0
+                        var existeTitulares = titularesConPuntuacion.select("span").size != 0
                         if ((num < 22) && (existeTitulares) && (resultadoPartido != "")) {
                             var titularesLocal = titularesConPuntuacion[1].children()
                             var nombresTL =

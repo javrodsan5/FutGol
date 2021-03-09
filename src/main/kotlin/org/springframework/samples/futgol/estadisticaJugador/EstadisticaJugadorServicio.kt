@@ -154,12 +154,12 @@ class EstadisticaJugadorServicio {
                                                 .equals(nombresTL[n])
                                         ) {
                                             nombresTL.removeAt(n)
-                                            nombresTL.add(linea?.get(1))
+                                            nombresTL.add(n,linea?.get(1))
                                         }
                                     } else {
                                         if (linea?.get(0).equals(nombresTL[n])) {
                                             nombresTL.removeAt(n)
-                                            nombresTL.add(linea?.get(1).toString())
+                                            nombresTL.add(n,linea?.get(1).toString())
                                         }
                                     }
                                 }
@@ -213,12 +213,12 @@ class EstadisticaJugadorServicio {
                                                 .equals(nombresTV[n])
                                         ) {
                                             nombresTV.removeAt(n)
-                                            nombresTV.add(linea?.get(1))
+                                            nombresTV.add(n,linea?.get(1))
                                         }
                                     } else {
                                         if (linea?.get(0).equals(nombresTV[n])) {
                                             nombresTV.removeAt(n)
-                                            nombresTV.add(linea?.get(1).toString())
+                                            nombresTV.add(n,linea?.get(1).toString())
                                         }
                                     }
                                 }
@@ -295,12 +295,12 @@ class EstadisticaJugadorServicio {
                                                     .equals(nombresSL[n])
                                             ) {
                                                 nombresSL.removeAt(n)
-                                                nombresSL.add(linea?.get(1))
+                                                nombresSL.add(n,linea?.get(1))
                                             }
                                         } else {
                                             if (linea?.get(0).equals(nombresSL[n])) {
                                                 nombresSL.removeAt(n)
-                                                nombresSL.add(linea?.get(1).toString())
+                                                nombresSL.add(n,linea?.get(1).toString())
                                             }
                                         }
                                     }
@@ -357,12 +357,12 @@ class EstadisticaJugadorServicio {
                                                     .equals(nombresSV[n])
                                             ) {
                                                 nombresSV.removeAt(n)
-                                                nombresSV.add(linea?.get(1))
+                                                nombresSV.add(n,linea?.get(1))
                                             }
                                         } else {
                                             if (linea?.get(0).equals(nombresSV[n])) {
                                                 nombresSV.removeAt(n)
-                                                nombresSV.add(linea?.get(1).toString())
+                                                nombresSV.add(n,linea?.get(1).toString())
                                             }
                                         }
                                     }
@@ -455,20 +455,20 @@ class EstadisticaJugadorServicio {
                                         .equals(titularesLocal[j])
                                 ) {
                                     titularesLocal.removeAt(j)
-                                    titularesLocal.add(linea?.get(1).toString())
+                                    titularesLocal.add(j,linea?.get(1).toString())
                                 } else if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
                                         .equals(titularesV[j])
                                 ) {
                                     titularesV.removeAt(j)
-                                    titularesV.add(linea?.get(1).toString())
+                                    titularesV.add(j,linea?.get(1).toString())
                                 }
                             } else {
                                 if (linea?.get(0).equals(titularesLocal[j])) {
                                     titularesLocal.removeAt(j)
-                                    titularesLocal.add(linea?.get(1).toString())
+                                    titularesLocal.add(j,linea?.get(1).toString())
                                 } else if (linea?.get(0).equals(titularesV[j])) {
                                     titularesV.removeAt(j)
-                                    titularesV.add(linea?.get(1).toString())
+                                    titularesV.add(j,linea?.get(1).toString())
                                 }
                             }
                         }
@@ -655,6 +655,7 @@ class EstadisticaJugadorServicio {
         }
 
     }
+
 }
 
 

@@ -18,7 +18,7 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
-        <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.id}"
+        <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
                                                th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"/></li>
     </ul>
 </div>

@@ -20,9 +20,12 @@
                     class="btn btn-default" type="submit" th:text="${text}">Crear
                 Liga
             </button>
+            <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+            >Cancelar</a></button>
         </div>
     </div>
 </form>
+
 </body>
 
 </html>

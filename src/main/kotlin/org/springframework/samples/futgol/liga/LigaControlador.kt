@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.liga
 
 
 import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
@@ -150,20 +149,24 @@ class LigaControlador(
 
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
-        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
-        var equiposLiga = liga?.equipos?.sortedBy { x -> -x.puntos }
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            model["liga"] = liga!!
+            var equiposLiga = liga?.equipos?.sortedBy { x -> -x.puntos }
 
-        if (equiposLiga != null) {
-            var posiciones = equiposLiga.indices
-            model["posiciones"] = posiciones
-            model["equiposLiga"] = equiposLiga
-            var valores: MutableList<Double> = ArrayList()
-            for (e in equiposLiga) {
-                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+            if (equiposLiga != null) {
+                var posiciones = equiposLiga.indices
+                model["posiciones"] = posiciones
+                model["equiposLiga"] = equiposLiga
+                var valores: MutableList<Double> = ArrayList()
+                for (e in equiposLiga) {
+                    e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+                }
+                model["valores"] = valores
             }
-            model["valores"] = valores
+            return VISTA_CLASIFICACION_LIGA
         }
-        return VISTA_CLASIFICACION_LIGA
+        return "redirect:/misligas"
     }
 
     @GetMapping("topUsuarios")
@@ -203,12 +206,20 @@ class LigaControlador(
         return VISTA_DETALLES_LIGA
     }
 
-    @GetMapping("/liga/{idLiga}/subastas")
-    fun jugadoresLibresSubasta(@PathVariable idLiga: Int, model: Model): String {
-        var jugadoresSinEquipo =
-            ligaServicio.buscarJugadoresSinEquipoEnLiga(idLiga).shuffled().stream().limit(15)
-                .collect(Collectors.toList())
-        model["jugadoresSinEquipo"] = jugadoresSinEquipo
-        return VISTA_SUBASTA_LIGA
+    @GetMapping("/liga/{nombreLiga}/subastas")
+    fun jugadoresLibresSubasta(@PathVariable nombreLiga: String, model: Model): String {
+        return if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            var jugadoresSinEquipo =
+                liga?.id?.let {
+                    ligaServicio.buscarJugadoresSinEquipoEnLiga(it).shuffled().stream().limit(15)
+                        .collect(Collectors.toList())
+                }
+            model["jugadoresSinEquipo"] = jugadoresSinEquipo!!
+            model["liga"] = liga!!
+            VISTA_SUBASTA_LIGA
+        } else {
+            "redirect:/misligas"
+        }
     }
 }

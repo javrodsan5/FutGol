@@ -39,24 +39,24 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
             model["equipo"] = equipo
             var portero = equipo.jugadores.stream()?.filter { x -> x?.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+                .sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.get()
             model["portero"] = portero!!
             var defensas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DF" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
+                .sorted(Comparator.comparing { x -> -x.puntos })
                 ?.limit(4)
                 ?.collect(Collectors.toList())
             model["defensas"] = defensas!!
             var centrocampistas = equipo.jugadores.stream()?.filter { x -> x?.posicion == "CC" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
+                .sorted(Comparator.comparing { x -> -x.puntos })
+                ?.limit(3)
                 ?.collect(Collectors.toList())
             model["centrocampistas"] = centrocampistas!!
             var delanteros = equipo.jugadores.stream()?.filter { x -> x?.posicion == "DL" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(2)
+                .sorted(Comparator.comparing { x -> -x.puntos })
+                ?.limit(3)
                 ?.collect(Collectors.toList())
             model["delanteros"] = delanteros!!
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }

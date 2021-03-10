@@ -27,6 +27,9 @@ class Equipo() : NamedEntity() {
     @Column(name = "dinero_restante")
     var dineroRestante = 0
 
+    @Column(name = "formacion")
+    var formacion = ""
+
     @ManyToOne()
     @JoinColumn(name = "usuario", referencedColumnName = "username")
     var usuario: Usuario? = null

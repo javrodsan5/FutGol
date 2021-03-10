@@ -66,7 +66,6 @@ class EquipoControlador(
         } else {
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
-            equipo.jugadores = misJugadores
 
             var portero = misJugadores.stream()?.filter { x -> x?.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
@@ -86,7 +85,7 @@ class EquipoControlador(
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(2)
                 ?.collect(Collectors.toList())
-            var onceInicial= HashSet<Jugador>()
+            var onceInicial = HashSet<Jugador>()
             if (portero != null) {
                 onceInicial.add(portero)
             }
@@ -96,19 +95,21 @@ class EquipoControlador(
             if (centrocampistas != null) {
                 onceInicial.addAll(centrocampistas)
             }
-            if (delanteros!= null){
+            if (delanteros != null) {
                 onceInicial.addAll(delanteros)
             }
 
-            var banquillo: MutableSet<Jugador> = HashSet<Jugador>()
-            banquillo.addAll(equipo.jugadores)
+            var banquillo= HashSet<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
-            equipo.onceInicial= onceInicial
-            equipo.jugBanquillo= banquillo
 
+            equipo.onceInicial = onceInicial
+            equipo.jugBanquillo = banquillo
+            equipo.jugadores = misJugadores
+            println(equipo.jugadores)
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga
+            equipo.formacion = "4-4-2"
 
             this.equipoServicio.guardarEquipo(equipo)
             "redirect:/liga/$idLiga/miEquipo"
@@ -124,11 +125,12 @@ class EquipoControlador(
             model["SinEquipo"] = true
         } else {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
-            model["banquillo"]= miEquipo.jugBanquillo
-            println(miEquipo.jugadores)
-            println(miEquipo.jugadores.size)
+            model["banquillo"] = miEquipo.jugBanquillo
+
+            model["formacion"]= miEquipo.formacion
 
             model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
@@ -157,6 +159,29 @@ class EquipoControlador(
             model["delanteros"] = delanteros!!
         }
         return VISTA_DETALLES_MIEQUIPO
+    }
+
+    @GetMapping("liga/{idLiga}/miEquipo/cambiarFormacion/{formacion}")
+    fun cambiarFormacion(
+        model: Model, principal: Principal, @PathVariable idLiga: Int, @PathVariable formacion: String
+    ): String {
+        if (equipoServicio.tengoEquipo(idLiga, principal)) {
+            var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            var formacionAntigua= miEquipo.formacion
+            if (formacion == "442" && formacionAntigua != "4-4-2") {
+                miEquipo.formacion = "4-4-2"
+            } else if (formacion == "433" && formacionAntigua != "4-3-3") {
+                miEquipo.formacion = "4-3-3"
+            } else if (formacion == "352" && formacionAntigua != "3-5-2") {
+                miEquipo.formacion = "3-5-2"
+            }else if(formacion == "532" && formacionAntigua != "5-3-2"){
+                miEquipo.formacion = "5-3-2"
+            }
+            if(formacionAntigua!=miEquipo.formacion){
+                this.equipoServicio.guardarEquipo(miEquipo)
+            }
+        }
+        return "redirect:/liga/$idLiga/miEquipo"
     }
 
     @GetMapping("liga/{nombreLiga}/equipos/{idEquipo}")

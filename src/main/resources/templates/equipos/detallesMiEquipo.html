@@ -246,7 +246,8 @@
     </div>
     </div>
 
-    <b>Banquillo</b>
+    <h1>Banquillo</h1>
+    <br>
     <div style="display: inline-block" th:each="jugador : ${banquillo}">
         <div>
             <a th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}"><img

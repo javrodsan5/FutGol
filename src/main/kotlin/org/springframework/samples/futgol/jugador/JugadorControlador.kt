@@ -67,10 +67,13 @@ class JugadorControlador(
         return if (jugadorServicio.existeJugadorId(idJugador) == true) {
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
+            model["medias"] = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
             model["esPortero"] = jugador.posicion == "PO"
-            if (jugador.id?.let { this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada) } == true) {
+            model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
+            model["esDF"] = jugador.posicion == "DF"
+            if (jugador.id?.let {this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada)} == true) {
                 model["tieneEstadistica"] = true
-                model["est"] = estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+                model["est"] =estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
             } else {
                 model["tieneEstadistica"] = false
             }
@@ -115,10 +118,19 @@ class JugadorControlador(
         if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
+            if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
+                model["medias"] = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+                model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
+                model["esDF"] = jugador.posicion == "DF"
+            }
             model["esPortero"] = jugador.posicion == "PO"
-            var estadistica = estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)
-            if (estadistica != null) {
-                model["est"] = estadistica
+
+            if (jugador.id?.let {this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada)} == true) {
+                model["tieneEstadistica"] = true
+                model["est"] =
+                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+            }else {
+                model["tieneEstadistica"] = false
             }
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo

@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
+
 @WebMvcTest(
     LigaControlador::class, excludeFilters = [ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE,
@@ -39,11 +40,21 @@ class LigaControladorTest {
     @MockBean
     private lateinit var clausulaServicio: ClausulaServicio
 
+    @MockBean
+    private lateinit var ligaServicio: LigaServicio
+
     @Test
     fun testProcessCreationFormSuccess() {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/liga/crearEditarLiga")
                 .param("name", "LiguillaPrueba")
         ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+    }
+
+    @Test
+    fun testClasificacionGeneral() {
+        mockMvc.perform(MockMvcRequestBuilders.get("/topUsuarios"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("usuarios/rankingUsuarios"))
     }
 }

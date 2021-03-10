@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
@@ -29,6 +30,9 @@ class JugadorServicio {
 
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
+
+    @Autowired
+    private val estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
 
     @Autowired
     fun JugadorServicio(jugadorRepositorio: JugadorRepositorio) {
@@ -63,6 +67,98 @@ class JugadorServicio {
     @Throws(DataAccessException::class)
     fun buscaJugadorPorNombre(nombreJugador: String): Jugador? {
         return jugadorRepositorio?.findByName(nombreJugador)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun tieneEstadisticas(idJugador: Int): Boolean? {
+        return estadisticaJugadorServicio?.buscarEstadisticasPorJugador((idJugador))?.size!!>=1
+    }
+
+    @Transactional(readOnly = true)
+    fun mediaEstadisticasJugador(idJugador: Int): List<Double>? {
+        var medias: MutableList<Double> = ArrayList()
+        if (existeJugadorId(idJugador) == true && tieneEstadisticas(idJugador) == true) {
+            var jugador = buscaJugadorPorId(idJugador)
+            var estadisticasJugador = estadisticaJugadorServicio?.buscarEstadisticasPorJugador((idJugador))
+            var puntos = 0.0
+            var minutos = 0.0
+            var tAmarillas = 0.0
+            var tRojas = 0.0
+            var numeroEstadisticas = estadisticasJugador?.size
+            if (jugador!!.posicion == "PO") {
+                var salvadas = 0.0
+                var disparosRecibidos = 0.0
+                var golesRecibidos = 0.0
+                for (e in estadisticasJugador!!) {
+                    salvadas += e.salvadas
+                    disparosRecibidos += e.disparosRecibidos
+                    golesRecibidos += e.golesRecibidos
+                    puntos += e.puntos
+                    minutos += e.minutosJugados
+                    tAmarillas += e.tarjetasAmarillas
+                    tRojas += e.tarjetasRojas
+                }
+                medias.add(Math.round(salvadas / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(disparosRecibidos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(golesRecibidos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+            } else if (jugador.posicion == "DF") {
+                var robos = 0.0
+                var bloqueos = 0.0
+                var asistencias = 0.0
+                for (e in estadisticasJugador!!) {
+                    robos += e.robos
+                    bloqueos += e.bloqueos
+                    asistencias += e.asistencias
+                    puntos += e.puntos
+                    minutos += e.minutosJugados
+                    tAmarillas += e.tarjetasAmarillas
+                    tRojas += e.tarjetasRojas
+                }
+                medias.add(Math.round(robos / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(bloqueos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+            } else {
+                var goles = 0.0
+                var dispPuerta = 0.0
+                var dispTotales = 0.0
+                var asistencias = 0.0
+                var penaltisMarcados = 0.0
+                var penaltisLanzados = 0.0
+                for (e in estadisticasJugador!!) {
+                    goles += e.goles
+                    dispPuerta += e.disparosPuerta
+                    dispTotales += e.disparosTotales
+                    penaltisLanzados += e.penaltisLanzados
+                    penaltisMarcados += e.penaltisMarcados
+                    asistencias += e.asistencias
+                    puntos += e.puntos
+                    minutos += e.minutosJugados
+                    tAmarillas += e.tarjetasAmarillas
+                    tRojas += e.tarjetasRojas
+                }
+                medias.add(Math.round(goles / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(dispPuerta / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(dispTotales / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(penaltisLanzados / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(penaltisMarcados / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+            }
+        }
+        return medias
+
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {

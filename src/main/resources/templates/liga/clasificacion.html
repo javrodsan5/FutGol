@@ -4,8 +4,8 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 <body>
 
-<h2>Clasificación</h2>
-
+<h1>Clasificación de <b th:text="${liga.name}"></b></h1>
+<h3>Equipos en la liga: <b th:text="${equiposLiga.size}"></b></h3>
 <table id="clasificacion" class="table table-striped">
     <thead>
     <tr>

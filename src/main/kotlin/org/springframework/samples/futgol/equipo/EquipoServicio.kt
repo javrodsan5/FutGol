@@ -105,7 +105,7 @@ class EquipoServicio {
                 valorEquipo += j.valor
             }
         }
-        return valorEquipo
+        return Math.round(valorEquipo * 100) / 100.0
     }
 
     @Transactional(readOnly = true)

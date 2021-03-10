@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'detallesMiEquipo')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
 
@@ -248,8 +248,9 @@
 
     <b>Banquillo</b>
     <div style="display: inline-block" th:each="jugador : ${banquillo}">
-        <div><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"><img
-                th:src="${jugador.foto}"/></a></div>
+        <div>
+            <a th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}"><img
+                    th:src="${jugador.foto}"/></a></div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>
     </div>
 </h2>

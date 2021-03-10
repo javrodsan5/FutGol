@@ -1,10 +1,13 @@
 package org.springframework.samples.futgol.jugador
 
+import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.clausula.Clausula
 import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.clausula.ClausulaValidador
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -23,8 +26,12 @@ import javax.validation.Valid
 @Controller
 class JugadorControlador(
     val jugadorServicio: JugadorServicio,
-    val equipoServicio: EquipoServicio, val equipoRealServicio: EquipoRealServicio,
-    val clausulaServicio: ClausulaServicio, val usuarioServicio: UsuarioServicio
+    val equipoServicio: EquipoServicio,
+    val equipoRealServicio: EquipoRealServicio,
+    val clausulaServicio: ClausulaServicio,
+    val estadisticaJugadorServicio: EstadisticaJugadorServicio,
+    val usuarioServicio: UsuarioServicio,
+    val jornadaServicio: JornadaServicio
 ) {
 
     private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
@@ -50,13 +57,27 @@ class JugadorControlador(
         return VISTA_WSJUGADORES
     }
 
-    @GetMapping("/jugador/{idJugador}")
-    fun detallesJugadorCualquiera(model: Model, @PathVariable idJugador: Int): String {
+    @CachePut("detallesJugador")
+    @GetMapping("/jugador/{idJugador}/jornada/{numeroJornada}")
+    fun detallesJugadorCualquiera(
+        model: Model,
+        @PathVariable idJugador: Int,
+        @PathVariable numeroJornada: Int
+    ): String {
         return if (jugadorServicio.existeJugadorId(idJugador) == true) {
-            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["jugador"] = jugador
+            model["esPortero"] = jugador.posicion == "PO"
+            if (jugador.id?.let { this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada) } == true) {
+                model["tieneEstadistica"] = true
+                model["est"] = estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+            } else {
+                model["tieneEstadistica"] = false
+            }
+            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             VISTA_DETALLES_JUGADOR
         } else {
-             "redirect:/"
+            "redirect:/"
         }
     }
 
@@ -73,7 +94,7 @@ class JugadorControlador(
     fun procesoBusquedaJugador(jugador: Jugador, result: BindingResult, model: Model): String {
         return if (jugador.name?.let { jugadorServicio.existeJugadorNombre(it) } == true) {
             var jug = jugadorServicio.buscaJugadorPorNombre(jugador.name!!)
-            "redirect:/jugador/" + jug!!.id
+            "redirect:/jugador/" + jug!!.id + "/jornada/1"
         } else {
             result.rejectValue("name", "no se ha encontrado", "no se ha encontrado")
             model["jugadores"] =
@@ -84,15 +105,22 @@ class JugadorControlador(
         }
     }
 
-    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}")
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada}")
     fun detallesJugadorEquipo(
         model: Model,
-        @PathVariable("idEquipo") idEquipo: Int,
-        @PathVariable("idJugador") idJugador: Int, principal: Principal?
+        @PathVariable idEquipo: Int,
+        @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
     ): String {
         var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
         if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
-            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["jugador"] = jugador
+            model["esPortero"] = jugador.posicion == "PO"
+            var estadistica = estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)
+            if (estadistica != null) {
+                model["est"] = estadistica
+            }
+            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo
             model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
             if (equipo!!.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'subastas')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
 
@@ -16,7 +16,7 @@
     </thead>
     <tbody>
     <tr th:each="jugador : ${jugadoresSinEquipo}">
-        <td><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"
+        <td><a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"
                th:text="${jugador.name}"/></a></td>
         <td><h3><b th:text="${jugador.valor}"></b> mill. €</h3></td>
     </tr>

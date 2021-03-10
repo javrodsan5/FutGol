@@ -8,6 +8,7 @@ import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.StringUtils
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths

@@ -4,7 +4,16 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
 
 <body>
-<h1><b>Nombre: </b><b th:text="${jugador.name}"></b></h1>
+<div class="caja" style="float: left;">
+    <div style="display: inline-block;float: left;">
+        <br><br>
+        <h1><b th:text="${jugador.name}"></b></h1>
+    </div>
+    <div style="display: inline-block;float: left;">
+        <br>
+        <img th:src="${jugador.foto}"><br><br><br>
+    </div>
+</div>
 <h2>Valor: <b th:text="${jugador.valor}"></b>000.000€</h2>
 <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
 
@@ -45,6 +54,9 @@
     </ul>
 </div>
 
+<br>
+<br>
+<br>
 <div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="true">

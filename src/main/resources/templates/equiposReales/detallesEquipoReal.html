@@ -176,7 +176,7 @@
         <div><h2>Top 5 Jugadores</h2></div>
 
         <div style="display: inline-block" th:each="jugador : ${top5Jugadores}">
-            <div style="margin: 2px 2px 2px"><a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}"><img class="image--cover img-responsive"
+            <div style="margin: 2px 2px 2px"><a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><img class="image--cover img-responsive"
                                                                                                                   th:src="${jugador.foto}"/></a></div>
             <div><b th:text="${jugador.puntos}"/> puntos</div>
         </div>
@@ -186,7 +186,7 @@
     <center><h2>Banquillo</h2></center>
 <div style="display: inline-block; float: right" th:each="jugador : ${banquillo}">
     <div style="margin: 2px 2px 2px">
-        <a th:href="@{/jugador/{idJugador} (idJugador= ${jugador.id})}">
+        <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
         <img class="image--cover img-responsive" width="20%" height="20%" th:src="${jugador.foto}">
         </a></div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>

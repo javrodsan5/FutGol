@@ -173,14 +173,13 @@ class LigaControlador(
     fun clasificacionGeneral(model: Model): String {
         var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
         if (equipos != null) {
-            var posiciones = equipos.indices
             model["equipos"] = equipos
             var valores: MutableList<Double> = ArrayList()
             for (e in equipos) {
                 e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
             }
             model["valores"] = valores
-            model["posiciones"] = posiciones
+            model["posiciones"] = equipos.indices
         }
         return VISTA_RANKING_USUARIOS
     }

@@ -29,4 +29,7 @@ class Jornada : BaseEntity() {
     )
     var jugadores: MutableList<Jugador> = ArrayList()
 
+    @Column(name = "formacion")
+    var formacion = ""
+
 }

@@ -105,7 +105,6 @@ class EquipoControlador(
             equipo.onceInicial = onceInicial
             equipo.jugBanquillo = banquillo
             equipo.jugadores = misJugadores
-            println(equipo.jugadores)
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
             equipo.liga = liga

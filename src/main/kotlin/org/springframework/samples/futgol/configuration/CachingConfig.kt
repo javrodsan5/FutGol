@@ -13,6 +13,14 @@ class CachingConfig {
 
     @Bean
     fun cacheManager(): CacheManager {
-        return ConcurrentMapCacheManager("detallesLiga", "ligas", "jornadas", "detallesUsuario","detallesJugador")
+        return ConcurrentMapCacheManager(
+            "detallesLiga",
+            "ligas",
+            "jornadas",
+            "detallesUsuario",
+            "detallesJugador",
+            "detallesEquipoReal",
+            "listaEquiposReales"
+        )
     }
 }

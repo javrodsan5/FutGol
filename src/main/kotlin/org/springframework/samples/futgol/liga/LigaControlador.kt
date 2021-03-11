@@ -32,7 +32,6 @@ class LigaControlador(
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
     private val VISTA_SUBASTA_LIGA = "liga/subastas"
-    private val VISTA_RANKING_USUARIOS = "usuarios/rankingUsuarios"
     private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
@@ -169,20 +168,7 @@ class LigaControlador(
         return "redirect:/misligas"
     }
 
-    @GetMapping("topUsuarios")
-    fun clasificacionGeneral(model: Model): String {
-        var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
-        if (equipos != null) {
-            model["equipos"] = equipos
-            var valores: MutableList<Double> = ArrayList()
-            for (e in equipos) {
-                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
-            }
-            model["valores"] = valores
-            model["posiciones"] = equipos.indices
-        }
-        return VISTA_RANKING_USUARIOS
-    }
+
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")
     fun asociarUsuarioLiga(

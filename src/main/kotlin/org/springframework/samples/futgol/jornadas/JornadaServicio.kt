@@ -44,11 +44,12 @@ class JornadaServicio {
 
     @Transactional(readOnly = true)
     fun onceIdealJornada(idJornada: Int): MutableList<Jugador?> {
-        var jug442: MutableList<Jugador?> = ArrayList()
-        var jug433: MutableList<Jugador?> = ArrayList()
+        var jug442: MutableList<Jugador?> = ArrayList();
+        var jug433: MutableList<Jugador?> = ArrayList();
         var jug352: MutableList<Jugador?> = ArrayList()
         var jug532: MutableList<Jugador?> = ArrayList()
 
+        var portero: Jugador
 
         var defensas442: MutableList<Jugador?>
         var centrocampistas442: MutableList<Jugador?>
@@ -66,7 +67,6 @@ class JornadaServicio {
         var centrocampistas532: MutableList<Jugador?>
         var delanteros532: MutableList<Jugador?> = ArrayList()
 
-        var portero: Jugador
         //PROVISIONAL--
         var jugadoresSortPuntos = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
             ?.stream()?.filter { x -> x.partido?.jornada?.id == idJornada }
@@ -127,38 +127,37 @@ class JornadaServicio {
             jug532.addAll(centrocampistas532)
             jug532.addAll(delanteros532)
 
-            var puntos442 = 0
-            var puntos433 = 0
-            var puntos352 = 0
+            var puntos442 = 0;
+            var puntos433 = 0;
+            var puntos352 = 0;
             var puntos532 = 0
-            for (j in jug442) {
-                var puntosJornada =
-                    j?.id?.let { estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it) }?.stream()
+            for (n in 0 until jug442.size) {
+                var p442 = jug442[n]?.id?.let {
+                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
                         ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
                         ?.map { x -> x.puntos }?.findFirst()?.get()
-                puntos442 += puntosJornada!!
-            }
-            for (j in jug433) {
-                var puntosJornada =
-                    j?.id?.let { estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it) }?.stream()
+                }!!
+                puntos442 += p442
+                var p433 = jug433[n]?.id?.let {
+                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
                         ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
                         ?.map { x -> x.puntos }?.findFirst()?.get()
-                puntos433 += puntosJornada!!
-            }
-            for (j in jug352) {
-                var puntosJornada =
-                    j?.id?.let { estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it) }?.stream()
+                }!!
+                puntos433 += p433
+                var p352 = jug352[n]?.id?.let {
+                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
                         ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
                         ?.map { x -> x.puntos }?.findFirst()?.get()
-                puntos352 += puntosJornada!!
-            }
-            for (j in jug532) {
-                var puntosJornada =
-                    j?.id?.let { estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it) }?.stream()
+                }!!
+                puntos352 += p352
+                var p532 = jug532[n]?.id?.let {
+                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
                         ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
                         ?.map { x -> x.puntos }?.findFirst()?.get()
-                puntos532 += puntosJornada!!
+                }!!
+                puntos532 += p532
             }
+
             var jornada = buscarJornadaPorId(idJornada)!!
             if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
                 jornada.formacion = "352"

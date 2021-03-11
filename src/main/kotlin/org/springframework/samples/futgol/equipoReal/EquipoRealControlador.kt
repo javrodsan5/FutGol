@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.equipoReal
 
+import org.springframework.cache.annotation.CachePut
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -26,12 +27,14 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio) {
         return VISTA_WSEQUIPOS
     }
 
+    @CachePut("listaEquiposReales")
     @GetMapping("/equiposLiga")
     fun listaEquiposReales(model: Model): String {
         model["equiposReales"] = equipoRealServicio.buscarTodosEquiposReales()!!.sortedBy { x -> x.posicion }
         return VISTA_LISTA_EQUIPOSREALES
     }
 
+    @CachePut("detallesEquipoReal")
     @GetMapping("/equiposLiga/{nombreEquipo}")
     fun detallesEquipoReal(model: Model, @PathVariable("nombreEquipo") nombreEquipo: String): String {
         if (equipoRealServicio.existeEquipoReal(nombreEquipo) == true) {

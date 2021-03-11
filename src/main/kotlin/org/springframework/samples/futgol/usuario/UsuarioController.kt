@@ -1,6 +1,7 @@
 package org.springframework.samples.futgol.usuario
 
 import org.springframework.cache.annotation.CachePut
+import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -24,7 +25,8 @@ class UsuarioController(
     val usuarioServicio: UsuarioServicio,
     val userServicio: UserServicio,
     val authoritiesServicio: AuthoritiesServicio,
-    val ligaServicio: LigaServicio
+    val ligaServicio: LigaServicio,
+    val equipoServicio: EquipoServicio
 ) {
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
@@ -33,6 +35,7 @@ class UsuarioController(
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
     private val VISTA_BUSCAR_USUARIO = "usuarios/buscarUsuario"
+    private val VISTA_RANKING_USUARIOS = "usuarios/rankingUsuarios"
 
     val PATRON_EMAIL: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
@@ -100,9 +103,9 @@ class UsuarioController(
     @PostMapping("/usuarios/registro")
     fun procesoCreacion(@Valid usuario: Usuario, result: BindingResult, model: Model): String {
         when {
-            usuarioServicio.comprobarSiNombreUsuarioExiste(usuario.user?.username) ->
+            usuarioServicio.comprobarSiNombreUsuarioExiste(usuario.user?.username) == true ->
                 result.addError(FieldError("usuario", "user.username", "El nombre de usuario ya está en uso"))
-            usuarioServicio.comprobarSiEmailExiste(usuario.email) ->
+            usuarioServicio.comprobarSiEmailExiste(usuario.email) == true ->
                 result.addError(FieldError("usuario", "email", "El email ya está en uso"))
         }
         return if (result.hasErrors()) {
@@ -126,7 +129,7 @@ class UsuarioController(
         var usuarioComparador = usuarioServicio.usuarioLogueado(principal)
         if (usuarioComparador != null) {
             when {
-                usuario.email != usuarioComparador.email && usuarioServicio.comprobarSiEmailExiste(usuario.email) ->
+                usuario.email != usuarioComparador.email && usuarioServicio.comprobarSiEmailExiste(usuario.email) == true ->
                     result.addError(FieldError("usuario", "email", "El email ya está en uso"))
                 !StringUtils.hasLength(usuario.email) ->
                     result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
@@ -202,12 +205,27 @@ class UsuarioController(
 
     @GetMapping("/usuarios")
     fun procesoBusquedaUsuarioLiga(usuario: Usuario, result: BindingResult, model: Model): String {
-        return if (usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username)) {
+        return if (usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username) == true) {
             "redirect:/usuarios/" + usuario?.user?.username
         } else {
             result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")
             "redirect:/usuarios/buscar"
         }
         return "redirect:/usuarios/buscar"
+    }
+
+    @GetMapping("topUsuarios")
+    fun clasificacionGeneral(model: Model): String {
+        var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
+        if (equipos != null) {
+            model["equipos"] = equipos
+//            var valores: MutableList<Double> = ArrayList()
+//            for (e in equipos) {
+//                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+//            }
+//            model["valores"] = valores
+//            model["posiciones"] = equipos.indices
+        }
+        return VISTA_RANKING_USUARIOS
     }
 }

@@ -37,31 +37,14 @@ class UsuarioServicio {
     }
 
     @Transactional(readOnly = true)
-    fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean {
-        var res = false
-        var usuarios = usuarioRepository?.findAll()
-        if (usuarios != null) {
-            for (u in usuarios) {
-                if (u.user?.username.equals(nombreUsuario)) {
-                    res = true
-                }
-            }
-        }
-        return res
+    fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {
+         return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.user?.username.equals(nombreUsuario)}
     }
 
     @Transactional(readOnly = true)
-    fun comprobarSiEmailExiste(email: String?): Boolean {
-        var res = false
-        var usuarios = usuarioRepository?.findAll()
-        if (usuarios != null) {
-            for (u in usuarios) {
-                if (u.email.equals(email)) {
-                    res = true
-                }
-            }
-        }
-        return res
+    fun comprobarSiEmailExiste(email: String?): Boolean? {
+        return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.email.equals(email)}
+
     }
 
     @Transactional(readOnly = true)
@@ -92,8 +75,7 @@ class UsuarioServicio {
     fun ligasAInvitar(username: String, principal: Principal): MutableList<Liga> {
         var ligasUsuario = buscarLigasUsuario(username)
         var ligasNoUsuario: MutableList<Liga> = ArrayList()
-        var usuariologueado = usuarioLogueado(principal)
-        var misLigas = usuariologueado?.user?.let { buscarLigasUsuario(it.username) }
+        var misLigas = usuarioLogueado(principal)?.user?.let { buscarLigasUsuario(it.username) }
 
         if (misLigas != null && ligasUsuario != null) {
             for (ligaM in misLigas) {

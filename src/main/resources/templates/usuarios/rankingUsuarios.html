@@ -10,15 +10,17 @@
     <thead>
     <tr>
         <th>Usuario</th>
+        <th>Equipo</th>
         <th>Puntos</th>
-        <th>Valor del equipo</th>
+        <!--<th>Valor del equipo</th>-->
     </tr>
     </thead>
     <tbody>
     <tr th:each="equipo : ${equipos}">
         <td th:text="${equipo.usuario.user.username}"></td>
+        <td th:text="${equipo.name}"></td>
         <td th:text="${equipo.puntos}"></td>
-        <td th:each="valor : ${valores}" th:text="${valor}"></td>
+        <!-- <td th:each="valor : ${valores}" th:text="${valor}"></td> -->
     </tr>
     </div>
     </tbody>

@@ -27,6 +27,6 @@ class Jornada : BaseEntity() {
         joinColumns = [JoinColumn(name = "numero_jornada")],
         inverseJoinColumns = [JoinColumn(name = "jugador_id")]
     )
-    var jugadores: MutableSet<Jugador> = HashSet()
+    var jugadores: MutableList<Jugador> = ArrayList()
 
 }

@@ -5,6 +5,26 @@
 
 <body>
 
+<script>
+    function cambiarFormacion(formacion) {
+        var jugadores = document.getElementsByClassName("player")
+        for (i = 0; i < jugadores.length; i++) {
+            var clase = jugadores[i].className
+
+            if (clase.includes('433')) {
+                jugadores[i].className = clase.replace('433', formacion);
+            } else if (clase.includes('442')) {
+                jugadores[i].className = clase.replace('442', formacion);
+            } else if (clase.includes('352')) {
+                jugadores[i].className = clase.replace('352', formacion);
+            } else {
+                jugadores[i].className = clase.replace('532', formacion);
+            }
+
+        }
+    }
+</script>
+
 <div th:if="${ultimaJornada}">
     <h1>Última jornada:</h1>
 </div>
@@ -27,8 +47,30 @@
     <h1>No existe todavía once ideal de esta jornada.</h1>
 </div>
 <div>
+    <div th:if="${!noOnce}">
+    <div th:if="${formacion}=='4-3-3'">
+        <script>
+            $(document).ready(function () {
+                cambiarFormacion('433')
+            });
+        </script>
+    </div>
+    <div th:if="${formacion}=='3-5-2'">
+        <script>
+            $(document).ready(function () {
+                cambiarFormacion('352')
+            });
+        </script>
+    </div>
+    <div th:if="${formacion}=='5-3-2'">
+        <script>
+            $(document).ready(function () {
+                cambiarFormacion('532')
+            });
+        </script>
+    </div>
     <div style="display: inline-block;float: right;width: 55%;">
-        <div th:if="${!noOnce}" class="field">
+        <div class="field">
             <div class="grass"></div>
             <div class="map">
                 <div class="outline"></div>
@@ -189,6 +231,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <div style="display: inline-block;float: left;">
         <table id="partidos" class="table table-striped">

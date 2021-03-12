@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -15,6 +16,9 @@ class JornadaServicio {
 
     @Autowired
     private var estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
+
+    @Autowired
+    private var partidoServicio: PartidoServicio? = null
 
     @Autowired
     fun JornadaServicio(jornadaRepositorio: JornadaRepositorio) {
@@ -42,30 +46,12 @@ class JornadaServicio {
         return jornadaRepositorio?.findAll()
     }
 
-    @Transactional(readOnly = true)
-    fun onceIdealJornada(idJornada: Int): MutableList<Jugador?> {
+    @Transactional()
+    fun onceIdealJornada(idJornada: Int): Map<String, MutableList<Jugador?>> {
+        var jornadaIdeal = this.buscarJornadaPorId(idJornada)
         var jug442: MutableList<Jugador?> = ArrayList();
-        var jug433: MutableList<Jugador?> = ArrayList();
-        var jug352: MutableList<Jugador?> = ArrayList()
-        var jug532: MutableList<Jugador?> = ArrayList()
+        var map: Map<String,MutableList<Jugador?>> = HashMap<String,MutableList<Jugador?>>()
 
-        var portero: Jugador
-
-        var defensas442: MutableList<Jugador?>
-        var centrocampistas442: MutableList<Jugador?>
-        var delanteros442: MutableList<Jugador?>
-
-        var defensas433: MutableList<Jugador?> = ArrayList()
-        var centrocampistas433: MutableList<Jugador?>
-        var delanteros433: MutableList<Jugador?>
-
-        var defensas352: MutableList<Jugador?>
-        var centrocampistas352: MutableList<Jugador?>
-        var delanteros352: MutableList<Jugador?> = ArrayList()
-
-        var defensas532: MutableList<Jugador?>
-        var centrocampistas532: MutableList<Jugador?>
-        var delanteros532: MutableList<Jugador?> = ArrayList()
 
         //PROVISIONAL--
         var jugadoresSortPuntos = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
@@ -73,7 +59,32 @@ class JornadaServicio {
             ?.sorted(Comparator.comparing { x -> x.puntos })
             ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
         //--
-        if (jugadoresSortPuntos != null && !jugadoresSortPuntos.isEmpty()) {
+        if (jugadoresSortPuntos != null && !jugadoresSortPuntos.isEmpty()
+            && (jornadaIdeal?.formacion == "" || jornadaIdeal?.formacion == null)
+            && jornadaIdeal?.jugadores?.isEmpty() == true
+        ) {
+
+            var jug433: MutableList<Jugador?> = ArrayList();
+            var jug352: MutableList<Jugador?> = ArrayList()
+            var jug532: MutableList<Jugador?> = ArrayList()
+
+            var portero: Jugador
+
+            var defensas442: MutableList<Jugador?>
+            var centrocampistas442: MutableList<Jugador?>
+            var delanteros442: MutableList<Jugador?>
+
+            var defensas433: MutableList<Jugador?> = ArrayList()
+            var centrocampistas433: MutableList<Jugador?>
+            var delanteros433: MutableList<Jugador?>
+
+            var defensas352: MutableList<Jugador?>
+            var centrocampistas352: MutableList<Jugador?>
+            var delanteros352: MutableList<Jugador?> = ArrayList()
+
+            var defensas532: MutableList<Jugador?>
+            var centrocampistas532: MutableList<Jugador?>
+            var delanteros532: MutableList<Jugador?> = ArrayList()
 
             portero = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
 
@@ -158,26 +169,21 @@ class JornadaServicio {
                 puntos532 += p532
             }
 
-            var jornada = buscarJornadaPorId(idJornada)!!
             if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
-                jornada.formacion = "352"
-                guardarJornada(jornada)
-                return jug352
+                map= mapOf("3-5-2" to jug352)
+                return map
             } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532) {
-                jornada.formacion = "442"
-                guardarJornada(jornada)
-                return jug442
+                map= mapOf("4-4-2" to jug442)
+                return map
             } else if (puntos433 >= puntos352 && puntos433 >= puntos442 && puntos433 >= puntos532) {
-                jornada.formacion = "433"
-                guardarJornada(jornada)
-                return jug433
+                map= mapOf("4-3-3" to jug433)
+                return map
             } else {
-                jornada.formacion = "532"
-                guardarJornada(jornada)
-                return jug532
+                map= mapOf("5-3-2" to jug532)
+                return map
             }
         }
-        return jug442
+        return map
     }
 
 }

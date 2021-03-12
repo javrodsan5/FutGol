@@ -39,13 +39,28 @@ class JornadaControlador(
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            var jugadores = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
-            if (jugadores.isEmpty()) {
-                model["noOnce"] = true
-            } else {
-                model["jugadores"] = jugadores
-                model["noOnce"] = false
-            }
+            var map = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+            var jugadores= map.values.first()
+            var formacion= map.keys.first()
+            if (jornada.jugadores.isEmpty()) {
+                if (jugadores.isEmpty()) {
+                    model["noOnce"] = true
+                } else {
+                    for (j in jugadores) {
+                        jornada.jugadores.add(j!!)
+                    }
+                    jornada.formacion= formacion
+                    jornadaServicio.guardarJornada(jornada)
+                    model["jugadores"] = jugadores
+                    model["formacion"] = jornada.formacion
+                    model["noOnce"] = false
+                }
+
+            }else {
+            model["formacion"] = jornada.formacion
+            model["jugadores"] = jornada.jugadores
+            model["noOnce"] = false
+        }
             model["partidos"] = this.partidoServicio.buscarTodosPartidos()
                 ?.stream()?.filter { x -> x.jornada?.id == jornada.id }?.collect(Collectors.toList())!!
             model["ultimaJornada"] = true
@@ -59,19 +74,27 @@ class JornadaControlador(
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
+
             if (jornada.jugadores.isEmpty()) {
-                var jugadores = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+                var map = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
+                var jugadores= map.values.first()
+                var formacion= map.keys.first()
                 if (jugadores.isEmpty()) {
                     model["noOnce"] = true
                 } else {
+
                     for (j in jugadores) {
                         jornada.jugadores.add(j!!)
                     }
+                    jornada.formacion= formacion
                     jornadaServicio.guardarJornada(jornada)
+                    println(jornada.formacion)
+                    model["formacion"] = jornada.formacion
                     model["jugadores"] = jornada.jugadores
                     model["noOnce"] = false
                 }
             } else {
+                model["formacion"] = jornada.formacion
                 model["jugadores"] = jornada.jugadores
                 model["noOnce"] = false
             }

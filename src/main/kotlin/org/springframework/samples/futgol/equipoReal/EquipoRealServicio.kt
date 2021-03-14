@@ -4,6 +4,7 @@ import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 class EquipoRealServicio {
 
     private var equipoRealRepositorio: EquipoRealRepositorio? = null
+
+    @Autowired
+    private var equipoRealServicio: EquipoRealServicio? = null
 
     @Autowired
     fun EquipoServicio(equipoRealRepositorio: EquipoRealRepositorio) {

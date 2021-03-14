@@ -2,6 +2,9 @@ package org.springframework.samples.futgol.jornadas
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.equipo.Equipo
+import org.springframework.samples.futgol.equipoReal.EquipoReal
+import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.partido.PartidoServicio
@@ -19,6 +22,9 @@ class JornadaServicio {
 
     @Autowired
     private var partidoServicio: PartidoServicio? = null
+
+    @Autowired
+    private var equipoRealServicio: EquipoRealServicio? = null
 
     @Autowired
     fun JornadaServicio(jornadaRepositorio: JornadaRepositorio) {
@@ -47,22 +53,32 @@ class JornadaServicio {
     }
 
     @Transactional()
-    fun onceIdealJornada(idJornada: Int): Map<String, MutableList<Jugador?>> {
-        var jornadaIdeal = this.buscarJornadaPorId(idJornada)
+    fun onceIdeal(
+        jugadores: List<Jugador?>?,
+        idJornada: Int,
+        nombreEquipo: String
+    ): Map<String, MutableList<Jugador?>> {
         var jug442: MutableList<Jugador?> = ArrayList();
-        var map: Map<String,MutableList<Jugador?>> = HashMap<String,MutableList<Jugador?>>()
+        var map: Map<String, MutableList<Jugador?>> = HashMap<String, MutableList<Jugador?>>()
+        var bol = false
 
+        var equipo: EquipoReal?
+        if (idJornada != 0 && nombreEquipo == "") {//significa que es jornadas y no equipo real
+            var jornadaIdeal = this.buscarJornadaPorId(idJornada)
+            if (jugadores != null && !jugadores.isEmpty()
+                && (jornadaIdeal?.formacion == "" || jornadaIdeal?.formacion == null)
+                && jornadaIdeal?.jugadores?.isEmpty() == true
+            ) {
+                bol = true
+            }
+        } else {
+            equipo = this.equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
+            if (jugadores != null && !jugadores.isEmpty()){
+                bol = true
+            }
+        }
 
-        //PROVISIONAL--
-        var jugadoresSortPuntos = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
-            ?.stream()?.filter { x -> x.partido?.jornada?.id == idJornada }
-            ?.sorted(Comparator.comparing { x -> x.puntos })
-            ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
-        //--
-        if (jugadoresSortPuntos != null && !jugadoresSortPuntos.isEmpty()
-            && (jornadaIdeal?.formacion == "" || jornadaIdeal?.formacion == null)
-            && jornadaIdeal?.jugadores?.isEmpty() == true
-        ) {
+        if (bol) {
 
             var jug433: MutableList<Jugador?> = ArrayList();
             var jug352: MutableList<Jugador?> = ArrayList()
@@ -86,16 +102,16 @@ class JornadaServicio {
             var centrocampistas532: MutableList<Jugador?>
             var delanteros532: MutableList<Jugador?> = ArrayList()
 
-            portero = jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
+            portero = jugadores?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
 
             defensas442 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 4)
             centrocampistas442 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 4)
             delanteros442 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                     .subList(0, 2)
             jug442.add(portero)
             jug442.addAll(defensas442)
@@ -104,10 +120,10 @@ class JornadaServicio {
 
             defensas433.addAll(defensas442)
             centrocampistas433 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 3)
             delanteros433 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                     .subList(0, 3)
             jug433.add(portero)
             jug433.addAll(defensas433)
@@ -115,10 +131,10 @@ class JornadaServicio {
             jug433.addAll(delanteros433)
 
             defensas352 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 3)
             centrocampistas352 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 5)
             delanteros352.addAll(delanteros442)
             jug352.add(portero)
@@ -127,10 +143,10 @@ class JornadaServicio {
             jug352.addAll(delanteros352)
 
             defensas532 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 5)
             centrocampistas532 =
-                jugadoresSortPuntos?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 3)
             delanteros532.addAll(delanteros442)
             jug532.add(portero)
@@ -138,52 +154,66 @@ class JornadaServicio {
             jug532.addAll(centrocampistas532)
             jug532.addAll(delanteros532)
 
-            var puntos442 = 0;
-            var puntos433 = 0;
-            var puntos352 = 0;
+            var puntos442 = 0
+            var puntos433 = 0
+            var puntos352 = 0
             var puntos532 = 0
-            for (n in 0 until jug442.size) {
-                var p442 = jug442[n]?.id?.let {
-                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
-                        ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
-                        ?.map { x -> x.puntos }?.findFirst()?.get()
-                }!!
-                puntos442 += p442
-                var p433 = jug433[n]?.id?.let {
-                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
-                        ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
-                        ?.map { x -> x.puntos }?.findFirst()?.get()
-                }!!
-                puntos433 += p433
-                var p352 = jug352[n]?.id?.let {
-                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
-                        ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
-                        ?.map { x -> x.puntos }?.findFirst()?.get()
-                }!!
-                puntos352 += p352
-                var p532 = jug532[n]?.id?.let {
-                    estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
-                        ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
-                        ?.map { x -> x.puntos }?.findFirst()?.get()
-                }!!
-                puntos532 += p532
+            var puntosTotales= ArrayList<Int>()
+            if (idJornada != 0 && nombreEquipo == "") { //significa que es jornadas y no equipo real
+                for (n in 0 until jug442.size) {
+                    var p442 = jug442[n]?.id?.let {
+                        estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
+                            ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
+                            ?.map { x -> x.puntos }?.findFirst()?.get()
+                    }!!
+                    puntos442 += p442
+                    var p433 = jug433[n]?.id?.let {
+                        estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
+                            ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
+                            ?.map { x -> x.puntos }?.findFirst()?.get()
+                    }!!
+                    puntos433 += p433
+                    var p352 = jug352[n]?.id?.let {
+                        estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
+                            ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
+                            ?.map { x -> x.puntos }?.findFirst()?.get()
+                    }!!
+                    puntos352 += p352
+                    var p532 = jug532[n]?.id?.let {
+                        estadisticaJugadorServicio?.buscarEstadisticasPorJugador(it)?.stream()
+                            ?.filter { x -> x.partido?.jornada?.numeroJornada == idJornada }
+                            ?.map { x -> x.puntos }?.findFirst()?.get()
+                    }!!
+                    puntos532 += p532
+                }
+            } else {
+                puntos442 = jug442.stream().mapToInt { x -> x?.puntos!! }.sum()
+                puntos433 = jug433.stream().mapToInt { x -> x?.puntos!! }.sum()
+                puntos352 = jug352.stream().mapToInt { x -> x?.puntos!! }.sum()
+                puntos532 = jug532.stream().mapToInt { x -> x?.puntos!! }.sum()
+
+                println("442: " + puntos442)
+                println("433: " + puntos433)
+                println("352: " + puntos352)
+                println("532: " + puntos532)
             }
 
-            if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
-                map= mapOf("3-5-2" to jug352)
-                return map
+            return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
+                println("no")
+                map = mapOf("3-5-2" to jug352)
+                map
             } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532) {
-                map= mapOf("4-4-2" to jug442)
-                return map
+                map = mapOf("4-4-2" to jug442)
+                map
             } else if (puntos433 >= puntos352 && puntos433 >= puntos442 && puntos433 >= puntos532) {
-                map= mapOf("4-3-3" to jug433)
-                return map
+                map = mapOf("4-3-3" to jug433)
+                map
             } else {
-                map= mapOf("5-3-2" to jug532)
-                return map
+                map = mapOf("5-3-2" to jug532)
+                map
             }
         }
         return map
     }
-
 }
+

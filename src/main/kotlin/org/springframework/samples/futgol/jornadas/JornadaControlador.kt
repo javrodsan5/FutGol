@@ -1,7 +1,9 @@
 package org.springframework.samples.futgol.jornadas
 
 import org.springframework.cache.annotation.CachePut
+import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -14,7 +16,9 @@ import java.util.stream.Collectors
 class JornadaControlador(
     val jornadaServicio: JornadaServicio,
     val partidoServicio: PartidoServicio,
-    val estadisticaJugadorServicio: EstadisticaJugadorServicio
+    val estadisticaJugadorServicio: EstadisticaJugadorServicio,
+    val equipoRealServicio: EquipoRealServicio
+
 ) {
 
     private val VISTA_DETALLES_JORNADA = "jornadas/detallesJornada"
@@ -39,10 +43,19 @@ class JornadaControlador(
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            var map = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
-            var jugadores= map.values.first()
-            var formacion= map.keys.first()
+            var idJornada= jornada.id
             if (jornada.jugadores.isEmpty()) {
+                var todosJugadores= this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                    ?.stream()?.filter { x -> x.partido?.jornada?.id == idJornada }
+                    ?.sorted(Comparator.comparing { x -> x.puntos })
+                    ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
+                var map = idJornada?.let { jornadaServicio.onceIdeal(todosJugadores, it,"") }
+                var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
+                var formacion= ""
+                if(map?.values?.isNotEmpty() == true){
+                    jugadores= map?.values?.first()!!
+                    formacion= map?.keys?.first()
+                }
                 if (jugadores.isEmpty()) {
                     model["noOnce"] = true
                 } else {
@@ -76,9 +89,17 @@ class JornadaControlador(
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
 
             if (jornada.jugadores.isEmpty()) {
-                var map = jornada.id?.let { jornadaServicio.onceIdealJornada(it) }!!
-                var jugadores= map.values.first()
-                var formacion= map.keys.first()
+                var todosJugadores= this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                    ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
+                    ?.sorted(Comparator.comparing { x -> x.puntos })
+                    ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
+                var map = jornadaServicio.onceIdeal(todosJugadores,jornadaId,"")
+                var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
+                var formacion= ""
+                if(map.values.isNotEmpty()){
+                    jugadores= map.values.first()
+                    formacion= map.keys.first()
+                }
                 if (jugadores.isEmpty()) {
                     model["noOnce"] = true
                 } else {
@@ -88,7 +109,6 @@ class JornadaControlador(
                     }
                     jornada.formacion= formacion
                     jornadaServicio.guardarJornada(jornada)
-                    println(jornada.formacion)
                     model["formacion"] = jornada.formacion
                     model["jugadores"] = jornada.jugadores
                     model["noOnce"] = false

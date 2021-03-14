@@ -44,6 +44,9 @@ class EquipoReal : NamedEntity() {
     @Column(name = "escudo")
     var escudo = ""
 
+    @Column(name = "formacion")
+    var formacion = ""
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "club")
     var jugadores: MutableSet<Jugador> = HashSet()
 

@@ -4,6 +4,49 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesOtroEquipo')}">
 
 <body>
+
+<script>
+    function cambiarFormacion(formacion) {
+        var jugadores = document.getElementsByClassName("player")
+        for (i = 0; i < jugadores.length; i++) {
+            var clase = jugadores[i].className
+
+            if (clase.includes('433')) {
+                jugadores[i].className = clase.replace('433', formacion);
+            } else if (clase.includes('442')) {
+                jugadores[i].className = clase.replace('442', formacion);
+            } else if (clase.includes('352')) {
+                jugadores[i].className = clase.replace('352', formacion);
+            } else {
+                jugadores[i].className = clase.replace('532', formacion);
+            }
+
+        }
+    }
+</script>
+
+<div th:if="${formacion}=='4-3-3'">
+    <script>
+        $(document).ready(function () {
+            cambiarFormacion('433')
+        });
+    </script>
+</div>
+<div th:if="${formacion}=='3-5-2'">
+    <script>
+        $(document).ready(function () {
+            cambiarFormacion('352')
+        });
+    </script>
+</div>
+<div th:if="${formacion}=='5-3-2'">
+    <script>
+        $(document).ready(function () {
+            cambiarFormacion('532')
+        });
+    </script>
+</div>
+
 <div class="escudoYTops">
     <div class="caja" style="float: left;">
         <div style="display: inline-block;float: left;">
@@ -58,7 +101,7 @@
                 <div class="spot_right"></div>
             </div>
 
-            <div class="player p1" th:object="${portero}">
+            <div class="player p1" th:object="${jugadores[0]}">
                 <img th:src="*{foto}" class="image--cover img-responsive">
                 <br>
                 <div class="message-container--player"><p class="message--player" th:text="*{name}"></p></div>
@@ -69,7 +112,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p2-433" th:object="${defensas[0]}">
+            <div class="player p2-442" th:object="${jugadores[1]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -82,7 +125,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p3-433" th:object="${defensas[1]}">
+            <div class="player p3-442" th:object="${jugadores[2]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -95,7 +138,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p4-433" th:object="${defensas[2]}">
+            <div class="player p4-442" th:object="${jugadores[3]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -108,7 +151,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p5-433" th:object="${defensas[3]}">
+            <div class="player p5-442" th:object="${jugadores[4]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -121,7 +164,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p6-433" th:object="${centrocampistas[0]}">
+            <div class="player p6-442" th:object="${jugadores[5]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -134,7 +177,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p7-433" th:object="${centrocampistas[1]}">
+            <div class="player p7-442" th:object="${jugadores[6]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -147,7 +190,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p8-433" th:object="${centrocampistas[2]}">
+            <div class="player p8-442" th:object="${jugadores[7]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -160,7 +203,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p9-433" th:object="${delanteros[0]}">
+            <div class="player p9-442" th:object="${jugadores[8]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -173,7 +216,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p10-433" th:object="${delanteros[1]}">
+            <div class="player p10-442" th:object="${jugadores[9]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>
@@ -186,7 +229,7 @@
                     <img th:src="*{foto}" width="30%" height="30%">
                 </div>
             </div>
-            <div class="player p11-433" th:object="${delanteros[2]}">
+            <div class="player p11-442" th:object="${jugadores[10]}">
                 <div style="display: inline-block;">
                     <img th:src="*{foto}" class="image--cover img-responsive">
                 </div>

@@ -46,7 +46,6 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
                 ?.stream()?.sorted(Comparator.comparing { x -> x.puntos })
                 ?.collect(Collectors.toList())?.reversed()
             var map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores,0, it) }
-            println("womazo")
             var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
             var formacion = ""
             println(map?.keys)
@@ -61,6 +60,7 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
                 this.equipoRealServicio.guardarEquipo(equipo)
                 model["formacion"] = equipo.formacion
             }
+            model["proxPartido"] = equipoRealServicio.proximoPartido(nombreEquipo)
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
             model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
             if (equipo.jugadores.size > 5) {

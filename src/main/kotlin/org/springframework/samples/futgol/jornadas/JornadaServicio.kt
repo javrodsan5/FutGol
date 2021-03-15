@@ -158,7 +158,6 @@ class JornadaServicio {
             var puntos433 = 0
             var puntos352 = 0
             var puntos532 = 0
-            var puntosTotales= ArrayList<Int>()
             if (idJornada != 0 && nombreEquipo == "") { //significa que es jornadas y no equipo real
                 for (n in 0 until jug442.size) {
                     var p442 = jug442[n]?.id?.let {

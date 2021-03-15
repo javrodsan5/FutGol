@@ -2,6 +2,8 @@ package org.springframework.samples.futgol.jornadas
 
 import lombok.Getter
 import lombok.Setter
+import org.springframework.samples.futgol.equipoReal.EquipoReal
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.model.BaseEntity
 import org.springframework.samples.futgol.partido.Partido
@@ -31,5 +33,9 @@ class Jornada : BaseEntity() {
 
     @Column(name = "formacion")
     var formacion = ""
+
+    @ManyToOne()
+    @JoinColumn(name = "mejor_jugador", referencedColumnName = "id")
+    var mejorJugador: EstadisticaJugador? = null
 
 }

@@ -576,14 +576,14 @@ class EstadisticaJugadorServicio {
 
                                     if (j?.posicion == "DF") {
                                         when {
-                                            est.minutosJugados > 60 && est.golesRecibidos == 0 -> puntosPorPartido += 3
+                                            est.minutosJugados > 60 && est.golesRecibidos == 0 -> puntosPorPartido += 2
                                             est.minutosJugados > 60 && est.golesRecibidos == 1 -> puntosPorPartido += 1
                                             est.minutosJugados > 60 && est.golesRecibidos > 2 -> puntosPorPartido -= est.golesRecibidos
                                         }
                                         puntosPorPartido += est.goles * 6
                                         puntosPorPartido += est.asistencias * 2
                                         puntosPorPartido += (est.robos * 0.5).toInt()
-                                        puntosPorPartido += (est.bloqueos * 0.5).toInt()
+                                        puntosPorPartido += (est.bloqueos * 0.4).toInt()
 
                                     } else if (j?.posicion == "CC") {
                                         puntosPorPartido += est.goles * 5

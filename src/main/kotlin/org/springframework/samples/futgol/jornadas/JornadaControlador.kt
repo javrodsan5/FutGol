@@ -43,18 +43,18 @@ class JornadaControlador(
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            var idJornada= jornada.id
+            var idJornada = jornada.id
             if (jornada.jugadores.isEmpty()) {
-                var todosJugadores= this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                var todosJugadores = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
                     ?.stream()?.filter { x -> x.partido?.jornada?.id == idJornada }
                     ?.sorted(Comparator.comparing { x -> x.puntos })
                     ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
-                var map = idJornada?.let { jornadaServicio.onceIdeal(todosJugadores, it,"") }
+                var map = idJornada?.let { jornadaServicio.onceIdeal(todosJugadores, it, "") }
                 var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
-                var formacion= ""
-                if(map?.values?.isNotEmpty() == true){
-                    jugadores= map?.values?.first()!!
-                    formacion= map?.keys?.first()
+                var formacion = ""
+                if (map?.values?.isNotEmpty() == true) {
+                    jugadores = map?.values?.first()!!
+                    formacion = map?.keys?.first()
                 }
                 if (jugadores.isEmpty()) {
                     model["noOnce"] = true
@@ -62,18 +62,18 @@ class JornadaControlador(
                     for (j in jugadores) {
                         jornada.jugadores.add(j!!)
                     }
-                    jornada.formacion= formacion
+                    jornada.formacion = formacion
                     jornadaServicio.guardarJornada(jornada)
                     model["jugadores"] = jugadores
                     model["formacion"] = jornada.formacion
                     model["noOnce"] = false
                 }
 
-            }else {
-            model["formacion"] = jornada.formacion
-            model["jugadores"] = jornada.jugadores
-            model["noOnce"] = false
-        }
+            } else {
+                model["formacion"] = jornada.formacion
+                model["jugadores"] = jornada.jugadores
+                model["noOnce"] = false
+            }
             model["partidos"] = this.partidoServicio.buscarTodosPartidos()
                 ?.stream()?.filter { x -> x.jornada?.id == jornada.id }?.collect(Collectors.toList())!!
             model["ultimaJornada"] = true
@@ -87,27 +87,35 @@ class JornadaControlador(
         if (jornada != null) {
             model["jornada"] = jornada
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-
-            if (jornada.jugadores.isEmpty()) {
-                var todosJugadores= this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+            if (jornada.mejorJugador == null) {
+                var mejorJugador = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
                     ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                    ?.sorted(Comparator.comparing { x -> x.puntos })
-                    ?.map { x -> x.jugador }?.collect(Collectors.toList())?.reversed()
-                var map = jornadaServicio.onceIdeal(todosJugadores,jornadaId,"")
+                    ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
+                jornada.mejorJugador= mejorJugador
+                jornadaServicio.guardarJornada(jornada)
+                model["mejorJugador"] = mejorJugador
+            } else {
+                model["mejorJugador"] = jornada.mejorJugador!!
+            }
+            if (jornada.jugadores.isEmpty()) {
+                var todosJugadores = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                    ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
+                    ?.sorted(Comparator.comparing { x -> -x.puntos })
+                    ?.map { x -> x.jugador }?.collect(Collectors.toList())
+                var map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "")
                 var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
-                var formacion= ""
-                if(map.values.isNotEmpty()){
-                    jugadores= map.values.first()
-                    formacion= map.keys.first()
+                var formacion = ""
+                if (map.values.isNotEmpty()) {
+                    jugadores = map.values.first()
+                    formacion = map.keys.first()
                 }
                 if (jugadores.isEmpty()) {
                     model["noOnce"] = true
                 } else {
-
                     for (j in jugadores) {
                         jornada.jugadores.add(j!!)
                     }
-                    jornada.formacion= formacion
+                    jornada.formacion = formacion
                     jornadaServicio.guardarJornada(jornada)
                     model["formacion"] = jornada.formacion
                     model["jugadores"] = jornada.jugadores

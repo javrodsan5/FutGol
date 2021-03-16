@@ -41,27 +41,15 @@
                                                th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"/></li>
     </ul>
 </div>
-<div style="float: right;">
-    <h1>Mejor jugador de la jornada</h1>
-    <div class="caja" style="float: right;">
-        <div style="display: inline-block;float: left;">
-            <br><br>
-            <h1><b th:text="${mejorJugador.jugador.name}"></b></h1>
-            <h1><b th:text="${mejorJugador.puntos}"></b> puntos</h1>
 
-        </div>
-        <div style="display: inline-block;float: left;">
-            <br>
-            <img th:src="${mejorJugador.jugador.foto}"><br><br><br>
-        </div>
-    </div>
-</div>
 <br><br>
 <div th:if="${noOnce}">
     <h1>No existe todavía once ideal de esta jornada.</h1>
 </div>
+
 <div>
     <div th:if="${!noOnce}">
+
         <div th:if="${formacion}=='4-3-3'">
             <script>
                 $(document).ready(function () {
@@ -83,6 +71,23 @@
                 });
             </script>
         </div>
+
+        <div style="float: right; display: inline-block;">
+            <h1>Mejor jugador de la jornada</h1>
+            <div class="caja" style="float: right;">
+                <div style="display: inline-block;float: left;">
+                    <br><br>
+                    <h1><b th:text="${jornada.mejorJugador.jugador.name}"></b></h1>
+                    <h1><b th:text="${jornada.mejorJugador.puntos}"></b> puntos</h1>
+
+                </div>
+                <div style="display: inline-block;float: left;">
+                    <br>
+                    <img th:src="${jornada.mejorJugador.jugador.foto}"><br><br><br>
+                </div>
+            </div>
+        </div>
+
         <div style="display: inline-block;float: right;width: 55%;">
             <div class="field">
                 <div class="grass"></div>
@@ -271,5 +276,30 @@
         </table>
     </div>
 </div>
+
+<div style="display: inline-block;float: left;">
+    <table id="partidos" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Equipo Local</th>
+            <th>Equipo Visitante</th>
+            <th>Resultado</th>
+            <th>Fecha</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="partido : ${partidos}">
+            <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
+                   th:text="${partido.equipoLocal.name}"/>
+            <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
+                   th:text="${partido.equipoVisitante.name}"/>
+            <td th:text="${partido.resultado}"/>
+            <td th:text="${partido.fecha}"/>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+
 </body>
 </html>

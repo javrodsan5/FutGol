@@ -13,8 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.*
+import java.util.function.Function
 import java.util.stream.Collectors
 import javax.validation.Valid
+import kotlin.Comparator
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+import kotlin.math.absoluteValue
 
 @Controller
 class EquipoControlador(
@@ -51,7 +57,7 @@ class EquipoControlador(
 
     @PostMapping("/liga/{idLiga}/nuevoEquipo")
     fun procesoCrearEquipo(
-        @Valid equipo: Equipo, result: BindingResult, @PathVariable(("idLiga")) idLiga: Int, principal: Principal,
+        @Valid equipo: Equipo, result: BindingResult, @PathVariable("idLiga") idLiga: Int, principal: Principal,
         model: Model
     ): String {
         var liga = this.ligaServicio.buscarLigaPorId(idLiga)
@@ -99,7 +105,7 @@ class EquipoControlador(
                 onceInicial.addAll(delanteros)
             }
 
-            var banquillo= HashSet<Jugador>(misJugadores)
+            var banquillo = HashSet<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
 
             equipo.onceInicial = onceInicial
@@ -124,38 +130,36 @@ class EquipoControlador(
             model["SinEquipo"] = true
         } else {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            var NPortero = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "PO" }
+                ?.findFirst()?.get()
+            var NDefensas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DF" }
+                ?.collect(Collectors.toList())
+            var NCentrocampistas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "CC" }
+                ?.collect(Collectors.toList())
+            var NDelanteros = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DL" }
+                ?.collect(Collectors.toList())
 
+            var onceInicial = ArrayList<Jugador>()
+            if (NPortero != null) {
+                onceInicial.add(NPortero)
+            }
+            if (NDefensas != null) {
+                onceInicial.addAll(NDefensas)
+            }
+            if (NCentrocampistas != null) {
+                onceInicial.addAll(NCentrocampistas)
+            }
+            if (NDelanteros != null) {
+                onceInicial.addAll(NDelanteros)
+            }
+
+            miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
+            this.equipoServicio.guardarEquipo(miEquipo)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
-            model["banquillo"] = miEquipo.jugBanquillo
-
-            model["formacion"]= miEquipo.formacion
-
             model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            //CAMBIAR A ONCE INICIAL CUANDO ESTÉ PUESTO Y PONER TB LOS JUGADORES DEL BANQUILLO
-            var portero = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "PO" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
-            model["portero"] = portero!!
-            var defensas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DF" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())
-            model["defensas"] = defensas!!
-            var centrocampistas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "CC" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())
-            model["centrocampistas"] = centrocampistas!!
-            var delanteros = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DL" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(2)
-                ?.collect(Collectors.toList())
-            model["delanteros"] = delanteros!!
+
         }
         return VISTA_DETALLES_MIEQUIPO
     }
@@ -166,17 +170,155 @@ class EquipoControlador(
     ): String {
         if (equipoServicio.tengoEquipo(idLiga, principal)) {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            var formacionAntigua= miEquipo.formacion
+            var formacionAntigua = miEquipo.formacion
+            var onceAntiguo = miEquipo.onceInicial
+            var banqAntiguo = miEquipo.jugBanquillo
+
+            var defensasOnce =
+                onceAntiguo.stream().filter { x -> x.posicion == "DF" }.collect(Collectors.toList())
+            var centroCampistasOnce =
+                onceAntiguo.stream().filter { x -> x.posicion == "CC" }.collect(Collectors.toList())
+            var delanterosOnce =
+                onceAntiguo.stream().filter { x -> x.posicion == "DL" }.collect(Collectors.toList())
+            var defensasBanq =
+                banqAntiguo.stream().filter { x -> x.posicion == "DF" }.collect(Collectors.toList())
+            var centroCampistasBanq =
+                banqAntiguo.stream().filter { x -> x.posicion == "CC" }.collect(Collectors.toList())
+            var delanterossBanq =
+                banqAntiguo.stream().filter { x -> x.posicion == "DL" }.collect(Collectors.toList())
+
+            var nuevoOnce: MutableSet<Jugador> = onceAntiguo
+            var nuevoBanq: MutableSet<Jugador> = banqAntiguo
+
+            var nDFBQ = defensasBanq.size
+            var nCCBQ = centroCampistasBanq.size
+            var nDLBQ = delanterossBanq.size
+
+            var DFRestantes = 0
+            var CCRestantes = 0
+            var DLRestantes = 0
+
             if (formacion == "442" && formacionAntigua != "4-4-2") {
+                if (formacionAntigua == "4-3-3") {
+                    if (nCCBQ >= 1) {
+                        CCRestantes = 1
+                        DLRestantes = -1
+
+                    }
+                } else if (formacionAntigua == "3-5-2") {
+                    if (nDFBQ >= 1) {
+                        DFRestantes = 1
+                        CCRestantes = -1
+                    }
+                } else {
+                    if (nCCBQ >= 1) {
+                        DFRestantes = -1
+                        CCRestantes = 1
+                    }
+                }
                 miEquipo.formacion = "4-4-2"
+
             } else if (formacion == "433" && formacionAntigua != "4-3-3") {
+                if (formacionAntigua == "4-4-2") {
+                    if (nDLBQ >= 1) {
+                        CCRestantes = -1
+                        DLRestantes = 1
+                    }
+                } else if (formacionAntigua == "3-5-2") {
+                    if (nDFBQ >= 1 && nDLBQ >= 1) {
+                        DFRestantes = 1
+                        CCRestantes = -2
+                        DLRestantes = 1
+                    }
+                } else {
+                    DFRestantes = -1
+                    DLRestantes = 1
+                }
                 miEquipo.formacion = "4-3-3"
             } else if (formacion == "352" && formacionAntigua != "3-5-2") {
+                if (formacionAntigua == "4-4-2") {
+                    if (nCCBQ >= 1) {
+                        DFRestantes = -1
+                        CCRestantes = 1
+                    }
+                } else if (formacionAntigua == "4-3-3") {
+                    if (nCCBQ >= 2) {
+                        DFRestantes = -1
+                        CCRestantes = 2
+                        DLRestantes = -1
+                    }
+                } else {
+                    if (nCCBQ >= 2) {
+                        DFRestantes = -2
+                        CCRestantes = 2
+                    }
+                }
                 miEquipo.formacion = "3-5-2"
-            }else if(formacion == "532" && formacionAntigua != "5-3-2"){
+            } else if (formacion == "532" && formacionAntigua != "5-3-2") {
+                if (formacionAntigua == "4-4-2") {
+                    if (nDFBQ >= 1) {
+                        DFRestantes = 1
+                        CCRestantes = -1
+                    }
+                } else if (formacionAntigua == "4-3-3") {
+                    if (nDFBQ >= 1) {
+                        DFRestantes = 1
+                        DLRestantes = -1
+                    }
+                } else {
+                    if (nDFBQ >= 2) {
+                        DFRestantes = 2
+                        CCRestantes = -2
+                    }
+                }
                 miEquipo.formacion = "5-3-2"
             }
-            if(formacionAntigua!=miEquipo.formacion){
+            if (formacionAntigua != miEquipo.formacion) {
+                if (DFRestantes > 0) {
+                    for (n in 0 until DFRestantes) {
+                        nuevoBanq.remove(defensasBanq[n])
+                        nuevoOnce.add(defensasBanq[n])
+                        defensasBanq.removeAt(n)
+                    }
+                } else if (DFRestantes < 0) {
+                    for (n in 0 until DFRestantes.absoluteValue) {
+                        nuevoBanq.add(defensasOnce[n])
+                        nuevoOnce.remove(defensasOnce[n])
+                        defensasOnce.removeAt(n)
+                    }
+                }
+
+                if (CCRestantes > 0) {
+                    for (n in 0 until CCRestantes) {
+                        nuevoBanq.remove(centroCampistasBanq[n])
+                        nuevoOnce.add(centroCampistasBanq[n])
+                        centroCampistasBanq.removeAt(n)
+                    }
+                } else if (CCRestantes < 0) {
+                    for (n in 0 until CCRestantes.absoluteValue) {
+                        nuevoBanq.add(centroCampistasOnce[n])
+                        nuevoOnce.remove(centroCampistasOnce[n])
+                        centroCampistasOnce.removeAt(n)
+                    }
+                }
+
+                if (DLRestantes > 0) {
+                    for (n in 0 until DLRestantes) {
+                        nuevoBanq.remove(delanterossBanq[n])
+                        nuevoOnce.add(delanterossBanq[n])
+                        delanterossBanq.removeAt(n)
+                    }
+                } else if (DLRestantes < 0) {
+                    for (n in 0 until DLRestantes.absoluteValue) {
+                        nuevoBanq.add(delanterosOnce[n])
+                        nuevoOnce.remove(delanterosOnce[n])
+                        delanterosOnce.removeAt(n)
+                    }
+                }
+
+                miEquipo.onceInicial = nuevoOnce
+                miEquipo.jugBanquillo = nuevoBanq
+
                 this.equipoServicio.guardarEquipo(miEquipo)
             }
         }

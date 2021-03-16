@@ -110,6 +110,17 @@ class EstadisticaJugadorServicio {
         return res
     }
 
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeEstadisticasJornada(jornadaId: Int): Boolean? {
+        var res = false
+        var estadisticas = this.buscarTodasEstadisticas()
+        if (estadisticas != null || estadisticas?.isEmpty() == false) {
+            res= estadisticas.stream().anyMatch{x-> x.partido?.jornada?.id==jornadaId}
+        }
+        return res
+    }
+
     fun wsValoraciones() {
         var urlBase = "https://es.fcstats.com/"
         var doc = Jsoup.connect("$urlBase/partidos,primera-division-espana,19,1.php").get()

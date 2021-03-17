@@ -60,7 +60,13 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
                 this.equipoRealServicio.guardarEquipo(equipo)
                 model["formacion"] = equipo.formacion
             }
-            model["proxPartido"] = equipoRealServicio.proximoPartido(nombreEquipo)
+            var proxPartido = equipoRealServicio.proximoPartido(nombreEquipo)
+            model["proxPartido"] = proxPartido
+            if(proxPartido.equipoVisitante?.name == equipo.name) {
+                model["rival"] = proxPartido.equipoLocal!!
+            }else {
+                model["rival"] = proxPartido.equipoVisitante!!
+            }
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
             model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
             if (equipo.jugadores.size > 5) {

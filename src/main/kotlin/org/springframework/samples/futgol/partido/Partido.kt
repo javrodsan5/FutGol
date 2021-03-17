@@ -24,7 +24,7 @@ class Partido() : BaseEntity() {
     var equipoVisitante: EquipoReal? = null
 
     @ManyToOne()
-    @JoinColumn(name = "jornada", referencedColumnName = "id")
+    @JoinColumn(name = "jornada", referencedColumnName = "numero_jornada")
     var jornada: Jornada? = null
 
     @Column(name = "fecha")

@@ -67,6 +67,12 @@
                 th:src="${jugador.foto}"/></a></div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>
     </div>
+    <div class="cajita" style="float: right;">
+        <h1>Próximo partido del equipo</h1>
+        <h2 th:text="${proxPartido.fecha}"/>
+        <h2 th:text="${proxPartido.equipoLocal}"/>
+        <h2 th:text="${proxPartido.equipoVisitante}"/>
+    </div>
 </div>
 
 <div style="display: flex; float: left;">
@@ -247,9 +253,6 @@
 </div>
 <br>
 <br>
-<h2 th:text="${proxPartido.fecha}"/>
-<h2 th:text="${proxPartido.equipoLocal}"/>
-<h2 th:text="${proxPartido.equipoVisitante}"/>
 
 
 <div style="display: inline-block;float: left;">

@@ -20,7 +20,7 @@ class Jornada : BaseEntity() {
     @Column(name = "numero_jornada")
     var numeroJornada = 0
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "jornada")
     var partidos: MutableSet<Partido> = HashSet()
 
     @ManyToMany(fetch = FetchType.EAGER)

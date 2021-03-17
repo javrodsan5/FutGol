@@ -37,6 +37,8 @@ template {
   display: none;
 }
 
+
+
 a {
   background-color: transparent;
 }
@@ -7636,4 +7638,8 @@ hr {
     -moz-border-radius: 55px 0px 55px 0px;
     -webkit-border-radius: 55px 0px 55px 0px;
     border: 2px solid #2b542c;
+}
+
+.cajita {
+    border: 2px solid #8FBC8F ;
 }

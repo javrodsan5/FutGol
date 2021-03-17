@@ -64,14 +64,10 @@ class EquipoRealServicio {
         else {
             ultJornadaJugada = pv.jornada?.numeroJornada!! + 1
         }
-        print("jornada: " + ultJornadaJugada)
         if (ultJornadaJugada < 38) {
             var jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(ultJornadaJugada)
-            //jornada.partidos está vacío
             for (p in jornada!!.partidos) {
                 if (p.equipoLocal?.name == nombreEquipo || p.equipoVisitante?.name == nombreEquipo) {
-                    print(p.equipoLocal?.name)
-
                     return p
                 }
             }

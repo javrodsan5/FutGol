@@ -70,8 +70,9 @@
     <div class="cajita" style="float: right;">
         <h1>Próximo partido del equipo</h1>
         <h2 th:text="${proxPartido.fecha}"/>
-        <h2 th:text="${proxPartido.equipoLocal}"/>
-        <h2 th:text="${proxPartido.equipoVisitante}"/>
+        <h2><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${rival.name})}"
+               th:text="${rival.name}"/></h2>
+
     </div>
 </div>
 

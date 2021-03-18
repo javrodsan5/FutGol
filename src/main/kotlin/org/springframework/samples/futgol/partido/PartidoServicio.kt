@@ -3,7 +3,6 @@ package org.springframework.samples.futgol.partido
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.stereotype.Service
@@ -25,7 +24,7 @@ class PartidoServicio {
         this.partidoRepositorio = partidoRepositorio
     }
 
-    @Transactional()
+    @Transactional
     @Throws(DataAccessException::class)
     fun guardarPartido(partido: Partido) {
         partidoRepositorio?.save(partido)
@@ -53,7 +52,7 @@ class PartidoServicio {
         var partidos = this.buscarTodosPartidos()
         if (partidos != null) {
             for (p in partidos) {
-                if (p.equipoLocal?.name==equipoLocal && p.equipoVisitante?.name==equipoVisitante) {
+                if (p.equipoLocal?.name == equipoLocal && p.equipoVisitante?.name == equipoVisitante) {
                     res = true
                     break
                 }
@@ -73,25 +72,27 @@ class PartidoServicio {
             var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
                 .replace("C�diz", "Cádiz")
                 .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
+                .replace("Alav�s", "Alavés")
             p.equipoLocal = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoLocal)
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
                 .replace("C�diz", "Cádiz")
                 .replace("Atl�tico Madrid", "Atlético Madrid")
-                .replace("Alav�s","Alavés")
+                .replace("Alav�s", "Alavés")
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
 
             var resultadoTexto = partido.select("td[data-stat=score] a").text()
 
-            if(this.existePartido(equipoLocal,equipoVisitante)==false){
+            if (this.existePartido(equipoLocal, equipoVisitante) == false) {
                 p.fecha = partido.select("td[data-stat=date] a").text()
-                p.jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(partido.select("th[data-stat=gameweek]").text().toInt())
-                p.resultado= resultadoTexto
+                p.jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(
+                    partido.select("th[data-stat=gameweek]").text().toInt()
+                )
+                p.resultado = resultadoTexto
                 this.guardarPartido(p)
-            }else{
-                var pa = this.buscarPartidoPorNombresEquipos(equipoLocal,equipoVisitante)!!
-                if(pa?.resultado=="" && resultadoTexto!=""){
-                    pa.resultado=resultadoTexto
+            } else {
+                var pa = this.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)!!
+                if (pa.resultado == "" && resultadoTexto != "") {
+                    pa.resultado = resultadoTexto
                     this.guardarPartido(pa)
                 }
 

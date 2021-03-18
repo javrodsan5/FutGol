@@ -5,7 +5,6 @@ import lombok.Setter
 import org.springframework.samples.futgol.clausula.Clausula
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.liga.Liga
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.model.NamedEntity
 import org.springframework.samples.futgol.usuario.Usuario
 import java.util.*

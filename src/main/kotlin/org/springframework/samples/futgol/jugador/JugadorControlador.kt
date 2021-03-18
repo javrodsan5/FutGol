@@ -65,7 +65,7 @@ class JugadorControlador(
         @PathVariable numeroJornada: Int
     ): String {
         return if (jugadorServicio.existeJugadorId(idJugador) == true) {
-            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             model["medias"] = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
             model["esPortero"] = jugador.posicion == "PO"
@@ -135,7 +135,7 @@ class JugadorControlador(
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo
             model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
-            if (equipo!!.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
+            if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
                 model["loTengoEnMiEquipo"] = true
             }
         } else {

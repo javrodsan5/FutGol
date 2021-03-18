@@ -19,7 +19,7 @@ class MovimientoControlador(
 
 
     fun buscaVendedores(movimientos: Collection<Movimiento>?): MutableList<Usuario> {
-        var vendedores: MutableList<Usuario> = ArrayList()
+        val vendedores: MutableList<Usuario> = ArrayList()
         if (movimientos != null) {
             for (m in movimientos) {
                 m.jugador?.name?.let { movimientoServicio.buscaVendedor(it) }?.let { vendedores.add(it) }
@@ -30,13 +30,13 @@ class MovimientoControlador(
 
     @GetMapping("/liga/{idLiga}/movimientos")
     fun movimientosLiga(model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal): String {
-        var usuario = usuarioServicio.usuarioLogueado(principal)
-        var liga = ligaServicio.buscarLigaPorId(idLiga)
+        val usuario = usuarioServicio.usuarioLogueado(principal)
+        val liga = ligaServicio.buscarLigaPorId(idLiga)
         var ligasUsuario = usuario?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
         if (ligasUsuario != null) {
             for (l in ligasUsuario) {
                 if (l.id == idLiga) {
-                    var movimientos = movimientoServicio.buscarMovimientosDeLigaPorId(idLiga)
+                    val movimientos = movimientoServicio.buscarMovimientosDeLigaPorId(idLiga)
                     if (movimientos != null && liga != null) {
                         model["movimientos"] = movimientos
                         model["liga"] = liga
@@ -52,8 +52,8 @@ class MovimientoControlador(
 
     @GetMapping("/liga/{idLiga}/misMovimientos")
     fun movimientosUsuario(model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal): String {
-        var usuario = usuarioServicio.usuarioLogueado(principal)
-        var ligasUsuario = usuario?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
+        val usuario = usuarioServicio.usuarioLogueado(principal)
+        val ligasUsuario = usuario?.user?.let { usuarioServicio.buscarLigasUsuario(it.username) }
         if (ligasUsuario != null) {
             for (l in ligasUsuario) {
                 if (l.id == idLiga) {

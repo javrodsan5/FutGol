@@ -43,14 +43,8 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     fun comprobarSiEmailExiste(email: String?): Boolean? {
-        return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.email.equals(email)}
+        return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.email == email }
 
-    }
-
-    @Transactional(readOnly = true)
-    @Throws(DataAccessException::class)
-    fun buscarUsuarioPorId(idUsuario: Int): Usuario? {
-        return usuarioRepository?.findById(idUsuario)
     }
 
     @Transactional(readOnly = true)
@@ -73,9 +67,9 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     fun ligasAInvitar(username: String, principal: Principal): MutableList<Liga> {
-        var ligasUsuario = buscarLigasUsuario(username)
+        val ligasUsuario = buscarLigasUsuario(username)
         var ligasNoUsuario: MutableList<Liga> = ArrayList()
-        var misLigas = usuarioLogueado(principal)?.user?.let { buscarLigasUsuario(it.username) }
+        val misLigas = usuarioLogueado(principal)?.user?.let { buscarLigasUsuario(it.username) }
 
         if (misLigas != null && ligasUsuario != null) {
             for (ligaM in misLigas) {

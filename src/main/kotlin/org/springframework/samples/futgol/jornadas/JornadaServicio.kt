@@ -2,12 +2,10 @@ package org.springframework.samples.futgol.jornadas
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
-import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -19,9 +17,6 @@ class JornadaServicio {
 
     @Autowired
     private var estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
-
-    @Autowired
-    private var partidoServicio: PartidoServicio? = null
 
     @Autowired
     private var equipoRealServicio: EquipoRealServicio? = null
@@ -73,7 +68,7 @@ class JornadaServicio {
             }
         } else {
             equipo = this.equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
-            if (jugadores != null && !jugadores.isEmpty()){
+            if (jugadores != null && !jugadores.isEmpty()) {
                 bol = true
             }
         }
@@ -105,13 +100,13 @@ class JornadaServicio {
             portero = jugadores?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
 
             defensas442 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 4)
             centrocampistas442 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 4)
             delanteros442 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                jugadores.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                     .subList(0, 2)
             jug442.add(portero)
             jug442.addAll(defensas442)
@@ -120,10 +115,10 @@ class JornadaServicio {
 
             defensas433.addAll(defensas442)
             centrocampistas433 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 3)
             delanteros433 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                     .subList(0, 3)
             jug433.add(portero)
             jug433.addAll(defensas433)
@@ -131,10 +126,10 @@ class JornadaServicio {
             jug433.addAll(delanteros433)
 
             defensas352 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 3)
             centrocampistas352 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 5)
             delanteros352.addAll(delanteros442)
             jug352.add(portero)
@@ -143,10 +138,10 @@ class JornadaServicio {
             jug352.addAll(delanteros352)
 
             defensas532 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 5)
             centrocampistas532 =
-                jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 3)
             delanteros532.addAll(delanteros442)
             jug532.add(portero)

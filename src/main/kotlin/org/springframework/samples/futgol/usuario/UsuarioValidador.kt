@@ -7,7 +7,7 @@ import java.util.regex.Pattern
 
 class UsuarioValidador : Validator {
 
-    private val REQUERIDO = "Campo requerido."
+    private val REQUERIDO = "Campo requerido"
 
     private val PATRON_EMAIL: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
@@ -55,11 +55,11 @@ class UsuarioValidador : Validator {
 
 
     override fun validate(target: Any, errors: Errors) {
-        var usuario = target as Usuario
-        var name = usuario.name
-        var email = usuario.email
-        var username = usuario.user?.username
-        var password = usuario.user?.password
+        val usuario = target as Usuario
+        val name = usuario.name
+        val email = usuario.email
+        val username = usuario.user?.username
+        val password = usuario.user?.password
 
 
         if (!StringUtils.hasLength(name)) {

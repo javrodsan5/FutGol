@@ -33,7 +33,7 @@ class MovimientoServicio {
 
     @Transactional(readOnly = true)
     fun buscaVendedor(nombreJugador: String): Usuario? {
-        var equipos = equipoServicio?.buscaTodosEquipos()
+        val equipos = equipoServicio?.buscaTodosEquipos()
         if (equipos != null) {
             for (e in equipos) {
                 for (jugador in e.jugadores) {

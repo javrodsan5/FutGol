@@ -32,7 +32,6 @@ class LigaControlador(
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
     private val VISTA_SUBASTA_LIGA = "liga/subastas"
-    private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
@@ -99,15 +98,15 @@ class LigaControlador(
         liga: Liga, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String, result: BindingResult,
         model: Model
     ): String {
-        var ligaComparador = ligaServicio.buscarLigaPorNombre(nombreLiga)
+        val ligaComparador = ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (liga.name != ligaComparador!!.name && ligaServicio.comprobarSiExisteLiga(liga.name)) {
             result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
-            liga.id = ligaComparador?.id
-            liga.admin = ligaComparador?.admin
+            liga.id = ligaComparador.id
+            liga.admin = ligaComparador.admin
             liga.usuariosInvitados = ligaComparador.usuariosInvitados
             liga.usuarios = ligaComparador.usuarios
             this.ligaServicio.guardarLiga(liga)
@@ -126,7 +125,7 @@ class LigaControlador(
             model["liga"] = liga!!
             var equiposLiga = liga.equipos.sortedBy { x -> x.name }
             model["equipos"] = equiposLiga
-            if (liga!!.equipos.size >= 8) {
+            if (liga.equipos.size >= 8) {
                 noLimiteEquipos = false
             }
             model["noLimiteEquipos"] = noLimiteEquipos
@@ -135,7 +134,7 @@ class LigaControlador(
                 soyAdmin = true
                 model["soyAdmin"] = soyAdmin
             }
-            var noTengoEquipo: Boolean
+            val noTengoEquipo: Boolean
             if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
                 noTengoEquipo = true
                 model["noTengoEquipo"] = noTengoEquipo
@@ -149,11 +148,10 @@ class LigaControlador(
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
         if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
-            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             model["liga"] = liga!!
-            var equiposLiga = liga?.equipos?.sortedBy { x -> -x.puntos }
+            val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
 
-            if (equiposLiga != null) {
                 var posiciones = equiposLiga.indices
                 model["posiciones"] = posiciones
                 model["equiposLiga"] = equiposLiga
@@ -162,7 +160,6 @@ class LigaControlador(
                     e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
                 }
                 model["valores"] = valores
-            }
             return VISTA_CLASIFICACION_LIGA
         }
         return "redirect:/misligas"
@@ -177,8 +174,8 @@ class LigaControlador(
         model: MutableMap<String, Any>
     ): String {
 
-        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+        val usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
+        val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (usuario != null && liga != null) {
             if (!usuario.ligas.contains(liga)) {
                 usuario.ligas.add(liga)

@@ -14,9 +14,6 @@ class EquipoRealServicio {
     private var equipoRealRepositorio: EquipoRealRepositorio? = null
 
     @Autowired
-    private var equipoRealServicio: EquipoRealServicio? = null
-
-    @Autowired
     private var jornadaServicio: JornadaServicio? = null
 
     @Autowired
@@ -54,7 +51,7 @@ class EquipoRealServicio {
     @Transactional(readOnly = true)
     fun proximoPartido(nombreEquipo: String): Partido {
         var equipoReal = buscarEquipoRealPorNombre(nombreEquipo)!!
-        var ultJornadaJugada = 0
+        var ultJornadaJugada: Int
 
         var pl = equipoReal.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }.findLast { x -> x.resultado != "" }
         var pv =

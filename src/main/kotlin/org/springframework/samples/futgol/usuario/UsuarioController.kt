@@ -63,7 +63,7 @@ class UsuarioController(
     fun misInvitaciones(model: Model, principal: Principal): String {
         val usuario = usuarioServicio.usuarioLogueado(principal)
         model["invitaciones"] = usuario?.invitaciones!!
-        model["usuario"] = usuario!!
+        model["usuario"] = usuario
         return VISTA_INVITACIONES
     }
 
@@ -113,7 +113,7 @@ class UsuarioController(
             VISTA_REGISTRO_USUARIO
         } else {
             this.usuarioServicio.guardarUsuario(usuario)
-            usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
+            usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
     }
@@ -181,10 +181,10 @@ class UsuarioController(
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
         var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
-        if(usuario.user?.username == usuarioServicio.usuarioLogueado(principal)!!.user?.username ) {
+        if (usuario.user?.username == usuarioServicio.usuarioLogueado(principal)!!.user?.username) {
             return "redirect:/micuenta"
         }
-        model["usuario"] =usuario
+        model["usuario"] = usuario
         model["ligasUsuario"] = usuarioServicio.buscarLigasUsuario(username)!!
         model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
         return VISTA_DETALLES_USUARIO
@@ -205,13 +205,12 @@ class UsuarioController(
 
     @GetMapping("/usuarios")
     fun procesoBusquedaUsuarioLiga(usuario: Usuario, result: BindingResult, model: Model): String {
-        return if (usuarioServicio.comprobarSiNombreUsuarioExiste(usuario?.user?.username) == true) {
-            "redirect:/usuarios/" + usuario?.user?.username
+        return if (usuarioServicio.comprobarSiNombreUsuarioExiste(usuario.user?.username) == true) {
+            "redirect:/usuarios/" + usuario.user?.username
         } else {
             result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")
             "redirect:/usuarios/buscar"
         }
-        return "redirect:/usuarios/buscar"
     }
 
     @GetMapping("topUsuarios")

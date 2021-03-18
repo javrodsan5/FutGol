@@ -27,7 +27,7 @@ class EquipoServicio {
     private var ligaServicio: LigaServicio? = null
 
 
-    @Transactional()
+    @Transactional
     @Throws(DataAccessException::class)
     fun guardarEquipo(equipo: Equipo) {
         equipoRepositorio?.save(equipo)
@@ -51,8 +51,8 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun buscaMiEquipoEnLiga(idLiga: Int, principal: Principal): Equipo {
-        var equiposLiga = buscaEquiposDeLigaPorId(idLiga)
-        var usuario = usuarioServicio?.usuarioLogueado(principal)
+        val equiposLiga = buscaEquiposDeLigaPorId(idLiga)
+        val usuario = usuarioServicio?.usuarioLogueado(principal)
         var miEquipo = Equipo()
         if (equiposLiga != null) {
             for (e in equiposLiga) {
@@ -78,7 +78,7 @@ class EquipoServicio {
     @Transactional(readOnly = true)
     fun comprobarSiExisteEquipoLiga(nombreEquipo: String?, idLiga: Int): Boolean {
         var res = false
-        var equipos = equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
+        val equipos = equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
         if (equipos != null) {
             for (e in equipos) {
                 if (e.name.equals(nombreEquipo)) {
@@ -91,7 +91,7 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun calcularValorEquipo(nombreEquipo: String?, idLiga: Int): Double {
-        var equipos = buscaEquiposDeLigaPorId(idLiga)
+        val equipos = buscaEquiposDeLigaPorId(idLiga)
         var valorEquipo = 0.0
         var equipo = Equipo()
         if (equipos != null) {
@@ -110,7 +110,7 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun buscaEquiposEnListaEquipos(equipos: MutableSet<Equipo>, nombreEquipo: String?): Equipo {
-        var equipo = Equipo()
+        val equipo = Equipo()
         for (e in equipos) {
             if(e.name == nombreEquipo) {
                 return e
@@ -121,8 +121,8 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun topJugadoresEquipo(nombreEquipo: String?, idLiga: Int): List<Jugador>? {
-        var equipos = ligaServicio?.buscarLigaPorId(idLiga)?.equipos
-        var equipo = equipos?.let { buscaEquiposEnListaEquipos(it, nombreEquipo) }
+        val equipos = ligaServicio?.buscarLigaPorId(idLiga)?.equipos
+        val equipo = equipos?.let { buscaEquiposEnListaEquipos(it, nombreEquipo) }
         return equipo?.jugadores?.sortedBy { j -> -j.puntos }?.subList(0, 4)
 
     }

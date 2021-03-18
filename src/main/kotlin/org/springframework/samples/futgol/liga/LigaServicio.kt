@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
 import java.util.*
-import java.util.stream.Collectors
 
 @Service
 class LigaServicio {
@@ -31,7 +30,7 @@ class LigaServicio {
         this.ligaRepositorio = ligaRepositorio
     }
 
-    @Transactional()
+    @Transactional
     @Throws(DataAccessException::class)
     fun guardarLiga(liga: Liga) {
         ligaRepositorio?.save(liga)
@@ -49,8 +48,8 @@ class LigaServicio {
 
     @Transactional(readOnly = true)
     fun buscarJugadoresEnLiga(idLiga: Int): Collection<Jugador>? {
-        var equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
-        var jugadoresLiga: MutableSet<Jugador> = HashSet()
+        val equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
+        val jugadoresLiga: MutableSet<Jugador> = HashSet()
         if (equipos != null) {
             for (e in equipos) {
                 for (j in e.jugadores) {
@@ -64,29 +63,14 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun calculaPosicionLiga(idLiga: Int, principal: Principal): Int? {
-        var equipo = equipoServicio?.buscaMiEquipoEnLiga(idLiga, principal)
-        var liga = buscarLigaPorId(idLiga)
-        var equiposOrdenadosPuntos = liga?.equipos?.sortedBy { x -> -x.puntos }
-        for (e in 0 until equiposOrdenadosPuntos!!.size) {
-            if(equiposOrdenadosPuntos[e].name == equipo!!.name) {
-                return e+1
-            }
-        }
-        return 1000
-    }
-
-    @Transactional(readOnly = true)
     fun buscarJugadoresSinEquipoEnLiga(idLiga: Int): MutableSet<Jugador> {
-        var todosJugadores = jugadorServicio?.buscaTodosJugadores()
-        var jugadoresConEquipo = buscarJugadoresEnLiga(idLiga)
-        var jugadoresSinEquipo: MutableSet<Jugador> = HashSet()
+        val todosJugadores = jugadorServicio?.buscaTodosJugadores()
+        val jugadoresConEquipo = buscarJugadoresEnLiga(idLiga)
+        val jugadoresSinEquipo: MutableSet<Jugador> = HashSet()
         if (todosJugadores != null) {
             for (tj in todosJugadores) {
-                if (tj != null) {
-                    if (!jugadoresConEquipo?.contains(tj)!!) {
-                        jugadoresSinEquipo.add(tj)
-                    }
+                if (!jugadoresConEquipo?.contains(tj)!!) {
+                    jugadoresSinEquipo.add(tj)
                 }
             }
         }
@@ -96,7 +80,7 @@ class LigaServicio {
     @Transactional(readOnly = true)
     fun comprobarSiExisteLiga(nombreLiga: String?): Boolean {
         var res = false
-        var ligas = ligaRepositorio?.findAll()
+        val ligas = ligaRepositorio?.findAll()
         if (ligas != null) {
             for (l in ligas) {
                 if (l.name.equals(nombreLiga)) {

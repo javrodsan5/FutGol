@@ -55,15 +55,15 @@ class JornadaControlador(
 
                     if (jornada?.jugadores?.isEmpty() == true) {
                         println("womazo")
-                        if (jornada?.mejorJugador == null) {
-                            var mejorJugador = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                        if (jornada.mejorJugador == null) {
+                            var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                                 ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
                                 ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
                             jornada?.mejorJugador = mejorJugador
                             jornadaServicio.guardarJornada(jornada)
                         }
 
-                        var todosJugadores = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                        val todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                             ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
                             ?.sorted(Comparator.comparing { x -> -x.puntos })
                             ?.map { x -> x.jugador }?.collect(Collectors.toList())

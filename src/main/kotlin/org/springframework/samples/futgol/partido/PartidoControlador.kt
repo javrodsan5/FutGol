@@ -4,10 +4,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.PreparedStatement
-import java.sql.SQLException
 
 @Controller
 class PartidoControlador(val partidoServicio: PartidoServicio) {
@@ -24,8 +20,6 @@ class PartidoControlador(val partidoServicio: PartidoServicio) {
 
     @PostMapping("/WSPartidos")
     fun creaWSPartidos(model: Model): String {
-
-
         this.partidoServicio.wsPartidos()
         return VISTA_WSPARTIDOS
     }

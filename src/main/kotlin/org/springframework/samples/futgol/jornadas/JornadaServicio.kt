@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.jornadas
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
@@ -57,7 +56,6 @@ class JornadaServicio {
         var map: Map<String, MutableList<Jugador?>> = HashMap<String, MutableList<Jugador?>>()
         var bol = false
 
-        var equipo: EquipoReal?
         if (idJornada != 0 && nombreEquipo == "") {//significa que es jornadas y no equipo real
             var jornadaIdeal = this.buscarJornadaPorId(idJornada)
             if (jugadores != null && !jugadores.isEmpty()
@@ -67,7 +65,6 @@ class JornadaServicio {
                 bol = true
             }
         } else {
-            equipo = this.equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
             if (jugadores != null && !jugadores.isEmpty()) {
                 bol = true
             }
@@ -186,14 +183,9 @@ class JornadaServicio {
                 puntos352 = jug352.stream().mapToInt { x -> x?.puntos!! }.sum()
                 puntos532 = jug532.stream().mapToInt { x -> x?.puntos!! }.sum()
 
-                println("442: " + puntos442)
-                println("433: " + puntos433)
-                println("352: " + puntos352)
-                println("532: " + puntos532)
             }
 
             return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
-                println("no")
                 map = mapOf("3-5-2" to jug352)
                 map
             } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532) {

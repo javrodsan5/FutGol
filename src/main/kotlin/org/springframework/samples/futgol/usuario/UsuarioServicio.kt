@@ -12,14 +12,14 @@ import java.util.stream.Collectors
 @Service
 class UsuarioServicio {
 
-    private var usuarioRepository: UsuarioRepository? = null
+    private var usuarioRepositorio: UsuarioRepositorio? = null
 
     @Autowired
     private val userService: UserServicio? = null
 
     @Autowired
-    fun UsuarioServicio(usuarioRepository: UsuarioRepository?) {
-        this.usuarioRepository = usuarioRepository
+    fun UsuarioServicio(usuarioRepositorio: UsuarioRepositorio?) {
+        this.usuarioRepositorio = usuarioRepositorio
     }
 
     fun usuarioLogueado(principal: Principal): Usuario? {
@@ -30,7 +30,7 @@ class UsuarioServicio {
     @Transactional
     @Throws(DataAccessException::class)
     fun guardarUsuario(usuario: Usuario) {
-        usuarioRepository?.save(usuario)
+        usuarioRepositorio?.save(usuario)
         usuario.user?.let {
             userService?.saveUser(it)
         }
@@ -38,31 +38,31 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {
-         return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.user?.username.equals(nombreUsuario)}
+         return usuarioRepositorio?.findAll()?.stream()?.anyMatch{ x -> x.user?.username.equals(nombreUsuario)}
     }
 
     @Transactional(readOnly = true)
     fun comprobarSiEmailExiste(email: String?): Boolean? {
-        return usuarioRepository?.findAll()?.stream()?.anyMatch{ x -> x.email == email }
+        return usuarioRepositorio?.findAll()?.stream()?.anyMatch{ x -> x.email == email }
 
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarUsuarioPorNombreUsuario(username: String): Usuario? {
-        return usuarioRepository?.buscarUsuarioPorNombreUsuario(username)
+        return usuarioRepositorio?.buscarUsuarioPorNombreUsuario(username)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarLigasUsuario(username: String): Collection<Liga>? {
-        return usuarioRepository?.buscarLigasUsuario(username)
+        return usuarioRepositorio?.buscarLigasUsuario(username)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarTodosUsuarios(): MutableList<String?>? {
-        return usuarioRepository?.findAll()?.stream()?.map { x -> x.user?.username }?.collect(Collectors.toList())
+        return usuarioRepositorio?.findAll()?.stream()?.map { x -> x.user?.username }?.collect(Collectors.toList())
     }
 
     @Transactional(readOnly = true)

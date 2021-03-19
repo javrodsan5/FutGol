@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
 import org.springframework.samples.futgol.liga.Liga
 
-interface UsuarioRepository : Repository<Usuario, Int> {
+interface UsuarioRepositorio : Repository<Usuario, Int> {
 
     fun findAll(): Collection<Usuario>
 

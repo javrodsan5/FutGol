@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.equipoReal
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
-import org.springframework.samples.futgol.equipo.Equipo
 
 interface EquipoRealRepositorio: Repository<EquipoReal, Int> {
 

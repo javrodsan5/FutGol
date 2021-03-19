@@ -4,9 +4,7 @@ import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.jugador.Jugador
-import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.model.BaseEntity
-import java.util.*
 import javax.persistence.*
 
 @Getter

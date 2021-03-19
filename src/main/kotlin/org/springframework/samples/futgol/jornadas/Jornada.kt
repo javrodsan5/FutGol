@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.jornadas
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.model.BaseEntity

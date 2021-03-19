@@ -48,20 +48,20 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
             var map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores,0, it) }
             var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
             var formacion = ""
-            println(map?.keys)
-            println(map?.values)
+
             if(map?.values?.isNotEmpty()==true){
                 jugadores= map?.values?.first()
                 model["jugadores"]= jugadores
-                println(jugadores)
+
                 formacion= map?.keys.first()
                 equipo.formacion= formacion
-                println(formacion)
-                this.equipoRealServicio.guardarEquipo(equipo)
                 model["formacion"] = equipo.formacion
+
+                this.equipoRealServicio.guardarEquipo(equipo)
             }
             var proxPartido = equipoRealServicio.proximoPartido(nombreEquipo)
             model["proxPartido"] = proxPartido
+
             if(proxPartido.equipoVisitante?.name == equipo.name) {
                 model["rival"] = proxPartido.equipoLocal!!
             }else {
@@ -69,9 +69,11 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
             }
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
             model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
+
             if (equipo.jugadores.size > 5) {
                 model["top5Jugadores"] = equipo.jugadores.sortedBy { x -> -x.puntos }.subList(0, 5)
             }
+
             var banquillo = equipo.jugadores
             banquillo.removeAll(jugadores)
             model["banquillo"] = banquillo

@@ -54,7 +54,7 @@ class JornadaControlador(
                 if (jornadaId?.let { this.estadisticaJugadorServicio.existeEstadisticasJornada(it) } == true) {
 
                     if (jornada?.jugadores?.isEmpty() == true) {
-                        println("womazo")
+
                         if (jornada.mejorJugador == null) {
                             var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                                 ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
@@ -69,16 +69,14 @@ class JornadaControlador(
                             ?.map { x -> x.jugador }?.collect(Collectors.toList())
 
                         var map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "") //mirar
-                        println(map.values)
-                        println(map.keys)
+
                         var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
                         var formacion = ""
                         if (map.values.isNotEmpty()) {
                             jugadores = map.values.first()
                             formacion = map.keys.first()
                         }
-                        println(jugadores)
-                        println(formacion)
+
                         if (jugadores.isEmpty()) {
                             model["noOnce"] = true
                         } else {
@@ -121,7 +119,6 @@ class JornadaControlador(
             if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
 
                 if (jornada?.jugadores?.isEmpty() == true) {
-                    println("womazo")
                     if (jornada?.mejorJugador == null) {
                         var mejorJugador = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
                             ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
@@ -136,16 +133,14 @@ class JornadaControlador(
                         ?.map { x -> x.jugador }?.collect(Collectors.toList())
 
                     var map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "") //mirar
-                    println(map.values)
-                    println(map.keys)
+
                     var jugadores: MutableList<Jugador?> = ArrayList<Jugador?>()
                     var formacion = ""
                     if (map.values.isNotEmpty()) {
                         jugadores = map.values.first()
                         formacion = map.keys.first()
                     }
-                    println(jugadores)
-                    println(formacion)
+
                     if (jugadores.isEmpty()) {
                         model["noOnce"] = true
                     } else {

@@ -53,7 +53,7 @@ class JugadorControlador(
     @PostMapping("/WSJugadores")
     fun creaWSJugadores(model: Model): String {
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()
-        //this.jugadorServicio.webScrapingJugadoresFbref()
+        this.jugadorServicio.webScrapingJugadoresFbref()
         return VISTA_WSJUGADORES
     }
 
@@ -99,7 +99,7 @@ class JugadorControlador(
             var jug = jugadorServicio.buscaJugadorPorNombre(jugador.name!!)
             "redirect:/jugador/" + jug!!.id + "/jornada/1"
         } else {
-            result.rejectValue("name", "no se ha encontrado", "no se ha encontrado")
+            result.rejectValue("name", "No se ha encontrado", "No se ha encontrado")
             model["jugadores"] =
                 jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })
                     ?.limit(5)

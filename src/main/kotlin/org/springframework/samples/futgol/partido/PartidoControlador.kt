@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping
 class PartidoControlador(val partidoServicio: PartidoServicio) {
 
     private val VISTA_WSPARTIDOS = "partidos/wsPartidos"
-    private val VISTA_PARTIDOS = "partidos/partidos"
-    private val VISTA_FILTRAR_PARTIDOS = "partidos/filtroPartidos"
-
 
     @GetMapping("/WSPartidos")
     fun iniciaWSPartidos(model: Model): String {

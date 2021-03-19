@@ -73,17 +73,6 @@ class EquipoRealServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscaPartidoJornada(numeroJornada: Int, nombreEquipo: String): Partido? {
-        var jornada = jornadaServicio?.buscarJornadaPorNumeroJornada(numeroJornada)
-        for (p in jornada!!.partidos) {
-            if (p.equipoLocal?.name == nombreEquipo || p.equipoVisitante?.name == nombreEquipo) {
-                return p
-            }
-        }
-        return Partido()
-    }
-
-    @Transactional(readOnly = true)
     fun buscarEquipoRealPorNombre(nombre: String): EquipoReal? {
         return equipoRealRepositorio?.buscarEquipoRealPorNombre(nombre)
     }

@@ -21,7 +21,7 @@ import java.util.regex.Pattern
 import javax.validation.Valid
 
 @Controller
-class UsuarioController(
+class UsuarioControlador(
     val usuarioServicio: UsuarioServicio,
     val userServicio: UserServicio,
     val authoritiesServicio: AuthoritiesServicio,

@@ -17,7 +17,7 @@
                 jugadores[i].className = clase.replace('442', formacion);
             } else if (clase.includes('352')) {
                 jugadores[i].className = clase.replace('352', formacion);
-            }else{
+            } else {
                 jugadores[i].className = clase.replace('532', formacion);
             }
 
@@ -112,6 +112,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p2-442" th:object="${equipo.onceInicial[1]}">
@@ -125,6 +128,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p3-442" th:object="${equipo.onceInicial[2]}">
@@ -138,6 +144,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p4-442" th:object="${equipo.onceInicial[3]}">
@@ -151,6 +160,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p5-442" th:object="${equipo.onceInicial[4]}">
@@ -164,6 +176,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p6-442" th:object="${equipo.onceInicial[5]}">
@@ -177,6 +192,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p7-442" th:object="${equipo.onceInicial[6]}">
@@ -190,6 +208,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p8-442" th:object="${equipo.onceInicial[7]}">
@@ -203,6 +224,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p9-442" th:object="${equipo.onceInicial[8]}">
@@ -216,6 +240,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p10-442" th:object="${equipo.onceInicial[9]}">
@@ -227,6 +254,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
         <div class="player p11-442" th:object="${equipo.onceInicial[10]}">
@@ -238,6 +268,9 @@
                 <h3>Altura: <b th:text="*{altura}"></b> cm</h3>
                 <h3>Peso: <b th:text="*{peso}"></b> kg</h3>
                 <img th:src="*{foto}" width="30%" height="30%">
+                <a th:href="@{/liga/{idLiga}/miEquipo/once/remove/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                    <button class="btn">Meter en el banquillo</button>
+                </a>
             </div>
         </div>
     </div>
@@ -246,9 +279,15 @@
     <h1>Banquillo</h1>
     <br>
     <div style="display: inline-block" th:each="jugador : ${equipo.jugBanquillo}">
-        <div>
-            <a th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}"><img
-                    th:src="${jugador.foto}"/></a></div>
+        <a th:href="@{/liga/{idLiga}/miEquipo/once/add/{idJugador} (idLiga = ${liga.id} ,idJugador= ${jugador.id})}">
+            <button class="btn">Meter en el once</button>
+        </a>
+        <div class="botonImagen">
+            <img th:src="${jugador.foto}"/><a
+                th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}">
+            <button class="btn">Detalles</button>
+        </a>
+        </div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>
     </div>
 </h2>
@@ -257,6 +296,7 @@
     <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
         <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
 </h2>
+
 </body>
 
 </html>

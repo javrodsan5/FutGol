@@ -7643,3 +7643,39 @@ hr {
 .cajita {
     border: 2px solid #8FBC8F ;
 }
+
+.botonImagen {
+    position: relative;
+    width:100%;
+    max-width:200px;
+}
+.botonImagen:before {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;left:0;right:0;
+    background-color:rgba(0,0,0,0);
+}
+.botonImagen:hover::before {
+    background-color:rgba(0,0,0,0.5);
+}
+.botonImagen img {
+    display:block;
+}
+.botonImagen button {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    opacity:0;
+}
+
+.botonImagen .btn:hover {
+    background-color: limegreen;
+}
+
+.botonImagen:hover button {
+    opacity: 1;
+}

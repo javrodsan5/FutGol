@@ -13,6 +13,6 @@ class ClausulaRepositorioTest(@Autowired private val clausulaRepositorio: Clausu
     @Test
     fun buscaEquipoPorIdTest() {
         val clausulas = clausulaRepositorio.findClausulasByJugadorId(1608)
-        Assertions.assertThat(clausulas!!.size).isEqualTo(2)
+        Assertions.assertThat(clausulas.size).isEqualTo(2)
     }
 }

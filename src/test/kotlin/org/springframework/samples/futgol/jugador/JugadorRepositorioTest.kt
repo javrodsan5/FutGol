@@ -13,12 +13,12 @@ class JugadorRepositorioTest(@Autowired private val jugadorRepositorio: JugadorR
     @Test
     fun buscaJugadorPorIdTest() {
         val jugador = jugadorRepositorio.findById(1608)
-        Assertions.assertThat(jugador!!.name).isEqualTo("Jan Oblak")
+        Assertions.assertThat(jugador.name).isEqualTo("Jan Oblak")
     }
 
     @Test
     fun buscaJugadorPorNombreYEquipoTest() {
         val jugador = jugadorRepositorio.buscarJugadorPorNombreyEquipo("Jan Oblak", "Atlético Madrid")
-        Assertions.assertThat(jugador!!.id).isEqualTo(1608)
+        Assertions.assertThat(jugador.id).isEqualTo(1608)
     }
 }

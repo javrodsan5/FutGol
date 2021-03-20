@@ -167,9 +167,9 @@ class UsuarioControlador(
         var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
         var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
         if (liga!!.equipos.size >= 8) {
-            "redirect:/misligas"
+            return "redirect:/misligas"
         }
-        if (usuario != null && liga != null) {
+        if (usuario != null) {
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
             this.usuarioServicio.guardarUsuario(usuario)

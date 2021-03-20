@@ -134,8 +134,8 @@ class EstadisticaJugadorServicio {
             println("No se puede leer el fichero de nombres.")
         }
 
-        for (n in 0 until linksPartidos.size) {
-            var doc2 = Jsoup.connect("$urlBase" + linksPartidos.get(n).attr("href")).get()
+        for (linkPartido in linksPartidos) {
+            var doc2 = Jsoup.connect("$urlBase" + linkPartido.attr("href")).get()
             var plantilla = doc2.select("div.matchLineupsValues")
 
             if (!plantilla.isEmpty()) {
@@ -184,41 +184,40 @@ class EstadisticaJugadorServicio {
                                     puntuacionesTL.add(6.0)
                                 }
                             }
-                            for (n in 0 until nombresTL.size) {
-                                for (k in 0 until l.size) {
-                                    var linea = l[k]?.split(",")
+                            for (r in 0 until nombresTL.size) {
+                                for (element in l) {
+                                    var linea = element?.split(",")
                                     if (linea?.size!! >= 3) {
-                                        if (linea?.get(2).equals(equipoLocal) && linea?.get(0)
-                                                .equals(nombresTL[n])
+                                        if (linea[2] == equipoLocal && linea[0] == nombresTL[r]
                                         ) {
-                                            nombresTL.removeAt(n)
-                                            nombresTL.add(n,linea?.get(1))
+                                            nombresTL.removeAt(r)
+                                            nombresTL.add(r, linea[1])
                                         }
                                     } else {
-                                        if (linea?.get(0).equals(nombresTL[n])) {
-                                            nombresTL.removeAt(n)
-                                            nombresTL.add(n,linea?.get(1).toString())
+                                        if (linea[0] == nombresTL[r]) {
+                                            nombresTL.removeAt(r)
+                                            nombresTL.add(r, linea[1])
                                         }
                                     }
                                 }
-                                println(nombresTL[n])
-                                if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[n], equipoLocal) == true) {
+
+                                if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[r], equipoLocal) == true) {
                                     var pId =
-                                        this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                        this.partidoServicio.buscarPartidoPorNombresEquipos(
                                             equipoLocal,
                                             equipoVisitante
                                         )?.id
                                     if (pId != null) {
-                                        if (this.existeEstadisticaJugador(nombresTL[n], equipoLocal, pId) == true) {
+                                        if (this.existeEstadisticaJugador(nombresTL[r], equipoLocal, pId) == true) {
                                             var e =
                                                 this.buscarEstadisticaPorJugadorPartido(
-                                                    nombresTL[n],
+                                                    nombresTL[r],
                                                     equipoLocal,
                                                     pId
                                                 )
                                             if (e != null && e.valoracion == 0.0) {
-                                                e?.puntos = e.puntos + (puntuacionesTL[n] / 1.5).toInt()
-                                                e?.valoracion = puntuacionesTL[n]
+                                                e.puntos = e.puntos + (puntuacionesTL[r] / 1.5).toInt()
+                                                e.valoracion = puntuacionesTL[r]
                                                 this.guardarEstadistica(e)
                                             }
                                         }
@@ -243,50 +242,49 @@ class EstadisticaJugadorServicio {
                                 }
                             }
 
-                            for (n in 0 until nombresTV.size) {
-                                for (k in 0 until l.size) {
-                                    var linea = l[k]?.split(",")
+                            for (s in 0 until nombresTV.size) {
+                                for (element in l) {
+                                    var linea = element?.split(",")
                                     if (linea?.size!! >= 3) {
-                                        if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
-                                                .equals(nombresTV[n])
+                                        if (linea[2] == equipoVisitante && linea[0] == nombresTV[s]
                                         ) {
-                                            nombresTV.removeAt(n)
-                                            nombresTV.add(n,linea?.get(1))
+                                            nombresTV.removeAt(s)
+                                            nombresTV.add(s, linea[1])
                                         }
                                     } else {
-                                        if (linea?.get(0).equals(nombresTV[n])) {
-                                            nombresTV.removeAt(n)
-                                            nombresTV.add(n,linea?.get(1).toString())
+                                        if (linea[0] == nombresTV[s]) {
+                                            nombresTV.removeAt(s)
+                                            nombresTV.add(s, linea[1])
                                         }
                                     }
                                 }
-                                println(nombresTV[n])
+
                                 if (this.jugadorServicio?.existeJugadorEquipo(
-                                        nombresTV[n],
+                                        nombresTV[s],
                                         equipoVisitante
                                     ) == true
                                 ) {
                                     var pId =
-                                        this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                        this.partidoServicio.buscarPartidoPorNombresEquipos(
                                             equipoLocal,
                                             equipoVisitante
                                         )?.id
                                     if (pId != null) {
                                         if (this.existeEstadisticaJugador(
-                                                nombresTV[n],
+                                                nombresTV[s],
                                                 equipoVisitante,
                                                 pId
                                             ) == true
                                         ) {
                                             var e =
                                                 this.buscarEstadisticaPorJugadorPartido(
-                                                    nombresTV[n],
+                                                    nombresTV[s],
                                                     equipoVisitante,
                                                     pId
                                                 )
                                             if (e != null && e.valoracion == 0.0) {
-                                                e?.puntos = e.puntos + (puntuacionesTV[n] / 1.5).toInt()
-                                                e?.valoracion = puntuacionesTV[n]
+                                                e.puntos = e.puntos + (puntuacionesTV[s] / 1.5).toInt()
+                                                e.valoracion = puntuacionesTV[s]
                                                 this.guardarEstadistica(e)
                                             }
                                         }
@@ -304,9 +302,9 @@ class EstadisticaJugadorServicio {
                             var suplentesConPuntuacionL =
                                 suplentes[1].children()
                                     .filter { x -> x.select("span.lineupRating").text().isNotEmpty() }
-                            var n = nombresSLTamaño
+                            var tam = nombresSLTamaño
                             var suplentesConPuntuacionV =
-                                suplentes[n + 2].children()
+                                suplentes[tam + 2].children()
                                     .filter { x -> x.select("span.lineupRating").text().isNotEmpty() }
                             if (!suplentesConPuntuacionL.isEmpty()) {
                                 var nombresSL =
@@ -317,50 +315,47 @@ class EstadisticaJugadorServicio {
                                         .collect(Collectors.toList())
                                 var puntuacionesSL = ArrayList<Double>()
                                 for (p in puntuacionesSLString) {
-                                    var puntuacion: Double
+                                    var puntuacionSL: Double
                                     if (p != "") {
-                                        puntuacion = p.toDouble()
-                                        puntuacionesSL.add(puntuacion)
+                                        puntuacionSL = p.toDouble()
+                                        puntuacionesSL.add(puntuacionSL)
                                     }
                                 }
 
-                                for (n in 0 until nombresSL.size) {
-
-                                    for (k in 0 until l.size) {
-                                        var linea = l[k]?.split(",")
+                                for (p in 0 until nombresSL.size) {
+                                    for (element in l) {
+                                        var linea = element?.split(",")
                                         if (linea?.size!! >= 3) {
-                                            if (linea?.get(2).equals(equipoLocal) && linea?.get(0)
-                                                    .equals(nombresSL[n])
+                                            if (linea[2] == equipoLocal && linea[0] == nombresSL[p]
                                             ) {
-                                                nombresSL.removeAt(n)
-                                                nombresSL.add(n,linea?.get(1))
+                                                nombresSL.removeAt(p)
+                                                nombresSL.add(p, linea[1])
                                             }
                                         } else {
-                                            if (linea?.get(0).equals(nombresSL[n])) {
-                                                nombresSL.removeAt(n)
-                                                nombresSL.add(n,linea?.get(1).toString())
+                                            if (linea[0] == nombresSL[p]) {
+                                                nombresSL.removeAt(p)
+                                                nombresSL.add(p, linea[1])
                                             }
                                         }
                                     }
 
-                                    println(nombresSL[n])
-                                    if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[n], equipoLocal) == true) {
+                                    if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[p], equipoLocal) == true) {
                                         var pId =
-                                            this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                            this.partidoServicio.buscarPartidoPorNombresEquipos(
                                                 equipoLocal,
                                                 equipoVisitante
                                             )?.id
                                         if (pId != null) {
-                                            if (this.existeEstadisticaJugador(nombresSL[n], equipoLocal, pId) == true) {
+                                            if (this.existeEstadisticaJugador(nombresSL[p], equipoLocal, pId) == true) {
                                                 var e =
                                                     this.buscarEstadisticaPorJugadorPartido(
-                                                        nombresSL[n],
+                                                        nombresSL[p],
                                                         equipoLocal,
                                                         pId
                                                     )
                                                 if (e != null && e.valoracion == 0.0) {
-                                                    e?.puntos = e.puntos + (puntuacionesSL[n] / 1.5).toInt()
-                                                    e?.valoracion = puntuacionesSL[n]
+                                                    e.puntos = e.puntos + (puntuacionesSL[p] / 1.5).toInt()
+                                                    e.valoracion = puntuacionesSL[p]
 
                                                     this.guardarEstadistica(e)
                                                 }
@@ -380,56 +375,55 @@ class EstadisticaJugadorServicio {
                                         .collect(Collectors.toList())
                                 var puntuacionesSV = ArrayList<Double>()
                                 for (p in puntuacionesSVString) {
-                                    var puntuacion: Double
+                                    var puntuacionSV: Double
                                     if (p != "") {
-                                        puntuacion = p.toDouble()
-                                        puntuacionesSV.add(puntuacion)
+                                        puntuacionSV = p.toDouble()
+                                        puntuacionesSV.add(puntuacionSV)
                                     }
                                 }
 
-                                for (n in 0 until nombresSV.size) {
-                                    for (k in 0 until l.size) {
-                                        var linea = l[k]?.split(",")
+                                for (f in 0 until nombresSV.size) {
+                                    for (element in l) {
+                                        var linea = element?.split(",")
                                         if (linea?.size!! >= 3) {
-                                            if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
-                                                    .equals(nombresSV[n])
+                                            if (linea[2] == equipoVisitante && linea[0] == nombresSV[f]
                                             ) {
-                                                nombresSV.removeAt(n)
-                                                nombresSV.add(n,linea?.get(1))
+                                                nombresSV.removeAt(f)
+                                                nombresSV.add(f, linea[1])
                                             }
                                         } else {
-                                            if (linea?.get(0).equals(nombresSV[n])) {
-                                                nombresSV.removeAt(n)
-                                                nombresSV.add(n,linea?.get(1).toString())
+                                            if (linea[0] == nombresSV[f]) {
+                                                nombresSV.removeAt(f)
+                                                nombresSV.add(f, linea[1])
                                             }
                                         }
                                     }
-                                    println(nombresSV[n])
+
                                     if (this.jugadorServicio?.existeJugadorEquipo(
-                                            nombresSV[n],
+                                            nombresSV[f],
                                             equipoVisitante
                                         ) == true
                                     ) {
                                         var pId =
-                                            this.partidoServicio?.buscarPartidoPorNombresEquipos(
+                                            this.partidoServicio.buscarPartidoPorNombresEquipos(
                                                 equipoLocal,
                                                 equipoVisitante
                                             )?.id
                                         if (pId != null) {
                                             if (this.existeEstadisticaJugador(
-                                                    nombresSV[n],
+                                                    nombresSV[f],
                                                     equipoVisitante,
                                                     pId
                                                 ) == true
                                             ) {
                                                 var e = this.buscarEstadisticaPorJugadorPartido(
-                                                    nombresSV[n],
+                                                    nombresSV[f],
                                                     equipoVisitante,
                                                     pId
                                                 )
                                                 if (e != null && e.valoracion == 0.0) {
-                                                    e?.puntos = e.puntos + (puntuacionesSV[n] / 1.5).toInt()
-                                                    e?.valoracion = puntuacionesSV[n]
+                                                    e.puntos = e.puntos + (puntuacionesSV[f] / 1.5).toInt()
+                                                    e.valoracion = puntuacionesSV[f]
                                                     this.guardarEstadistica(e)
                                                 }
                                             }
@@ -465,48 +459,45 @@ class EstadisticaJugadorServicio {
         if (estaVacioEstadisticas == false) {
             ultimaEPId = this.buscarUltimaEstadistica()?.partido?.id!!
         }
-        for (n in 0 until partidos.size) {
-            var equipoLocal = partidos[n].select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
+        for (partido in partidos) {
+            var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
             var equipoVisitante =
-                partidos[n].select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
+                partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
 
             if (this.partidoServicio?.existePartido(equipoLocal, equipoVisitante) == true) {
-                var idPartido =
-                    this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.id
-                var resultadoPartido =
-                    this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)?.resultado
-                var linkPartido = partidos[n].select("td[data-stat=score] a").attr("href")
+                var p= this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
+                var idPartido = p?.id
+                var resultadoPartido = p?.resultado
+                var linkPartido = partido.select("td[data-stat=score] a").attr("href")
 
-                if ((idPartido!! >= ultimaEPId!!) && (resultadoPartido != "")) {
-                    var doc2 = Jsoup.connect("$urlBase" + linkPartido).get()
+                if ((idPartido!! >= ultimaEPId) && (resultadoPartido != "")) {
+                    var doc2 = Jsoup.connect(urlBase + linkPartido).get()
                     var alineaciones = doc2.select("div.lineup tbody")
                     var titularesLocal = alineaciones[0].select("tr").subList(1, 12)
                         .stream().map { x -> x.select("td a").text() }.collect(Collectors.toList())
                     var titularesV = alineaciones[1].select("tr").subList(1, 12)
                         .stream().map { x -> x.select("td a").text() }.collect(Collectors.toList())
 
-                    for (k in 0 until l.size) {
-                        var linea = l[k]?.split(",")
+                    for (element in l) {
+                        var linea = element?.split(",")
                         for (j in 0 until titularesLocal.size) {
                             if (linea?.size!! >= 3) {
-                                if (linea?.get(2).equals(equipoLocal) && linea?.get(0)
-                                        .equals(titularesLocal[j])
+                                if (linea[2] == equipoLocal && linea[0] == titularesLocal[j]
                                 ) {
                                     titularesLocal.removeAt(j)
-                                    titularesLocal.add(j,linea?.get(1).toString())
-                                } else if (linea?.get(2).equals(equipoVisitante) && linea?.get(0)
-                                        .equals(titularesV[j])
+                                    titularesLocal.add(j, linea[1])
+                                } else if (linea[2] == equipoVisitante && linea[0] == titularesV[j]
                                 ) {
                                     titularesV.removeAt(j)
-                                    titularesV.add(j,linea?.get(1).toString())
+                                    titularesV.add(j, linea[1])
                                 }
                             } else {
-                                if (linea?.get(0).equals(titularesLocal[j])) {
+                                if (linea[0] == titularesLocal[j]) {
                                     titularesLocal.removeAt(j)
-                                    titularesLocal.add(j,linea?.get(1).toString())
-                                } else if (linea?.get(0).equals(titularesV[j])) {
+                                    titularesLocal.add(j, linea[1])
+                                } else if (linea[0] == titularesV[j]) {
                                     titularesV.removeAt(j)
-                                    titularesV.add(j,linea?.get(1).toString())
+                                    titularesV.add(j, linea[1])
                                 }
                             }
                         }
@@ -525,21 +516,21 @@ class EstadisticaJugadorServicio {
                         for (i in 0 until tamanyo) {
                             var jugador = jugadores[i]
                             var nombreJugador = jugador.select("th[data-stat=player] a").text().trim()
-                            for (k in 0 until l.size) {
-                                var linea = l[k]?.split(",")
+                            for (element in l) {
+                                var linea = element?.split(",")
                                 if (linea?.size!! >= 3) {
-                                    if (linea?.get(2).equals(equipo) && linea?.get(0).equals(nombreJugador)) {
-                                        nombreJugador = linea?.get(1).toString()
+                                    if (linea[2] == equipo && linea[0] == nombreJugador) {
+                                        nombreJugador = linea.get(1)
                                     }
                                 } else {
-                                    if (linea?.get(0).equals(nombreJugador)) {
-                                        nombreJugador = linea?.get(1).toString()
+                                    if (linea[0] == nombreJugador) {
+                                        nombreJugador = linea.get(1)
                                     }
                                 }
                             }
                             if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
                                 var j =
-                                    this.jugadorServicio?.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
+                                    this.jugadorServicio.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                                 var est = EstadisticaJugador()
                                 if (existeEstadisticaJugador(nombreJugador, equipo, idPartido) == true) {
                                     est =

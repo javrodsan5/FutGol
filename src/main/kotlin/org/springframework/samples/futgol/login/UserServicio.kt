@@ -23,10 +23,7 @@ class UserServicio {
     @Throws(DataAccessException::class)
     fun saveUser(user: User) {
         user.enabled = true
-        if (passwordEncoder != null) {
-            print("xd")
-            user.password = passwordEncoder.encode(user.password)
-        }
+        user.password = passwordEncoder.encode(user.password)
         userRepository?.save(user)
     }
 

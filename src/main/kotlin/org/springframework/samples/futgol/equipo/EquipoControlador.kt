@@ -71,37 +71,31 @@ class EquipoControlador(
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
 
-            var portero = misJugadores.stream()?.filter { x -> x?.posicion == "PO" }
+            var portero = misJugadores.stream().filter { x -> x.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
-            var defensas = misJugadores.stream()?.filter { x -> x?.posicion == "DF" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())
-            var centrocampistas = misJugadores.stream()?.filter { x -> x?.posicion == "CC" }
+                .sorted(Comparator.comparing { x -> -x.valor }).findFirst().get()
+            var defensas = misJugadores.stream().filter { x -> x.posicion == "DF" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())
-            var delanteros = misJugadores.stream()?.filter { x -> x?.posicion == "DL" }
+                .limit(4)
+                .collect(Collectors.toList())
+            var centrocampistas = misJugadores.stream().filter { x -> x.posicion == "CC" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(2)
-                ?.collect(Collectors.toList())
+                .limit(4)
+                .collect(Collectors.toList())
+            var delanteros = misJugadores.stream().filter { x -> x.posicion == "DL" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                .limit(2)
+                .collect(Collectors.toList())
+
             var onceInicial = HashSet<Jugador>()
-            if (portero != null) {
-                onceInicial.add(portero)
-            }
-            if (defensas != null) {
-                onceInicial.addAll(defensas)
-            }
-            if (centrocampistas != null) {
-                onceInicial.addAll(centrocampistas)
-            }
-            if (delanteros != null) {
-                onceInicial.addAll(delanteros)
-            }
+
+            onceInicial.add(portero)
+            onceInicial.addAll(defensas)
+            onceInicial.addAll(centrocampistas)
+            onceInicial.addAll(delanteros)
 
             var banquillo = HashSet<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
@@ -128,34 +122,27 @@ class EquipoControlador(
             model["SinEquipo"] = true
         } else {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            var NPortero = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "PO" }
-                ?.findFirst()?.get()
-            var NDefensas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DF" }
-                ?.collect(Collectors.toList())
-            var NCentrocampistas = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "CC" }
-                ?.collect(Collectors.toList())
-            var NDelanteros = miEquipo.onceInicial.stream()?.filter { x -> x?.posicion == "DL" }
-                ?.collect(Collectors.toList())
+            var NPortero = miEquipo.onceInicial.stream().filter { x -> x.posicion == "PO" }
+                .findFirst().get()
+            var NDefensas = miEquipo.onceInicial.stream().filter { x -> x.posicion == "DF" }
+                .collect(Collectors.toList())
+            var NCentrocampistas = miEquipo.onceInicial.stream().filter { x -> x.posicion == "CC" }
+                .collect(Collectors.toList())
+            var NDelanteros = miEquipo.onceInicial.stream().filter { x -> x.posicion == "DL" }
+                .collect(Collectors.toList())
 
             var onceInicial = ArrayList<Jugador>()
-            if (NPortero != null) {
-                onceInicial.add(NPortero)
-            }
-            if (NDefensas != null) {
-                onceInicial.addAll(NDefensas)
-            }
-            if (NCentrocampistas != null) {
-                onceInicial.addAll(NCentrocampistas)
-            }
-            if (NDelanteros != null) {
-                onceInicial.addAll(NDelanteros)
-            }
+
+            onceInicial.add(NPortero)
+            onceInicial.addAll(NDefensas)
+            onceInicial.addAll(NCentrocampistas)
+            onceInicial.addAll(NDelanteros)
 
             miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
             this.equipoServicio.guardarEquipo(miEquipo)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
-            model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)!!
+            model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
 
         }

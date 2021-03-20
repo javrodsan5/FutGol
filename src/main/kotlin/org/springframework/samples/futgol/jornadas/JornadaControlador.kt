@@ -38,9 +38,9 @@ class JornadaControlador(
                 ultimaJornada -= 1
             }
         }
-        var jornada = ultimaJornada?.let { jornadaServicio.buscarJornadaPorNumeroJornada(it) }
-        if (jornada != null) {
-            var jornadaId = jornada.id
+        var ultimaJ = ultimaJornada?.let { jornadaServicio.buscarJornadaPorNumeroJornada(it) }
+        if (ultimaJ != null) {
+            var jornadaId = ultimaJ.id
             if (this.jornadaServicio.buscarTodasJornadas()?.any { x -> x.id == jornadaId } == true) {
                 var jornada = jornadaId?.let { jornadaServicio.buscarJornadaPorId(it) }
                 if (jornada != null) {
@@ -59,7 +59,7 @@ class JornadaControlador(
                             var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                                 ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
                                 ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
-                            jornada?.mejorJugador = mejorJugador
+                            jornada.mejorJugador = mejorJugador
                             jornadaServicio.guardarJornada(jornada)
                         }
 
@@ -91,7 +91,7 @@ class JornadaControlador(
                         }
                     } else {
                         model["formacion"] = jornada?.formacion!!
-                        model["jugadores"] = jornada?.jugadores!!
+                        model["jugadores"] = jornada.jugadores
                         model["noOnce"] = false
 
                     }
@@ -119,15 +119,15 @@ class JornadaControlador(
             if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
 
                 if (jornada?.jugadores?.isEmpty() == true) {
-                    if (jornada?.mejorJugador == null) {
-                        var mejorJugador = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                    if (jornada.mejorJugador == null) {
+                        var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                             ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
                             ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
-                        jornada?.mejorJugador = mejorJugador
+                        jornada.mejorJugador = mejorJugador
                         jornadaServicio.guardarJornada(jornada)
                     }
 
-                    var todosJugadores = this.estadisticaJugadorServicio?.buscarTodasEstadisticas()
+                    var todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                         ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
                         ?.sorted(Comparator.comparing { x -> -x.puntos })
                         ?.map { x -> x.jugador }?.collect(Collectors.toList())
@@ -155,7 +155,7 @@ class JornadaControlador(
                     }
                 } else {
                     model["formacion"] = jornada?.formacion!!
-                    model["jugadores"] = jornada?.jugadores!!
+                    model["jugadores"] = jornada.jugadores
                     model["noOnce"] = false
 
                 }

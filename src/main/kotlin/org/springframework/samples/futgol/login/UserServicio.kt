@@ -1,8 +1,8 @@
 package org.springframework.samples.futgol.login
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -10,20 +10,18 @@ import org.springframework.transaction.annotation.Transactional
 class UserServicio {
 
     private var userRepository: UserRepositorio? = null
-    private lateinit var passwordEncoder: PasswordEncoder
-
 
     @Autowired
-    fun UserService(userRepository: UserRepositorio?, passwordEncoder: PasswordEncoder) {
+    fun UserService(userRepository: UserRepositorio?) {
         this.userRepository = userRepository
-        this.passwordEncoder = passwordEncoder
     }
 
     @Transactional
     @Throws(DataAccessException::class)
     fun saveUser(user: User) {
         user.enabled = true
-        user.password = passwordEncoder.encode(user.password)
+        var contrasenyaEncrip = BCryptPasswordEncoder().encode(user.password)
+        user.password = contrasenyaEncrip
         userRepository?.save(user)
     }
 

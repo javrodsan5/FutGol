@@ -59,6 +59,13 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun tienenMismaPos(idJugador1: Int, idJugador2: Int): Boolean? {
+        return buscaJugadorPorId(idJugador1)?.posicion == buscaJugadorPorId(idJugador2)?.posicion
+
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun existeJugadorNombre(nombreJugador: String): Boolean? {
         return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.name == nombreJugador }
     }

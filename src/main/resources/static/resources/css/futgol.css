@@ -7679,3 +7679,12 @@ hr {
 .botonImagen:hover button {
     opacity: 1;
 }
+
+.botonSust {
+    transition-duration: 0.4s;
+}
+
+.botonSust:hover {
+    background-color: #4CAF50;
+    color: white;
+}

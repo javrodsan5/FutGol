@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+<div class="caja" style="float: left;">
+    <div style="display: inline-block;float: left;">
+        <br><br>
+        <h1><b th:text="${titular.name}"></b></h1>
+        <h1><b th:text="${titular.puntos}"></b> pts</h1>
+    </div>
+    <div style="display: inline-block;float: left;">
+        <br>
+        <img th:src="${titular.foto}"><br><br><br>
+    </div>
+</div>
+
+<div style="margin-left:45px;">
+    <h1>Posibles sustituciones</h1>
+    <div style="display: inline-block" th:each="jugador : ${jugadoresMismaPos}">
+        <div><a
+                th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}">
+            <img th:src="${jugador.foto}" width="195" height="280"/></a>
+            <h2 th:text="${jugador.name}"/>
+            <div><b th:text="${jugador.puntos}"/> puntos</div>
+            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugadorOnce}/por/{idJugadorBanquillo} (idLiga= ${liga.id}, idJugadorBanquillo= ${jugador.id}, idJugadorOnce= ${titular.id})}"
+            />
+            <h2>Sustituir</h2></a><br>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

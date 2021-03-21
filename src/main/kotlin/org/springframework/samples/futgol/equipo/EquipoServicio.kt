@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.equipo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
@@ -24,6 +25,9 @@ class EquipoServicio {
     private var usuarioServicio: UsuarioServicio? = null
 
     @Autowired
+    private var jugadorServicio: JugadorServicio? = null
+
+    @Autowired
     private var ligaServicio: LigaServicio? = null
 
 
@@ -36,6 +40,34 @@ class EquipoServicio {
     @Transactional(readOnly = true)
     fun buscaEquiposDeLigaPorId(idLiga: Int): Collection<Equipo>? {
         return equipoRepositorio?.buscarEquiposDeLigaPorId((idLiga))
+    }
+
+    @Transactional(readOnly = true)
+    fun jugadorEnOnce(idJugador: Int, idEquipo: Int): Boolean {
+        var res = false
+        var equipo = buscaEquiposPorId(idEquipo)
+        for (jug in equipo!!.onceInicial) {
+            if (jug.id == idJugador) {
+                res = true
+                break
+            }
+        }
+        return res
+    }
+
+    @Transactional(readOnly = true)
+    fun buscaJugadoresBanqEquipoMismaPos(
+        idEquipo: Int, idJugador: Int
+    ): MutableList<Jugador>? {
+        var listaSustitutos: MutableList<Jugador> = ArrayList()
+        var equipo = buscaEquiposPorId(idEquipo)
+        var posicion = jugadorServicio?.buscaJugadorPorId(idJugador)?.posicion
+        for (jug in equipo!!.jugBanquillo) {
+            if (jug.posicion == posicion) {
+                listaSustitutos.add(jug)
+            }
+        }
+        return listaSustitutos
     }
 
 
@@ -57,7 +89,7 @@ class EquipoServicio {
         if (equiposLiga != null) {
             for (e in equiposLiga) {
                 if (usuario != null) {
-                    if (e.usuario!!.user?.username  == usuario.user!!.username) {
+                    if (e.usuario!!.user?.username == usuario.user!!.username) {
                         miEquipo = e
                     }
                 }
@@ -112,7 +144,7 @@ class EquipoServicio {
     fun buscaEquiposEnListaEquipos(equipos: MutableSet<Equipo>, nombreEquipo: String?): Equipo {
         val equipo = Equipo()
         for (e in equipos) {
-            if(e.name == nombreEquipo) {
+            if (e.name == nombreEquipo) {
                 return e
             }
         }

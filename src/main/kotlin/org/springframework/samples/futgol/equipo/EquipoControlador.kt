@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
 import java.util.stream.Collectors
 import javax.validation.Valid
-import kotlin.Comparator
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 import kotlin.math.absoluteValue
 
 @Controller
@@ -32,12 +29,13 @@ class EquipoControlador(
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
     private val VISTA_DETALLES_MIEQUIPO = "equipos/detallesMiEquipo"
     private val VISTA_DETALLES_OTROS_EQUIPOS = "equipos/detallesOtroEquipo"
+    private val VISTA_GESTION_ONCE = "equipos/gestionOnce"
 
 
     @GetMapping("/liga/{idLiga}/nuevoEquipo")
     fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: Int): String {
         return if (equipoServicio.tengoEquipo(idLiga, principal)) {
-            var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
             "redirect:/liga/$idLiga/miEquipo"
@@ -71,20 +69,21 @@ class EquipoControlador(
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
 
-            var portero = misJugadores.stream().filter { x -> x.posicion == "PO" }
+
+            var portero = misJugadores.stream().filter { x -> x?.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor }).findFirst().get()
-            var defensas = misJugadores.stream().filter { x -> x.posicion == "DF" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                .limit(4)
-                .collect(Collectors.toList())
-            var centrocampistas = misJugadores.stream().filter { x -> x.posicion == "CC" }
+                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+            var defensas = misJugadores.stream().filter { x -> x?.posicion == "DF" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
-                .limit(4)
-                .collect(Collectors.toList())
-            var delanteros = misJugadores.stream().filter { x -> x.posicion == "DL" }
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            var centrocampistas = misJugadores.stream().filter { x -> x?.posicion == "CC" }
+                .filter { x -> x.estadoLesion == "En forma" }
+                .sorted(Comparator.comparing { x -> -x.valor })
+                ?.limit(4)
+                ?.collect(Collectors.toList())
+            var delanteros = misJugadores.stream().filter { x -> x?.posicion == "DL" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 .limit(2)
@@ -130,6 +129,7 @@ class EquipoControlador(
                 .collect(Collectors.toList())
             var NDelanteros = miEquipo.onceInicial.stream().filter { x -> x.posicion == "DL" }
                 .collect(Collectors.toList())
+
 
             var onceInicial = ArrayList<Jugador>()
 
@@ -333,21 +333,71 @@ class EquipoControlador(
         }
     }
 
-    @GetMapping("liga/{idLiga}/miEquipo/once/add/{idJugador}")
-    fun meterOnceInicial(
+    @GetMapping("liga/{idLiga}/miEquipo/cambiarOnce/{idJugador}")
+    fun sustitutosPosibles(
         @PathVariable idLiga: Int, @PathVariable idJugador: Int,
         model: Model, principal: Principal
     ): String {
-        var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+
         var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        if (jugador != null) {
-            for (j in equipo.jugBanquillo) {
-                if (jugador.id == j.id) {
-                    equipo.jugBanquillo.removeIf { it.name == jugador.name }
-                    equipo.onceInicial.add(jugador)
-                    equipoServicio.guardarEquipo(equipo)
-                    break
+        model["equipo"] = equipo
+        if (jugadorServicio.existeJugadorId(idJugador) == true && equipo.id?.let {
+                jugadorServicio.checkJugadorEnEquipo(idJugador, it)
+            } == true &&
+            equipo.id?.let { equipoServicio.jugadorEnOnce(idJugador, it) } == true) {
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["titular"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            var jugadoresMismaPos =
+                equipo.id?.let { equipoServicio.buscaJugadoresBanqEquipoMismaPos(it, idJugador) }
+            model["jugadoresMismaPos"] = jugadoresMismaPos!!
+        } else {
+            return "redirect:/liga/" + idLiga + "/miEquipo"
+        }
+        return VISTA_GESTION_ONCE
+    }
+
+    @GetMapping("liga/{idLiga}/miEquipo/cambiarOnce/{idJugadorOnce}/por/{idJugadorBanquillo}")
+    fun sustituirJugadoresOnce(
+        @PathVariable idLiga: Int, @PathVariable idJugadorOnce: Int, @PathVariable idJugadorBanquillo: Int,
+        model: Model, principal: Principal
+    ): String {
+
+        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        if (jugadorServicio.existeJugadorId(idJugadorOnce) == true && equipo.id?.let {
+                jugadorServicio.checkJugadorEnEquipo(idJugadorOnce, it)
+            } == true &&
+            equipo.id?.let { equipoServicio.jugadorEnOnce(idJugadorOnce, it) } == true) {
+            if (jugadorServicio.existeJugadorId(idJugadorBanquillo) == true && equipo.id?.let {
+                    jugadorServicio.checkJugadorEnEquipo(idJugadorBanquillo, it)
+                } == true &&
+                equipo.id?.let {
+                    equipoServicio.jugadorEnOnce(
+                        idJugadorBanquillo,
+                        it
+                    )
+                } == false && jugadorServicio.tienenMismaPos(idJugadorOnce, idJugadorBanquillo)!!) {
+
+                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                var titular = jugadorServicio.buscaJugadorPorId(idJugadorOnce)!!
+                var sustituto = jugadorServicio.buscaJugadorPorId(idJugadorBanquillo)!!
+                var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+                model["equipo"] = equipo
+
+                for (jug in equipo.jugBanquillo) {
+                    if (jug.id == sustituto.id) {
+                        equipo.jugBanquillo.remove(jug)
+                        break
+                    }
                 }
+                for (jug in equipo.onceInicial) {
+                    if (jug.id == titular.id) {
+                        equipo.onceInicial.remove(jug)
+                        break
+                    }
+                }
+                equipo.jugBanquillo.add(titular)
+                equipo.onceInicial.add(sustituto)
+                equipoServicio.guardarEquipo(equipo)
             }
         }
         return "redirect:/liga/$idLiga/miEquipo"

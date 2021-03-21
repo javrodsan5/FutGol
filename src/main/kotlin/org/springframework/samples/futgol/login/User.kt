@@ -19,7 +19,6 @@ public class User{
     var username = ""
 
     @NotBlank
-    @Size(min=5, max=30)
     var password = ""
 
     var enabled = false

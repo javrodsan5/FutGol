@@ -14,6 +14,6 @@ class JornadaRepositorioTest(@Autowired private val jornadaRepositorio: JornadaR
     @Test
     fun buscaJornadaPorNumeroJornadaTest() {
         val jornada = jornadaRepositorio.findJornadaByNumeroJornada(11)
-        Assertions.assertThat(jornada!!.id).isEqualTo(11)
+        Assertions.assertThat(jornada.id).isEqualTo(11)
     }
 }

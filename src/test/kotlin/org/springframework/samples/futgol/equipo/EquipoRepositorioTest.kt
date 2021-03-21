@@ -13,13 +13,13 @@ class EquipoRepositorioTest(@Autowired private val equipoRepositorio: EquipoRepo
     @Test
     fun buscaEquipoPorIdTest() {
         val equipo = equipoRepositorio.buscaEquiposPorId(114)
-        Assertions.assertThat(equipo!!.name).isEqualTo("equipoteke")
+        Assertions.assertThat(equipo.name).isEqualTo("equipoteke")
     }
 
     @Test
     fun buscaEquipoPorNombreTest() {
         val equipo = equipoRepositorio.buscarEquipoPorNombre("equipoteke")
-        Assertions.assertThat(equipo!!.id).isEqualTo(114)
+        Assertions.assertThat(equipo.id).isEqualTo(114)
     }
 
     @Test

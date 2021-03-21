@@ -97,13 +97,13 @@ class JornadaServicio {
             portero = jugadores?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
 
             defensas442 =
-                jugadores.stream()?.filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
                     .subList(0, 4)
             centrocampistas442 =
-                jugadores.stream()?.filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
                     .subList(0, 4)
             delanteros442 =
-                jugadores.stream()?.filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
+                jugadores.stream().filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
                     .subList(0, 2)
             jug442.add(portero)
             jug442.addAll(defensas442)

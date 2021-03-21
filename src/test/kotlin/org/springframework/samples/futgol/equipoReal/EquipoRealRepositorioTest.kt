@@ -13,6 +13,6 @@ class EquipoRealRepositorioTest(@Autowired private val equipoRealRepositorio: Eq
     @Test
     fun buscaUsuarioPorIdTest() {
         var equipoReal = this.equipoRealRepositorio.buscarEquipoRealPorNombre("Osasuna")
-        Assertions.assertThat(equipoReal!!.id).isEqualTo(93)
+        Assertions.assertThat(equipoReal.id).isEqualTo(93)
     }
 }

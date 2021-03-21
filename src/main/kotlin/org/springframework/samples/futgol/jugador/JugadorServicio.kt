@@ -285,8 +285,8 @@ class JugadorServicio {
                 var persona = jugadores[n].select("td div.di.nowrap:first-of-type span a")
                 var nombre = persona.attr("title")
                 var res = true
-                for (n in 0 until l.size) {
-                    var linea = l[n]
+                for (element in l) {
+                    var linea = element
                     if (linea?.equals(nombre) == true) {
                         res = false
                         break
@@ -294,7 +294,7 @@ class JugadorServicio {
                 }
                 if (res) {
                     var linkDetallePersona = persona.attr("href")
-                    var doc4 = Jsoup.connect("$urlBase" + linkDetallePersona).get()
+                    var doc4 = Jsoup.connect(urlBase + linkDetallePersona).get()
                     var estado = "En forma"
                     if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
                         estado = "Lesionado"
@@ -353,7 +353,7 @@ class JugadorServicio {
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
 
-            val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
+            val doc2 = Jsoup.connect(urlBase + linkEquipo).get()
 
             linksJug.addAll(
                     doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
@@ -372,19 +372,19 @@ class JugadorServicio {
         }
 
         for (linkJugador in linksJug) {
-            var doc3 = Jsoup.connect("$urlBase" + linkJugador).get()
+            var doc3 = Jsoup.connect(urlBase + linkJugador).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().trim()
             var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
             if (equipoRealServicio?.existeEquipoReal(equipo) == true) {
-                for (n in 0 until l.size) {
-                    var linea = l[n]?.split(",")
+                for (element in l) {
+                    var linea = element?.split(",")
                     if (linea?.size!! >= 3) {
-                        if (linea?.get(2).equals(equipo) && linea?.get(0).equals(nombreJugador)) {
-                            nombreJugador = linea?.get(1).toString()
+                        if (linea[2] == equipo && linea[0] == nombreJugador) {
+                            nombreJugador = linea[1]
                         }
                     } else {
-                        if (linea?.get(0).equals(nombreJugador)) {
-                            nombreJugador = linea?.get(1).toString()
+                        if (linea[0] == nombreJugador) {
+                            nombreJugador = linea[1]
                         }
                     }
                 }
@@ -393,41 +393,39 @@ class JugadorServicio {
                     if (j?.posicion == "") {
                         println(nombreJugador)
                         var element: Elements? = doc3.select("div.players#info div#meta p")
-                        if (j != null) {
-                            for (n in 0 until element?.size!!) {
-                                if (element[n].text().contains("Posición:")) {
-                                    j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0, 2)
-                                }
+                        for (n in 0 until element?.size!!) {
+                            if (element[n].text().contains("Posición:")) {
+                                j.posicion = element[n].text().split("▪")[0].substringAfter(": ").trim().substring(0, 2)
+                            }
 
-                                if (element[n].text().contains("Pie primario:")) {
-                                    if (element[n].text().contains("%")) {
-                                        j.piePrimario =
-                                                element[n].text().split("▪")[1].substringAfter("% ")
-                                                        .replace("*", "") //pie primario
+                            if (element[n].text().contains("Pie primario:")) {
+                                if (element[n].text().contains("%")) {
+                                    j.piePrimario =
+                                            element[n].text().split("▪")[1].substringAfter("% ")
+                                                    .replace("*", "") //pie primario
 
-                                    } else {
-                                        j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
-                                    }
-                                }
-                                if (j.piePrimario == "") {
-                                    j.piePrimario = "Derecha"
-                                }
-
-                                if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
-                                    j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
-                                }
-
-                                if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
-                                    j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
-                                }
-                                if (element[n].text().contains("Nacimiento:")) {
-                                    var lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
-                                    var x = lugarFechaNacimiento.length - 3
-                                    j.lugarFechaNacimiento = lugarFechaNacimiento.substring(0, x)
+                                } else {
+                                    j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
                                 }
                             }
-                            this.guardarJugador(j)
+                            if (j.piePrimario == "") {
+                                j.piePrimario = "Derecha"
+                            }
+
+                            if (element[n].text().contains("cm") && isNumeric(element[n].text()[0].toInt())) {
+                                j.altura = element[n].text().split(",")[0].substringBefore("cm").trim().toDouble()
+                            }
+
+                            if (element[n].text().contains("kg") && isNumeric(element[n].text()[0].toInt())) {
+                                j.peso = element[n].text().split(",")[1].substringBefore("kg").trim().toDouble()
+                            }
+                            if (element[n].text().contains("Nacimiento:")) {
+                                var lugarFechaNacimiento = element[n].text().substringAfter("Nacimiento: ")
+                                var x = lugarFechaNacimiento.length - 3
+                                j.lugarFechaNacimiento = lugarFechaNacimiento.substring(0, x)
+                            }
                         }
+                        this.guardarJugador(j)
                     }
                 }
             }

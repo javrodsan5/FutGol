@@ -72,17 +72,17 @@ class EquipoControlador(
 
             var portero = misJugadores.stream().filter { x -> x?.posicion == "PO" }
                 .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()
+                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()!!
             var defensas = misJugadores.stream().filter { x -> x?.posicion == "DF" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(4)
-                ?.collect(Collectors.toList())
+                ?.collect(Collectors.toList())!!
             var centrocampistas = misJugadores.stream().filter { x -> x?.posicion == "CC" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })
                 ?.limit(4)
-                ?.collect(Collectors.toList())
+                ?.collect(Collectors.toList())!!
             var delanteros = misJugadores.stream().filter { x -> x?.posicion == "DL" }
                 .filter { x -> x.estadoLesion == "En forma" }
                 .sorted(Comparator.comparing { x -> -x.valor })

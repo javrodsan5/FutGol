@@ -22,7 +22,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.ico}"/>
+    <link rel="shortcut icon" type="image/x-icon" th:src="@{/resources/images/favicon.ico}"/>
 
     <title>FutGol</title>
 
@@ -210,7 +210,41 @@
     input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
 });
 </script>
-
+<footer>
+    <div class="footer_container">
+        <div class="futgol">
+            <img th:align="left" class="img-responsive" width="20%" height="40%"
+                 src="../../static/resources/images/logoFooter.png" th:src="@{/resources/images/logoFooter.png}"/>
+            <h1>FutGol</h1>
+        </div>
+        <div class="javi">
+            <h2>Javier Rodríguez Santiago</h2>
+            <div style="display: inline-block">
+                <img th:align="left" class="image--cover img-responsive" width="30%" height="30%"
+                     src="../../static/resources/images/javi.png" th:src="@{/resources/images/javi.png}"/>
+                <h4>Software Engineer</h4>
+                <div class="social_media" style="float: bottom">
+                    <a href="https://github.com/javrodsan5"><i class="fa fa-github"></i></a>
+                    <a href="https://linkedin.com/in/javier-rodríguez-santiago-0930b8189"><i
+                            class="fa fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="fernando">
+            <h2>Fernando Calvo Durán</h2>
+            <div style="display: inline-block">
+                <img th:align="left" class="image--cover img-responsive" width="30%" height="30%"
+                     src="../../static/resources/images/fernando.PNG" th:src="@{/resources/images/fernando.PNG}"/>
+                <h4>Software Engineer</h4>
+            </div>
+            <div class="social_media" style="float: bottom">
+                <a href="https://github.com/fercaldur"><i class="fa fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/fernando-calvo-durán-768823204"><i
+                        class="fa fa-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 
 </html>

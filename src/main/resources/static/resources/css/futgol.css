@@ -7410,6 +7410,11 @@ hr {
     object-position: center;
 }
 
+.image--cover:hover {
+    box-shadow: 0px 20px 40px rgba(0,0,0,0.4);
+    transform: scale(1.5,1.5);
+}
+
 /* Now let's specifically place our team on the field! Some of them just get one cell, some span through more to get a nicer alignment. They are all centered within the area they occupy. */
 .p1 {
     grid-column: 1 / 3;

@@ -380,7 +380,6 @@ class EquipoControlador(
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                 var titular = jugadorServicio.buscaJugadorPorId(idJugadorOnce)!!
                 var sustituto = jugadorServicio.buscaJugadorPorId(idJugadorBanquillo)!!
-                var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
                 model["equipo"] = equipo
 
                 for (jug in equipo.jugBanquillo) {

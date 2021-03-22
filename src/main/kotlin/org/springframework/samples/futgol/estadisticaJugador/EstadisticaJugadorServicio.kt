@@ -112,13 +112,14 @@ class EstadisticaJugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun buscarEstadisticasPorJornada(jornadaId: Int): Collection<EstadisticaJugador>? {
+        return estadisticaJugadorRepositorio?.buscarEstadisticasPorJornada(jornadaId)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun existeEstadisticasJornada(jornadaId: Int): Boolean? {
-        var res = false
-        var estadisticas = this.buscarTodasEstadisticas()
-        if (estadisticas != null || estadisticas?.isEmpty() == false) {
-            res= estadisticas.stream().anyMatch{x-> x.partido?.jornada?.id==jornadaId}
-        }
-        return res
+        return !this.buscarEstadisticasPorJornada(jornadaId).isNullOrEmpty()
     }
 
     fun wsValoraciones() {

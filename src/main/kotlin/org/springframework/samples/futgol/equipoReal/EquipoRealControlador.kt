@@ -43,9 +43,13 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
             var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
             model["equipo"] = equipo
             var todosJugadores = equipo.jugadores
-                .stream().sorted(Comparator.comparing { x -> x.puntos })
-                .collect(Collectors.toList())?.reversed()
-            var map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores,0, it) }
+                .stream().sorted(Comparator.comparing { x -> -x.puntos })
+                .collect(Collectors.toList())
+
+            var map: Map<String, MutableList<Jugador?>> = HashMap()
+            if(todosJugadores!=null && todosJugadores.isNotEmpty()){
+                map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores,0, it) }!!
+            }
             var jugadores: MutableList<Jugador?> = ArrayList()
             var formacion: String
 

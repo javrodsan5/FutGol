@@ -2,9 +2,9 @@
 
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout (~{::body},'equiposReales')}">
-
 <body>
-<p>PJ: Partidos Jugados, G: Ganados, E: Empatados, P: Perdidos, GF: Goles a Favor, GC: Goles en Contra, DG: Diferencia de Goles</p>
+<p>PJ: Partidos Jugados, G: Ganados, E: Empatados, P: Perdidos, GF: Goles a Favor, GC: Goles en Contra, DG: Diferencia
+    de Goles</p>
 <table class="table">
     <thead>
     <tr>
@@ -25,14 +25,16 @@
 
     <tr th:each="equipo : ${equiposReales}">
         <td style="background-color: white" th:text="${equipo.posicion}"></td>
-        <td style="background-color: white; text-align: center"><img style="float: left;" width="30px" height="30px"th:src="${equipo.escudo}"/><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${equipo.name})}" th:text="${equipo.name}"/></td>
+        <td style="background-color: white; text-align: center"><img style="float: left;" width="30px" height="30px"
+                                                                     th:src="${equipo.escudo}"/><a
+                th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${equipo.name})}" th:text="${equipo.name}"/></td>
         <td style="background-color: white" th:text="${equipo.partidosJugados}"></td>
         <td style="background-color: white" th:text="${equipo.partidosGanados}"></td>
         <td style="background-color: white" th:text="${equipo.partidosEmpatados}"></td>
         <td style="background-color: white" th:text="${equipo.partidosPerdidos}"></td>
-        <td style="background-color: white" th:text="${equipo.golesAFavor}" ></td>
-        <td style="background-color: white" th:text="${equipo.golesEnContra}" ></td>
-        <td style="background-color: white" th:text="${equipo.diferenciaGoles}" ></td>
+        <td style="background-color: white" th:text="${equipo.golesAFavor}"></td>
+        <td style="background-color: white" th:text="${equipo.golesEnContra}"></td>
+        <td style="background-color: white" th:text="${equipo.diferenciaGoles}"></td>
         <td style="background-color: white" th:text="${equipo.puntos}"></td>
 
 

@@ -72,6 +72,12 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun buscaTodosJugadores(): Collection<Jugador>? {
+        return jugadorRepositorio?.findAll()
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscaJugadorPorNombre(nombreJugador: String): Jugador? {
         return jugadorRepositorio?.findByName(nombreJugador)
     }
@@ -225,6 +231,12 @@ class JugadorServicio {
         return jugadorRepositorio?.existeJugadorEquipo(nombreJugador, equipo)
     }
 
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun buscaJugadoresOrdenPuntos(): Collection<Jugador>? {
+        return jugadorRepositorio?.buscarJugadoresOrdenPuntos()
+    }
+
     fun checkJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {
         var estaEnEquipo = false
         var equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
@@ -248,19 +260,19 @@ class JugadorServicio {
         var urlBase = "https://www.transfermarkt.es"
         var doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
         var linksEquipos =
-                doc.select("div.box.tab-print td a.vereinprofil_tooltip").map { col -> col.attr("href") }.stream()
-                        .distinct().collect(Collectors.toList())
+            doc.select("div.box.tab-print td a.vereinprofil_tooltip").map { col -> col.attr("href") }.stream()
+                .distinct().collect(Collectors.toList())
         for (linkEquipo in linksEquipos) {
             var doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
             var nombreEquipo =
-                    doc2.select("div.dataName h1 span").text().replace("Atlético de Madrid", "Atlético Madrid")
-                            .replace("CF", "").replace("FC", "").replace("SD", "")
-                            .replace("Real Betis Balompié", "Real Betis").replace("Deportivo", "")
-                            .replace("Real Valladolid", "Valladolid")
-                            .replace("CA", "").replace("UD", "").replace("RC Celta de Vigo", "Celta Vigo").trim()
+                doc2.select("div.dataName h1 span").text().replace("Atlético de Madrid", "Atlético Madrid")
+                    .replace("CF", "").replace("FC", "").replace("SD", "")
+                    .replace("Real Betis Balompié", "Real Betis").replace("Deportivo", "")
+                    .replace("Real Valladolid", "Valladolid")
+                    .replace("CA", "").replace("UD", "").replace("RC Celta de Vigo", "Celta Vigo").trim()
             var linkPlantilla =
-                    doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct()
-                            .collect(Collectors.toList())
+                doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct()
+                    .collect(Collectors.toList())
             var doc3 = Jsoup.connect("$urlBase" + linkPlantilla[0]).get()
             var precioJugadores = doc3.select("div.responsive-table tbody tr td.rechts.hauptlink")
             var jugadores = doc3.select("div#yw1.grid-view table.items tbody tr:first-of-type")
@@ -336,19 +348,19 @@ class JugadorServicio {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()
         var linksEquipos = doc.select("#results107311_overall:first-of-type tr td:first-of-type a")
-                .map { col -> col.attr("href") }.stream()
-                .collect(Collectors.toList()) //todos los links de los equipos de la liga
+            .map { col -> col.attr("href") }.stream()
+            .collect(Collectors.toList()) //todos los links de los equipos de la liga
         var linksJug: MutableList<String> = ArrayList()
         for (linkEquipo in linksEquipos) {
 
             val doc2 = Jsoup.connect(urlBase + linkEquipo).get()
 
             linksJug.addAll(
-                    doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
-                            .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
+                doc2.select("table.min_width.sortable.stats_table#stats_standard_10731 th a:first-of-type")
+                    .map { col -> col.attr("href") }.stream().distinct().collect(Collectors.toList())
             )
             linksJug =
-                    linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
+                linksJug.stream().distinct().collect(Collectors.toList()) //todos los links jugadores de la liga
 
         }
 
@@ -389,8 +401,8 @@ class JugadorServicio {
                             if (element[n].text().contains("Pie primario:")) {
                                 if (element[n].text().contains("%")) {
                                     j.piePrimario =
-                                            element[n].text().split("▪")[1].substringAfter("% ")
-                                                    .replace("*", "") //pie primario
+                                        element[n].text().split("▪")[1].substringAfter("% ")
+                                            .replace("*", "") //pie primario
 
                                 } else {
                                     j.piePrimario = element[n].text().split("▪")[1].substringAfter(": ") //pie primario
@@ -420,9 +432,5 @@ class JugadorServicio {
         }
     }
 
-    @Transactional(readOnly = true)
-    @Throws(DataAccessException::class)
-    fun buscaTodosJugadores(): Collection<Jugador>? {
-        return jugadorRepositorio?.findAll()
-    }
+
 }

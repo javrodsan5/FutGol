@@ -37,7 +37,6 @@ class ClausulaServicio {
     @Transactional(readOnly = true)
     fun buscarClausulasPorJugadorYEquipo(idJugador: Int, idEquipo: Int): Clausula? {
         val clausulasJugador = buscarClausulasPorIdJugador(idJugador)
-        var clau = Clausula()
         if (clausulasJugador != null) {
             for (c in clausulasJugador) {
                 if (c.equipo?.id == equipoServicio?.buscaEquiposPorId(idEquipo)?.id) {
@@ -45,6 +44,7 @@ class ClausulaServicio {
                 }
             }
         }
+        var clau = Clausula()
         clau.valorClausula=0
         clau.equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
         clau.jugador = jugadorServicio?.buscaJugadorPorId(idJugador)

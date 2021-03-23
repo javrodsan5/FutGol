@@ -87,7 +87,7 @@ class JugadorControlador(
     @GetMapping("/topJugadores")
     fun buscaJugador(model: Model): String {
         model["jugadores"] =
-            jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })?.limit(5)
+            jugadorServicio.buscaJugadoresOrdenPuntos()?.stream()?.limit(5)
                 ?.collect(Collectors.toList())!!
         model.addAttribute(Jugador())
         return VISTA_BUSCAR_JUGADOR

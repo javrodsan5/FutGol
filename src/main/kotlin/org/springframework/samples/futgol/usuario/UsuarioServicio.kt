@@ -67,8 +67,8 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarTodosUsuarios(): MutableList<String?>? {
-        return usuarioRepositorio?.findAll()?.stream()?.map { x -> x.user?.username }?.collect(Collectors.toList())
+    fun buscarTodosNombresUsuarios(): MutableList<String>? {
+        return usuarioRepositorio?.buscaTodosNombresusuario()
     }
 
     @Transactional(readOnly = true)

@@ -7,6 +7,9 @@ interface JugadorRepositorio : Repository<Jugador, Int> {
 
     fun findAll(): Collection<Jugador>
 
+    @Query("SELECT j FROM Jugador j ORDER BY j.puntos")
+    fun buscarJugadoresOrdenPuntos(): Collection<Jugador>
+
     fun save(jugador: Jugador)
 
     fun findById(idJugador: Int): Jugador

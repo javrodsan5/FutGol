@@ -83,42 +83,19 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun buscaMiEquipoEnLiga(idLiga: Int, principal: Principal): Equipo {
-        val equiposLiga = buscaEquiposDeLigaPorId(idLiga)
-        val usuario = usuarioServicio?.usuarioLogueado(principal)
-        var miEquipo = Equipo()
-        if (equiposLiga != null) {
-            for (e in equiposLiga) {
-                if (usuario != null) {
-                    if (e.usuario!!.user?.username == usuario.user!!.username) {
-                        miEquipo = e
-                    }
-                }
-            }
-        }
-        return miEquipo
+        var nombreUsuario = usuarioServicio?.usuarioLogueado(principal)?.user?.username
+        return nombreUsuario?.let { this.equipoRepositorio?.buscarEquipoUsuarioEnLiga(it,idLiga) }!!
     }
 
     @Transactional(readOnly = true)
     fun tengoEquipo(idLiga: Int, principal: Principal): Boolean {
-        var res = false
-        if (StringUtils.hasLength(buscaMiEquipoEnLiga(idLiga, principal).name)) {
-            res = true
-        }
-        return res
+        var nombreUsuario = usuarioServicio?.usuarioLogueado(principal)?.user?.username
+        return nombreUsuario?.let { this.equipoRepositorio?.existeUsuarioConEquipoEnLiga(it,idLiga) }!!
     }
 
     @Transactional(readOnly = true)
     fun comprobarSiExisteEquipoLiga(nombreEquipo: String?, idLiga: Int): Boolean {
-        var res = false
-        val equipos = equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
-        if (equipos != null) {
-            for (e in equipos) {
-                if (e.name.equals(nombreEquipo)) {
-                    res = true
-                }
-            }
-        }
-        return res
+        return nombreEquipo?.let { this.equipoRepositorio?.existeEquipoEnLiga(it,idLiga) }!!
     }
 
     @Transactional(readOnly = true)

@@ -19,4 +19,13 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
     @Query("SELECT e FROM Equipo e where e.name = ?1")
     fun buscarEquipoPorNombre(nombre: String): Equipo
 
+    @Query("SELECT e FROM Equipo e where e.usuario.user.username = ?1 AND e.liga.id = ?2")
+    fun buscarEquipoUsuarioEnLiga(nombreUsuario: String, idLiga: Int): Equipo
+
+    @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM Equipo e where e.usuario.user.username = ?1 AND e.liga.id = ?2")
+    fun existeUsuarioConEquipoEnLiga(nombreUsuario: String, idLiga: Int): Boolean
+
+    @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM Equipo e where e.name = ?1 AND e.liga.id = ?2")
+    fun existeEquipoEnLiga(nombreEquipo: String, idLiga: Int): Boolean
+
 }

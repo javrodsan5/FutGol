@@ -58,7 +58,7 @@ class LigaControlador(
 
     @PostMapping("/liga/crear")
     fun procesoCreacion(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
-        if (ligaServicio.comprobarSiExisteLiga(liga.name)) {
+        if (ligaServicio.comprobarSiExisteLiga(liga.name) == true) {
             result.addError(FieldError("liga", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
@@ -81,7 +81,7 @@ class LigaControlador(
     fun iniciarActualizacion(
         @PathVariable("nombreLiga") nombreLiga: String, model: Model, principal: Principal
     ): String {
-        if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             val nombreUsuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
             if (liga?.admin?.user?.username == nombreUsuario) {
@@ -99,7 +99,7 @@ class LigaControlador(
         model: Model
     ): String {
         val ligaComparador = ligaServicio.buscarLigaPorNombre(nombreLiga)
-        if (liga.name != ligaComparador!!.name && ligaServicio.comprobarSiExisteLiga(liga.name)) {
+        if (liga.name != ligaComparador!!.name && ligaServicio.comprobarSiExisteLiga(liga.name) == true) {
             result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
@@ -117,7 +117,7 @@ class LigaControlador(
     @CachePut("detallesLiga")
     @GetMapping("liga/{nombreLiga}")
     fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
-        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             val nombreUsuario = usuarioServicio.usuarioLogueado(principal!!)?.user?.username
             var soyAdmin: Boolean
@@ -147,7 +147,7 @@ class LigaControlador(
 
     @GetMapping("liga/{nombreLiga}/clasificacion")
     fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
-        if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             model["liga"] = liga!!
             val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
@@ -190,7 +190,7 @@ class LigaControlador(
 
     @GetMapping("/liga/{nombreLiga}/subastas")
     fun jugadoresLibresSubasta(@PathVariable nombreLiga: String, model: Model): String {
-        return if (ligaServicio.comprobarSiExisteLiga(nombreLiga)) {
+        return if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
             var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             var jugadoresSinEquipo =
                 liga?.id?.let {

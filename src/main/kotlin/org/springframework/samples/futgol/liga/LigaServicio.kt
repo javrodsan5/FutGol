@@ -78,17 +78,8 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun comprobarSiExisteLiga(nombreLiga: String?): Boolean {
-        var res = false
-        val ligas = ligaRepositorio?.findAll()
-        if (ligas != null) {
-            for (l in ligas) {
-                if (l.name.equals(nombreLiga)) {
-                    res = true
-                }
-            }
-        }
-        return res
+    fun comprobarSiExisteLiga(nombreLiga: String?): Boolean? {
+        return nombreLiga?.let { this.ligaRepositorio?.comprobarSiExisteLiga(it) }
     }
 
     @Transactional(readOnly = true)

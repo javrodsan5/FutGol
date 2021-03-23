@@ -31,7 +31,6 @@
 </head>
 
 <body>
-
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -153,10 +152,11 @@
         </div>
     </div>
 </nav>
+
 <div class="container-fluid">
     <div class="container xd-container">
-
-        <th:block th:include="${template}"/>
+        <div class="jm-loadingpage"></div>
+        <div th:block th:include="${template}"/>
 
 
     </div>
@@ -209,6 +209,12 @@
     var input = $("#password");
     input.attr('type') === 'password' ? input.attr('type', 'text') : input.attr('type', 'password')
 });
+</script>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery(".jm-loadingpage").fadeOut("slow");;
+    });
 </script>
 <footer>
     <div class="footer_container">

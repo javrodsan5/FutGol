@@ -20,4 +20,10 @@ interface UsuarioRepositorio : Repository<Usuario, Int> {
     fun buscarUsuarioPorId(id: Int): Usuario
 
     fun save(usuario: Usuario)
+
+    @Query(value = "SELECT CASE WHEN count(u)> 0 THEN TRUE ELSE FALSE END FROM Usuario u where u.user.username = ?1")
+    fun existeUsuario(nombreUsuario: String): Boolean
+
+    @Query(value = "SELECT CASE WHEN count(u)> 0 THEN TRUE ELSE FALSE END FROM Usuario u where u.email = ?1")
+    fun existeUsuarioConEmail(email: String): Boolean
 }

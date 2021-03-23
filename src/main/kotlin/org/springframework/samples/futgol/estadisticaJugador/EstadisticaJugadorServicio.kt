@@ -3,12 +3,10 @@ package org.springframework.samples.futgol.estadisticaJugador
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.StringUtils
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -25,8 +23,6 @@ class EstadisticaJugadorServicio {
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
 
-    @Autowired
-    private val equipoRealServicio: EquipoRealServicio? = null
 
     @Autowired
     fun EstadisticaJugadorServicio(estadisticaJugadorRepositorio: EstadisticaJugadorRepositorio) {
@@ -79,35 +75,19 @@ class EstadisticaJugadorServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeEstadisticaJugador(nombreJugador: String, nombreEquipo: String, idPartido: Int?): Boolean? {
-        var res = false
-        if (nombreEquipo != "" && equipoRealServicio?.existeEquipoReal(nombreEquipo) == true) {
-            var estadisticas = this.buscarTodasEstadisticas()
-            if (estadisticas != null || estadisticas?.isEmpty() == false) {
-                for (e in estadisticas) {
-                    if (e.jugador?.name == nombreJugador && e.partido?.id == idPartido && e.jugador?.club?.name == nombreEquipo) {
-                        res = true
-                        break
-                    }
-                }
-            }
-        }
-        return res
+        return estadisticaJugadorRepositorio?.existeEstadisticaJugEqPart(nombreJugador, nombreEquipo, idPartido)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun tieneAlgunaEstadisticaJugador(idJugador: Int): Boolean? {
+        return estadisticaJugadorRepositorio?.tieneAlgunaEstadisticaJugador(idJugador)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeEstadisticaJugadorJornada(idJugador: Int, numeroJornada: Int): Boolean? {
-        var res = false
-        var estadisticas = this.buscarTodasEstadisticas()
-        if (estadisticas != null || estadisticas?.isEmpty() == false) {
-            for (e in estadisticas) {
-                if (e.jugador?.id == idJugador && e.partido?.jornada?.numeroJornada == numeroJornada) {
-                    res = true
-                    break
-                }
-            }
-        }
-        return res
+        return estadisticaJugadorRepositorio?.existeEstadisticaJugadorJornada(idJugador, numeroJornada)
     }
 
     @Transactional(readOnly = true)
@@ -466,7 +446,7 @@ class EstadisticaJugadorServicio {
                 partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
 
             if (this.partidoServicio?.existePartido(equipoLocal, equipoVisitante) == true) {
-                var p= this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
+                var p = this.partidoServicio.buscarPartidoPorNombresEquipos(equipoLocal, equipoVisitante)
                 var idPartido = p?.id
                 var resultadoPartido = p?.resultado
                 var linkPartido = partido.select("td[data-stat=score] a").attr("href")

@@ -24,17 +24,7 @@ class EquipoRealServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeEquipoReal(nombreEquipo: String): Boolean? {
-        var res = false
-        var equipos = equipoRealRepositorio?.findAll()
-        if (equipos != null) {
-            for (e in equipos) {
-                if (e.name == nombreEquipo) {
-                    res = true
-                    break
-                }
-            }
-        }
-        return res
+        return equipoRealRepositorio?.existeEquipoReal(nombreEquipo)
     }
 
     @Transactional()

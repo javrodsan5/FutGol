@@ -44,12 +44,12 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {
-        return usuarioRepositorio?.findAll()?.stream()?.anyMatch { x -> x.user?.username.equals(nombreUsuario) }
+        return nombreUsuario?.let { usuarioRepositorio?.existeUsuario(it) }
     }
 
     @Transactional(readOnly = true)
     fun comprobarSiEmailExiste(email: String?): Boolean? {
-        return usuarioRepositorio?.findAll()?.stream()?.anyMatch { x -> x.email == email }
+        return email?.let { usuarioRepositorio?.existeUsuarioConEmail(it) }
 
     }
 

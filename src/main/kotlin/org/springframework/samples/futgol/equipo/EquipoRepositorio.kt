@@ -9,7 +9,7 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
 
     fun save(equipo: Equipo)
 
-    @Query("SELECT e FROM Equipo e where e.liga.id = ?1")
+    @Query("SELECT l.equipos FROM Liga l where l.id = ?1")
     fun buscarEquiposDeLigaPorId(id: Int): Collection<Equipo>
 
     @Query("SELECT e FROM Equipo e where e.id = ?1")
@@ -27,5 +27,6 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
 
     @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM Equipo e where e.name = ?1 AND e.liga.id = ?2")
     fun existeEquipoEnLiga(nombreEquipo: String, idLiga: Int): Boolean
+
 
 }

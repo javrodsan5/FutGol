@@ -6,7 +6,8 @@ import org.springframework.samples.futgol.liga.Liga
 
 interface UsuarioRepositorio : Repository<Usuario, Int> {
 
-    fun findAll(): Collection<Usuario>
+    @Query("SELECT u.user.username FROM Usuario u")
+    fun buscaTodosNombresusuario(): MutableList<String>
 
     fun findById(idUsuario: Int): Usuario
 

@@ -192,7 +192,7 @@ class UsuarioControlador(
     @GetMapping("/usuarios/buscar")
     fun iniciarBusquedaUsuarioLiga(model: Model, principal: Principal): String {
         var usuario = Usuario()
-        var usuarios = usuarioServicio.buscarTodosUsuarios()
+        var usuarios = usuarioServicio.buscarTodosNombresUsuarios()
         usuarios?.removeIf { it == principal.name }
 
         model.addAttribute(usuario)

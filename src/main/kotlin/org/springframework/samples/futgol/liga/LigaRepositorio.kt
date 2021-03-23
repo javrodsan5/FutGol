@@ -13,4 +13,9 @@ interface LigaRepositorio : Repository<Liga, Int> {
 
     @Query("SELECT l FROM Liga l where l.id = ?1")
     fun buscarLigaPorId(id: Int): Liga
+
+    @Query(value = "SELECT CASE WHEN count(l)> 0 THEN TRUE ELSE FALSE END FROM Liga l where l.name = ?1")
+    fun comprobarSiExisteLiga(nombre: String): Boolean
+
+
 }

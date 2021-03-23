@@ -48,17 +48,7 @@ class PartidoServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existePartido(equipoLocal: String, equipoVisitante: String): Boolean? {
-        var res = false
-        var partidos = this.buscarTodosPartidos()
-        if (partidos != null) {
-            for (p in partidos) {
-                if (p.equipoLocal?.name == equipoLocal && p.equipoVisitante?.name == equipoVisitante) {
-                    res = true
-                    break
-                }
-            }
-        }
-        return res
+        return partidoRepositorio?.existePartido(equipoLocal, equipoVisitante)
     }
 
     @Transactional

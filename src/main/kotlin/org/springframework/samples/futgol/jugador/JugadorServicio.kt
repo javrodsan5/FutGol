@@ -54,7 +54,7 @@ class JugadorServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeJugadorId(idJugador: Int): Boolean? {
-        return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.id == idJugador }
+        return jugadorRepositorio?.existeJugadorId(idJugador)
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +67,7 @@ class JugadorServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeJugadorNombre(nombreJugador: String): Boolean? {
-        return jugadorRepositorio?.findAll()?.stream()?.anyMatch { x -> x.name == nombreJugador }
+        return jugadorRepositorio?.existeJugadorNombre(nombreJugador)
     }
 
     @Transactional(readOnly = true)
@@ -79,7 +79,7 @@ class JugadorServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun tieneEstadisticas(idJugador: Int): Boolean? {
-        return estadisticaJugadorServicio?.buscarEstadisticasPorJugador((idJugador))?.size!!>=1
+        return estadisticaJugadorServicio?.tieneAlgunaEstadisticaJugador(idJugador)
     }
 
     @Transactional(readOnly = true)
@@ -222,19 +222,7 @@ class JugadorServicio {
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun existeJugadorEquipo(nombreJugador: String, equipo: String): Boolean? {
-        var res = false
-        if (equipo != "" && equipoRealServicio?.existeEquipoReal(equipo) == true) {
-            var jugadores = equipoRealServicio.buscarEquipoRealPorNombre(equipo)?.jugadores
-            if (jugadores != null) {
-                for (j in jugadores) {
-                    if (j.name == nombreJugador) {
-                        res = true
-                        break
-                    }
-                }
-            }
-        }
-        return res
+        return jugadorRepositorio?.existeJugadorEquipo(nombreJugador, equipo)
     }
 
     fun checkJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {

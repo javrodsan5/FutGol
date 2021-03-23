@@ -18,9 +18,6 @@ class JornadaServicio {
     private var estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
 
     @Autowired
-    private var equipoRealServicio: EquipoRealServicio? = null
-
-    @Autowired
     fun JornadaServicio(jornadaRepositorio: JornadaRepositorio) {
         this.jornadaRepositorio = jornadaRepositorio
     }

@@ -3,6 +3,8 @@ package org.springframework.samples.futgol.equipoReal
 import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.util.stream.Collectors
 
+@EnableScheduling
 @Controller
 class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jornadaServicio: JornadaServicio) {
 
@@ -23,8 +26,9 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
         return VISTA_WSEQUIPOS
     }
 
+    @Scheduled(cron = "0 45 17 * * ? ")
     @PostMapping("/WSEquipos")
-    fun creaWSEquipos(model: Model): String {
+    fun creaWSEquipos(): String {
         this.equipoRealServicio.webScrapingEquipos()
         return VISTA_WSEQUIPOS
     }

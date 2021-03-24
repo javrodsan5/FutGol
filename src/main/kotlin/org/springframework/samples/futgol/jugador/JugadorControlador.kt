@@ -9,6 +9,7 @@ import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -50,8 +51,9 @@ class JugadorControlador(
         return VISTA_WSJUGADORES
     }
 
+    @Scheduled(cron = "0 0 18 * * ? ")
     @PostMapping("/WSJugadores")
-    fun creaWSJugadores(model: Model): String {
+    fun creaWSJugadores(): String {
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()
         this.jugadorServicio.webScrapingJugadoresFbref()
         return VISTA_WSJUGADORES

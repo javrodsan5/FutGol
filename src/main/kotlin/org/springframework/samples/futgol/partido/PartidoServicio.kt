@@ -54,7 +54,6 @@ class PartidoServicio {
         return partidoRepositorio?.existePartido(equipoLocal, equipoVisitante)
     }
 
-    @Scheduled(cron = "0 10 1 * * ? ")
     @Transactional
     fun wsPartidos() {
         var urlBase = "https://fbref.com/"

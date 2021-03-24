@@ -10,12 +10,12 @@ class LoginController {
 
     @GetMapping("/login")
     fun login(): String {
-        return "/login"
+        return "login"
     }
 
     @GetMapping("/loginError")
     fun loginError(model: Model): String {
         model.addAttribute("loginError", true)
-        return "/login"
+        return "login"
     }
 }

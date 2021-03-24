@@ -7,45 +7,41 @@
 
 
 <h2>Mi cuenta</h2>
-
-
-<table class="table table-striped" th:object="${usuario}">
-    <tr>
-        <th>Nombre</th>
-        <td th:text="*{name}"/></td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td th:text="*{email}"/></td>
-    </tr>
-    <tr>
-        <th>Usuario</th>
-        <td th:text="*{user.username}"/></td>
-    </tr>
-    <div th:if="*{invitaciones!=null and !invitaciones.empty}">
-    <tr>
-        <th>Invitaciones</th>
-        <td th:text="*{invitaciones}"/></td>
-    </tr>
+<div class="profile-wrapper">
+    <div class="profile-body">
+        <img src="../../static/resources/images/userIcon.PNG" th:src="@{/resources/images/userIcon.PNG}" alt=""/>
+        <div class="profile-details">
+            <h1 th:text="${usuario.user.username}"></h1>
+            <p class="description" th:text="${usuario.email}"></p>
+            <p th:text="${usuario.name}"></p>
+        </div>
     </div>
-    <div th:if="*{invitaciones==null or invitaciones.empty}">
+</div>
+
+
+<a class="btn btn-default" th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar
+    mis datos</a>
+
+<div class="invitaciones" style="float: right">
+    <div th:if="${usuario.invitaciones!=null and !usuario.invitaciones.empty}">
+        <h1>Mis Invitaciones</h1>
+
+        <div th:each="invitacion : ${usuario.invitaciones}">
+            <h2 th:text="${invitacion}"></h2>
+            <a class="btn btn-default"
+               th:href="@{/micuenta/invitaciones/{nombreLiga}/aceptar (nombreLiga=${invitacion})}">Aceptar</a>
+            <a class="btn btn-default"
+               th:href="@{/micuenta/invitaciones/{nombreLiga}/rechazar (nombreLiga=${invitacion})}">Rechazar</a>
+        </div>
+    </div>
+
+    <div th:if="${usuario.invitaciones==null or usuario.invitaciones.empty}">
         <tr>
             <th>Invitaciones</th>
-            <td> No tienes invitaciones </td>
+            <td> No tienes invitaciones</td>
         </tr>
     </div>
-
-</table>
-
-<a class="btn btn-default"  th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar mis datos</a>
-
-<div th th:object="${usuario}">
-    <div th:if="*{invitaciones!=null and !invitaciones.empty}">
-        <br><br>
-<a class="btn btn-default"  th:href="@{micuenta/invitaciones}"><span class="glyphicon glyphicon-bullhorn"></span> Invitaciones</a>
 </div>
-</div>
-
 </body>
 
 </html>

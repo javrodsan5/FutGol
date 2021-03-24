@@ -24,9 +24,7 @@
     }
 </script>
 
-<div th:if="${ultimaJornada}">
-    <h1>Última jornada:</h1>
-</div>
+<h1 th:if="${ultimaJornada}">Última jornada:</h1>
 <h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
 
 <div class="dropdown">
@@ -38,10 +36,9 @@
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
         <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                               th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"/></li>
+                                               th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"></a></li>
     </ul>
 </div>
-
 <br><br>
 <div th:if="${noOnce}">
     <h1>No existe todavía once ideal de esta jornada.</h1>
@@ -72,7 +69,7 @@
                 </script>
             </div>
 
-            <div style="float: right; display: inline-block;">
+            <div style="float: right; display: inline-block; margin-left: 15%">
                 <h1>Mejor jugador de la jornada</h1>
                 <div class="caja" style="float: right;">
                     <div style="display: inline-block;float: left;">

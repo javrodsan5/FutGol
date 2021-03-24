@@ -28,18 +28,16 @@ class JornadaControlador(
     fun ultimaJornadaJugada(model: Model): String {
         var b = true
         var jornada = this.jornadaServicio.buscarTodasJornadas()?.stream()
-            ?.filter { x -> x.partidos.stream().allMatch { x -> x.resultado != "" } }
+            ?.filter { x -> x.partidos.stream().allMatch { p -> p.resultado != "" } }
             ?.max(Comparator.comparing { x -> x.numeroJornada })?.get()
         if (jornada != null) {
             model["jornada"] = jornada
             var jornadaId = jornada.id
             model["ultimaJornada"] = true
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            model["partidos"] = this.partidoServicio.buscarTodosPartidos()
-                ?.stream()?.filter { x -> x.jornada?.id == jornadaId }?.collect(Collectors.toList())!!
 
             if (jornadaId?.let { this.estadisticaJugadorServicio.existeEstadisticasJornada(it) } == true) {
-                if (jornada?.jugadores?.isEmpty() == true) {
+                if (jornada.jugadores.isEmpty()) {
                     if (jornada.mejorJugador == null) {
                         var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
                             ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }

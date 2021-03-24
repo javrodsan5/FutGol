@@ -35,11 +35,6 @@ class UsuarioServicio {
     @Throws(DataAccessException::class)
     fun guardarUsuario(usuario: Usuario) {
         usuarioRepositorio?.save(usuario)
-        usuario.user?.let {
-            userService?.saveUser(it)
-        }
-        usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
-
     }
 
     @Transactional(readOnly = true)

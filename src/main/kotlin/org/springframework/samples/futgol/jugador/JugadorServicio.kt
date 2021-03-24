@@ -8,6 +8,8 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
@@ -17,6 +19,7 @@ import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.HashSet
 
+@EnableScheduling
 @Service
 class JugadorServicio {
 
@@ -250,6 +253,7 @@ class JugadorServicio {
         return estaEnEquipo
     }
 
+    @Scheduled(cron = "0 40 1 * * ? ")
     fun webScrapingJugadoresTransfermarkt() {
         var l: List<String?> = ArrayList()
         try {
@@ -344,6 +348,7 @@ class JugadorServicio {
 
     }
 
+    @Scheduled(cron = "0 40 2 * * ? ")
     fun webScrapingJugadoresFbref() {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()

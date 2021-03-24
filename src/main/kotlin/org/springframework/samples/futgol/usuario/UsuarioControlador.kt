@@ -113,6 +113,8 @@ class UsuarioControlador(
             VISTA_REGISTRO_USUARIO
         } else {
             this.usuarioServicio.guardarUsuario(usuario)
+            usuario.user?.let { this.userServicio?.saveUser(it) }
+            usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
     }

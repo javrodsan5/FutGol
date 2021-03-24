@@ -31,7 +31,6 @@ class UsuarioControlador(
 
     private val VISTA_REGISTRO_USUARIO = "usuarios/registroUsuario"
     private val VISTA_MISDATOS = "usuarios/misdatos"
-    private val VISTA_INVITACIONES = "usuarios/invitaciones"
     private val VISTA_EDITAR_USUARIO = "usuarios/editarUsuario"
     private val VISTA_DETALLES_USUARIO = "usuarios/detallesUsuario"
     private val VISTA_BUSCAR_USUARIO = "usuarios/buscarUsuario"
@@ -59,13 +58,6 @@ class UsuarioControlador(
         return VISTA_MISDATOS
     }
 
-    @GetMapping("/micuenta/invitaciones")
-    fun misInvitaciones(model: Model, principal: Principal): String {
-        val usuario = usuarioServicio.usuarioLogueado(principal)
-        model["invitaciones"] = usuario?.invitaciones!!
-        model["usuario"] = usuario
-        return VISTA_INVITACIONES
-    }
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
     fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
@@ -173,7 +165,7 @@ class UsuarioControlador(
             liga.usuariosInvitados.add(usuario)
             this.usuarioServicio.guardarUsuario(usuario)
         }
-        return "redirect:/misligas"
+        return "redirect:/usuarios/$nombreUsuario"
     }
 
     @CachePut("detallesUsuario")

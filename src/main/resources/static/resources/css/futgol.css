@@ -7841,6 +7841,51 @@ footer{
     float: right;
 }
 
+.profile-wrapper {
+    max-width: 500px;
+    width: 500px;
+    height: 150px;
+}
+
+.profile-body {
+    background: #c9e2b3;
+    height: 150px;
+}
+
+.profile-body img {
+    margin: 15px 25px;
+    height: 80%;
+    border: 3px solid white;
+    border-radius: 100%;
+    vertical-align: top;
+    float:left
+}
+
+.profile-body img:after {
+    clear: both;
+}
+
+.profile-details {
+    display: inline;
+    float: left;
+    overflow: hidden;
+    color: white;
+}
+
+.profile-details:after {
+    clear: both;
+}
+
+.profile-details h1 {
+    margin-bottom: 0.1em;
+}
+
+.profile-details .description {
+    margin: 0;
+    padding-bottom: 0.3em;
+}
+
+
 /*Loading page*/
 .jm-loadingpage {
     position: fixed;
@@ -7852,3 +7897,8 @@ footer{
     background: url("../images/loadingpage.gif") center no-repeat #fff;
 }
 /*Loading page*/
+
+.invitaciones {
+    border: 2px solid #8FBC8F ;
+    vertical-align: top;
+}

@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.partido.Partido
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+@EnableScheduling
 @Service
 class EquipoRealServicio {
 
@@ -67,6 +70,7 @@ class EquipoRealServicio {
         return equipoRealRepositorio?.buscarEquipoRealPorNombre(nombre)
     }
 
+    @Scheduled(cron = "0 0 1 * * ? ")
     @Transactional()
     fun webScrapingEquipos() {
         var urlBase = "https://fbref.com/"
@@ -77,6 +81,7 @@ class EquipoRealServicio {
             var equipo = EquipoReal()
             if (this.existeEquipoReal(nombreEquipo) == true) {
                 equipo = this.buscarEquipoRealPorNombre(nombreEquipo)!!
+                println(equipo)
 
             } else {
                 equipo.name = nombreEquipo

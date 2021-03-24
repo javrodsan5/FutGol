@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.IOException
@@ -12,6 +14,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.stream.Collectors
 
+@EnableScheduling
 @Service
 class EstadisticaJugadorServicio {
 
@@ -102,6 +105,7 @@ class EstadisticaJugadorServicio {
         return !this.buscarEstadisticasPorJornada(jornadaId).isNullOrEmpty()
     }
 
+    @Scheduled(cron = "0 0 5 * * ? ")
     fun wsValoraciones() {
         var urlBase = "https://es.fcstats.com/"
         var doc = Jsoup.connect("$urlBase/partidos,primera-division-espana,19,1.php").get()
@@ -422,7 +426,7 @@ class EstadisticaJugadorServicio {
         }
     }
 
-
+    @Scheduled(cron = "0 0 4 * * ? ")
     fun wsEstadisticas() {
         var urlBase = "https://fbref.com/"
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()

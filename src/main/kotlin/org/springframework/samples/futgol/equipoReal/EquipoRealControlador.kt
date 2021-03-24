@@ -17,20 +17,13 @@ import java.util.stream.Collectors
 @Controller
 class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jornadaServicio: JornadaServicio) {
 
-    private val VISTA_WSEQUIPOS = "equipos/WScreaEquipos"
     private val VISTA_LISTA_EQUIPOSREALES = "equiposReales/listaEquiposReales"
     private val VISTA_DETALLES_EQUIPOREAL = "equiposReales/detallesEquipoReal"
 
-    @GetMapping("/WSEquipos")
-    fun iniciaWSEquipos(model: Model): String {
-        return VISTA_WSEQUIPOS
-    }
-
-    @Scheduled(cron = "0 45 17 * * ? ")
+    @Scheduled(cron = "0 12 19 * * ? ")
     @PostMapping("/WSEquipos")
-    fun creaWSEquipos(): String {
+    fun creaWSEquipos() {
         this.equipoRealServicio.webScrapingEquipos()
-        return VISTA_WSEQUIPOS
     }
 
     @CachePut("listaEquiposReales")

@@ -19,7 +19,6 @@ import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.HashSet
 
-@EnableScheduling
 @Service
 class JugadorServicio {
 
@@ -253,7 +252,6 @@ class JugadorServicio {
         return estaEnEquipo
     }
 
-    @Scheduled(cron = "0 40 1 * * ? ")
     fun webScrapingJugadoresTransfermarkt() {
         var l: List<String?> = ArrayList()
         try {
@@ -348,7 +346,6 @@ class JugadorServicio {
 
     }
 
-    @Scheduled(cron = "0 40 2 * * ? ")
     fun webScrapingJugadoresFbref() {
         var urlBase = "https://fbref.com"
         var doc = Jsoup.connect("$urlBase/es/comps/12/Estadisticas-de-La-Liga").get()

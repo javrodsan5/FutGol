@@ -19,7 +19,7 @@ class EstadisticaJugadorControlador(
     val equipoRealServicio: EquipoRealServicio
 ) {
 
-    @Scheduled(cron = "0 50 19 * * ? ")
+    @Scheduled(cron = "0 0 20 * * ? ")
     @PostMapping("/WSEstadisticas")
     fun creaEstadisticasJugadoresWS() {
         this.estadisticaJugadorServicio.wsEstadisticas()

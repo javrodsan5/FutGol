@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@EnableScheduling
 @Service
 class EquipoRealServicio {
 
@@ -70,7 +69,6 @@ class EquipoRealServicio {
         return equipoRealRepositorio?.buscarEquipoRealPorNombre(nombre)
     }
 
-    @Scheduled(cron = "0 0 1 * * ? ")
     @Transactional()
     fun webScrapingEquipos() {
         var urlBase = "https://fbref.com/"

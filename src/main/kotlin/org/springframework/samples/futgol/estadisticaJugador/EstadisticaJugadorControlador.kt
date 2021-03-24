@@ -19,19 +19,10 @@ class EstadisticaJugadorControlador(
     val equipoRealServicio: EquipoRealServicio
 ) {
 
-    private val VISTA_WSESTADISTICA = "estadisticaJugador/wsEstadistica"
-
-    @GetMapping("/WSEstadisticas")
-    fun iniciaWSJugadores(model: Model): String {
-        return VISTA_WSESTADISTICA
-    }
-
-    @Scheduled(cron = "0 0 19 * * ? ")
+    @Scheduled(cron = "0 30 20 * * ? ")
     @PostMapping("/WSEstadisticas")
-    fun creaEstadisticasJugadoresWS(): String {
+    fun creaEstadisticasJugadoresWS() {
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
-        return VISTA_WSESTADISTICA
     }
-
 }

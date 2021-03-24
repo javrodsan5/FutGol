@@ -6,11 +6,9 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-@EnableScheduling
 @Service
 class PartidoServicio {
 
@@ -31,11 +29,6 @@ class PartidoServicio {
     @Throws(DataAccessException::class)
     fun guardarPartido(partido: Partido) {
         partidoRepositorio?.save(partido)
-    }
-
-    @Transactional(readOnly = true)
-    fun buscarTodosPartidos(): Collection<Partido>? {
-        return partidoRepositorio?.findAll()
     }
 
     @Transactional(readOnly = true)
@@ -63,8 +56,10 @@ class PartidoServicio {
         for (partido in partidos) {
             var p = Partido()
             var equipoLocal = partido.select("td[data-stat=squad_a]").text().replace("Betis", "Real Betis")
+            println(equipoLocal)
             p.equipoLocal = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoLocal)
             var equipoVisitante = partido.select("td[data-stat=squad_b]").text().replace("Betis", "Real Betis")
+            println(equipoVisitante)
             p.equipoVisitante = this.equipoRealServicio?.buscarEquipoRealPorNombre(equipoVisitante)
 
             var resultadoTexto = partido.select("td[data-stat=score] a").text()

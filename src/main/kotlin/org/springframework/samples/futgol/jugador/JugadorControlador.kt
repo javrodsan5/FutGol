@@ -35,7 +35,6 @@ class JugadorControlador(
     val jornadaServicio: JornadaServicio
 ) {
 
-    private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
     private val VISTA_DETALLES_JUGADOR_EQUIPO = "jugadores/detallesJugadorEquipo"
@@ -46,17 +45,11 @@ class JugadorControlador(
         dataBinder.validator = ClausulaValidador()
     }
 
-    @GetMapping("/WSJugadores")
-    fun iniciaWSJugadores(model: Model): String {
-        return VISTA_WSJUGADORES
-    }
-
-    @Scheduled(cron = "0 0 18 * * ? ")
+    @Scheduled(cron = "0 18 19 * * ? ")
     @PostMapping("/WSJugadores")
-    fun creaWSJugadores(): String {
+    fun creaWSJugadores() {
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()
         this.jugadorServicio.webScrapingJugadoresFbref()
-        return VISTA_WSJUGADORES
     }
 
     @CachePut("detallesJugador")

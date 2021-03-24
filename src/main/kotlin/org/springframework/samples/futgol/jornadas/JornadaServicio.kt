@@ -58,73 +58,48 @@ class JornadaServicio {
 
         var portero: Jugador
 
-        var defensas442: MutableList<Jugador?>
-        var centrocampistas442: MutableList<Jugador?>
-        var delanteros442: MutableList<Jugador?>
-
-        var defensas433: MutableList<Jugador?> = ArrayList()
-        var centrocampistas433: MutableList<Jugador?>
-        var delanteros433: MutableList<Jugador?>
-
-        var defensas352: MutableList<Jugador?>
-        var centrocampistas352: MutableList<Jugador?>
-        var delanteros352: MutableList<Jugador?> = ArrayList()
-
-        var defensas532: MutableList<Jugador?>
-        var centrocampistas532: MutableList<Jugador?>
-        var delanteros532: MutableList<Jugador?> = ArrayList()
-
         portero = jugadores?.stream()?.filter { x -> x?.posicion == "PO" }?.findFirst()?.get()!!
+        var numeroDefensas = jugadores?.stream()?.filter { x -> x?.posicion == "DF" }.count()
+        var numeroCentroCampistas = jugadores?.stream()?.filter { x -> x?.posicion == "CC" }.count()
+        var numeroDelanteros = jugadores?.stream()?.filter { x -> x?.posicion == "DL" }.count()
+        var defensas = jugadores.filter { x-> x?.posicion == "DF" }
+        var centrocampistas = jugadores.filter { x-> x?.posicion == "CC" }
+        var delanteros = jugadores.filter { x-> x?.posicion == "DL" }
 
-        defensas442 =
-            jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
-                .subList(0, 4)
-        centrocampistas442 =
-            jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
-                .subList(0, 4)
-        delanteros442 =
-            jugadores.stream().filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
-                .subList(0, 2)
-        jug442.add(portero)
-        jug442.addAll(defensas442)
-        jug442.addAll(centrocampistas442)
-        jug442.addAll(delanteros442)
+        if (numeroDefensas >= 4 && numeroCentroCampistas >= 4 && numeroDelanteros >= 2) { //4-4-2
 
-        defensas433.addAll(defensas442)
-        centrocampistas433 =
-            jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
-                .subList(0, 3)
-        delanteros433 =
-            jugadores.stream().filter { x -> x?.posicion == "DL" }.collect(Collectors.toList())
-                .subList(0, 3)
-        jug433.add(portero)
-        jug433.addAll(defensas433)
-        jug433.addAll(centrocampistas433)
-        jug433.addAll(delanteros433)
+            jug442.add(portero)
+            jug442.addAll(defensas.subList(0,4))
+            jug442.addAll(centrocampistas.subList(0,4))
+            jug442.addAll(delanteros.subList(0,2))
 
-        defensas352 =
-            jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
-                .subList(0, 3)
-        centrocampistas352 =
-            jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
-                .subList(0, 5)
-        delanteros352.addAll(delanteros442)
-        jug352.add(portero)
-        jug352.addAll(defensas352)
-        jug352.addAll(centrocampistas352)
-        jug352.addAll(delanteros352)
+        }
+        if (numeroDefensas >= 4 && numeroCentroCampistas >= 3 && numeroDelanteros >= 3) {
 
-        defensas532 =
-            jugadores.stream().filter { x -> x?.posicion == "DF" }.collect(Collectors.toList())
-                .subList(0, 5)
-        centrocampistas532 =
-            jugadores.stream().filter { x -> x?.posicion == "CC" }.collect(Collectors.toList())
-                .subList(0, 3)
-        delanteros532.addAll(delanteros442)
-        jug532.add(portero)
-        jug532.addAll(defensas532)
-        jug532.addAll(centrocampistas532)
-        jug532.addAll(delanteros532)
+            jug433.add(portero)
+            jug433.addAll(defensas.subList(0,4))
+            jug433.addAll(centrocampistas.subList(0,3))
+            jug433.addAll(delanteros.subList(0,3))
+
+        }
+
+        if (numeroDefensas >= 3 && numeroCentroCampistas >= 5 && numeroDelanteros >= 2) {
+
+            jug352.add(portero)
+            jug352.addAll(defensas.subList(0,3))
+            jug352.addAll(centrocampistas.subList(0,5))
+            jug352.addAll(delanteros.subList(0,2))
+
+        }
+
+        if (numeroDefensas >= 5 && numeroCentroCampistas >= 3 && numeroDelanteros >= 2) {
+
+            jug532.add(portero)
+            jug532.addAll(defensas.subList(0,5))
+            jug532.addAll(centrocampistas.subList(0,3))
+            jug532.addAll(delanteros.subList(0,2))
+
+        }
 
         var puntos442 = 0
         var puntos433 = 0

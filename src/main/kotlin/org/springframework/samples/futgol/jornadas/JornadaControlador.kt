@@ -90,51 +90,49 @@ class JornadaControlador(
                 model["jornada"] = jornada
             }
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-
-            if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
-                if (jornada?.jugadores?.isEmpty() == true) {
-                    if (jornada.mejorJugador == null) {
-                        var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                            ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                            ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
-                        jornada.mejorJugador = mejorJugador
-                        jornadaServicio.guardarJornada(jornada)
-                    }
-
-                    var todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                        ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                        ?.sorted(Comparator.comparing { x -> -x.puntos })
-                        ?.map { x -> x.jugador }?.collect(Collectors.toList())
-
-                    var map: Map<String, MutableList<Jugador?>> = HashMap()
-                    if ((todosJugadores != null && todosJugadores.isNotEmpty()) && (jornada.formacion == "" || jornada.formacion == null)) {
-                        map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "")
-
-                    }
-
-                    var jugadores: MutableList<Jugador?> = ArrayList()
-                    var formacion = ""
-                    if (map.values.isNotEmpty()) {
-                        jugadores = map.values.first()
-                        formacion = map.keys.first()
-                    }
-
-                    if (jugadores.isNotEmpty()) {
-                        for (j in jugadores) {
-                            jornada.jugadores.add(j!!)
+            if (jornada?.partidos?.stream()?.allMatch { p -> p.resultado != "" } == true) {
+                if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
+                    if (jornada.jugadores.isEmpty() == true) {
+                        if (jornada.mejorJugador == null) {
+                            var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
+                                ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
+                                ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
+                            jornada.mejorJugador = mejorJugador
+                            jornadaServicio.guardarJornada(jornada)
                         }
-                        jornada.formacion = formacion
-                        jornadaServicio.guardarJornada(jornada)
+
+                        var todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
+                            ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
+                            ?.sorted(Comparator.comparing { x -> -x.puntos })
+                            ?.map { x -> x.jugador }?.collect(Collectors.toList())
+
+                        var map: Map<String, MutableList<Jugador?>> = HashMap()
+                        if ((todosJugadores != null && todosJugadores.isNotEmpty()) && (jornada.formacion == "" || jornada.formacion == null)) {
+                            map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "")
+
+                        }
+
+                        var jugadores: MutableList<Jugador?> = ArrayList()
+                        var formacion = ""
+                        if (map.values.isNotEmpty()) {
+                            jugadores = map.values.first()
+                            formacion = map.keys.first()
+                        }
+
+                        if (jugadores.isNotEmpty()) {
+                            for (j in jugadores) {
+                                jornada.jugadores.add(j!!)
+                            }
+                            jornada.formacion = formacion
+                            jornadaServicio.guardarJornada(jornada)
+                            b = false
+                        }
+                    } else {
                         b = false
                     }
-                } else {
-                    b = false
                 }
             }
             model["noOnce"] = b
-
-        } else {
-            return "redirect:/"
         }
         return VISTA_DETALLES_JORNADA
     }

@@ -58,6 +58,12 @@ class UsuarioControlador(
         return VISTA_MISDATOS
     }
 
+    @GetMapping("/usuarios2")
+    fun usuarios(model: Model): String {
+        model["usuarios"] = usuarioServicio.buscarTodosNombresUsuarios()!!
+        return "usuarios/usuarios"
+    }
+
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
     fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {

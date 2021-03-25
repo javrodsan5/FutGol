@@ -46,10 +46,11 @@ class JugadorControlador(
     }
 
     @Scheduled(cron = "0 58 18 * * ? ")
-    @PostMapping("/WSJugadores")
-    fun creaWSJugadores() {
+    @GetMapping("/WSJugadores")
+    fun creaWSJugadores(): String {
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()
         this.jugadorServicio.webScrapingJugadoresFbref()
+        return "welcome"
     }
 
     @CachePut("detallesJugador")

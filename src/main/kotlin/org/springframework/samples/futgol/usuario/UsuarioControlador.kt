@@ -76,7 +76,7 @@ class UsuarioControlador(
             this.usuarioServicio.guardarUsuario(usuario)
             this.ligaServicio.guardarLiga(liga)
         }
-        return "redirect:/micuenta/invitaciones"
+        return "redirect:/micuenta"
     }
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
@@ -89,7 +89,7 @@ class UsuarioControlador(
             this.usuarioServicio.guardarUsuario(usuario)
             this.ligaServicio.guardarLiga(liga)
         }
-        return "redirect:/micuenta/invitaciones"
+        return "redirect:/micuenta"
     }
 
     @GetMapping("/usuarios/registro")
@@ -145,11 +145,12 @@ class UsuarioControlador(
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {
+                var user = usuario.user
+                println(user?.username)
                 usuario.id = usuarioComparador.id
                 usuario.ligas = usuarioComparador.ligas
                 usuario.invitaciones = usuarioComparador.invitaciones
-                usuario.user = this.userServicio.findUser(principal.name)
-                usuario.user?.username = principal.name
+                usuario.user = user
 
             }
             this.usuarioServicio.guardarUsuario(usuario)

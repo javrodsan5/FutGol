@@ -145,15 +145,21 @@ class UsuarioControlador(
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {
-                var user = usuario.user
-                println(user?.username)
-                usuario.id = usuarioComparador.id
-                usuario.ligas = usuarioComparador.ligas
-                usuario.invitaciones = usuarioComparador.invitaciones
-                usuario.user = user
+                usuarioComparador.name = usuario.name
+                usuarioComparador.email = usuario.email
+
+                var user = userServicio.findUser(usuarioComparador.user?.username)
+                var authority = authoritiesServicio.findAuthority(usuarioComparador.user?.username!!)
+                user!!.username = usuario.user?.username!!
+                user!!.password = usuario.user?.password!!
+                this.userServicio?.saveUser(user!!)
+                usuarioComparador.user = user
+                authority?.user?.username = usuario.user?.username!!
+                this.authoritiesServicio.saveAuthorities2(authority!!)
+
+                this.usuarioServicio.guardarUsuario(usuarioComparador)
 
             }
-            this.usuarioServicio.guardarUsuario(usuario)
             "redirect:/micuenta"
         }
     }

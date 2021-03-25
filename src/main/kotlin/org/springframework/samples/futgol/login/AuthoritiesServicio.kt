@@ -31,4 +31,15 @@ class AuthoritiesServicio {
             authoritiesRepositorio?.save(authority)
         } else throw object : DataAccessException("User '$username' not found!") {}
     }
+
+    @Transactional
+    @Throws(DataAccessException::class)
+    fun saveAuthorities2(authority: Authorities) {
+            authoritiesRepositorio?.save(authority)
+    }
+
+    @Transactional(readOnly = true)
+    fun findAuthority(username: String?): Authorities? {
+        return username?.let { authoritiesRepositorio?.findByUserName(it) }
+    }
 }

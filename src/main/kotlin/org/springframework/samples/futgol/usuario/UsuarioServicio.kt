@@ -2,6 +2,7 @@ package org.springframework.samples.futgol.usuario
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
 import java.util.stream.Collectors
+import javax.transaction.RollbackException
 
 @Service
 class UsuarioServicio {
@@ -36,6 +38,16 @@ class UsuarioServicio {
     fun guardarUsuario(usuario: Usuario) {
         usuarioRepositorio?.save(usuario)
     }
+
+    @Transactional
+    @Throws(DataAccessException::class)
+    fun guardarUsuario2(usuario: Usuario) {
+        usuarioRepositorio?.save(usuario)
+        usuario.user?.let {
+            userService?.saveUser(it)
+        }
+    }
+
 
     @Transactional(readOnly = true)
     fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {

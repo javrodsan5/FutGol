@@ -11,4 +11,5 @@ interface MovimientoRepositorio : Repository<Movimiento, Int> {
 
     @Query("SELECT m FROM Movimiento m where m.creadorMovimiento.user.username = ?1")
     fun buscarMovimientosPorUsuario(nombreUsuario: String): Collection<Movimiento>
+
 }

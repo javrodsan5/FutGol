@@ -66,9 +66,15 @@ class JugadorControlador(
             model["esPortero"] = jugador.posicion == "PO"
             model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
             model["esDF"] = jugador.posicion == "DF"
-            if (jugador.id?.let {this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada)} == true) {
+            if (jugador.id?.let {
+                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
+                        it,
+                        numeroJornada
+                    )
+                } == true) {
                 model["tieneEstadistica"] = true
-                model["est"] =estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+                model["est"] =
+                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
             } else {
                 model["tieneEstadistica"] = false
             }
@@ -120,11 +126,16 @@ class JugadorControlador(
             }
             model["esPortero"] = jugador.posicion == "PO"
 
-            if (jugador.id?.let {this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(it, numeroJornada)} == true) {
+            if (jugador.id?.let {
+                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
+                        it,
+                        numeroJornada
+                    )
+                } == true) {
                 model["tieneEstadistica"] = true
                 model["est"] =
                     estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
-            }else {
+            } else {
                 model["tieneEstadistica"] = false
             }
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
@@ -176,6 +187,6 @@ class JugadorControlador(
             clausula.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
             clausulaServicio.guardarClausula(clausula)
         }
-        return "redirect:/equipo/$idEquipo/jugador/" + idJugador
+        return "redirect:/equipo/$idEquipo/jugador/" + idJugador + "/jornada/1"
     }
 }

@@ -59,6 +59,7 @@ class MovimientoControlador(
                 if (l.id == idLiga) {
                     var movimientos = usuario.user?.let { movimientoServicio.buscarMovimientosUsuario(it.username) }
                     if (movimientos != null) {
+                        model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                         model["movimientos"] = movimientos
                         var vendedores = buscaVendedores(movimientos)
                         model["vendedores"] = vendedores

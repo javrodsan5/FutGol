@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping
 class PartidoControlador(val partidoServicio: PartidoServicio) {
 
     @Scheduled(cron = "0 47 18 * * ? ")
-    @PostMapping("/WSPartidos")
-    fun creaWSPartidos() {
+    @GetMapping("/WSPartidos")
+    fun creaWSPartidos(): String {
         this.partidoServicio.wsPartidos()
+        return "welcome"
     }
 }

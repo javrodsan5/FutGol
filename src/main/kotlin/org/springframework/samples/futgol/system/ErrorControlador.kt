@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.boot.web.servlet.error.ErrorController
 
 @Controller
-class CustomErrorController : ErrorController {
+class ErrorControlador : ErrorController {
     @RequestMapping("/error")
     fun handleError(request: HttpServletRequest): String {
         val status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)

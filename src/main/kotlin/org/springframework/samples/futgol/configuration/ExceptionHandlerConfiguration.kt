@@ -2,7 +2,7 @@ package org.springframework.samples.futgol.configuration
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.samples.futgol.system.CustomErrorController
+import org.springframework.samples.futgol.system.ErrorControlador
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.servlet.http.HttpServletRequest
 
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest
 class ExceptionHandlerConfiguration{
 
     @Autowired
-    var customErrorController: CustomErrorController?= null
+    var errorControlador: ErrorControlador?= null
 
     @ExceptionHandler()
     fun defaultErrorHandler(request: HttpServletRequest, ex: Exception): String{
@@ -21,11 +21,11 @@ class ExceptionHandlerConfiguration{
         return "errores/exception";
     }
 
-    fun getErrorController(): CustomErrorController? {
-        return customErrorController;
+    fun getErrorController(): ErrorControlador? {
+        return errorControlador;
     }
 
-    fun setErrorController(errorController: CustomErrorController) {
-        this.customErrorController = errorController;
+    fun setErrorController(errorControlador: ErrorControlador) {
+        this.errorControlador = errorControlador;
     }
 }

@@ -20,9 +20,11 @@ class EstadisticaJugadorControlador(
 ) {
 
     @Scheduled(cron = "0 0 20 * * ? ")
-    @PostMapping("/WSEstadisticas")
-    fun creaEstadisticasJugadoresWS() {
+    @GetMapping("/WSEstadisticas")
+    fun creaEstadisticasJugadoresWS(): String {
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
+        return "welcome"
+
     }
 }

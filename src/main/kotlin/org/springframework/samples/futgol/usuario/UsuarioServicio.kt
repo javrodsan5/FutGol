@@ -46,6 +46,8 @@ class UsuarioServicio {
         usuario.user?.let {
             userService?.saveUser(it)
         }
+        usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
+
     }
 
 

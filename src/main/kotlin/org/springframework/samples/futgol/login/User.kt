@@ -2,19 +2,21 @@ package org.springframework.samples.futgol.login
 
 import lombok.Getter
 import lombok.Setter
+import org.springframework.samples.futgol.model.BaseEntity
 import org.springframework.validation.annotation.Validated
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.OneToMany
+import javax.persistence.Table
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
 
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
 @Validated
-public class User{
+class User : BaseEntity() {
 
-    @Id
     @NotBlank
     var username = ""
 
@@ -24,6 +26,6 @@ public class User{
     var enabled = false
 
     @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-    private val authorities: Set<Authorities>? = null
+    val authorities: MutableSet<Authorities>? = null
 
 }

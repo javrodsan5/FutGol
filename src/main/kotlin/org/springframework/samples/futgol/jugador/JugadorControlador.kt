@@ -45,7 +45,7 @@ class JugadorControlador(
         dataBinder.validator = ClausulaValidador()
     }
 
-    @Scheduled(cron = "0 58 18 * * ? ")
+    @Scheduled(cron = "0 6 1 * * MON ")
     @GetMapping("/WSJugadores")
     fun creaWSJugadores(): String {
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()

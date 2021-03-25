@@ -57,7 +57,6 @@ class UsuarioServicio {
     @Transactional(readOnly = true)
     fun comprobarSiEmailExiste(email: String?): Boolean? {
         return email?.let { usuarioRepositorio?.existeUsuarioConEmail(it) }
-
     }
 
     @Transactional(readOnly = true)

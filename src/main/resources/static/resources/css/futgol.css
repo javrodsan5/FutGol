@@ -2535,7 +2535,7 @@ output {
 }
 .form-control {
   display: block;
-  width: 100%;
+  width: 94%;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
@@ -7075,9 +7075,6 @@ hr {
   border-top: 1px dotted #34302D;
 }
 
-@import url("//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
-@import url("//fonts.googleapis.com/css?family=Open+Sans");
-
 #snav.en {
     left: 0;
     text-align: left;
@@ -7104,8 +7101,7 @@ hr {
     position: fixed;
     top:20%;
     z-index: 9999;
-    font-size: 18px;
-    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
 }
 #snav ul {
     list-style: none;
@@ -7130,19 +7126,19 @@ hr {
 }
 #snav .fa {
     vertical-align: middle;
-    font-size: 18px;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
     position: relative;
     z-index: 4;
 }
 #snav li span {
-    font-size: 15px;
+    font-size: 20px;
     vertical-align: middle;
-    height: 35px;
-    line-height: 35px;
+    height: 50px;
+    line-height: 50px;
     width: auto;
     white-space: nowrap;
     overflow: hidden;
@@ -7152,6 +7148,7 @@ hr {
     top: 0;
     visibility: hidden;
     z-index: 3;
+    font-family: "montserratregular", sans-serif;
 }
 #snav li a:hover .fa {
     transform: rotate(360deg);
@@ -7163,16 +7160,16 @@ hr {
 #snav li span {
     background-color: #34302d;
 }
-/* icons color and background before hover  */
+
 #snav li .fa {
-    background-color: #EEE;
-    color: #34302d
+    background-color: #34302d;
+    color: white;
 }
-/* icons hover color */
+
 #snav li a:hover .fa {
     color: #fff;
 }
-/* repeated colors from 1 to 10 each hover color repeated after 10 menu items */
+
 #snav li:nth-child(10n+1) span, #snav li:nth-child(10n+1) a:hover .fa {
     background-color: #8350DD;
 }
@@ -7183,26 +7180,9 @@ hr {
     background-color: #3DC25D;
 }
 #snav li:nth-child(10n+4) span, #snav li:nth-child(10n+4) a:hover .fa {
-    background-color: #99BE24;
-}
-#snav li:nth-child(10n+5) span, #snav li:nth-child(10n+5) a:hover .fa {
-    background-color: #38c;
-}
-#snav li:nth-child(10n+6) span, #snav li:nth-child(10n+6) a:hover .fa {
-    background-color: #ff0000;
-}
-#snav li:nth-child(10n+7) span, #snav li:nth-child(10n+7) a:hover .fa {
-    background-color: #000;
-}
-#snav li:nth-child(10n+8) span, #snav li:nth-child(10n+8) a:hover .fa {
     background-color: #F1A111;
 }
-#snav li:nth-child(10n+9) span, #snav li:nth-child(10n+9) a:hover .fa {
-    background-color: #777;
-}
-#snav li:nth-child(10n+10) span, #snav li:nth-child(10n+10) a:hover .fa {
-    background-color: #30555C;
-}
+
 .message-container {
     width: 300px;
 }
@@ -7885,18 +7865,15 @@ footer{
     padding-bottom: 0.3em;
 }
 
-
-/*Loading page*/
-.jm-loadingpage {
+.cargaPagina {
     position: fixed;
     left: 0px;
     top: 0px;
     width: 100%;
     height: 100%;
     z-index: 999999999;
-    background: url("../images/loadingpage.gif") center no-repeat #fff;
+    background: url("../images/loadingpage.gif") center no-repeat #ffffff;
 }
-/*Loading page*/
 
 .invitaciones {
     border: 2px solid #8FBC8F ;

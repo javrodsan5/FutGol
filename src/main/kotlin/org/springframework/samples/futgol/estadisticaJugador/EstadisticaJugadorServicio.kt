@@ -64,6 +64,12 @@ class EstadisticaJugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun existeAlgunaEstadistica(): Boolean {
+        return estadisticaJugadorRepositorio?.existeAlgunaEstadistica()!!
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscarEstadisticasPorPartido(idPartido: Int): Collection<EstadisticaJugador>? {
         return estadisticaJugadorRepositorio?.buscarEstadisticasPorPartido(idPartido)
     }
@@ -112,7 +118,7 @@ class EstadisticaJugadorServicio {
                 .filter { x -> x.text() != "17:00" }
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("CambioNombresFCstats.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresFCstats.txt")).collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }
@@ -431,14 +437,13 @@ class EstadisticaJugadorServicio {
             .filter { x -> x.select("tr.spacer.partial_table.result_all").isEmpty() }
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("CambioNombresJugadores.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt")).collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }
-        var estaVacioEstadisticas = this.buscarTodasEstadisticas()?.isEmpty()
 
         var ultimaEPId = 0
-        if (estaVacioEstadisticas == false) {
+        if (this.existeAlgunaEstadistica()) {
             ultimaEPId = this.buscarUltimaEstadistica()?.partido?.id!!
         }
         for (partido in partidos) {

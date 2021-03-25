@@ -255,7 +255,8 @@ class JugadorServicio {
     fun webScrapingJugadoresTransfermarkt() {
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("NombresTransfermarkt.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("src/main/resources/wsFiles/NombresTransfermarkt.txt"))
+                .collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }
@@ -368,7 +369,7 @@ class JugadorServicio {
 
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("CambioNombresJugadores.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt")).collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }

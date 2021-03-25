@@ -20,7 +20,7 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
     private val VISTA_LISTA_EQUIPOSREALES = "equiposReales/listaEquiposReales"
     private val VISTA_DETALLES_EQUIPOREAL = "equiposReales/detallesEquipoReal"
 
-    @Scheduled(cron = "0 45 18 * * ? ")
+    @Scheduled(cron = "0 0 1 * * MON ")
     @GetMapping("/WSEquipos")
     fun creaWSEquipos(): String {
         this.equipoRealServicio.webScrapingEquipos()

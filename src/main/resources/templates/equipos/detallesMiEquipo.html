@@ -49,6 +49,19 @@
         </script>
     </div>
 
+
+    <br><br>
+    <div>
+        <h1><b th:text="${equipo.name}"></b></h1>
+        <div style="display: inline-block">Dinero restante: <b th:text="${equipo.dineroRestante}"></b>€</div>
+        <div style="display: inline-block">Numero de jugadores: <b th:text="${equipo.jugadores.size}"></b>/24</div>
+        <div style="display: inline-block">Puntos: <b th:text="${equipo.puntos}"></b></div>
+        <div style="display: inline-block">Valor del equipo: <b th:text="${valorEquipo}"></b> mill. €</div>
+        <div th:align="right">
+            <a class="btn btn-default" th:href="@{/liga/{idLiga}/misMovimientos (idLiga= ${liga.id})}">
+                <span class="glyphicon glyphicon-signal"></span> Mis movimientos en la liga</a>
+        </div>
+    </div>
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
@@ -70,18 +83,6 @@
             </li>
 
         </ul>
-    </div>
-    <br><br>
-    <div>
-        <h1><b th:text="${equipo.name}"></b></h1>
-        <div style="display: inline-block">Dinero restante: <b th:text="${equipo.dineroRestante}"></b>€</div>
-        <div style="display: inline-block">Numero de jugadores: <b th:text="${equipo.jugadores.size}"></b>/24</div>
-        <div style="display: inline-block">Puntos: <b th:text="${equipo.puntos}"></b></div>
-        <div style="display: inline-block">Valor del equipo: <b th:text="${valorEquipo}"></b> mill. €</div>
-        <div th:align="right">
-            <a class="btn btn-default" th:href="@{/liga/{idLiga}/misMovimientos (idLiga= ${liga.id})}">
-                <span class="glyphicon glyphicon-signal"></span> Mis movimientos en la liga</a>
-        </div>
     </div>
     <div>Formación actual: <b th:text="${equipo.formacion}"></b></div>
     <div class="field">

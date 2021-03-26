@@ -507,11 +507,11 @@ class EstadisticaJugadorServicio {
                                 var linea = element?.split(",")
                                 if (linea?.size!! >= 3) {
                                     if (linea[2] == equipo && linea[0] == nombreJugador) {
-                                        nombreJugador = linea.get(1)
+                                        nombreJugador = linea[1]
                                     }
                                 } else {
                                     if (linea[0] == nombreJugador) {
-                                        nombreJugador = linea.get(1)
+                                        nombreJugador = linea[1]
                                     }
                                 }
                             }

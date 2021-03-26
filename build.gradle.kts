@@ -65,6 +65,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.30.1")
     implementation("org.springframework:spring-context-support:5.3.3")
     implementation("org.springframework.boot:spring-boot-starter-cache:2.4.0")
+    implementation("mysql:mysql-connector-java:8.0.15")
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

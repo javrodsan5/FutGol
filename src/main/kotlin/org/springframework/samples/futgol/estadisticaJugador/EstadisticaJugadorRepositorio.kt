@@ -2,6 +2,7 @@ package org.springframework.samples.futgol.estadisticaJugador
 
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
+import org.springframework.samples.futgol.jugador.Jugador
 
 interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
 
@@ -26,6 +27,12 @@ interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
 
     @Query("SELECT e FROM EstadisticaJugador e where e.jugador.id = ?1")
     fun buscarEstadisticasPorJugador(idJugador: Int): Collection<EstadisticaJugador>
+
+    @Query("SELECT e FROM EstadisticaJugador e where e.partido.jornada.id = ?1 and e.puntos= (SELECT MAX(x.puntos) FROM EstadisticaJugador x where x.partido.jornada.id = ?1)")
+    fun mejorJugadorJornada(idJornada: Int): Collection<EstadisticaJugador>
+
+    @Query("SELECT e.jugador FROM EstadisticaJugador e where e.partido.jornada.id = ?1 order by e.puntos desc ")
+    fun jugadoresParticipantesEnJornadaMasPuntos (idJornada: Int): Collection<Jugador>
 
     @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM EstadisticaJugador e where e.jugador.name = ?1 AND e.jugador.club.name = ?2 AND e.partido.id = ?3")
     fun existeEstadisticaJugEqPart(nombreJugador: String, nombreEquipo: String, idPartido: Int?): Boolean

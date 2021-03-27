@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.estadisticaJugador
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -110,9 +111,21 @@ class EstadisticaJugadorServicio {
         return !this.buscarEstadisticasPorJornada(jornadaId).isNullOrEmpty()
     }
 
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun mejorJugadorJornada(jornadaId: Int): EstadisticaJugador {
+        return estadisticaJugadorRepositorio?.mejorJugadorJornada(jornadaId)?.toList()?.get(0)!!
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun jugadoresParticipantesEnJornada(jornadaId: Int): List<Jugador> {
+        return estadisticaJugadorRepositorio?.jugadoresParticipantesEnJornadaMasPuntos(jornadaId)?.toList()!!
+    }
+
     fun wsValoraciones() {
         var urlBase = "https://es.fcstats.com/"
-        var doc = Jsoup.connect("$urlBase/partidos,primera-division-espana,19,1.php").get()
+        var doc = Jsoup.connect("$urlBase+partidos,primera-division-espana,19,1.php").get()
         var linksPartidos =
             doc.select("table.matchesListMain tbody tr.matchRow td.matchResult a").filter { x -> x.text() != "Postp." }
                 .filter { x -> x.text() != "17:00" }

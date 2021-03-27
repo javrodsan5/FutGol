@@ -39,17 +39,12 @@ class JornadaControlador(
             if (jornadaId?.let { this.estadisticaJugadorServicio.existeEstadisticasJornada(it) } == true) {
                 if (jornada.jugadores.isEmpty()) {
                     if (jornada.mejorJugador == null) {
-                        var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                            ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                            ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
+                        var mejorJugador = this.estadisticaJugadorServicio.mejorJugadorJornada(jornadaId)
                         jornada.mejorJugador = mejorJugador
                         jornadaServicio.guardarJornada(jornada)
                     }
 
-                    var todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                        ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                        ?.sorted(Comparator.comparing { x -> -x.puntos })
-                        ?.map { x -> x.jugador }?.collect(Collectors.toList())
+                    var todosJugadores = this.estadisticaJugadorServicio.jugadoresParticipantesEnJornada(jornadaId)
 
                     var map: Map<String, MutableList<Jugador?>> = HashMap()
                     if ((todosJugadores != null && todosJugadores.isNotEmpty()) && (jornada.formacion == "" || jornada.formacion == null)) {
@@ -94,18 +89,12 @@ class JornadaControlador(
                 if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
                     if (jornada.jugadores.isEmpty() == true) {
                         if (jornada.mejorJugador == null) {
-                            var mejorJugador = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                                ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                                ?.sorted(Comparator.comparing { x -> -x.puntos })?.findFirst()?.orElse(null)!!
+                            var mejorJugador = this.estadisticaJugadorServicio.mejorJugadorJornada(jornadaId)
                             jornada.mejorJugador = mejorJugador
                             jornadaServicio.guardarJornada(jornada)
                         }
 
-                        var todosJugadores = this.estadisticaJugadorServicio.buscarTodasEstadisticas()
-                            ?.stream()?.filter { x -> x.partido?.jornada?.id == jornadaId }
-                            ?.sorted(Comparator.comparing { x -> -x.puntos })
-                            ?.map { x -> x.jugador }?.collect(Collectors.toList())
-
+                        var todosJugadores = this.estadisticaJugadorServicio.jugadoresParticipantesEnJornada(jornadaId)
                         var map: Map<String, MutableList<Jugador?>> = HashMap()
                         if ((todosJugadores != null && todosJugadores.isNotEmpty()) && (jornada.formacion == "" || jornada.formacion == null)) {
                             map = jornadaServicio.onceIdeal(todosJugadores, jornadaId, "")

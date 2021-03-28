@@ -5,6 +5,7 @@ import lombok.Setter
 import org.springframework.samples.futgol.clausula.Clausula
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.model.NamedEntity
 import java.util.*
 import javax.persistence.*
@@ -36,8 +37,11 @@ class Jugador : NamedEntity() {
     @Column(name = "puntos")
     var puntos = 0
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
+    @OneToMany(mappedBy = "id")
     var clausulas: MutableSet<Clausula> = HashSet()
+
+    @OneToMany(mappedBy = "jugador")
+    var estadisticas: MutableList<EstadisticaJugador> = ArrayList()
 
     @Column(name = "foto")
     var foto = ""

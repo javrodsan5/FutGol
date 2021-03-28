@@ -6,7 +6,6 @@ import org.springframework.samples.futgol.jugador.Jugador
 
 interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
 
-    fun findAll(): Collection<EstadisticaJugador>
 
     fun save(estadisticaJugador: EstadisticaJugador)
 

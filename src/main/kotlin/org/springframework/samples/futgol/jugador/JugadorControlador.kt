@@ -117,7 +117,7 @@ class JugadorControlador(
         @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
     ): String {
         var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-        if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
+        if (jugadorServicio.existeJugadorEnEquipo(idJugador, idEquipo)) {
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
@@ -161,7 +161,7 @@ class JugadorControlador(
         var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
         if (usuario != null) {
             if (equipo!!.usuario?.user?.username == usuario.user?.username) {
-                if (jugadorServicio.checkJugadorEnEquipo(idJugador, idEquipo)) {
+                if (jugadorServicio.existeJugadorEnEquipo(idJugador, idEquipo)) {
                     model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
                 }
             } else {

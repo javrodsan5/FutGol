@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
-import java.util.stream.Collectors
 import javax.validation.Valid
 import kotlin.math.absoluteValue
 
@@ -69,32 +68,16 @@ class EquipoControlador(
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
 
-
-            var portero = misJugadores.stream().filter { x -> x?.posicion == "PO" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })?.findFirst()?.get()!!
-            var defensas = misJugadores.stream().filter { x -> x?.posicion == "DF" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())!!
-            var centrocampistas = misJugadores.stream().filter { x -> x?.posicion == "CC" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                ?.limit(4)
-                ?.collect(Collectors.toList())!!
-            var delanteros = misJugadores.stream().filter { x -> x?.posicion == "DL" }
-                .filter { x -> x.estadoLesion == "En forma" }
-                .sorted(Comparator.comparing { x -> -x.valor })
-                .limit(2)
-                .collect(Collectors.toList())
-
             var onceInicial = HashSet<Jugador>()
 
-            onceInicial.add(portero)
-            onceInicial.addAll(defensas)
-            onceInicial.addAll(centrocampistas)
-            onceInicial.addAll(delanteros)
+            onceInicial.add(misJugadores.filter { x -> x.posicion == "PO" && x.estadoLesion == "En forma" }
+                .sortedBy { x -> -x.valor }[0])
+            onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DF" && x.estadoLesion == "En forma" }
+                .sortedBy { x -> -x.valor }.subList(0, 4))
+            onceInicial.addAll(misJugadores.filter { x -> x.posicion == "CC" && x.estadoLesion == "En forma" }
+                .sortedBy { x -> -x.valor }.subList(0, 4))
+            onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DL" && x.estadoLesion == "En forma" }
+                .sortedBy { x -> -x.valor }.subList(0, 2))
 
             var banquillo = HashSet<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
@@ -117,35 +100,24 @@ class EquipoControlador(
         model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
     ): String {
         if (!equipoServicio.tengoEquipo(idLiga, principal)) {
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             model["SinEquipo"] = true
         } else {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            var NPortero = miEquipo.onceInicial.stream().filter { x -> x.posicion == "PO" }
-                .findFirst().get()
-            var NDefensas = miEquipo.onceInicial.stream().filter { x -> x.posicion == "DF" }
-                .collect(Collectors.toList())
-            var NCentrocampistas = miEquipo.onceInicial.stream().filter { x -> x.posicion == "CC" }
-                .collect(Collectors.toList())
-            var NDelanteros = miEquipo.onceInicial.stream().filter { x -> x.posicion == "DL" }
-                .collect(Collectors.toList())
-
 
             var onceInicial = ArrayList<Jugador>()
 
-            onceInicial.add(NPortero)
-            onceInicial.addAll(NDefensas)
-            onceInicial.addAll(NCentrocampistas)
-            onceInicial.addAll(NDelanteros)
+            onceInicial.add(miEquipo.onceInicial.filter { x -> x.posicion == "PO" }[0])
+            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
+            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
+            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })
 
             miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
             this.equipoServicio.guardarEquipo(miEquipo)
             model["tengoEquipo"] = true
             model["equipo"] = miEquipo
-            model["valorEquipo"] = equipoServicio.calcularValorEquipo(miEquipo.name, idLiga)
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-
+            model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
         }
+        model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
         return VISTA_DETALLES_MIEQUIPO
     }
 
@@ -159,18 +131,12 @@ class EquipoControlador(
             var onceAntiguo = miEquipo.onceInicial
             var banqAntiguo = miEquipo.jugBanquillo
 
-            var defensasOnce =
-                onceAntiguo.stream().filter { x -> x.posicion == "DF" }.collect(Collectors.toList())
-            var centroCampistasOnce =
-                onceAntiguo.stream().filter { x -> x.posicion == "CC" }.collect(Collectors.toList())
-            var delanterosOnce =
-                onceAntiguo.stream().filter { x -> x.posicion == "DL" }.collect(Collectors.toList())
-            var defensasBanq =
-                banqAntiguo.stream().filter { x -> x.posicion == "DF" }.collect(Collectors.toList())
-            var centroCampistasBanq =
-                banqAntiguo.stream().filter { x -> x.posicion == "CC" }.collect(Collectors.toList())
-            var delanterossBanq =
-                banqAntiguo.stream().filter { x -> x.posicion == "DL" }.collect(Collectors.toList())
+            var defensasOnce = onceAntiguo.filter { x -> x.posicion == "DF" } as MutableList<Jugador>
+            var centroCampistasOnce = onceAntiguo.filter { x -> x.posicion == "CC" } as MutableList<Jugador>
+            var delanterosOnce = onceAntiguo.filter { x -> x.posicion == "DL" } as MutableList<Jugador>
+            var defensasBanq = banqAntiguo.filter { x -> x.posicion == "DF" } as MutableList<Jugador>
+            var centroCampistasBanq = banqAntiguo.filter { x -> x.posicion == "CC" } as MutableList<Jugador>
+            var delanterossBanq = banqAntiguo.filter { x -> x.posicion == "DL" } as MutableList<Jugador>
 
             var nuevoOnce: MutableSet<Jugador> = onceAntiguo
             var nuevoBanq: MutableSet<Jugador> = banqAntiguo
@@ -179,26 +145,26 @@ class EquipoControlador(
             var nCCBQ = centroCampistasBanq.size
             var nDLBQ = delanterossBanq.size
 
-            var DFRestantes = 0
-            var CCRestantes = 0
-            var DLRestantes = 0
+            var defensasRestantes = 0
+            var centrocRestantes = 0
+            var delantRestantes = 0
 
             if (formacion == "442" && formacionAntigua != "4-4-2") {
                 if (formacionAntigua == "4-3-3") {
                     if (nCCBQ >= 1) {
-                        CCRestantes = 1
-                        DLRestantes = -1
+                        centrocRestantes = 1
+                        delantRestantes = -1
 
                     }
                 } else if (formacionAntigua == "3-5-2") {
                     if (nDFBQ >= 1) {
-                        DFRestantes = 1
-                        CCRestantes = -1
+                        defensasRestantes = 1
+                        centrocRestantes = -1
                     }
                 } else {
                     if (nCCBQ >= 1) {
-                        DFRestantes = -1
-                        CCRestantes = 1
+                        defensasRestantes = -1
+                        centrocRestantes = 1
                     }
                 }
                 miEquipo.formacion = "4-4-2"
@@ -206,95 +172,97 @@ class EquipoControlador(
             } else if (formacion == "433" && formacionAntigua != "4-3-3") {
                 if (formacionAntigua == "4-4-2") {
                     if (nDLBQ >= 1) {
-                        CCRestantes = -1
-                        DLRestantes = 1
+                        centrocRestantes = -1
+                        delantRestantes = 1
                     }
                 } else if (formacionAntigua == "3-5-2") {
                     if (nDFBQ >= 1 && nDLBQ >= 1) {
-                        DFRestantes = 1
-                        CCRestantes = -2
-                        DLRestantes = 1
+                        defensasRestantes = 1
+                        centrocRestantes = -2
+                        delantRestantes = 1
                     }
                 } else {
-                    DFRestantes = -1
-                    DLRestantes = 1
+                    defensasRestantes = -1
+                    delantRestantes = 1
                 }
                 miEquipo.formacion = "4-3-3"
+
             } else if (formacion == "352" && formacionAntigua != "3-5-2") {
                 if (formacionAntigua == "4-4-2") {
                     if (nCCBQ >= 1) {
-                        DFRestantes = -1
-                        CCRestantes = 1
+                        defensasRestantes = -1
+                        centrocRestantes = 1
                     }
                 } else if (formacionAntigua == "4-3-3") {
                     if (nCCBQ >= 2) {
-                        DFRestantes = -1
-                        CCRestantes = 2
-                        DLRestantes = -1
+                        defensasRestantes = -1
+                        centrocRestantes = 2
+                        delantRestantes = -1
                     }
                 } else {
                     if (nCCBQ >= 2) {
-                        DFRestantes = -2
-                        CCRestantes = 2
+                        defensasRestantes = -2
+                        centrocRestantes = 2
                     }
                 }
                 miEquipo.formacion = "3-5-2"
+
             } else if (formacion == "532" && formacionAntigua != "5-3-2") {
                 if (formacionAntigua == "4-4-2") {
                     if (nDFBQ >= 1) {
-                        DFRestantes = 1
-                        CCRestantes = -1
+                        defensasRestantes = 1
+                        centrocRestantes = -1
                     }
                 } else if (formacionAntigua == "4-3-3") {
                     if (nDFBQ >= 1) {
-                        DFRestantes = 1
-                        DLRestantes = -1
+                        defensasRestantes = 1
+                        delantRestantes = -1
                     }
                 } else {
                     if (nDFBQ >= 2) {
-                        DFRestantes = 2
-                        CCRestantes = -2
+                        defensasRestantes = 2
+                        centrocRestantes = -2
                     }
                 }
                 miEquipo.formacion = "5-3-2"
             }
             if (formacionAntigua != miEquipo.formacion) {
-                if (DFRestantes > 0) {
-                    for (n in 0 until DFRestantes) {
+                if (defensasRestantes > 0) {
+                    for (n in 0 until defensasRestantes) {
                         nuevoBanq.remove(defensasBanq[n])
                         nuevoOnce.add(defensasBanq[n])
                         defensasBanq.removeAt(n)
                     }
-                } else if (DFRestantes < 0) {
-                    for (n in 0 until DFRestantes.absoluteValue) {
+                } else if (defensasRestantes < 0) {
+                    for (n in 0 until defensasRestantes.absoluteValue) {
                         nuevoBanq.add(defensasOnce[n])
                         nuevoOnce.remove(defensasOnce[n])
                         defensasOnce.removeAt(n)
                     }
                 }
 
-                if (CCRestantes > 0) {
-                    for (n in 0 until CCRestantes) {
+                if (centrocRestantes > 0) {
+                    for (n in 0 until centrocRestantes) {
                         nuevoBanq.remove(centroCampistasBanq[n])
                         nuevoOnce.add(centroCampistasBanq[n])
                         centroCampistasBanq.removeAt(n)
                     }
-                } else if (CCRestantes < 0) {
-                    for (n in 0 until CCRestantes.absoluteValue) {
+                } else if (centrocRestantes < 0) {
+                    for (n in 0 until centrocRestantes.absoluteValue) {
                         nuevoBanq.add(centroCampistasOnce[n])
                         nuevoOnce.remove(centroCampistasOnce[n])
                         centroCampistasOnce.removeAt(n)
                     }
                 }
 
-                if (DLRestantes > 0) {
-                    for (n in 0 until DLRestantes) {
+                if (delantRestantes > 0) {
+                    for (n in 0 until delantRestantes) {
                         nuevoBanq.remove(delanterossBanq[n])
                         nuevoOnce.add(delanterossBanq[n])
                         delanterossBanq.removeAt(n)
                     }
-                } else if (DLRestantes < 0) {
-                    for (n in 0 until DLRestantes.absoluteValue) {
+                } else if (delantRestantes < 0) {
+                    for (n in 0 until delantRestantes.absoluteValue) {
                         nuevoBanq.add(delanterosOnce[n])
                         nuevoOnce.remove(delanterosOnce[n])
                         delanterosOnce.removeAt(n)
@@ -316,20 +284,31 @@ class EquipoControlador(
         principal: Principal,
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
-        var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
-        model["liga"] = liga
-        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-        model["equipo"] = equipo
-        var jugadores = equipo.jugadores
-        model["jugadores"] = jugadores
-        model["valorEquipo"] = liga.id?.let { equipoServicio.calcularValorEquipo(equipo.name, it) }!!
-        if (jugadores.size > 5) {
-            model["top5Jugadores"] = liga.id?.let { equipoServicio.topJugadoresEquipo(equipo.name, it) }!!
-        }
-        return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
-            VISTA_DETALLES_OTROS_EQUIPOS
-        } else {
-            "redirect:/liga/" + liga.id + "/miEquipo"
+        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
+
+            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
+            model["liga"] = liga
+            if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(nombreLiga, it) } == true) {
+
+                var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+                model["equipo"] = equipo
+                var jugadores = equipo.jugadores
+                model["jugadores"] = jugadores
+                model["valorEquipo"] =
+                    liga.id?.let { equipo.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }!!
+                if (jugadores.size > 5) {
+                    model["top5Jugadores"] = liga.id?.let { equipoServicio.topJugadoresEquipo(equipo.name, it) }!!
+                }
+                return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
+                    VISTA_DETALLES_OTROS_EQUIPOS
+                } else {
+                    "redirect:/liga/" + liga.id + "/miEquipo"
+                }
+            } else {
+                return "redirect:/"
+            }
+        }else{
+            return "redirect:/"
         }
     }
 
@@ -338,22 +317,24 @@ class EquipoControlador(
         @PathVariable idLiga: Int, @PathVariable idJugador: Int,
         model: Model, principal: Principal
     ): String {
-
-        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        model["equipo"] = equipo
-        if (jugadorServicio.existeJugadorId(idJugador) == true && equipo.id?.let {
-                jugadorServicio.checkJugadorEnEquipo(idJugador, it)
-            } == true &&
-            equipo.id?.let { equipoServicio.jugadorEnOnce(idJugador, it) } == true) {
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            model["titular"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            var jugadoresMismaPos =
-                equipo.id?.let { equipoServicio.buscaJugadoresBanqEquipoMismaPos(it, idJugador) }
-            model["jugadoresMismaPos"] = jugadoresMismaPos!!
-        } else {
-            return "redirect:/liga/" + idLiga + "/miEquipo"
+        if (this.equipoServicio.tengoEquipo(idLiga,principal)) {
+            var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            model["equipo"] = equipo
+            if (jugadorServicio.existeJugadorId(idJugador) == true && equipo.id?.let {
+                    jugadorServicio.existeJugadorEnEquipo(idJugador, it) } == true &&
+                equipo.id?.let { equipoServicio.jugadorEnOnce(idJugador, it) } == true) {
+                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                model["titular"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                var jugadoresMismaPos =
+                    equipo.id?.let { equipoServicio.buscaJugadoresBanqEquipoMismaPos(it, idJugador) }
+                model["jugadoresMismaPos"] = jugadoresMismaPos!!
+            } else {
+                return "redirect:/liga/$idLiga/miEquipo"
+            }
+            return VISTA_GESTION_ONCE
+        }else{
+            return "redirect:/"
         }
-        return VISTA_GESTION_ONCE
     }
 
     @GetMapping("liga/{idLiga}/miEquipo/cambiarOnce/{idJugadorOnce}/por/{idJugadorBanquillo}")
@@ -362,42 +343,47 @@ class EquipoControlador(
         model: Model, principal: Principal
     ): String {
 
-        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        if (jugadorServicio.existeJugadorId(idJugadorOnce) == true && equipo.id?.let {
-                jugadorServicio.checkJugadorEnEquipo(idJugadorOnce, it)
-            } == true &&
-            equipo.id?.let { equipoServicio.jugadorEnOnce(idJugadorOnce, it) } == true) {
-            if (jugadorServicio.existeJugadorId(idJugadorBanquillo) == true && equipo.id?.let {
-                    jugadorServicio.checkJugadorEnEquipo(idJugadorBanquillo, it)
+        if (this.equipoServicio.tengoEquipo(idLiga,principal)) {
+
+            var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            if (jugadorServicio.existeJugadorId(idJugadorOnce) == true && equipo.id?.let {
+                    jugadorServicio.existeJugadorEnEquipo(idJugadorOnce, it)
                 } == true &&
-                equipo.id?.let {
-                    equipoServicio.jugadorEnOnce(
-                        idJugadorBanquillo,
-                        it
-                    )
-                } == false && jugadorServicio.tienenMismaPos(idJugadorOnce, idJugadorBanquillo)!!) {
+                equipo.id?.let { equipoServicio.jugadorEnOnce(idJugadorOnce, it) } == true) {
+                if (jugadorServicio.existeJugadorId(idJugadorBanquillo) == true && equipo.id?.let {
+                        jugadorServicio.existeJugadorEnEquipo(idJugadorBanquillo, it)
+                    } == true &&
+                    equipo.id?.let {
+                        equipoServicio.jugadorEnOnce(
+                            idJugadorBanquillo,
+                            it
+                        )
+                    } == false && jugadorServicio.tienenMismaPos(idJugadorOnce, idJugadorBanquillo)!!) {
 
-                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-                var titular = jugadorServicio.buscaJugadorPorId(idJugadorOnce)!!
-                var sustituto = jugadorServicio.buscaJugadorPorId(idJugadorBanquillo)!!
-                model["equipo"] = equipo
+                    model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                    var titular = jugadorServicio.buscaJugadorPorId(idJugadorOnce)!!
+                    var sustituto = jugadorServicio.buscaJugadorPorId(idJugadorBanquillo)!!
+                    model["equipo"] = equipo
 
-                for (jug in equipo.jugBanquillo) {
-                    if (jug.id == sustituto.id) {
-                        equipo.jugBanquillo.remove(jug)
-                        break
+                    for (jug in equipo.jugBanquillo) {
+                        if (jug.id == sustituto.id) {
+                            equipo.jugBanquillo.remove(jug)
+                            break
+                        }
                     }
-                }
-                for (jug in equipo.onceInicial) {
-                    if (jug.id == titular.id) {
-                        equipo.onceInicial.remove(jug)
-                        break
+                    for (jug in equipo.onceInicial) {
+                        if (jug.id == titular.id) {
+                            equipo.onceInicial.remove(jug)
+                            break
+                        }
                     }
+                    equipo.jugBanquillo.add(titular)
+                    equipo.onceInicial.add(sustituto)
+                    equipoServicio.guardarEquipo(equipo)
                 }
-                equipo.jugBanquillo.add(titular)
-                equipo.onceInicial.add(sustituto)
-                equipoServicio.guardarEquipo(equipo)
             }
+        }else{
+            return "redirect:/"
         }
         return "redirect:/liga/$idLiga/miEquipo"
     }
@@ -408,19 +394,23 @@ class EquipoControlador(
         model: Model, principal: Principal
     ): String {
 
-        var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
-        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        if (jugador != null) {
-            for (j in equipo.onceInicial) {
-                if (jugador.id == j.id) {
-                    equipo.jugBanquillo.add(jugador)
-                    equipo.onceInicial.removeIf { it.name == jugador.name }
-                    equipoServicio.guardarEquipo(equipo)
-                    break
+        if (this.equipoServicio.tengoEquipo(idLiga, principal)) {
+
+            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+            var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            if (jugador != null) {
+                for (j in equipo.onceInicial) {
+                    if (jugador.id == j.id) {
+                        equipo.jugBanquillo.add(jugador)
+                        equipo.onceInicial.removeIf { it.name == jugador.name }
+                        equipoServicio.guardarEquipo(equipo)
+                        break
+                    }
                 }
             }
+            return "redirect:/liga/$idLiga/miEquipo"
+        } else {
+            return "redirect:/"
         }
-        return "redirect:/liga/$idLiga/miEquipo"
     }
-
 }

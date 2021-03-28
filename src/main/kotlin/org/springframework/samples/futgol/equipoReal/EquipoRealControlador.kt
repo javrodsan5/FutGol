@@ -40,33 +40,32 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
         if (equipoRealServicio.existeEquipoReal(nombreEquipo) == true) {
             var equipo = equipoRealServicio.buscarEquipoRealPorNombre(nombreEquipo)!!
             model["equipo"] = equipo
-            var todosJugadores = equipo.jugadores
-                .stream().sorted(Comparator.comparing { x -> -x.puntos })
-                .collect(Collectors.toList())
+            var todosJugadores = equipo.jugadores.sortedBy { x -> -x.puntos }
 
             var map: Map<String, MutableList<Jugador?>> = HashMap()
-            if(todosJugadores!=null && todosJugadores.isNotEmpty()){
-                map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores,0, it) }!!
+            if (todosJugadores != null && todosJugadores.isNotEmpty()) {
+                map = equipo.name?.let { this.jornadaServicio.onceIdeal(todosJugadores, 0, it) }!!
             }
             var jugadores: MutableList<Jugador?> = ArrayList()
             var formacion: String
 
-            if(map?.values?.isNotEmpty()==true){
-                jugadores= map.values.first()
-                model["jugadores"]= jugadores
+            if (map.values.isNotEmpty()) {
+                jugadores = map.values.first()
+                model["jugadores"] = jugadores
 
-                formacion= map.keys.first()
-                equipo.formacion= formacion
+                formacion = map.keys.first()
+                equipo.formacion = formacion
                 model["formacion"] = equipo.formacion
 
                 this.equipoRealServicio.guardarEquipo(equipo)
             }
+
             var proxPartido = equipoRealServicio.proximoPartido(nombreEquipo)
             model["proxPartido"] = proxPartido
 
-            if(proxPartido.equipoVisitante?.name == equipo.name) {
+            if (proxPartido.equipoVisitante?.name == equipo.name) {
                 model["rival"] = proxPartido.equipoLocal!!
-            }else {
+            } else {
                 model["rival"] = proxPartido.equipoVisitante!!
             }
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }

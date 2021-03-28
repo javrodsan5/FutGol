@@ -19,6 +19,9 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
     @Query("SELECT e FROM Equipo e where e.name = ?1")
     fun buscarEquipoPorNombre(nombre: String): Equipo
 
+    @Query("SELECT e FROM Equipo e where e.name = ?1 and e.liga.id = ?2")
+    fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo
+
     @Query("SELECT e FROM Equipo e where e.usuario.user.username = ?1 AND e.liga.id = ?2")
     fun buscarEquipoUsuarioEnLiga(nombreUsuario: String, idLiga: Int): Equipo
 

@@ -157,7 +157,7 @@ class LigaControlador(
                 model["equiposLiga"] = equiposLiga
                 var valores: MutableList<Double> = ArrayList()
                 for (e in equiposLiga) {
-                    e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
+                    e.liga?.id?.let { e.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }?.let { valores.add(it) }
                 }
                 model["valores"] = valores
             return VISTA_CLASIFICACION_LIGA

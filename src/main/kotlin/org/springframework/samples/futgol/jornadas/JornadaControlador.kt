@@ -89,8 +89,7 @@ class JornadaControlador(
                 if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
                     if (jornada.jugadores.isEmpty() == true) {
                         if (jornada.mejorJugador == null) {
-                            var mejorJugador = this.estadisticaJugadorServicio.mejorJugadorJornada(jornadaId)
-                            jornada.mejorJugador = mejorJugador
+                            jornada.mejorJugador = this.estadisticaJugadorServicio.mejorJugadorJornada(jornadaId)
                             jornadaServicio.guardarJornada(jornada)
                         }
 

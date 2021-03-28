@@ -177,47 +177,17 @@ class JugadorServicio {
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
-        var jugadores = this.buscaTodosJugadores()
-        var listaPosiblesJugador = ArrayList<Jugador>()
-        if (jugadores != null) {
-            for (jugador in jugadores) {
-                if (jugador.equipos.stream().noneMatch { x -> x.liga?.id == idLiga }) {
-                    listaPosiblesJugador.add(jugador)
-                }
-            }
-        }
-        return listaPosiblesJugador
+        return this.buscaTodosJugadores()?.filter { x -> x.equipos.none { x -> x.liga?.id == idLiga } }
     }
 
     fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador> {
         var jugadoresAsignables = this.jugadoresAsignablesLiga(idLiga)
-        var porterosA = ArrayList<Jugador>()
-        var defensasA = ArrayList<Jugador>()
-        var centrocamA = ArrayList<Jugador>()
-        var delanterosA = ArrayList<Jugador>()
         var misJugadores = HashSet<Jugador>()
 
-        if (jugadoresAsignables != null) {
-            for (jugador in jugadoresAsignables) {
-                if (jugador.posicion == "PO") {
-                    porterosA.add(jugador)
-                } else if (jugador.posicion == "DF") {
-                    defensasA.add(jugador)
-                } else if (jugador.posicion == "CC") {
-                    centrocamA.add(jugador)
-                } else {
-                    delanterosA.add(jugador)
-                }
-            }
-        }
-        var porteros = porterosA.shuffled().subList(0, 2)
-        var defensas = defensasA.shuffled().subList(0, 6)
-        var centrocam = centrocamA.shuffled().subList(0, 6)
-        var delanteros = delanterosA.shuffled().subList(0, 4)
-        misJugadores.addAll(porteros)
-        misJugadores.addAll(defensas)
-        misJugadores.addAll(centrocam)
-        misJugadores.addAll(delanteros)
+        misJugadores.addAll(jugadoresAsignables?.filter { x-> x.posicion == "PO" }?.shuffled()?.subList(0, 2)!!)
+        misJugadores.addAll(jugadoresAsignables.filter { x -> x.posicion == "DF" }.shuffled().subList(0, 6))
+        misJugadores.addAll(jugadoresAsignables.filter { x-> x.posicion == "CC" }.shuffled().subList(0, 6))
+        misJugadores.addAll(jugadoresAsignables.filter { x-> x.posicion == "DL" }.shuffled().subList(0, 4))
         return misJugadores
     }
 
@@ -239,17 +209,9 @@ class JugadorServicio {
         return jugadorRepositorio?.buscarJugadoresOrdenPuntos()
     }
 
-    fun checkJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {
-        var estaEnEquipo = false
+    fun existeJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {
         var equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
-        var jugador = jugadorServicio?.buscaJugadorPorId(idJugador)!!
-        for (j in equipo!!.jugadores) {
-            if (j.name == jugador.name) {
-                estaEnEquipo = true
-                break
-            }
-        }
-        return estaEnEquipo
+        return equipo?.jugadores?.any { x-> x.id == idJugador }!!
     }
 
     fun webScrapingJugadoresTransfermarkt() {
@@ -369,7 +331,8 @@ class JugadorServicio {
 
         var l: List<String?> = ArrayList()
         try {
-            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt")).collect(Collectors.toList())
+            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt"))
+                .collect(Collectors.toList())
         } catch (e: IOException) {
             println("No se puede leer el fichero de nombres.")
         }

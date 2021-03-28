@@ -44,30 +44,17 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun jugadorEnOnce(idJugador: Int, idEquipo: Int): Boolean {
-        var res = false
-        var equipo = buscaEquiposPorId(idEquipo)
-        for (jug in equipo!!.onceInicial) {
-            if (jug.id == idJugador) {
-                res = true
-                break
-            }
-        }
-        return res
+        var equipo = this.buscaEquiposPorId(idEquipo)
+        return equipo?.onceInicial?.any { x -> x.id == idJugador }!!
     }
 
     @Transactional(readOnly = true)
     fun buscaJugadoresBanqEquipoMismaPos(
         idEquipo: Int, idJugador: Int
     ): MutableList<Jugador>? {
-        var listaSustitutos: MutableList<Jugador> = ArrayList()
         var equipo = buscaEquiposPorId(idEquipo)
         var posicion = jugadorServicio?.buscaJugadorPorId(idJugador)?.posicion
-        for (jug in equipo!!.jugBanquillo) {
-            if (jug.posicion == posicion) {
-                listaSustitutos.add(jug)
-            }
-        }
-        return listaSustitutos
+        return equipo?.jugBanquillo?.filter { x -> x.posicion == posicion } as MutableList<Jugador>
     }
 
 
@@ -84,37 +71,37 @@ class EquipoServicio {
     @Transactional(readOnly = true)
     fun buscaMiEquipoEnLiga(idLiga: Int, principal: Principal): Equipo {
         var nombreUsuario = usuarioServicio?.usuarioLogueado(principal)?.user?.username
-        return nombreUsuario?.let { this.equipoRepositorio?.buscarEquipoUsuarioEnLiga(it,idLiga) }!!
+        return nombreUsuario?.let { this.equipoRepositorio?.buscarEquipoUsuarioEnLiga(it, idLiga) }!!
     }
 
     @Transactional(readOnly = true)
     fun tengoEquipo(idLiga: Int, principal: Principal): Boolean {
         var nombreUsuario = usuarioServicio?.usuarioLogueado(principal)?.user?.username
-        return nombreUsuario?.let { this.equipoRepositorio?.existeUsuarioConEquipoEnLiga(it,idLiga) }!!
+        return nombreUsuario?.let { this.equipoRepositorio?.existeUsuarioConEquipoEnLiga(it, idLiga) }!!
     }
 
     @Transactional(readOnly = true)
     fun comprobarSiExisteEquipoLiga(nombreEquipo: String?, idLiga: Int): Boolean {
-        return nombreEquipo?.let { this.equipoRepositorio?.existeEquipoEnLiga(it,idLiga) }!!
+        return nombreEquipo?.let { this.equipoRepositorio?.existeEquipoEnLiga(it, idLiga) }!!
     }
 
     @Transactional(readOnly = true)
-    fun calcularValorEquipo(nombreEquipo: String?, idLiga: Int): Double {
-        val equipos = buscaEquiposDeLigaPorId(idLiga)
-        var valorEquipo = 0.0
-        var equipo = Equipo()
-        if (equipos != null) {
-            for (e in equipos) {
-                if (e.name == nombreEquipo) {
-                    equipo = e
-                    break
-                }
-            }
+    fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo {
+        return this.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
+    }
+
+    @Transactional(readOnly = true)
+    fun calcularValorEquipo(nombreEquipo: String, idLiga: Int): Double {
+        var res = 0.0
+        if (this.comprobarSiExisteEquipoLiga(nombreEquipo, idLiga)) {
+            var valorEquipo = 0.0
+            var equipo = this.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
             for (j in equipo.jugadores) {
                 valorEquipo += j.valor
             }
+            res = Math.round(valorEquipo * 100) / 100.0
         }
-        return Math.round(valorEquipo * 100) / 100.0
+        return res
     }
 
     @Transactional(readOnly = true)

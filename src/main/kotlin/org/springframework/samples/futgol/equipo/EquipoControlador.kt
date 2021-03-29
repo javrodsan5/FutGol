@@ -106,7 +106,7 @@ class EquipoControlador(
 
             var onceInicial = ArrayList<Jugador>()
 
-            onceInicial.add(miEquipo.onceInicial.filter { x -> x.posicion == "PO" }[0])
+            onceInicial.add(miEquipo.onceInicial.single { x -> x.posicion == "PO" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })

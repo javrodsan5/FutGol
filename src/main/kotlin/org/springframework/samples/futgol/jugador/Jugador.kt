@@ -56,8 +56,8 @@ class Jugador : NamedEntity() {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "equipo_jugadores",
-        joinColumns = [JoinColumn(name = "equipo_id")],
-        inverseJoinColumns = [JoinColumn(name = "jugador_id")]
+        joinColumns = [JoinColumn(name = "jugador_id")],
+        inverseJoinColumns = [JoinColumn(name = "equipo_id")]
     )
     var equipos: MutableSet<Equipo> = HashSet()
 

@@ -86,8 +86,8 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo {
-        return this.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
+    fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo? {
+        return equipoRepositorio?.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
     }
 
     @Transactional(readOnly = true)
@@ -96,7 +96,7 @@ class EquipoServicio {
         if (this.comprobarSiExisteEquipoLiga(nombreEquipo, idLiga)) {
             var valorEquipo = 0.0
             var equipo = this.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
-            for (j in equipo.jugadores) {
+            for (j in equipo?.jugadores!!) {
                 valorEquipo += j.valor
             }
             res = Math.round(valorEquipo * 100) / 100.0

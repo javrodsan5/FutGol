@@ -6,9 +6,9 @@
 <body>
 <script>
     function cambiarFormacion(formacion) {
-        var jugadores = document.getElementsByClassName("player")
+        var jugadores = document.getElementsByClassName("player");
         for (i = 0; i < jugadores.length; i++) {
-            var clase = jugadores[i].className
+            var clase = jugadores[i].className;
 
             if (clase.includes('433')) {
                 jugadores[i].className = clase.replace('433', formacion);
@@ -22,6 +22,30 @@
 
         }
     }
+
+    function coloresPuntuaciones() {
+        var puntuaciones = document.getElementsByClassName("circulo");
+
+        for (i = 0; i < puntuaciones.length; i++) {
+            var clase= puntuaciones[i]
+            var puntuacion = parseInt(puntuaciones[i].innerHTML.replace("<p>", "").replace("</p>",""));
+
+            if (puntuacion < 0) {
+                clase.style.backgroundColor = "#cf3b36";
+            } else if (puntuacion === 0 || (puntuacion > 0 && puntuacion <= 5)) {
+                clase.style.backgroundColor = "#ffef40";
+            } else if ((puntuacion > 5 && puntuacion < 10)) {
+                clase.style.backgroundColor = "#3cdb39";
+            } else if ((puntuacion >= 10 && puntuacion < 15)) {
+                clase.style.backgroundColor = "#22c9b9";
+            } else {
+                clase.style.backgroundColor = "#e83ace";
+
+            }
+
+        }
+    }
+    coloresPuntuaciones();
 </script>
 
 <h1 th:if="${ultimaJornada}">Última jornada:</h1>
@@ -46,6 +70,7 @@
 
 <div>
     <div th:if="${!noOnce}">
+
         <div th:object="${jornada}">
             <div th:if="*{formacion}=='4-3-3'">
                 <script>
@@ -67,6 +92,16 @@
                         cambiarFormacion('532')
                     });
                 </script>
+            </div>
+
+            <div>
+
+                <script>
+                    $(document).ready(function () {
+                        coloresPuntuaciones()
+                    });
+                </script>
+
             </div>
 
             <div style="float: right; display: inline-block; margin-left: 15%">

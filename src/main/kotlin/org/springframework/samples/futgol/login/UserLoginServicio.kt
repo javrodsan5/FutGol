@@ -15,6 +15,7 @@ class UserLoginServicio : UserDetailsService {
     private val userService: UserServicio? = null
 
     override fun loadUserByUsername(username: String?): UserDetails {
+        println(username)
         var user: User? =
             userService?.findUser(username) ?: throw UsernameNotFoundException("Usuario " + username + "no encontrado.")
         var grantedAuthorities = ArrayList<GrantedAuthority>()

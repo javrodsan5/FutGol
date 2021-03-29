@@ -13,7 +13,7 @@ import javax.validation.constraints.Size
 class Authorities : BaseEntity(){
 
     @ManyToOne
-    @JoinColumn(name = "username")
+    @JoinColumn(name = "username", referencedColumnName = "username")
     var user: User? = null
 
     @Size(min = 3, max = 50)

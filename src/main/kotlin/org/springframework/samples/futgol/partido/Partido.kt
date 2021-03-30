@@ -33,7 +33,5 @@ class Partido() : BaseEntity() {
     @Column(name = "resultado")
     var resultado = ""
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "partido")
-    var estadisticasJugador: MutableSet<EstadisticaJugador> = HashSet()
 
 }

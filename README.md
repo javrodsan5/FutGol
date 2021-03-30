@@ -9,7 +9,7 @@
 * Web framework: Spring MVC
 * Templates: Thymeleaf and Bootstrap
 * Persistence : Spring Data JPA
-* Database: SQLite
+* Database: MYSQL
 * Build: Gradle Script with the Kotlin DSL
 * Testing: Junit 5, Mockito and AssertJ
 

@@ -71,12 +71,6 @@ class EstadisticaJugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarEstadisticasPorJugador(idJugador: Int): Collection<EstadisticaJugador>? {
-        return estadisticaJugadorRepositorio?.buscarEstadisticasPorJugador(idJugador)
-    }
-
-    @Transactional(readOnly = true)
-    @Throws(DataAccessException::class)
     fun existeEstadisticaJugador(nombreJugador: String, nombreEquipo: String, idPartido: Int?): Boolean? {
         return estadisticaJugadorRepositorio?.existeEstadisticaJugEqPart(nombreJugador, nombreEquipo, idPartido)
     }

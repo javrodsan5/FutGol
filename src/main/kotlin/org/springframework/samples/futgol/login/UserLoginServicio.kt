@@ -17,6 +17,8 @@ class UserLoginServicio : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
         var user: User? =
             userService?.findUser(username) ?: throw UsernameNotFoundException("Usuario " + username + "no encontrado.")
+        println(user!!.username)
+
         var grantedAuthorities = ArrayList<GrantedAuthority>()
         grantedAuthorities.add(SimpleGrantedAuthority("usuario"))
         return org.springframework.security.core.userdetails.User(user?.username, user?.password, grantedAuthorities)

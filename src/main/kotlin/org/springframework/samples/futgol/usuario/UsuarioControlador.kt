@@ -151,7 +151,6 @@ class UsuarioControlador(
 
 
                 var user = userServicio.findUser(usuarioComparador.user?.username)
-                var authority = authoritiesServicio.findAuthority(usuarioComparador.user?.username)
 
                 user!!.username = usuario.user?.username!!
 
@@ -162,10 +161,7 @@ class UsuarioControlador(
                     user.password = usuario.user?.password!!
                 }
                 this.userServicio.saveUser(user,b)
-                authority?.user= user
-                if (authority != null) {
-                    this.authoritiesServicio.saveAuthorities2(authority)
-                }
+
                 usuarioComparador.user = user
                 this.usuarioServicio.guardarUsuario(usuarioComparador)
 

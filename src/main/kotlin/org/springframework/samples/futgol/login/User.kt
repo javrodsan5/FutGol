@@ -22,7 +22,7 @@ class User : BaseEntity() {
 
     var enabled = false
 
-    @OneToOne(cascade = [CascadeType.ALL], mappedBy = "user")
-    var authority: Authorities ?= null
+    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
+    val authorities: MutableSet<Authorities>? = null
 
 }

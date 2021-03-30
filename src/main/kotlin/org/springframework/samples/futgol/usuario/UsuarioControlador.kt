@@ -5,6 +5,7 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -111,7 +112,7 @@ class UsuarioControlador(
             VISTA_REGISTRO_USUARIO
         } else {
             this.usuarioServicio.guardarUsuario(usuario)
-            usuario.user?.let { this.userServicio?.saveUser(it) }
+            usuario.user?.let { this.userServicio.saveUser(it,true) }
             usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
@@ -148,15 +149,24 @@ class UsuarioControlador(
                 usuarioComparador.name = usuario.name
                 usuarioComparador.email = usuario.email
 
-                var user = userServicio.findUser(usuarioComparador.user?.username)
-                var authority = authoritiesServicio.findAuthority(usuarioComparador.user?.username!!)
-                user!!.username = usuario.user?.username!!
-                user!!.password = usuario.user?.password!!
-                this.userServicio?.saveUser(user!!)
-                usuarioComparador.user = user
-                authority?.user?.username = usuario.user?.username!!
-                this.authoritiesServicio.saveAuthorities2(authority!!)
 
+                var user = userServicio.findUser(usuarioComparador.user?.username)
+                var authority = authoritiesServicio.findAuthority(usuarioComparador.user?.username)
+
+                user!!.username = usuario.user?.username!!
+
+                var b= false
+
+                if(!BCryptPasswordEncoder().matches(usuario.user!!.password,user.password)){
+                    b=true
+                    user.password = usuario.user?.password!!
+                }
+                this.userServicio.saveUser(user,b)
+                authority?.user= user
+                if (authority != null) {
+                    this.authoritiesServicio.saveAuthorities2(authority)
+                }
+                usuarioComparador.user = user
                 this.usuarioServicio.guardarUsuario(usuarioComparador)
 
             }

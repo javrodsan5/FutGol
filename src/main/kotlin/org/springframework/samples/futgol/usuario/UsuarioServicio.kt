@@ -39,17 +39,6 @@ class UsuarioServicio {
         usuarioRepositorio?.save(usuario)
     }
 
-    @Transactional
-    @Throws(DataAccessException::class)
-    fun guardarUsuario2(usuario: Usuario) {
-        usuarioRepositorio?.save(usuario)
-        usuario.user?.let {
-            userService?.saveUser(it)
-        }
-        usuario.user?.username?.let { this.authoritiesServicio?.saveAuthorities(it, "usuario") }
-
-    }
-
 
     @Transactional(readOnly = true)
     fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {

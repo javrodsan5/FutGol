@@ -4,10 +4,7 @@ import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.model.BaseEntity
 import org.springframework.validation.annotation.Validated
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.OneToMany
-import javax.persistence.Table
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
 @Getter
@@ -25,7 +22,7 @@ class User : BaseEntity() {
 
     var enabled = false
 
-    @OneToMany(cascade = [CascadeType.ALL], mappedBy = "user")
-    val authorities: MutableSet<Authorities>? = null
+    @OneToOne(cascade = [CascadeType.ALL], mappedBy = "user")
+    var authority: Authorities ?= null
 
 }

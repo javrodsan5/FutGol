@@ -53,12 +53,7 @@ class Jugador : NamedEntity() {
     @JoinColumn(name = "club", referencedColumnName = "id")
     var club: EquipoReal? = null
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "equipo_jugadores",
-        joinColumns = [JoinColumn(name = "jugador_id")],
-        inverseJoinColumns = [JoinColumn(name = "equipo_id")]
-    )
+    @ManyToMany(mappedBy = "jugadores")
     var equipos: MutableSet<Equipo> = HashSet()
 
 }

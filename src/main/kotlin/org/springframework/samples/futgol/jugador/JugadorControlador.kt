@@ -137,13 +137,16 @@ class JugadorControlador(
                 model["est"] =
                     estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
             } else {
+
                 model["tieneEstadistica"] = false
             }
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo
             model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+
             if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
                 model["loTengoEnMiEquipo"] = true
+
             }
         } else {
             return "redirect:/"

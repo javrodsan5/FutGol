@@ -86,6 +86,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun comprobarSiExisteEquipo(idEquipo: Int): Boolean? {
+        return equipoRepositorio?.existeEquipo(idEquipo)
+    }
+
+    @Transactional(readOnly = true)
     fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo? {
         return equipoRepositorio?.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
     }

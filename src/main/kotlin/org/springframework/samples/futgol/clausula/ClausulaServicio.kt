@@ -34,7 +34,7 @@ class ClausulaServicio {
         return clausulaRepositorio?.findClausulasByJugadorId(idJugador)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     fun buscarClausulasPorJugadorYEquipo(idJugador: Int, idEquipo: Int): Clausula? {
         val clausulasJugador = buscarClausulasPorIdJugador(idJugador)
         if (clausulasJugador != null) {

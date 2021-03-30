@@ -107,30 +107,19 @@ class JornadaServicio {
             jug451.add(delanteros[0])
         }
 
-        var puntos442 = 0
-        var puntos433 = 0
-        var puntos352 = 0
-        var puntos532 = 0
-        var puntos451 = 0
+        var puntos442: Int
+        var puntos433: Int
+        var puntos352: Int
+        var puntos532: Int
+        var puntos451: Int
 
         if (idJornada != 0 && nombreEquipo == "") { //significa que es jornadas y no equipo real
-            for (n in 0 until jug442.size) {
-                puntos442 += jug442[n]?.id?.let {
-                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
-                }!!
-                puntos433 += jug433[n]?.id?.let {
-                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
-                }!!
-                puntos352 += jug352[n]?.id?.let {
-                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
-                }!!
-                puntos532 += jug532[n]?.id?.let {
-                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
-                }!!
-                puntos451 += jug451[n]?.id?.let {
-                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
-                }!!
-            }
+            puntos442 = jug442.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+            puntos433 = jug433.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+            puntos352 = jug352.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+            puntos532 = jug532.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+            puntos451 = jug451.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+
         } else {
             puntos442 = jug442.sumBy { x -> x?.puntos!! }
             puntos433 = jug433.sumBy { x -> x?.puntos!! }

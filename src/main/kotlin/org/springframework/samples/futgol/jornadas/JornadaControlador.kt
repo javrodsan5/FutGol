@@ -59,9 +59,7 @@ class JornadaControlador(
                     }
 
                     if (jugadores.isNotEmpty()) {
-                        for (j in jugadores) {
-                            jornada.jugadores.add(j!!)
-                        }
+                        jornada.jugadores = jugadores as MutableList<Jugador>
                         jornada.formacion = formacion
                         jornadaServicio.guardarJornada(jornada)
                         b = false
@@ -106,15 +104,15 @@ class JornadaControlador(
                         }
 
                         if (jugadores.isNotEmpty()) {
-                            for (j in jugadores) {
-                                jornada.jugadores.add(j!!)
-                            }
+                            jornada.jugadores = jugadores as MutableList<Jugador>
+                            println(jornada.jugadores)
                             jornada.formacion = formacion
 
                             jornadaServicio.guardarJornada(jornada)
                             noOnceTodavia = false
                         }
                     } else {
+                        println(jornada.jugadores)
                         noOnceTodavia = false
                     }
                 }

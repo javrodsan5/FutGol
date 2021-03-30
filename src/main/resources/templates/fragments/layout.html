@@ -171,6 +171,12 @@
         <div id='snav' class='en'>
             <ul>
                 <li>
+                    <a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}">
+                        <i class="fa fa-bars"></i>
+                        <span>General</span>
+                    </a>
+                </li>
+                <li>
                     <a th:href="@{/liga/{idLiga}/miEquipo(idLiga= ${liga.id})}">
                         <i class="fa fa-futbol-o"></i>
                         <span>Mi equipo</span>

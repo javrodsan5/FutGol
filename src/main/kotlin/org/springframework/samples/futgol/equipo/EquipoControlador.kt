@@ -106,7 +106,7 @@ class EquipoControlador(
 
             var onceInicial = ArrayList<Jugador>()
 
-            onceInicial.add(miEquipo.onceInicial.filter { x -> x.posicion == "PO" }[0])
+            onceInicial.add(miEquipo.onceInicial.single { x -> x.posicion == "PO" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
             onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })
@@ -284,13 +284,11 @@ class EquipoControlador(
         principal: Principal,
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
-        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
-
+        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(idEquipo) == true) {
+            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
             model["liga"] = liga
-            if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(nombreLiga, it) } == true) {
-
-                var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+            if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
                 model["equipo"] = equipo
                 var jugadores = equipo.jugadores
                 model["jugadores"] = jugadores

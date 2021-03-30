@@ -57,6 +57,4 @@ class Equipo() : NamedEntity() {
     )
     var jugadores: MutableSet<Jugador> = HashSet()
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "id")
-    var clausulas: MutableSet<Clausula> = HashSet()
 }

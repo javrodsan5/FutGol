@@ -37,9 +37,6 @@ class Jugador : NamedEntity() {
     @Column(name = "puntos")
     var puntos = 0
 
-    @OneToMany(mappedBy = "id")
-    var clausulas: MutableSet<Clausula> = HashSet()
-
     @OneToMany(mappedBy = "jugador")
     var estadisticas: MutableList<EstadisticaJugador> = ArrayList()
 

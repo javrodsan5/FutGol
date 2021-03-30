@@ -95,7 +95,7 @@ class JugadorServicio {
         var medias: MutableList<Double> = ArrayList()
         if (existeJugadorId(idJugador) == true && tieneEstadisticas(idJugador) == true) {
             var jugador = buscaJugadorPorId(idJugador)
-            var estadisticasJugador = estadisticaJugadorServicio?.buscarEstadisticasPorJugador((idJugador))
+            var estadisticasJugador = jugador!!.estadisticas
             var puntos = 0.0
             var minutos = 0.0
             var tAmarillas = 0.0

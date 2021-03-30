@@ -53,6 +53,8 @@ class JornadaServicio {
         var jug433: MutableList<Jugador?> = ArrayList()
         var jug352: MutableList<Jugador?> = ArrayList()
         var jug532: MutableList<Jugador?> = ArrayList()
+        var jug451: MutableList<Jugador?> = ArrayList()
+
 
         var map: Map<String, MutableList<Jugador?>>
 
@@ -64,7 +66,7 @@ class JornadaServicio {
         var numeroCentroCampistas = centrocampistas.size
         var numeroDelanteros = delanteros.size
 
-        if (numeroDefensas >= 4 && numeroCentroCampistas >= 4 && numeroDelanteros >= 2) { //4-4-2
+        if (numeroDefensas >= 4 && numeroCentroCampistas >= 4 && numeroDelanteros >= 2) {
 
             jug442.add(portero)
             jug442.addAll(defensas.subList(0, 4))
@@ -82,7 +84,6 @@ class JornadaServicio {
         }
 
         if (numeroDefensas >= 3 && numeroCentroCampistas >= 5 && numeroDelanteros >= 2) {
-
             jug352.add(portero)
             jug352.addAll(defensas.subList(0, 3))
             jug352.addAll(centrocampistas.subList(0, 5))
@@ -96,13 +97,21 @@ class JornadaServicio {
             jug532.addAll(defensas.subList(0, 5))
             jug532.addAll(centrocampistas.subList(0, 3))
             jug532.addAll(delanteros.subList(0, 2))
+        }
 
+        if (numeroDefensas >= 4 && numeroCentroCampistas >= 5 && numeroDelanteros >= 1) {
+
+            jug451.add(portero)
+            jug451.addAll(defensas.subList(0, 4))
+            jug451.addAll(centrocampistas.subList(0, 5))
+            jug451.add(delanteros[0])
         }
 
         var puntos442 = 0
         var puntos433 = 0
         var puntos352 = 0
         var puntos532 = 0
+        var puntos451 = 0
 
         if (idJornada != 0 && nombreEquipo == "") { //significa que es jornadas y no equipo real
             for (n in 0 until jug442.size) {
@@ -118,23 +127,30 @@ class JornadaServicio {
                 puntos532 += jug532[n]?.id?.let {
                     this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
                 }!!
+                puntos451 += jug451[n]?.id?.let {
+                    this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(it, idJornada)?.puntos
+                }!!
             }
         } else {
             puntos442 = jug442.sumBy { x -> x?.puntos!! }
             puntos433 = jug433.sumBy { x -> x?.puntos!! }
             puntos352 = jug352.sumBy { x -> x?.puntos!! }
             puntos532 = jug532.sumBy { x -> x?.puntos!! }
+            puntos451 = jug451.sumBy { x -> x?.puntos!! }
 
         }
 
-        return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532) {
+        return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532 && puntos352>= puntos451) {
             map = mapOf("3-5-2" to jug352)
             map
-        } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532) {
+        } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532 && puntos442 >= puntos451) {
             map = mapOf("4-4-2" to jug442)
             map
-        } else if (puntos433 >= puntos352 && puntos433 >= puntos442 && puntos433 >= puntos532) {
+        } else if (puntos433 >= puntos352 && puntos433 >= puntos442 && puntos433 >= puntos532 && puntos433 >= puntos451) {
             map = mapOf("4-3-3" to jug433)
+            map
+        }else if (puntos451 >= puntos352 && puntos451 >= puntos442 && puntos451 >= puntos532 && puntos451>=puntos433) {
+            map = mapOf("4-5-1" to jug451)
             map
         } else {
             map = mapOf("5-3-2" to jug532)

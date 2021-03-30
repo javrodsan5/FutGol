@@ -24,9 +24,6 @@ interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
     @Query("SELECT e FROM EstadisticaJugador e where e.jugador.id = ?1 AND e.partido.jornada.numeroJornada = ?2")
     fun buscarEstadisticasPorJugadorJornada(idJugador: Int, numeroJornada: Int?): EstadisticaJugador
 
-    @Query("SELECT e FROM EstadisticaJugador e where e.jugador.id = ?1")
-    fun buscarEstadisticasPorJugador(idJugador: Int): Collection<EstadisticaJugador>
-
     @Query("SELECT e FROM EstadisticaJugador e where e.partido.jornada.id = ?1 and e.puntos= (SELECT MAX(x.puntos) FROM EstadisticaJugador x where x.partido.jornada.id = ?1)")
     fun mejorJugadorJornada(idJornada: Int): Collection<EstadisticaJugador>
 

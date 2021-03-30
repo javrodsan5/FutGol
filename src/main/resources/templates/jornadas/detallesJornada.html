@@ -150,6 +150,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[0].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -159,7 +160,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p2-442" th:object="${jornada.jugadores[1]}">
@@ -174,6 +174,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[1].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -183,7 +184,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p3-442" th:object="${jornada.jugadores[2]}">
@@ -198,6 +198,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[2].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -207,7 +208,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p4-442" th:object="${jornada.jugadores[3]}">
@@ -222,6 +222,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[3].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -231,7 +232,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p5-442" th:object="${jornada.jugadores[4]}">
@@ -246,6 +246,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[4].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -255,7 +256,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p6-442" th:object="${jornada.jugadores[5]}">
@@ -270,6 +270,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[5].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -279,7 +280,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p7-442" th:object="${jornada.jugadores[6]}">
@@ -294,6 +294,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[6].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -303,7 +304,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p8-442" th:object="${jornada.jugadores[7]}">
@@ -318,6 +318,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[7].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -327,7 +328,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p9-442" th:object="${jornada.jugadores[8]}">
@@ -342,6 +342,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[8].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -351,7 +352,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p10-442" th:object="${jornada.jugadores[9]}">
@@ -366,6 +366,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[9].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -375,7 +376,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                     <div class="player p11-442" th:object="${jornada.jugadores[10]}">
@@ -390,6 +390,7 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                                <h4>Últimas jornadas jugadas</h4>
                                 <div th:each="e, it : ${jornada.jugadores[10].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
                                     <b>
@@ -399,7 +400,6 @@
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
-                            <img style="display:inline-block; float: right" th:src="*{foto}" width="30%" height="30%">
                         </div>
                     </div>
                 </div>

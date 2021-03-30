@@ -17,6 +17,8 @@
                 jugadores[i].className = clase.replace('442', formacion);
             } else if (clase.includes('352')) {
                 jugadores[i].className = clase.replace('352', formacion);
+            }else if (clase.includes('451')) {
+                jugadores[i].className = clase.replace('451', formacion);
             } else {
                 jugadores[i].className = clase.replace('532', formacion);
             }
@@ -43,6 +45,13 @@
     <script>
         $(document).ready(function () {
             cambiarFormacion('532')
+        });
+    </script>
+</div>
+<div th:if="${formacion}=='4-5-1'">
+    <script>
+        $(document).ready(function () {
+            cambiarFormacion('451')
         });
     </script>
 </div>

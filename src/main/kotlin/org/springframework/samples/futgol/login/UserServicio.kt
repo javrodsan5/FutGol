@@ -18,10 +18,12 @@ class UserServicio {
 
     @Transactional
     @Throws(DataAccessException::class)
-    fun saveUser(user: User) {
+    fun saveUser(user: User, nuevaPass: Boolean) {
         user.enabled = true
-        var contrasenyaEncrip = BCryptPasswordEncoder().encode(user.password)
-        user.password = contrasenyaEncrip
+        if (nuevaPass) {
+            var contrasenyaEncrip = BCryptPasswordEncoder().encode(user.password)
+            user.password = contrasenyaEncrip
+        }
         userRepository?.save(user)
     }
 

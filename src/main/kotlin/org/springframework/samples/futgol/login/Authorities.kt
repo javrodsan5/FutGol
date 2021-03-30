@@ -12,7 +12,7 @@ import javax.validation.constraints.Size
 @Table(name = "authorities")
 class Authorities : BaseEntity(){
 
-    @ManyToOne
+    @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "username", referencedColumnName = "username")
     var user: User? = null
 

@@ -5,6 +5,10 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -20,6 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
 import java.util.regex.Pattern
 import javax.validation.Valid
+import org.springframework.security.core.context.SecurityContextHolder
+
+
+
 
 @Controller
 class UsuarioControlador(
@@ -112,7 +120,7 @@ class UsuarioControlador(
             VISTA_REGISTRO_USUARIO
         } else {
             this.usuarioServicio.guardarUsuario(usuario)
-            usuario.user?.let { this.userServicio.saveUser(it,true) }
+            usuario.user?.let { this.userServicio.saveUser(it, true) }
             usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
             return "redirect:/"
         }
@@ -146,24 +154,28 @@ class UsuarioControlador(
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {
-                usuarioComparador.name = usuario.name
-                usuarioComparador.email = usuario.email
-
 
                 var user = userServicio.findUser(usuarioComparador.user?.username)
 
-                user!!.username = usuario.user?.username!!
-
-                var b= false
-
-                if(!BCryptPasswordEncoder().matches(usuario.user!!.password,user.password)){
-                    b=true
-                    user.password = usuario.user?.password!!
+                var b = false
+                if (user != null) {
+                    if (!BCryptPasswordEncoder().matches(usuario.user!!.password, user.password)) {
+                        b = true
+                        user.password = usuario.user?.password!!
+                    }
+                    user.username = usuario.user?.username!!
+                    this.userServicio.saveUser(user, b)
                 }
-                this.userServicio.saveUser(user,b)
 
-                usuarioComparador.user = user
+                usuarioComparador.name = usuario.name
+                usuarioComparador.email = usuario.email
                 this.usuarioServicio.guardarUsuario(usuarioComparador)
+
+                var auth= SecurityContextHolder.getContext().authentication
+                var updatedAuthorities = ArrayList<GrantedAuthority>(auth.authorities)
+                updatedAuthorities.add(SimpleGrantedAuthority("usuario"))
+                var newAuth = UsernamePasswordAuthenticationToken(auth.principal, auth.credentials, updatedAuthorities)
+                SecurityContextHolder.getContext().authentication = newAuth
 
             }
             "redirect:/micuenta"

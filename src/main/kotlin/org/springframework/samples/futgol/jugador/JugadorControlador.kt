@@ -9,7 +9,6 @@ import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -43,14 +42,6 @@ class JugadorControlador(
     @InitBinder("clausula")
     fun initClausulaBinder(dataBinder: WebDataBinder) {
         dataBinder.validator = ClausulaValidador()
-    }
-
-    @Scheduled(cron = "0 6 1 * * MON ")
-    @GetMapping("/WSJugadores")
-    fun creaWSJugadores(): String {
-        this.jugadorServicio.webScrapingJugadoresTransfermarkt()
-        this.jugadorServicio.webScrapingJugadoresFbref()
-        return "welcome"
     }
 
     @CachePut("detallesJugador")

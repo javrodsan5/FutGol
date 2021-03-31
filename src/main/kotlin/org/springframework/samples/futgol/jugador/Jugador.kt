@@ -7,6 +7,7 @@ import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.model.NamedEntity
+import org.springframework.samples.futgol.partido.Partido
 import java.util.*
 import javax.persistence.*
 

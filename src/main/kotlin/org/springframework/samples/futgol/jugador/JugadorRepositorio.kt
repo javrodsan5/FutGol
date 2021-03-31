@@ -7,6 +7,8 @@ interface JugadorRepositorio : Repository<Jugador, Int> {
 
     fun findAll(): Collection<Jugador>
 
+    fun deleteJugadorById(idJugador: Int)
+
     @Query("SELECT j FROM Jugador j ORDER BY -j.puntos")
     fun buscarJugadoresOrdenPuntos(): Collection<Jugador>
 
@@ -18,6 +20,9 @@ interface JugadorRepositorio : Repository<Jugador, Int> {
 
     @Query("SELECT j FROM Jugador j where j.name = ?1 AND j.club.name = ?2")
     fun buscarJugadorPorNombreyEquipo(nombreJugador: String, nombreEquipo: String): Jugador
+
+    @Query("SELECT j FROM Jugador j where j.posicion= ''")
+    fun buscarJugadoresSinPosicion(): Collection<Jugador>
 
     @Query(value = "SELECT CASE WHEN count(j)> 0 THEN TRUE ELSE FALSE END FROM Jugador j where j.id = ?1")
     fun existeJugadorId(idJugador: Int): Boolean?

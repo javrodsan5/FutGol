@@ -113,7 +113,7 @@ class EstadisticaJugadorServicio {
 
     fun wsValoraciones() {
         var urlBase = "https://es.fcstats.com/"
-        var doc = Jsoup.connect("$urlBase+partidos,primera-division-espana,19,1.php").get()
+        var doc = Jsoup.connect(urlBase + "partidos,primera-division-espana,19,1.php").get()
         var linksPartidos =
             doc.select("table.matchesListMain tbody tr.matchRow td.matchResult a").filter { x -> x.text() != "Postp." }
                 .filter { x -> x.text() != "17:00" }

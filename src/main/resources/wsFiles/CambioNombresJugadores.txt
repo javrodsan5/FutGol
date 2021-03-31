@@ -32,7 +32,7 @@ Rober Correa,Roberto Correa
 Damian Kądzior,Damian Kadzior
 Tomás Pina Isla,Tomás Pina
 Édgar Méndez,Edgar Méndez
-Jota,Jota Peleteiro
+Jota,Jota Peleteiro,
 Martin Agirregabiria,Martín Aguirregabiria
 Marko Dmitrović,Marko Dmitrovic
 Kike,Kike García
@@ -83,3 +83,5 @@ Yoel,Yoel Rodríguez
 Quique,Quique González
 Raúl García,Raúl Carnero,Valladolid
 Juan Carlos,Juan Carlos Real
+Ezequiel Ávila,Chimy Ávila
+Jota,Jota,Valladolid

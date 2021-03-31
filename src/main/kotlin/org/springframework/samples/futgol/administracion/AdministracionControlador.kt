@@ -22,8 +22,7 @@ class AdministracionControlador(
     val equipoRealServicio: EquipoRealServicio
 ) {
 
-    //@Scheduled(cron = "0 0 1 * * MON ")
-    @Scheduled(cron = "0 38 19 * * ?")
+    @Scheduled(cron = "0 0 23 * * WED ")
     fun administrarWebScraping(): String {
         this.equipoRealServicio.webScrapingEquipos()
         this.partidoServicio.wsPartidos()
@@ -32,7 +31,6 @@ class AdministracionControlador(
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
         this.asignarPuntosEquipo()
-        println(LocalDateTime.now())
 
         return "welcome"
     }

@@ -6,7 +6,9 @@ import org.springframework.samples.futgol.clausula.Clausula
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipoReal.EquipoReal
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
+import org.springframework.samples.futgol.jornadas.Jornada
 import org.springframework.samples.futgol.model.NamedEntity
+import org.springframework.samples.futgol.usuario.Usuario
 import java.util.*
 import javax.persistence.*
 

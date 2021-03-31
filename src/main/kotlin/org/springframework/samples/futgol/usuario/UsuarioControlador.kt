@@ -4,11 +4,13 @@ import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
+import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.login.UserServicio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -25,8 +27,6 @@ import java.security.Principal
 import java.util.regex.Pattern
 import javax.validation.Valid
 import org.springframework.security.core.context.SecurityContextHolder
-
-
 
 
 @Controller
@@ -133,49 +133,30 @@ class UsuarioControlador(
     }
 
     @PostMapping("/micuenta/editarmisdatos")
-    fun procesoActualizacion(usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
+    fun procesoActualizacion(@Valid usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
         var usuarioComparador = usuarioServicio.usuarioLogueado(principal)
-        if (usuarioComparador != null) {
-            when {
-                usuario.email != usuarioComparador.email && usuarioServicio.comprobarSiEmailExiste(usuario.email) == true ->
-                    result.addError(FieldError("usuario", "email", "El email ya está en uso"))
-                !StringUtils.hasLength(usuario.email) ->
-                    result.addError(FieldError("usuario", "email", "El email no puedes dejarlo vacío"))
-                !PATRON_EMAIL.matcher(usuario.email).matches() ->
-                    result.addError(FieldError("usuario", "email", "Tu email debe tener un formato correcto"))
-                !StringUtils.hasLength(usuario.name) ->
-                    result.addError(FieldError("usuario", "name", "El nombre no puedes dejarlo vacío"))
-                !PATRON_NOMBRE.matcher(usuario.name).matches() ->
-                    result.addError(FieldError("usuario", "name", "Tu nombre solo puede tener letras"))
-            }
-        }
+
         return if (result.hasErrors()) {
             model["usuario"] = usuario
+            println(result.allErrors)
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {
 
                 var user = userServicio.findUser(usuarioComparador.user?.username)
-
+                user?.username= usuario.user?.username!!
                 var b = false
                 if (user != null) {
                     if (!BCryptPasswordEncoder().matches(usuario.user!!.password, user.password)) {
                         b = true
                         user.password = usuario.user?.password!!
                     }
-                    user.username = usuario.user?.username!!
                     this.userServicio.saveUser(user, b)
                 }
 
                 usuarioComparador.name = usuario.name
                 usuarioComparador.email = usuario.email
                 this.usuarioServicio.guardarUsuario(usuarioComparador)
-
-                var auth= SecurityContextHolder.getContext().authentication
-                var updatedAuthorities = ArrayList<GrantedAuthority>(auth.authorities)
-                updatedAuthorities.add(SimpleGrantedAuthority("usuario"))
-                var newAuth = UsernamePasswordAuthenticationToken(auth.principal, auth.credentials, updatedAuthorities)
-                SecurityContextHolder.getContext().authentication = newAuth
 
             }
             "redirect:/micuenta"

@@ -40,7 +40,7 @@ class AdministracionControlador(
             var equipos = l.id?.let { this.equipoServicio.buscaEquiposDeLigaPorId(it) }
             if (equipos != null) {
                 for (e in equipos) {
-                    e.name?.let { equipoServicio.asignaPuntosEquipo(it, 15) }
+                    e.name?.let { l.id?.let { it1 -> this.equipoServicio.asignaPuntosEquipo(it, it1) } }
                 }
             }
         }

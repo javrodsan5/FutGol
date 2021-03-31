@@ -138,7 +138,6 @@ class UsuarioControlador(
 
         return if (result.hasErrors()) {
             model["usuario"] = usuario
-            println(result.allErrors)
             VISTA_EDITAR_USUARIO
         } else {
             if (usuarioComparador != null) {

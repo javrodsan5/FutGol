@@ -2,13 +2,14 @@ package org.springframework.samples.futgol.equipo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.partido.Partido
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.StringUtils
 import java.security.Principal
 
 @Service
@@ -26,6 +27,9 @@ class EquipoServicio {
 
     @Autowired
     private var jugadorServicio: JugadorServicio? = null
+
+    @Autowired
+    private var jornadaServicio: JornadaServicio? = null
 
     @Autowired
     private var ligaServicio: LigaServicio? = null
@@ -93,6 +97,45 @@ class EquipoServicio {
     @Transactional(readOnly = true)
     fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo? {
         return equipoRepositorio?.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
+    }
+
+    @Transactional
+    fun asignaPuntosEquipo(nombreEquipo: String, idLiga: Int) {
+        if (comprobarSiExisteEquipoLiga(nombreEquipo, idLiga)) {
+            var equipo = buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)!!
+            var jornada = this.jornadaServicio?.buscarTodasJornadas()?.stream()
+                ?.filter { x -> x.partidos.stream().allMatch { p -> p.resultado == "" } }
+                ?.min(Comparator.comparing { x -> x.numeroJornada })?.get()
+            if (jornada != null) {
+                var numJornada = jornada.numeroJornada - 1
+                for (p in jornada.partidos) {
+                    auxAsignaPuntosEquipo(p, numJornada, equipo)
+                }
+            }
+            guardarEquipo(equipo)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun auxAsignaPuntosEquipo(p: Partido, numJornada: Int, equipo: Equipo) {
+        for (j in p.equipoLocal!!.jugadores) {
+            if (j in equipo.jugadores) {
+                for (est in j.estadisticas) {
+                    if (est.partido?.jornada?.numeroJornada == numJornada) {
+                        equipo.puntos += est.puntos
+                    }
+                }
+            }
+        }
+        for (j in p.equipoVisitante!!.jugadores) {
+            if (j in equipo.jugadores) {
+                for (est in j.estadisticas) {
+                    if (est.partido?.jornada?.numeroJornada == numJornada) {
+                        equipo.puntos += est.puntos
+                    }
+                }
+            }
+        }
     }
 
     @Transactional(readOnly = true)

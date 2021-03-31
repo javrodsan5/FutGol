@@ -42,6 +42,11 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscarTodasLigas(): Collection<Liga>? {
+        return ligaRepositorio?.findAll()
+    }
+
+    @Transactional(readOnly = true)
     fun buscarLigaPorId(idLiga: Int): Liga? {
         return ligaRepositorio?.buscarLigaPorId((idLiga))
     }

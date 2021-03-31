@@ -284,7 +284,10 @@ class EquipoControlador(
         principal: Principal,
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
-        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(idEquipo) == true) {
+        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(
+                idEquipo
+            ) == true
+        ) {
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
             model["liga"] = liga
@@ -305,7 +308,7 @@ class EquipoControlador(
             } else {
                 return "redirect:/"
             }
-        }else{
+        } else {
             return "redirect:/"
         }
     }
@@ -315,11 +318,12 @@ class EquipoControlador(
         @PathVariable idLiga: Int, @PathVariable idJugador: Int,
         model: Model, principal: Principal
     ): String {
-        if (this.equipoServicio.tengoEquipo(idLiga,principal)) {
+        if (this.equipoServicio.tengoEquipo(idLiga, principal)) {
             var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["equipo"] = equipo
             if (jugadorServicio.existeJugadorId(idJugador) == true && equipo.id?.let {
-                    jugadorServicio.existeJugadorEnEquipo(idJugador, it) } == true &&
+                    jugadorServicio.existeJugadorEnEquipo(idJugador, it)
+                } == true &&
                 equipo.id?.let { equipoServicio.jugadorEnOnce(idJugador, it) } == true) {
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                 model["titular"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
@@ -330,7 +334,7 @@ class EquipoControlador(
                 return "redirect:/liga/$idLiga/miEquipo"
             }
             return VISTA_GESTION_ONCE
-        }else{
+        } else {
             return "redirect:/"
         }
     }
@@ -341,7 +345,7 @@ class EquipoControlador(
         model: Model, principal: Principal
     ): String {
 
-        if (this.equipoServicio.tengoEquipo(idLiga,principal)) {
+        if (this.equipoServicio.tengoEquipo(idLiga, principal)) {
 
             var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (jugadorServicio.existeJugadorId(idJugadorOnce) == true && equipo.id?.let {
@@ -380,7 +384,7 @@ class EquipoControlador(
                     equipoServicio.guardarEquipo(equipo)
                 }
             }
-        }else{
+        } else {
             return "redirect:/"
         }
         return "redirect:/liga/$idLiga/miEquipo"
@@ -411,4 +415,6 @@ class EquipoControlador(
             return "redirect:/"
         }
     }
+
+
 }

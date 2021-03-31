@@ -20,12 +20,12 @@
 
     <div class="form-group has-feedback">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <input type="hidden" name="user.username" th:value="*{user.username}"/>
+
         <input
                 th:replace="~{fragments/inputField :: input ('Nombre', 'name', 'text')}"/>
         <input
                 th:replace="~{fragments/inputField :: input ('Email', 'email', 'text')}"/>
-        <input
-                th:replace="~{fragments/inputField :: input ('Nombre de Usuario', 'user.username', 'text')}"/>
         <input
                 th:replace="~{fragments/inputField :: input ('Contraseña', 'user.password', 'password')}"/>
 

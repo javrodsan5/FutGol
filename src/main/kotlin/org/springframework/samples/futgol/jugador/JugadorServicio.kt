@@ -80,6 +80,18 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun buscarJugadoresSinPosicion(): Collection<Jugador>? {
+        return jugadorRepositorio?.buscarJugadoresSinPosicion()
+    }
+
+    @Transactional()
+    @Throws(DataAccessException::class)
+    fun eliminarJugador(idJugador: Int) {
+        jugadorRepositorio?.deleteJugadorById(idJugador)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscaJugadorPorNombre(nombreJugador: String): Jugador? {
         return jugadorRepositorio?.findByName(nombreJugador)
     }
@@ -100,12 +112,12 @@ class JugadorServicio {
             var minutos = 0.0
             var tAmarillas = 0.0
             var tRojas = 0.0
-            var numeroEstadisticas = estadisticasJugador?.size
-            if (jugador!!.posicion == "PO") {
+            var numeroEstadisticas = estadisticasJugador.size
+            if (jugador.posicion == "PO") {
                 var salvadas = 0.0
                 var disparosRecibidos = 0.0
                 var golesRecibidos = 0.0
-                for (e in estadisticasJugador!!) {
+                for (e in estadisticasJugador) {
                     salvadas += e.salvadas
                     disparosRecibidos += e.disparosRecibidos
                     golesRecibidos += e.golesRecibidos
@@ -114,7 +126,7 @@ class JugadorServicio {
                     tAmarillas += e.tarjetasAmarillas
                     tRojas += e.tarjetasRojas
                 }
-                medias.add(Math.round(salvadas / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(salvadas / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(disparosRecibidos / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(golesRecibidos / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
@@ -125,7 +137,7 @@ class JugadorServicio {
                 var robos = 0.0
                 var bloqueos = 0.0
                 var asistencias = 0.0
-                for (e in estadisticasJugador!!) {
+                for (e in estadisticasJugador) {
                     robos += e.robos
                     bloqueos += e.bloqueos
                     asistencias += e.asistencias
@@ -134,7 +146,7 @@ class JugadorServicio {
                     tAmarillas += e.tarjetasAmarillas
                     tRojas += e.tarjetasRojas
                 }
-                medias.add(Math.round(robos / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(robos / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(bloqueos / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
@@ -148,7 +160,7 @@ class JugadorServicio {
                 var asistencias = 0.0
                 var penaltisMarcados = 0.0
                 var penaltisLanzados = 0.0
-                for (e in estadisticasJugador!!) {
+                for (e in estadisticasJugador) {
                     goles += e.goles
                     dispPuerta += e.disparosPuerta
                     dispTotales += e.disparosTotales
@@ -160,7 +172,7 @@ class JugadorServicio {
                     tAmarillas += e.tarjetasAmarillas
                     tRojas += e.tarjetasRojas
                 }
-                medias.add(Math.round(goles / numeroEstadisticas!! * 100) / 100.0)
+                medias.add(Math.round(goles / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(dispPuerta / numeroEstadisticas * 100) / 100.0)
                 medias.add(Math.round(dispTotales / numeroEstadisticas * 100) / 100.0)
@@ -177,17 +189,17 @@ class JugadorServicio {
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
-        return this.buscaTodosJugadores()?.filter { x -> x.equipos.none { x -> x.liga?.id == idLiga } }
+        return this.buscaTodosJugadores()?.filter { x -> x.equipos.none { y -> y.liga?.id == idLiga } }
     }
 
     fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador> {
         var jugadoresAsignables = this.jugadoresAsignablesLiga(idLiga)
         var misJugadores = HashSet<Jugador>()
 
-        misJugadores.addAll(jugadoresAsignables?.filter { x-> x.posicion == "PO" }?.shuffled()?.subList(0, 2)!!)
+        misJugadores.addAll(jugadoresAsignables?.filter { x -> x.posicion == "PO" }?.shuffled()?.subList(0, 2)!!)
         misJugadores.addAll(jugadoresAsignables.filter { x -> x.posicion == "DF" }.shuffled().subList(0, 6))
-        misJugadores.addAll(jugadoresAsignables.filter { x-> x.posicion == "CC" }.shuffled().subList(0, 6))
-        misJugadores.addAll(jugadoresAsignables.filter { x-> x.posicion == "DL" }.shuffled().subList(0, 4))
+        misJugadores.addAll(jugadoresAsignables.filter { x -> x.posicion == "CC" }.shuffled().subList(0, 6))
+        misJugadores.addAll(jugadoresAsignables.filter { x -> x.posicion == "DL" }.shuffled().subList(0, 4))
         return misJugadores
     }
 
@@ -211,17 +223,11 @@ class JugadorServicio {
 
     fun existeJugadorEnEquipo(idJugador: Int, idEquipo: Int): Boolean {
         var equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
-        return equipo?.jugadores?.any { x-> x.id == idJugador }!!
+        return equipo?.jugadores?.any { x -> x.id == idJugador }!!
     }
 
     fun webScrapingJugadoresTransfermarkt() {
-        var l: List<String?> = ArrayList()
-        try {
-            l = Files.lines(Paths.get("src/main/resources/wsFiles/NombresTransfermarkt.txt"))
-                .collect(Collectors.toList())
-        } catch (e: IOException) {
-            println("No se puede leer el fichero de nombres.")
-        }
+
         var urlBase = "https://www.transfermarkt.es"
         var doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
         var linksEquipos =
@@ -249,61 +255,52 @@ class JugadorServicio {
 
                 var persona = jugadores[n].select("td div.di.nowrap:first-of-type span a")
                 var nombre = persona.attr("title")
-                var res = true
-                for (element in l) {
-                    var linea = element
-                    if (linea?.equals(nombre) == true) {
-                        res = false
-                        break
+
+                var linkDetallePersona = persona.attr("href")
+                var doc4 = Jsoup.connect(urlBase + linkDetallePersona).get()
+                var estado = "En forma"
+                if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
+                    estado = "Lesionado"
+                } else if (!jugadores[n].select("td span.ausfall-6-table").isEmpty()) {
+                    estado = "Sancionado/No disponible"
+                }
+
+                var precio = precioJugadores[n].text()
+                var precioD = 0.1
+
+                var foto = doc4.select("div.dataBild img").attr("src")
+
+                if (!precio.isEmpty()) {
+                    precioD = if (precio.contains("mill")) {
+                        precio.substringBefore(" mil").replace(",", ".").toDouble()
+                    } else {
+                        precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
                     }
                 }
-                if (res) {
-                    var linkDetallePersona = persona.attr("href")
-                    var doc4 = Jsoup.connect(urlBase + linkDetallePersona).get()
-                    var estado = "En forma"
-                    if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
-                        estado = "Lesionado"
-                    } else if (!jugadores[n].select("td span.ausfall-6-table").isEmpty()) {
-                        estado = "Sancionado/No disponible"
-                    }
+                var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
 
-                    var precio = precioJugadores[n].text()
-                    var precioD = 0.1
+                if (this.existeJugadorEquipo(nombre, nombreEquipo) == true) {
 
-                    var foto = doc4.select("div.dataBild img").attr("src")
-
-                    if (!precio.isEmpty()) {
-                        precioD = if (precio.contains("mill")) {
-                            precio.substringBefore(" mil").replace(",", ".").toDouble()
-                        } else {
-                            precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
-                        }
-                    }
-                    var equipoReal = equipoRealServicio?.buscarEquipoRealPorNombre(nombreEquipo)
-
-                    if (this.existeJugadorEquipo(nombre, nombreEquipo) == true) {
-
-                        println("Existe " + nombre)
-                        j = this.buscaJugadorPorNombreYEquipo(nombre, nombreEquipo)!!
-                        if (estado != j.estadoLesion || precioD != j.valor || j.club?.id != equipoReal?.id) {
-                            println("Cambiamos algún atributo")
-                            j.estadoLesion = estado
-                            j.valor = precioD
-                            j.club = equipoReal
-                            guardarJugador(j)
-                        }
-                    } else {
-
-                        println("No existe " + nombre)
-                        j.name = nombre
+                    println("Existe " + nombre)
+                    j = this.buscaJugadorPorNombreYEquipo(nombre, nombreEquipo)!!
+                    if (estado != j.estadoLesion || precioD != j.valor || j.club?.id != equipoReal?.id) {
+                        println("Cambiamos algún atributo")
                         j.estadoLesion = estado
                         j.valor = precioD
-                        j.foto = foto
                         j.club = equipoReal
                         guardarJugador(j)
                     }
+                } else {
 
+                    println("No existe " + nombre)
+                    j.name = nombre
+                    j.estadoLesion = estado
+                    j.valor = precioD
+                    j.foto = foto
+                    j.club = equipoReal
+                    guardarJugador(j)
                 }
+
             }
         }
 

@@ -17,6 +17,9 @@ interface UsuarioRepositorio : Repository<Usuario, Int> {
     @Query("SELECT u.ligas FROM Usuario u where u.user.username = ?1")
     fun buscarLigasUsuario(nombreUsuario: String): Collection<Liga>
 
+    @Query("SELECT u.invitaciones FROM Usuario u where u.user.username = ?1")
+    fun buscarInvitacionesUsuario(nombreUsuario: String): Collection<Liga>
+
     @Query("SELECT u FROM Usuario u where u.id = ?1")
     fun buscarUsuarioPorId(id: Int): Usuario
 

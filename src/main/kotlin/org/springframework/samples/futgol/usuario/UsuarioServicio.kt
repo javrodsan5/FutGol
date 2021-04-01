@@ -2,15 +2,12 @@ package org.springframework.samples.futgol.usuario
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
-import java.util.stream.Collectors
-import javax.transaction.RollbackException
 
 @Service
 class UsuarioServicio {
@@ -64,6 +61,12 @@ class UsuarioServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun buscarInvitacionesUsuario(username: String): Collection<Liga>? {
+        return usuarioRepositorio?.buscarInvitacionesUsuario(username)
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscarTodosNombresUsuarios(): MutableList<String>? {
         return usuarioRepositorio?.buscaTodosNombresusuario()
     }
@@ -73,17 +76,25 @@ class UsuarioServicio {
         val ligasUsuario = buscarLigasUsuario(username)
         var ligasNoUsuario: MutableList<Liga> = ArrayList()
         val misLigas = usuarioLogueado(principal)?.user?.let { buscarLigasUsuario(it.username) }
+        val ligasInvitado = buscarInvitacionesUsuario(username)
 
-        if (misLigas != null && ligasUsuario != null) {
+        if (misLigas != null && ligasUsuario != null && ligasInvitado != null) {
             for (ligaM in misLigas) {
-                var res = true
+                var resLig = true
+                var resInv = true
                 for (ligaU in ligasUsuario) {
                     if (ligaM.name.equals(ligaU.name)) {
-                        res = false
+                        resLig = false
                         break
                     }
                 }
-                if (res && ligaM.equipos.size <= 8) {
+                for (ligaI in ligasInvitado) {
+                    if (ligaM.name.equals(ligaI.name)) {
+                        resLig = false
+                        break
+                    }
+                }
+                if (resLig && resInv && ligaM.equipos.size <= 8) {
                     ligasNoUsuario.add(ligaM)
                 }
             }

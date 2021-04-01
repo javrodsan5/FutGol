@@ -161,6 +161,11 @@ class EquipoControlador(
                         defensasRestantes = 1
                         centrocRestantes = -1
                     }
+                } else if (formacionAntigua == "4-5-1") {
+                    if (nDLBQ >= 1) {
+                        centrocRestantes = -1
+                        delantRestantes = 1
+                    }
                 } else {
                     if (nCCBQ >= 1) {
                         defensasRestantes = -1
@@ -181,11 +186,40 @@ class EquipoControlador(
                         centrocRestantes = -2
                         delantRestantes = 1
                     }
+                } else if (formacionAntigua == "4-5-1") {
+                    if (nCCBQ >= 2) {
+                        centrocRestantes = -2
+                        delantRestantes = 2
+                    }
                 } else {
                     defensasRestantes = -1
                     delantRestantes = 1
                 }
                 miEquipo.formacion = "4-3-3"
+            } else if (formacion == "451" && formacionAntigua != "4-5-1") {
+                if (formacionAntigua == "4-4-2") {
+                    if (nCCBQ >= 1) {
+                        centrocRestantes = 1
+                        delantRestantes = -1
+                    }
+                } else if (formacionAntigua == "3-5-2") {
+                    if (nDFBQ >= 1 && nDLBQ >= 1) {
+                        defensasRestantes = 1
+                        delantRestantes = -1
+                    }
+                } else if (formacionAntigua == "4-3-3") {
+                    if (nCCBQ >= 2) {
+                        centrocRestantes = 2
+                        delantRestantes = -2
+                    }
+                } else { //532
+                    if(nDFBQ >= 1 && nDLBQ >= 1) {
+                        defensasRestantes = -1
+                        centrocRestantes = 2
+                        delantRestantes = -1
+                    }
+                }
+                miEquipo.formacion = "4-5-1"
 
             } else if (formacion == "352" && formacionAntigua != "3-5-2") {
                 if (formacionAntigua == "4-4-2") {
@@ -198,6 +232,11 @@ class EquipoControlador(
                         defensasRestantes = -1
                         centrocRestantes = 2
                         delantRestantes = -1
+                    }
+                } else if (formacionAntigua == "4-5-1") {
+                    if (nDFBQ >= 1) {
+                        defensasRestantes = -1
+                        delantRestantes = 1
                     }
                 } else {
                     if (nCCBQ >= 2) {
@@ -217,6 +256,12 @@ class EquipoControlador(
                     if (nDFBQ >= 1) {
                         defensasRestantes = 1
                         delantRestantes = -1
+                    }
+                } else if (formacionAntigua == "4-5-1") {
+                    if (nCCBQ >= 2 && nDLBQ >=1) {
+                        defensasRestantes = 1
+                        centrocRestantes = -2
+                        delantRestantes = 1
                     }
                 } else {
                     if (nDFBQ >= 2) {
@@ -389,32 +434,5 @@ class EquipoControlador(
         }
         return "redirect:/liga/$idLiga/miEquipo"
     }
-
-    @GetMapping("liga/{idLiga}/miEquipo/once/remove/{idJugador}")
-    fun retirarOnceInicial(
-        @PathVariable idLiga: Int, @PathVariable idJugador: Int,
-        model: Model, principal: Principal
-    ): String {
-
-        if (this.equipoServicio.tengoEquipo(idLiga, principal)) {
-
-            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)
-            var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            if (jugador != null) {
-                for (j in equipo.onceInicial) {
-                    if (jugador.id == j.id) {
-                        equipo.jugBanquillo.add(jugador)
-                        equipo.onceInicial.removeIf { it.name == jugador.name }
-                        equipoServicio.guardarEquipo(equipo)
-                        break
-                    }
-                }
-            }
-            return "redirect:/liga/$idLiga/miEquipo"
-        } else {
-            return "redirect:/"
-        }
-    }
-
 
 }

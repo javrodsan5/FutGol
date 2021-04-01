@@ -83,9 +83,10 @@ class LigaControlador(
     ): String {
         if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
-            val nombreUsuario = usuarioServicio.usuarioLogueado(principal)?.user?.username
-            if (liga?.admin?.user?.username == nombreUsuario) {
+            if (liga?.admin?.user?.username == usuarioServicio.usuarioLogueado(principal)?.user?.username) {
                 model.addAttribute(liga!!)
+            } else {
+                return "redirect:/misligas"
             }
         } else {
             return "redirect:/misligas"
@@ -146,25 +147,25 @@ class LigaControlador(
     }
 
     @GetMapping("liga/{nombreLiga}/clasificacion")
-    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
-        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
+    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             model["liga"] = liga!!
             val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
 
-                var posiciones = equiposLiga.indices
-                model["posiciones"] = posiciones
-                model["equiposLiga"] = equiposLiga
-                var valores: MutableList<Double> = ArrayList()
-                for (e in equiposLiga) {
-                    e.liga?.id?.let { e.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }?.let { valores.add(it) }
-                }
-                model["valores"] = valores
+            var posiciones = equiposLiga.indices
+            model["posiciones"] = posiciones
+            model["equiposLiga"] = equiposLiga
+            var valores: MutableList<Double> = ArrayList()
+            for (e in equiposLiga) {
+                e.liga?.id?.let { e.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }
+                    ?.let { valores.add(it) }
+            }
+            model["valores"] = valores
             return VISTA_CLASIFICACION_LIGA
         }
         return "redirect:/misligas"
     }
-
 
 
     @GetMapping("/liga/{nombreLiga}/add/{username}")

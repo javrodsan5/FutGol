@@ -4,18 +4,11 @@ import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.login.AuthoritiesServicio
-import org.springframework.samples.futgol.login.User
 import org.springframework.samples.futgol.login.UserServicio
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
-import org.springframework.util.StringUtils
 import org.springframework.validation.BindingResult
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.WebDataBinder
@@ -26,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
 import java.util.regex.Pattern
 import javax.validation.Valid
-import org.springframework.security.core.context.SecurityContextHolder
 
 
 @Controller
@@ -67,38 +59,38 @@ class UsuarioControlador(
         return VISTA_MISDATOS
     }
 
-    @GetMapping("/usuarios2")
-    fun usuarios(model: Model): String {
-        model["usuarios"] = usuarioServicio.buscarTodosNombresUsuarios()!!
-        return "usuarios/usuarios"
-    }
-
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/aceptar")
     fun aceptarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
-        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
-        if (usuario != null && liga != null) {
-            usuario.ligas.add(liga)
-            usuario.invitaciones.removeIf { it.name == liga.name }
-            liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
-            this.usuarioServicio.guardarUsuario(usuario)
-            this.ligaServicio.guardarLiga(liga)
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
+            val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
+            var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)!!
+            if (usuario != null && liga in usuario.invitaciones) {
+                usuario.ligas.add(liga)
+                usuario.invitaciones.removeIf { it.name == liga.name }
+                liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
+                this.usuarioServicio.guardarUsuario(usuario)
+                this.ligaServicio.guardarLiga(liga)
+            }
+            return "redirect:/micuenta"
         }
-        return "redirect:/micuenta"
+        return "redirect:/"
     }
 
     @GetMapping("/micuenta/invitaciones/{nombreLiga}/rechazar")
     fun rechazarInvitacion(model: Model, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String): String {
-        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
-        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
-        if (usuario != null && liga != null) {
-            usuario.invitaciones.removeIf { it.name == liga.name }
-            liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
-            this.usuarioServicio.guardarUsuario(usuario)
-            this.ligaServicio.guardarLiga(liga)
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
+            val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
+            var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
+            if (usuario != null && liga != null) {
+                usuario.invitaciones.removeIf { it.name == liga.name }
+                liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
+                this.usuarioServicio.guardarUsuario(usuario)
+                this.ligaServicio.guardarLiga(liga)
+            }
+            return "redirect:/micuenta"
         }
-        return "redirect:/micuenta"
+        return "redirect:/"
     }
 
     @GetMapping("/usuarios/registro")
@@ -133,7 +125,12 @@ class UsuarioControlador(
     }
 
     @PostMapping("/micuenta/editarmisdatos")
-    fun procesoActualizacion(@Valid usuario: Usuario, result: BindingResult, principal: Principal, model: Model): String {
+    fun procesoActualizacion(
+        @Valid usuario: Usuario,
+        result: BindingResult,
+        principal: Principal,
+        model: Model
+    ): String {
         var usuarioComparador = usuarioServicio.usuarioLogueado(principal)
 
         return if (result.hasErrors()) {
@@ -143,7 +140,7 @@ class UsuarioControlador(
             if (usuarioComparador != null) {
 
                 var user = userServicio.findUser(usuarioComparador.user?.username)
-                user?.username= usuario.user?.username!!
+                user?.username = usuario.user?.username!!
                 var b = false
                 if (user != null) {
                     if (!BCryptPasswordEncoder().matches(usuario.user!!.password, user.password)) {
@@ -168,30 +165,37 @@ class UsuarioControlador(
         @PathVariable("nombreLiga") nombreLiga: String,
         @PathVariable("nombreUsuario") nombreUsuario: String
     ): String {
-        var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)
-        var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)
-        if (liga!!.equipos.size >= 8) {
-            return "redirect:/misligas"
-        }
-        if (usuario != null) {
+        if (usuarioServicio.comprobarSiNombreUsuarioExiste(nombreUsuario) == true && ligaServicio.comprobarSiExisteLiga(
+                nombreLiga
+            ) == true
+        ) {
+            var usuario = this.usuarioServicio.buscarUsuarioPorNombreUsuario(nombreUsuario)!!
+            var liga = this.ligaServicio.buscarLigaPorNombre(nombreLiga)!!
+            if (liga.equipos.size >= 8 || liga in usuario.ligas || liga in usuario.invitaciones) {
+                return "redirect:/misligas"
+            }
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
             this.usuarioServicio.guardarUsuario(usuario)
+            return "redirect:/usuarios/$nombreUsuario"
         }
-        return "redirect:/usuarios/$nombreUsuario"
+        return "redirect:/misligas"
     }
 
     @CachePut("detallesUsuario")
     @GetMapping("usuarios/{username}")
     fun detallesUsuario(model: MutableMap<String, Any>, @PathVariable username: String, principal: Principal): String {
-        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
-        if (usuario.user?.username == usuarioServicio.usuarioLogueado(principal)!!.user?.username) {
-            return "redirect:/micuenta"
+        if (usuarioServicio.comprobarSiNombreUsuarioExiste(username) == true) {
+            var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)!!
+            if (usuario.user?.username == usuarioServicio.usuarioLogueado(principal)!!.user?.username) {
+                return "redirect:/micuenta"
+            }
+            model["usuario"] = usuario
+            model["ligasUsuario"] = usuarioServicio.buscarLigasUsuario(username)!!
+            model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
+            return VISTA_DETALLES_USUARIO
         }
-        model["usuario"] = usuario
-        model["ligasUsuario"] = usuarioServicio.buscarLigasUsuario(username)!!
-        model["ligasNoUsuario"] = usuarioServicio.ligasAInvitar(username, principal)
-        return VISTA_DETALLES_USUARIO
+        return "redirect:/"
     }
 
     @GetMapping("/usuarios/buscar")

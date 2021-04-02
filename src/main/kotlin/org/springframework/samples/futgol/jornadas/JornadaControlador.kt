@@ -75,7 +75,8 @@ class JornadaControlador(
 
     @GetMapping("/jornada/{jornadaId}")
     fun detallesJornada(model: Model, @PathVariable("jornadaId") jornadaId: Int): String {
-        if (this.jornadaServicio.buscarTodasJornadas()?.any { x -> x.id == jornadaId } == true) {
+        if (jornadaServicio.existeJornada(jornadaId) == true && jornadaServicio.buscarTodasJornadas()
+                ?.any { x -> x.id == jornadaId } == true) {
             var noOnceTodavia = true
             var jornada = jornadaServicio.buscarJornadaPorId(jornadaId)
             if (jornada != null) {
@@ -105,20 +106,19 @@ class JornadaControlador(
 
                         if (jugadores.isNotEmpty()) {
                             jornada.jugadores = jugadores as MutableList<Jugador>
-                            println(jornada.jugadores)
                             jornada.formacion = formacion
 
                             jornadaServicio.guardarJornada(jornada)
                             noOnceTodavia = false
                         }
                     } else {
-                        println(jornada.jugadores)
                         noOnceTodavia = false
                     }
                 }
             }
             model["noOnce"] = noOnceTodavia
+            return VISTA_DETALLES_JORNADA
         }
-        return VISTA_DETALLES_JORNADA
+        return "redirect:/"
     }
 }

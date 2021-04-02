@@ -217,7 +217,7 @@ class UsuarioControlador(
             "redirect:/usuarios/" + usuario.user?.username
         } else {
             result.rejectValue("user.username", "no se ha encontrado", "no se ha encontrado")
-            "redirect:/usuarios/buscar"
+            "redirect:/misligas"
         }
     }
 

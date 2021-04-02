@@ -42,6 +42,7 @@ class Equipo() : NamedEntity() {
     )
     var jugBanquillo: MutableList<Jugador> = ArrayList()
 
+
     @ManyToMany()
     @JoinTable(
         name = "equipo_onceInicial",

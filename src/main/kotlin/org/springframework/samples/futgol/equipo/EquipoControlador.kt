@@ -33,21 +33,18 @@ class EquipoControlador(
 
     @GetMapping("/liga/{idLiga}/nuevoEquipo")
     fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: Int): String {
-        return if (equipoServicio.tengoEquipo(idLiga, principal)) {
-            val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            model["tengoEquipo"] = true
-            model["equipo"] = miEquipo
-            "redirect:/liga/$idLiga/miEquipo"
+        if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true) {
+            return "redirect:/liga/$idLiga/miEquipo"
         } else {
-            var liga = ligaServicio.buscarLigaPorId(idLiga)
-            if (liga!!.equipos.size >= 8) {
+            if (ligaServicio.buscarLigaPorId(idLiga)!!.equipos.size >= 8) {
                 "redirect:/misligas"
             } else {
                 val equipo = Equipo()
                 model["equipo"] = equipo
-                VISTA_CREAEQUIPOS
+                return VISTA_CREAEQUIPOS
             }
         }
+        return "redirect:/misligas"
     }
 
     @PostMapping("/liga/{idLiga}/nuevoEquipo")
@@ -99,33 +96,35 @@ class EquipoControlador(
     fun detallesMiEquipo(
         model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
     ): String {
-        if (!equipoServicio.tengoEquipo(idLiga, principal)) {
-            model["SinEquipo"] = true
-        } else {
-            var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)) {
+            if (!equipoServicio.tengoEquipo(idLiga, principal)) {
+                model["SinEquipo"] = true
+            } else {
+                var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+                var onceInicial = ArrayList<Jugador>()
 
-            var onceInicial = ArrayList<Jugador>()
+                onceInicial.add(miEquipo.onceInicial.single { x -> x.posicion == "PO" })
+                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
+                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
+                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })
 
-            onceInicial.add(miEquipo.onceInicial.single { x -> x.posicion == "PO" })
-            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
-            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
-            onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })
-
-            miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
-            this.equipoServicio.guardarEquipo(miEquipo)
-            model["tengoEquipo"] = true
-            model["equipo"] = miEquipo
-            model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
+                miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
+                this.equipoServicio.guardarEquipo(miEquipo)
+                model["tengoEquipo"] = true
+                model["equipo"] = miEquipo
+                model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
+            }
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            return VISTA_DETALLES_MIEQUIPO
         }
-        model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-        return VISTA_DETALLES_MIEQUIPO
+        return "redirect:/misligas"
     }
 
     @GetMapping("liga/{idLiga}/miEquipo/cambiarFormacion/{formacion}")
     fun cambiarFormacion(
         model: Model, principal: Principal, @PathVariable idLiga: Int, @PathVariable formacion: String
     ): String {
-        if (equipoServicio.tengoEquipo(idLiga, principal)) {
+        if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && equipoServicio.tengoEquipo(idLiga, principal)) {
             var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             var formacionAntigua = miEquipo.formacion
             var onceAntiguo = miEquipo.onceInicial
@@ -213,7 +212,7 @@ class EquipoControlador(
                         delantRestantes = -2
                     }
                 } else { //532
-                    if(nDFBQ >= 1 && nDLBQ >= 1) {
+                    if (nDFBQ >= 1 && nDLBQ >= 1) {
                         defensasRestantes = -1
                         centrocRestantes = 2
                         delantRestantes = -1
@@ -258,7 +257,7 @@ class EquipoControlador(
                         delantRestantes = -1
                     }
                 } else if (formacionAntigua == "4-5-1") {
-                    if (nCCBQ >= 2 && nDLBQ >=1) {
+                    if (nCCBQ >= 2 && nDLBQ >= 1) {
                         defensasRestantes = 1
                         centrocRestantes = -2
                         delantRestantes = 1
@@ -391,7 +390,6 @@ class EquipoControlador(
     ): String {
 
         if (this.equipoServicio.tengoEquipo(idLiga, principal)) {
-
             var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (jugadorServicio.existeJugadorId(idJugadorOnce) == true && equipo.id?.let {
                     jugadorServicio.existeJugadorEnEquipo(idJugadorOnce, it)

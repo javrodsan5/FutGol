@@ -34,6 +34,12 @@ class JornadaServicio {
     }
 
     @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
+    fun existeJornada(numeroJornada: Int): Boolean? {
+        return jornadaRepositorio?.existeJornada(numeroJornada)
+    }
+
+    @Transactional(readOnly = true)
     fun buscarJornadaPorNumeroJornada(idJornada: Int): Jornada? {
         return jornadaRepositorio?.findJornadaByNumeroJornada(idJornada)
     }

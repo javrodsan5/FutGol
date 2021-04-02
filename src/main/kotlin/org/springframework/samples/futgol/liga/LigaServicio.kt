@@ -88,8 +88,20 @@ class LigaServicio {
     }
 
     @Transactional(readOnly = true)
+    fun comprobarSiExisteLiga2(idLiga: Int?): Boolean? {
+        return idLiga?.let { this.ligaRepositorio?.comprobarSiExisteLiga2(it) }
+    }
+
+    @Transactional(readOnly = true)
     fun estoyEnLiga(nombreLiga: String, principal: Principal?): Boolean {
         val liga = buscarLigaPorNombre(nombreLiga)
+        val nombreUsuario = usuarioServicio?.usuarioLogueado(principal!!)?.user?.username
+        return liga!!.usuarios.stream().anyMatch { x -> x.user?.username == nombreUsuario }
+    }
+
+    @Transactional(readOnly = true)
+    fun estoyEnLiga2(idLiga: Int, principal: Principal?): Boolean {
+        val liga = buscarLigaPorId(idLiga)
         val nombreUsuario = usuarioServicio?.usuarioLogueado(principal!!)?.user?.username
         return liga!!.usuarios.stream().anyMatch { x -> x.user?.username == nombreUsuario }
     }

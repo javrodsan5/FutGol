@@ -167,28 +167,6 @@ class LigaControlador(
         return "redirect:/misligas"
     }
 
-
-    @GetMapping("/liga/{nombreLiga}/add/{username}")
-    fun asociarUsuarioLiga(
-        @PathVariable username: String,
-        @PathVariable nombreLiga: String,
-        model: MutableMap<String, Any>
-    ): String {
-
-        val usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
-        if (usuario != null && liga != null) {
-            if (!usuario.ligas.contains(liga)) {
-                usuario.ligas.add(liga)
-                liga.usuarios.add(usuario)
-                model["mensaje"] = "Usuario añadido correctamente a la liga!"
-            } else {
-                model["mensaje"] = "El usuario ya pertenece a la liga"
-            }
-        }
-        return VISTA_DETALLES_LIGA
-    }
-
     @GetMapping("/liga/{nombreLiga}/subastas")
     fun jugadoresLibresSubasta(@PathVariable nombreLiga: String, model: Model): String {
         return if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {

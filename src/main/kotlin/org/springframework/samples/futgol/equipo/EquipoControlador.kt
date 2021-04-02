@@ -34,14 +34,16 @@ class EquipoControlador(
     @GetMapping("/liga/{idLiga}/nuevoEquipo")
     fun iniciarEquipo(model: Model, principal: Principal, @PathVariable idLiga: Int): String {
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true) {
-            return "redirect:/liga/$idLiga/miEquipo"
-        } else {
-            if (ligaServicio.buscarLigaPorId(idLiga)!!.equipos.size >= 8) {
-                "redirect:/misligas"
+            if (equipoServicio.tengoEquipo(idLiga, principal)) {
+                return "redirect:/liga/$idLiga/miEquipo"
             } else {
-                val equipo = Equipo()
-                model["equipo"] = equipo
-                return VISTA_CREAEQUIPOS
+                if (ligaServicio.buscarLigaPorId(idLiga)!!.equipos.size >= 8) {
+                    "redirect:/misligas"
+                } else {
+                    val equipo = Equipo()
+                    model["equipo"] = equipo
+                    return VISTA_CREAEQUIPOS
+                }
             }
         }
         return "redirect:/misligas"

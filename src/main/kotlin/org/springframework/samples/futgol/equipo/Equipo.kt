@@ -33,7 +33,7 @@ class Equipo() : NamedEntity() {
     @JoinColumn(name = "usuario", referencedColumnName = "username")
     var usuario: Usuario? = null
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
         name = "equipo_jugBanquillo",
         joinColumns = [JoinColumn(name = "equipo_id")],
@@ -41,7 +41,7 @@ class Equipo() : NamedEntity() {
     )
     var jugBanquillo: MutableSet<Jugador> = HashSet()
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
         name = "equipo_onceInicial",
         joinColumns = [JoinColumn(name = "equipo_id")],

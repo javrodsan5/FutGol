@@ -9,7 +9,7 @@ import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
-import java.time.LocalDateTime
+import org.springframework.web.bind.annotation.GetMapping
 
 @EnableScheduling
 @Controller
@@ -47,9 +47,9 @@ class AdministracionControlador(
     }
 
     fun eliminarJugadoresSinPosicionFbref() {
-        var jugadores= this.jugadorServicio.buscarJugadoresSinPosicion()
+        var jugadores = this.jugadorServicio.buscarJugadoresSinPosicion()
         if (jugadores != null) {
-            for(jugador in jugadores){
+            for (jugador in jugadores) {
                 jugador.id?.let { this.jugadorServicio.eliminarJugador(it) }
             }
         }

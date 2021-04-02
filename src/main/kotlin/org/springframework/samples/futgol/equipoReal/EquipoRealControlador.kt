@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.equipoReal
 import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.jugador.Jugador
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
@@ -44,7 +45,11 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
 
             if (map.values.isNotEmpty()) {
                 jugadores = map.values.first()
-                model["jugadores"] = jugadores
+                var onceOrdenado = jugadores.sortedByDescending { x -> MetodosAux().transformador(x?.posicion!!) }
+                var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+
+                onceOrdenadoMut.addAll(onceOrdenado as Collection<Jugador>)
+                model["jugadores"] = onceOrdenadoMut
 
                 formacion = map.keys.first()
                 equipo.formacion = formacion
@@ -70,7 +75,11 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
 
             var banquillo = equipo.jugadores
             banquillo.removeAll(jugadores)
-            model["banquillo"] = banquillo
+            var banquilloOrdenado = banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+            var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
+            banquilloOrdenadoMut.addAll(banquilloOrdenado)
+
+            model["banquillo"] = banquilloOrdenadoMut
 
         } else {
             return "redirect:/equiposLiga"

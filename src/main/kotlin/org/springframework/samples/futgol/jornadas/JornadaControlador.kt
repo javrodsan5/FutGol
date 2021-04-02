@@ -5,6 +5,7 @@ import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.partido.PartidoServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -59,7 +60,11 @@ class JornadaControlador(
                     }
 
                     if (jugadores.isNotEmpty()) {
-                        jornada.jugadores = jugadores as MutableList<Jugador>
+                        var onceOrdenado =
+                            jugadores.sortedByDescending { x -> MetodosAux().transformador(x?.posicion!!) }
+                        var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+                        onceOrdenadoMut.addAll(onceOrdenado as Collection<Jugador>)
+                        jornada.jugadores = onceOrdenadoMut
                         jornada.formacion = formacion
                         jornadaServicio.guardarJornada(jornada)
                         b = false
@@ -76,7 +81,8 @@ class JornadaControlador(
     @GetMapping("/jornada/{jornadaId}")
     fun detallesJornada(model: Model, @PathVariable("jornadaId") jornadaId: Int): String {
         if (jornadaServicio.existeJornada(jornadaId) == true && jornadaServicio.buscarTodasJornadas()
-                ?.any { x -> x.id == jornadaId } == true) {
+                ?.any { x -> x.id == jornadaId } == true
+        ) {
             var noOnceTodavia = true
             var jornada = jornadaServicio.buscarJornadaPorId(jornadaId)
             if (jornada != null) {
@@ -105,7 +111,11 @@ class JornadaControlador(
                         }
 
                         if (jugadores.isNotEmpty()) {
-                            jornada.jugadores = jugadores as MutableList<Jugador>
+                            var onceOrdenado =
+                                jugadores.sortedByDescending { x -> MetodosAux().transformador(x?.posicion!!) }
+                            var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+                            onceOrdenadoMut.addAll(onceOrdenado as Collection<Jugador>)
+                            jornada.jugadores = onceOrdenadoMut
                             jornada.formacion = formacion
 
                             jornadaServicio.guardarJornada(jornada)

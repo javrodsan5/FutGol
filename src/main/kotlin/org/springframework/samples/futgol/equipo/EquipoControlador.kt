@@ -4,6 +4,7 @@ import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.*
 import javax.validation.Valid
+import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 @Controller
@@ -22,7 +25,6 @@ class EquipoControlador(
     val equipoServicio: EquipoServicio,
     val jugadorServicio: JugadorServicio,
     val usuarioServicio: UsuarioServicio
-
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
@@ -67,7 +69,7 @@ class EquipoControlador(
             val usuario = usuarioServicio.usuarioLogueado(principal)
             var misJugadores = jugadorServicio.asignarjugadoresNuevoEquipo(idLiga)
 
-            var onceInicial = HashSet<Jugador>()
+            var onceInicial = ArrayList<Jugador>()
 
             onceInicial.add(misJugadores.filter { x -> x.posicion == "PO" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }[0])
@@ -78,11 +80,19 @@ class EquipoControlador(
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DL" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }.subList(0, 2))
 
-            var banquillo = HashSet<Jugador>(misJugadores)
+            var banquillo = ArrayList<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
 
-            equipo.onceInicial = onceInicial
-            equipo.jugBanquillo = banquillo
+            var onceOrdenado= onceInicial.sortedByDescending { x-> MetodosAux().transformador(x.posicion)}
+            var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+            var banquilloOrdenado= banquillo.sortedByDescending { x-> MetodosAux().transformador(x.posicion)}
+            var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
+
+            onceOrdenadoMut.addAll(onceOrdenado)
+            banquilloOrdenadoMut.addAll(banquilloOrdenado)
+
+            equipo.onceInicial = onceOrdenadoMut
+            equipo.jugBanquillo = banquilloOrdenadoMut
             equipo.jugadores = misJugadores
             equipo.usuario = usuario
             equipo.dineroRestante = 25000000
@@ -94,6 +104,8 @@ class EquipoControlador(
         }
     }
 
+
+
     @GetMapping("liga/{idLiga}/miEquipo")
     fun detallesMiEquipo(
         model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
@@ -102,16 +114,9 @@ class EquipoControlador(
             if (!equipoServicio.tengoEquipo(idLiga, principal)) {
                 model["SinEquipo"] = true
             } else {
+
                 var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-                var onceInicial = ArrayList<Jugador>()
 
-                onceInicial.add(miEquipo.onceInicial.single { x -> x.posicion == "PO" })
-                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DF" })
-                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "CC" })
-                onceInicial.addAll(miEquipo.onceInicial.filter { x -> x.posicion == "DL" })
-
-                miEquipo.onceInicial = onceInicial.toSet() as MutableSet<Jugador>
-                this.equipoServicio.guardarEquipo(miEquipo)
                 model["tengoEquipo"] = true
                 model["equipo"] = miEquipo
                 model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
@@ -139,8 +144,8 @@ class EquipoControlador(
             var centroCampistasBanq = banqAntiguo.filter { x -> x.posicion == "CC" } as MutableList<Jugador>
             var delanterossBanq = banqAntiguo.filter { x -> x.posicion == "DL" } as MutableList<Jugador>
 
-            var nuevoOnce: MutableSet<Jugador> = onceAntiguo
-            var nuevoBanq: MutableSet<Jugador> = banqAntiguo
+            var nuevoOnce: MutableList<Jugador> = onceAntiguo
+            var nuevoBanq: MutableList<Jugador> = banqAntiguo
 
             var nDFBQ = defensasBanq.size
             var nCCBQ = centroCampistasBanq.size
@@ -204,7 +209,7 @@ class EquipoControlador(
                         delantRestantes = -1
                     }
                 } else if (formacionAntigua == "3-5-2") {
-                    if (nDFBQ >= 1 && nDLBQ >= 1) {
+                    if (nDFBQ >= 1) {
                         defensasRestantes = 1
                         delantRestantes = -1
                     }
@@ -213,8 +218,8 @@ class EquipoControlador(
                         centrocRestantes = 2
                         delantRestantes = -2
                     }
-                } else { //532
-                    if (nDFBQ >= 1 && nDLBQ >= 1) {
+                } else {//5-3-2
+                    if (nCCBQ >= 2) {
                         defensasRestantes = -1
                         centrocRestantes = 2
                         delantRestantes = -1
@@ -314,9 +319,15 @@ class EquipoControlador(
                         delanterosOnce.removeAt(n)
                     }
                 }
+                var onceOrdenado = nuevoOnce.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+                var banquilloOrdenado = nuevoBanq.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
-                miEquipo.onceInicial = nuevoOnce
-                miEquipo.jugBanquillo = nuevoBanq
+                onceOrdenadoMut.addAll(onceOrdenado)
+                banquilloOrdenadoMut.addAll(banquilloOrdenado)
+                miEquipo.onceInicial = onceOrdenadoMut
+                miEquipo.jugBanquillo = banquilloOrdenadoMut
 
                 this.equipoServicio.guardarEquipo(miEquipo)
             }
@@ -410,7 +421,6 @@ class EquipoControlador(
                     model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                     var titular = jugadorServicio.buscaJugadorPorId(idJugadorOnce)!!
                     var sustituto = jugadorServicio.buscaJugadorPorId(idJugadorBanquillo)!!
-                    model["equipo"] = equipo
 
                     for (jug in equipo.jugBanquillo) {
                         if (jug.id == sustituto.id) {
@@ -426,7 +436,18 @@ class EquipoControlador(
                     }
                     equipo.jugBanquillo.add(titular)
                     equipo.onceInicial.add(sustituto)
+                    var onceOrdenado = equipo.onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                    var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
+                    var banquilloOrdenado = equipo.jugBanquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                    var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
+
+                    onceOrdenadoMut.addAll(onceOrdenado)
+                    banquilloOrdenadoMut.addAll(banquilloOrdenado)
+                    equipo.onceInicial = onceOrdenadoMut
+                    equipo.jugBanquillo = banquilloOrdenadoMut
                     equipoServicio.guardarEquipo(equipo)
+                    model["equipo"] = equipo
+
                 }
             }
         } else {

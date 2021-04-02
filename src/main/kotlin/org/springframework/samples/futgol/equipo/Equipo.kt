@@ -9,6 +9,7 @@ import org.springframework.samples.futgol.model.NamedEntity
 import org.springframework.samples.futgol.usuario.Usuario
 import java.util.*
 import javax.persistence.*
+import kotlin.collections.ArrayList
 
 @Getter
 @Setter
@@ -33,23 +34,24 @@ class Equipo() : NamedEntity() {
     @JoinColumn(name = "usuario", referencedColumnName = "username")
     var usuario: Usuario? = null
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
         name = "equipo_jugBanquillo",
         joinColumns = [JoinColumn(name = "equipo_id")],
         inverseJoinColumns = [JoinColumn(name = "jugador_id")]
     )
-    var jugBanquillo: MutableSet<Jugador> = HashSet()
+    var jugBanquillo: MutableList<Jugador> = ArrayList()
 
-    @ManyToMany
+
+    @ManyToMany()
     @JoinTable(
         name = "equipo_onceInicial",
         joinColumns = [JoinColumn(name = "equipo_id")],
         inverseJoinColumns = [JoinColumn(name = "jugador_id")]
     )
-    var onceInicial: MutableSet<Jugador> = HashSet()
+    var onceInicial: MutableList<Jugador> = ArrayList()
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
         name = "equipo_jugadores",
         joinColumns = [JoinColumn(name = "equipo_id")],

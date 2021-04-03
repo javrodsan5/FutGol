@@ -28,8 +28,7 @@ class EquipoControlador(
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
-    private val VISTA_DETALLES_MIEQUIPO = "equipos/detallesMiEquipo"
-    private val VISTA_DETALLES_OTROS_EQUIPOS = "equipos/detallesOtroEquipo"
+    private val VISTA_DETALLES_EQUIPO = "equipos/detallesEquipo"
     private val VISTA_GESTION_ONCE = "equipos/gestionOnce"
 
 
@@ -117,12 +116,13 @@ class EquipoControlador(
                 var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
 
                 model["tengoEquipo"] = true
+                model["miEquipo"] = true
                 model["equipo"] = miEquipo
                 model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
                 model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
             }
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            return VISTA_DETALLES_MIEQUIPO
+            return VISTA_DETALLES_EQUIPO
         }
         return "redirect:/misligas"
     }
@@ -350,15 +350,13 @@ class EquipoControlador(
             model["liga"] = liga
             if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
                 model["equipo"] = equipo
-                var jugadores = equipo.jugadores
-                model["jugadores"] = jugadores
-                model["valorEquipo"] =
-                    liga.id?.let { equipo.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }!!
-                if (jugadores.size > 5) {
-                    model["top5Jugadores"] = liga.id?.let { equipoServicio.topJugadoresEquipo(equipo.name, it) }!!
-                }
+                model["tengoEquipo"] = true
+
+                model["valorEquipo"] = equipo.name?.let { equipoServicio.calcularValorEquipo(it, liga.id!!) }!!
+                model["ptosJorEq"] = equipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
                 return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
-                    VISTA_DETALLES_OTROS_EQUIPOS
+                    model["miEquipo"] = false
+                    VISTA_DETALLES_EQUIPO
                 } else {
                     "redirect:/liga/" + liga.id + "/miEquipo"
                 }

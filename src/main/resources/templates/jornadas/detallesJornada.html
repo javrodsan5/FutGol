@@ -27,8 +27,8 @@
         var puntuaciones = document.getElementsByClassName("circulo");
 
         for (i = 0; i < puntuaciones.length; i++) {
-            var clase= puntuaciones[i]
-            var puntuacion = parseInt(puntuaciones[i].innerHTML.replace("<p>", "").replace("</p>",""));
+            var clase = puntuaciones[i]
+            var puntuacion = parseInt(puntuaciones[i].innerHTML.replace("<p>", "").replace("</p>", ""));
 
             if (puntuacion < 0) {
                 clase.style.backgroundColor = "#cf3b36";
@@ -45,6 +45,7 @@
 
         }
     }
+
     coloresPuntuaciones();
 </script>
 
@@ -150,13 +151,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[0].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[0].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -174,13 +179,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[1].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[1].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -198,13 +207,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[2].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[2].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -222,13 +235,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[3].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[3].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -246,13 +263,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[4].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[4].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -270,13 +291,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[5].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[5].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -294,13 +319,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[6].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[6].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -318,13 +347,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[7].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[7].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -342,13 +375,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[8].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[8].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -366,13 +403,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[9].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[9].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>
@@ -390,13 +431,17 @@
                                 <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
                                 <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
                                 <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
-                                <h4>Últimas jornadas jugadas</h4>
-                                <div th:each="e, it : ${jornada.jugadores[10].estadisticas}"
+                                <h4>Últimas jornadas jugadas:</h4>
+
+                                <div style="display: inline-grid" th:each="e, it : ${jornada.jugadores[10].estadisticas}"
                                      th:if="${it.index >= it.size-5}">
-                                    <b>
-                                        <h4 style="display: inline-block"><p
-                                                th:text="${e.partido.jornada.numeroJornada}"></p></h4>
-                                    </b>
+                                    <div style="display: inline-block">
+                                        <b>
+                                            <h5 style="display: inline"><p
+                                                    th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                        </b>
+                                    </div>
+
                                     <div class="circulo"><p th:text="${e.puntos}"></p></div>
                                 </div>
                             </div>

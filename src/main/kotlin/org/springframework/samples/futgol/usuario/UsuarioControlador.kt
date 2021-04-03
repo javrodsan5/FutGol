@@ -114,7 +114,7 @@ class UsuarioControlador(
             this.usuarioServicio.guardarUsuario(usuario)
             usuario.user?.let { this.userServicio.saveUser(it, true) }
             usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
-            return "redirect:/"
+            return "login"
         }
     }
 

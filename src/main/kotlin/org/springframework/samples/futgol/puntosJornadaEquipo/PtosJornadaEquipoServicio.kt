@@ -2,7 +2,6 @@ package org.springframework.samples.futgol.puntosJornadaEquipo
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,8 +17,8 @@ class PtosJornadaEquipoServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarPtosJornadaEquipo(id: Int): PtosJornadaEquipo? {
-        return ptosJornadaEquipoRepositorio?.findPtosJornadaEquipoById(id)
+    fun buscarPtosJEPorEquipo(idEquipo: Int): Collection<PtosJornadaEquipo>? {
+        return ptosJornadaEquipoRepositorio?.buscarPtosPorEquipo(idEquipo)
     }
 
     @Transactional

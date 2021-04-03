@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.equipo
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.puntosJornadaEquipo.PtosJornadaEquipoServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
-import java.util.*
 import javax.validation.Valid
-import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 @Controller
@@ -24,7 +23,8 @@ class EquipoControlador(
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
     val jugadorServicio: JugadorServicio,
-    val usuarioServicio: UsuarioServicio
+    val usuarioServicio: UsuarioServicio,
+    val ptosJornadaEquipoServicio: PtosJornadaEquipoServicio
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
@@ -83,9 +83,9 @@ class EquipoControlador(
             var banquillo = ArrayList<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
 
-            var onceOrdenado= onceInicial.sortedByDescending { x-> MetodosAux().transformador(x.posicion)}
+            var onceOrdenado = onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
             var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
-            var banquilloOrdenado= banquillo.sortedByDescending { x-> MetodosAux().transformador(x.posicion)}
+            var banquilloOrdenado = banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
             var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
             onceOrdenadoMut.addAll(onceOrdenado)
@@ -105,7 +105,6 @@ class EquipoControlador(
     }
 
 
-
     @GetMapping("liga/{idLiga}/miEquipo")
     fun detallesMiEquipo(
         model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal
@@ -120,6 +119,7 @@ class EquipoControlador(
                 model["tengoEquipo"] = true
                 model["equipo"] = miEquipo
                 model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
+                model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
             }
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             return VISTA_DETALLES_MIEQUIPO
@@ -436,9 +436,11 @@ class EquipoControlador(
                     }
                     equipo.jugBanquillo.add(titular)
                     equipo.onceInicial.add(sustituto)
-                    var onceOrdenado = equipo.onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                    var onceOrdenado =
+                        equipo.onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
                     var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
-                    var banquilloOrdenado = equipo.jugBanquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+                    var banquilloOrdenado =
+                        equipo.jugBanquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
                     var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
                     onceOrdenadoMut.addAll(onceOrdenado)

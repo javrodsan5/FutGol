@@ -57,7 +57,11 @@
             });
         </script>
     </div>
-
+    <div>
+        <ul style="display: inline-block;">
+            <li th:each="pje : ${ptosJorEq}">Jornada <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b> <b th:text="${pje.puntos}"/> puntos</li>
+        </ul>
+    </div>
 
     <br><br>
     <div>

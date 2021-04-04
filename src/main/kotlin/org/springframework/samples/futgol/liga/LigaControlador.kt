@@ -121,7 +121,6 @@ class LigaControlador(
         if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             val nombreUsuario = usuarioServicio.usuarioLogueado(principal!!)?.user?.username
-            var soyAdmin: Boolean
             var noLimiteEquipos = true
             model["liga"] = liga!!
             var equiposLiga = liga.equipos.sortedBy { x -> x.name }
@@ -132,13 +131,10 @@ class LigaControlador(
             model["noLimiteEquipos"] = noLimiteEquipos
 
             if (liga.admin?.user?.username.equals(nombreUsuario)) {
-                soyAdmin = true
-                model["soyAdmin"] = soyAdmin
+                model["soyAdmin"] = true
             }
-            val noTengoEquipo: Boolean
             if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
-                noTengoEquipo = true
-                model["noTengoEquipo"] = noTengoEquipo
+                model["noTengoEquipo"] = true
             }
             return VISTA_DETALLES_LIGA
         } else {
@@ -153,8 +149,7 @@ class LigaControlador(
             model["liga"] = liga!!
             val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
 
-            var posiciones = equiposLiga.indices
-            model["posiciones"] = posiciones
+            model["posiciones"] = equiposLiga.indices
             model["equiposLiga"] = equiposLiga
             var valores: MutableList<Double> = ArrayList()
             for (e in equiposLiga) {

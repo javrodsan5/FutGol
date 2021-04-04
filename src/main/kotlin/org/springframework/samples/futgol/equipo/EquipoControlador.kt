@@ -70,8 +70,8 @@ class EquipoControlador(
 
             var onceInicial = ArrayList<Jugador>()
 
-            onceInicial.add(misJugadores.filter { x -> x.posicion == "PO" && x.estadoLesion == "En forma" }
-                .sortedBy { x -> -x.valor }[0])
+            onceInicial.add(misJugadores.sortedBy { x -> -x.valor }
+                .single { x -> x.posicion == "PO" && x.estadoLesion == "En forma" })
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DF" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }.subList(0, 4))
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "CC" && x.estadoLesion == "En forma" }
@@ -82,13 +82,11 @@ class EquipoControlador(
             var banquillo = ArrayList<Jugador>(misJugadores)
             banquillo.removeAll(onceInicial)
 
-            var onceOrdenado = onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
             var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
-            var banquilloOrdenado = banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
             var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
-            onceOrdenadoMut.addAll(onceOrdenado)
-            banquilloOrdenadoMut.addAll(banquilloOrdenado)
+            onceOrdenadoMut.addAll(onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
+            banquilloOrdenadoMut.addAll(banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
 
             equipo.onceInicial = onceOrdenadoMut
             equipo.jugBanquillo = banquilloOrdenadoMut
@@ -319,13 +317,12 @@ class EquipoControlador(
                         delanterosOnce.removeAt(n)
                     }
                 }
-                var onceOrdenado = nuevoOnce.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+
                 var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
-                var banquilloOrdenado = nuevoBanq.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
                 var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
-                onceOrdenadoMut.addAll(onceOrdenado)
-                banquilloOrdenadoMut.addAll(banquilloOrdenado)
+                onceOrdenadoMut.addAll(nuevoOnce.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
+                banquilloOrdenadoMut.addAll(nuevoBanq.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
                 miEquipo.onceInicial = onceOrdenadoMut
                 miEquipo.jugBanquillo = banquilloOrdenadoMut
 
@@ -434,15 +431,16 @@ class EquipoControlador(
                     }
                     equipo.jugBanquillo.add(titular)
                     equipo.onceInicial.add(sustituto)
-                    var onceOrdenado =
-                        equipo.onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+
                     var onceOrdenadoMut: MutableList<Jugador> = ArrayList()
-                    var banquilloOrdenado =
-                        equipo.jugBanquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
                     var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
 
-                    onceOrdenadoMut.addAll(onceOrdenado)
-                    banquilloOrdenadoMut.addAll(banquilloOrdenado)
+                    onceOrdenadoMut.addAll(equipo.onceInicial.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
+                    banquilloOrdenadoMut.addAll(equipo.jugBanquillo.sortedByDescending { x ->
+                        MetodosAux().transformador(
+                            x.posicion
+                        )
+                    })
                     equipo.onceInicial = onceOrdenadoMut
                     equipo.jugBanquillo = banquilloOrdenadoMut
                     equipoServicio.guardarEquipo(equipo)

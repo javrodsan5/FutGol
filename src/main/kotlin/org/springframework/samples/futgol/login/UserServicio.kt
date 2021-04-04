@@ -9,26 +9,26 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserServicio {
 
-    private var userRepository: UserRepositorio? = null
+    private var userRepositorio: UserRepositorio? = null
 
     @Autowired
-    fun UserService(userRepository: UserRepositorio?) {
-        this.userRepository = userRepository
+    fun UserServicio(userRepositorio: UserRepositorio?) {
+        this.userRepositorio = userRepositorio
     }
 
     @Transactional
     @Throws(DataAccessException::class)
-    fun saveUser(user: User, nuevaPass: Boolean) {
+    fun guardarUser(user: User, nuevaPass: Boolean) {
         user.enabled = true
         if (nuevaPass) {
             var contrasenyaEncrip = BCryptPasswordEncoder().encode(user.password)
             user.password = contrasenyaEncrip
         }
-        userRepository?.save(user)
+        userRepositorio?.save(user)
     }
 
     @Transactional(readOnly = true)
-    fun findUser(username: String?): User? {
-        return username?.let { userRepository?.findByNombreUsuario(it) }
+    fun buscarUser(username: String?): User? {
+        return username?.let { userRepositorio?.findByNombreUsuario(it) }
     }
 }

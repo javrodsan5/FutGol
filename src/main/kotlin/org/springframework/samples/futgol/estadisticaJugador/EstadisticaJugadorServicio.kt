@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -115,14 +116,10 @@ class EstadisticaJugadorServicio {
         var urlBase = "https://es.fcstats.com/"
         var doc = Jsoup.connect(urlBase + "partidos,primera-division-espana,19,1.php").get()
         var linksPartidos =
-            doc.select("table.matchesListMain tbody tr.matchRow td.matchResult a").filter { x -> x.text() != "Postp." }
-                .filter { x -> x.text() != "17:00" }
-        var l: List<String?> = ArrayList()
-        try {
-            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresFCstats.txt")).collect(Collectors.toList())
-        } catch (e: IOException) {
-            println("No se puede leer el fichero de nombres.")
-        }
+            doc.select("table.matchesListMain tbody tr.matchRow td.matchResult a")
+                .filter { x -> x.text() != "Postp." && x.text() != "17:00" }
+
+        var l = MetodosAux().leerFichero("src/main/resources/wsFiles/CambioNombresFCstats.txt")
 
         for (linkPartido in linksPartidos) {
             var doc2 = Jsoup.connect("$urlBase" + linkPartido.attr("href")).get()
@@ -175,21 +172,8 @@ class EstadisticaJugadorServicio {
                                 }
                             }
                             for (r in 0 until nombresTL.size) {
-                                for (element in l) {
-                                    var linea = element?.split(",")
-                                    if (linea?.size!! >= 3) {
-                                        if (linea[2] == equipoLocal && linea[0] == nombresTL[r]
-                                        ) {
-                                            nombresTL.removeAt(r)
-                                            nombresTL.add(r, linea[1])
-                                        }
-                                    } else {
-                                        if (linea[0] == nombresTL[r]) {
-                                            nombresTL.removeAt(r)
-                                            nombresTL.add(r, linea[1])
-                                        }
-                                    }
-                                }
+
+                                nombresTL = MetodosAux().modificarNombreJugadorFcStats(l,equipoLocal,nombresTL,r)
 
                                 if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[r], equipoLocal) == true) {
                                     var pId =
@@ -233,21 +217,8 @@ class EstadisticaJugadorServicio {
                             }
 
                             for (s in 0 until nombresTV.size) {
-                                for (element in l) {
-                                    var linea = element?.split(",")
-                                    if (linea?.size!! >= 3) {
-                                        if (linea[2] == equipoVisitante && linea[0] == nombresTV[s]
-                                        ) {
-                                            nombresTV.removeAt(s)
-                                            nombresTV.add(s, linea[1])
-                                        }
-                                    } else {
-                                        if (linea[0] == nombresTV[s]) {
-                                            nombresTV.removeAt(s)
-                                            nombresTV.add(s, linea[1])
-                                        }
-                                    }
-                                }
+
+                                nombresTV = MetodosAux().modificarNombreJugadorFcStats(l,equipoVisitante,nombresTV,s)
 
                                 if (this.jugadorServicio?.existeJugadorEquipo(
                                         nombresTV[s],
@@ -303,31 +274,13 @@ class EstadisticaJugadorServicio {
                                 var puntuacionesSLString =
                                     suplentesConPuntuacionL.stream().map { x -> x.select("span.lineupRating").text() }
                                         .collect(Collectors.toList())
-                                var puntuacionesSL = ArrayList<Double>()
-                                for (p in puntuacionesSLString) {
-                                    var puntuacionSL: Double
-                                    if (p != "") {
-                                        puntuacionSL = p.toDouble()
-                                        puntuacionesSL.add(puntuacionSL)
-                                    }
-                                }
+
+                                var puntuacionesSL = puntuacionesSLString.filter { x -> x != "" }
+                                    .map { x -> x.toDouble() }
 
                                 for (p in 0 until nombresSL.size) {
-                                    for (element in l) {
-                                        var linea = element?.split(",")
-                                        if (linea?.size!! >= 3) {
-                                            if (linea[2] == equipoLocal && linea[0] == nombresSL[p]
-                                            ) {
-                                                nombresSL.removeAt(p)
-                                                nombresSL.add(p, linea[1])
-                                            }
-                                        } else {
-                                            if (linea[0] == nombresSL[p]) {
-                                                nombresSL.removeAt(p)
-                                                nombresSL.add(p, linea[1])
-                                            }
-                                        }
-                                    }
+
+                                    nombresSL = MetodosAux().modificarNombreJugadorFcStats(l,equipoLocal,nombresSL,p)
 
                                     if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[p], equipoLocal) == true) {
                                         var pId =
@@ -356,38 +309,19 @@ class EstadisticaJugadorServicio {
                                 println("Suplentes local: " + nombresSL + " " + nombresSL.size)
                                 println("Puntuaciones suplentes local: " + puntuacionesSL)
                             }
-                            if (!suplentesConPuntuacionV.isEmpty()) {
+                            if (suplentesConPuntuacionV.isNotEmpty()) {
                                 var nombresSV =
                                     suplentesConPuntuacionV.stream().map { x -> x.select("a").text() }
                                         .collect(Collectors.toList())
                                 var puntuacionesSVString =
                                     suplentesConPuntuacionV.stream().map { x -> x.select("span.lineupRating").text() }
                                         .collect(Collectors.toList())
-                                var puntuacionesSV = ArrayList<Double>()
-                                for (p in puntuacionesSVString) {
-                                    var puntuacionSV: Double
-                                    if (p != "") {
-                                        puntuacionSV = p.toDouble()
-                                        puntuacionesSV.add(puntuacionSV)
-                                    }
-                                }
+                                var puntuacionesSV = puntuacionesSVString.filter { x -> x != "" }
+                                    .map { x -> x.toDouble() }
 
                                 for (f in 0 until nombresSV.size) {
-                                    for (element in l) {
-                                        var linea = element?.split(",")
-                                        if (linea?.size!! >= 3) {
-                                            if (linea[2] == equipoVisitante && linea[0] == nombresSV[f]
-                                            ) {
-                                                nombresSV.removeAt(f)
-                                                nombresSV.add(f, linea[1])
-                                            }
-                                        } else {
-                                            if (linea[0] == nombresSV[f]) {
-                                                nombresSV.removeAt(f)
-                                                nombresSV.add(f, linea[1])
-                                            }
-                                        }
-                                    }
+
+                                    nombresSV = MetodosAux().modificarNombreJugadorFcStats(l,equipoVisitante,nombresSV,f)
 
                                     if (this.jugadorServicio?.existeJugadorEquipo(
                                             nombresSV[f],
@@ -436,12 +370,8 @@ class EstadisticaJugadorServicio {
         var doc = Jsoup.connect("$urlBase/es/comps/12/horario/Resultados-y-partidos-en-La-Liga").get()
         var partidos = doc.select("table#sched_10731_1 tbody tr")
             .filter { x -> x.select("tr.spacer.partial_table.result_all").isEmpty() }
-        var l: List<String?> = ArrayList()
-        try {
-            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt")).collect(Collectors.toList())
-        } catch (e: IOException) {
-            println("No se puede leer el fichero de nombres.")
-        }
+
+        var l = MetodosAux().leerFichero("src/main/resources/wsFiles/CambioNombresJugadores.txt")
 
         var ultimaEPId = 0
         if (this.existeAlgunaEstadistica()) {
@@ -504,18 +434,9 @@ class EstadisticaJugadorServicio {
                         for (i in 0 until tamanyo) {
                             var jugador = jugadores[i]
                             var nombreJugador = jugador.select("th[data-stat=player] a").text().trim()
-                            for (element in l) {
-                                var linea = element?.split(",")
-                                if (linea?.size!! >= 3) {
-                                    if (linea[2] == equipo && linea[0] == nombreJugador) {
-                                        nombreJugador = linea[1]
-                                    }
-                                } else {
-                                    if (linea[0] == nombreJugador) {
-                                        nombreJugador = linea[1]
-                                    }
-                                }
-                            }
+
+                            nombreJugador = MetodosAux().modificarNombreJugador(l, equipo, nombreJugador)
+
                             if (jugadorServicio?.existeJugadorEquipo(nombreJugador, equipo) == true) {
                                 var j =
                                     this.jugadorServicio.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
@@ -674,9 +595,3 @@ class EstadisticaJugadorServicio {
     }
 
 }
-
-
-
-
-
-

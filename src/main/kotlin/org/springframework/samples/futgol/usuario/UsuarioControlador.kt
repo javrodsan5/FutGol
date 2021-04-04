@@ -112,8 +112,8 @@ class UsuarioControlador(
             VISTA_REGISTRO_USUARIO
         } else {
             this.usuarioServicio.guardarUsuario(usuario)
-            usuario.user?.let { this.userServicio.saveUser(it, true) }
-            usuario.user?.username?.let { this.authoritiesServicio.saveAuthorities(it, "usuario") }
+            usuario.user?.let { this.userServicio.guardarUser(it, true) }
+            usuario.user?.username?.let { this.authoritiesServicio.guardarAutoridades(it, "usuario") }
             return "login"
         }
     }
@@ -139,7 +139,7 @@ class UsuarioControlador(
         } else {
             if (usuarioComparador != null) {
 
-                var user = userServicio.findUser(usuarioComparador.user?.username)
+                var user = userServicio.buscarUser(usuarioComparador.user?.username)
                 user?.username = usuario.user?.username!!
                 var b = false
                 if (user != null) {
@@ -147,7 +147,7 @@ class UsuarioControlador(
                         b = true
                         user.password = usuario.user?.password!!
                     }
-                    this.userServicio.saveUser(user, b)
+                    this.userServicio.guardarUser(user, b)
                 }
 
                 usuarioComparador.name = usuario.name

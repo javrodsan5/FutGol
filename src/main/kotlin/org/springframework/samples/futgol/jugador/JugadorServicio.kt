@@ -226,6 +226,15 @@ class JugadorServicio {
         return equipo?.jugadores?.any { x -> x.id == idJugador }!!
     }
 
+    fun eliminarJugadoresSinPosicionFbref() {
+        var jugadores = this.buscarJugadoresSinPosicion()
+        if (jugadores != null) {
+            for (jugador in jugadores) {
+                jugador.id?.let { this.eliminarJugador(it) }
+            }
+        }
+    }
+
     fun webScrapingJugadoresTransfermarkt() {
 
         var urlBase = "https://www.transfermarkt.es"

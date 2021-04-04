@@ -32,7 +32,7 @@ Rober Correa,Roberto Correa
 Damian Kądzior,Damian Kadzior
 Tomás Pina Isla,Tomás Pina
 Édgar Méndez,Edgar Méndez
-Jota,Jota Peleteiro,
+Jota,Jota Peleteiro,Alavés
 Martin Agirregabiria,Martín Aguirregabiria
 Marko Dmitrović,Marko Dmitrovic
 Kike,Kike García
@@ -51,7 +51,7 @@ Míchel,Míchel Herrero
 Junior Firpo,Júnior Firpo
 Francisco Trincão,Trincão
 Iñaki,Iñaki Peña
-Óscar Rodríguez Arnaiz,Óscar
+Óscar Rodríguez Arnaiz,Óscar Rodríguez
 Yassine Bounou,Bono
 Fernando,Fernando Reges
 Dani Carvajal,Daniel Carvajal
@@ -69,7 +69,7 @@ Konrad De La Fuente,Konrad de la Fuente
 Tomáš Vaclík,Tomas Vaclík
 Javier Díaz,Javi Díaz
 Gerónimo Rulli,Gero Rulli
-José Sánchez,Pepe Sánchez
+Pepe,Pepe Sánchez
 Cristian,Cristian Rivero
 Francisco Reis Ferreira,Ferro
 Alejandro Blanco,Álex Blanco
@@ -85,3 +85,5 @@ Raúl García,Raúl Carnero,Valladolid
 Juan Carlos,Juan Carlos Real
 Ezequiel Ávila,Chimy Ávila
 Jota,Jota,Valladolid
+Ilaix,Ilaix Moriba
+Cárdenas,Dani Cárdenas

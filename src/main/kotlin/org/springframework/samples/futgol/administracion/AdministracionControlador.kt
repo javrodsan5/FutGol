@@ -22,36 +22,15 @@ class AdministracionControlador(
     val equipoRealServicio: EquipoRealServicio
 ) {
 
-    @Scheduled(cron = "0 07 13 * * ? ")
+    @Scheduled(cron = "0 0 2 * * THU ")
     fun administrarWebScraping() {
         this.equipoRealServicio.webScrapingEquipos()
         this.partidoServicio.wsPartidos()
         this.jugadorServicio.webScrapingJugadoresTransfermarkt()
         this.jugadorServicio.webScrapingJugadoresFbref()
+        this.jugadorServicio.eliminarJugadoresSinPosicionFbref()
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
-        this.eliminarJugadoresSinPosicionFbref()
-        this.asignarPuntosEquipo()
-    }
-
-    fun asignarPuntosEquipo() {
-        var ligas = this.ligaServicio.buscarTodasLigas()!!
-        for (l in ligas) {
-            var equipos = l.id?.let { this.equipoServicio.buscaEquiposDeLigaPorId(it) }
-            if (equipos != null) {
-                for (e in equipos) {
-                    e.name?.let { l.id?.let { it1 -> this.equipoServicio.asignaPuntosEquipo(it, it1) } }
-                }
-            }
-        }
-    }
-
-    fun eliminarJugadoresSinPosicionFbref() {
-        var jugadores = this.jugadorServicio.buscarJugadoresSinPosicion()
-        if (jugadores != null) {
-            for (jugador in jugadores) {
-                jugador.id?.let { this.jugadorServicio.eliminarJugador(it) }
-            }
-        }
+        this.equipoServicio.asignarPuntosEquipo()
     }
 }

@@ -127,6 +127,18 @@ class EquipoServicio {
         }
     }
 
+    fun asignarPuntosEquipo() {
+        var ligas = this.ligaServicio?.buscarTodasLigas()!!
+        for (l in ligas) {
+            var equipos = l.id?.let { this.buscaEquiposDeLigaPorId(it) }
+            if (equipos != null) {
+                for (e in equipos) {
+                    e.name?.let { l.id?.let { it1 -> this.asignaPuntosEquipo(it, it1) } }
+                }
+            }
+        }
+    }
+
     @Transactional(readOnly = true)
     fun auxAsignaPuntosEquipo(p: Partido, ptoJEq: PtosJornadaEquipo) {
         for (j in p.equipoLocal!!.jugadores) {

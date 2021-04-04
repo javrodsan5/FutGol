@@ -115,8 +115,8 @@ class EquipoServicio {
             var ptoJEq = PtosJornadaEquipo()
             ptoJEq.equipo = equipo
             if (jornada != null) {
-                var jornadabuena = jornadaServicio?.buscarJornadaPorNumeroJornada(jornada.numeroJornada - 1)
-                ptoJEq.jornada = jornadabuena
+                var jornadaBuena = jornadaServicio?.buscarJornadaPorNumeroJornada(jornada.numeroJornada - 1)
+                ptoJEq.jornada = jornadaBuena
                 for (p in jornada.partidos) {
                     auxAsignaPuntosEquipo(p, ptoJEq)
                 }

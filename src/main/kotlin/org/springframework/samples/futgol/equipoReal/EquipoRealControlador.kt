@@ -75,9 +75,9 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
 
             var banquillo = equipo.jugadores
             banquillo.removeAll(jugadores)
-            var banquilloOrdenado = banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) }
+
             var banquilloOrdenadoMut: MutableList<Jugador> = ArrayList()
-            banquilloOrdenadoMut.addAll(banquilloOrdenado)
+            banquilloOrdenadoMut.addAll(banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
 
             model["banquillo"] = banquilloOrdenadoMut
 

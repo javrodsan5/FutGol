@@ -49,7 +49,6 @@ Pedro López Muñoz,Pedro López
 Maranhão,Marcos André
 Míchel,Míchel Herrero
 Junior Firpo,Júnior Firpo
-Francisco Trincão,Trincão
 Iñaki,Iñaki Peña
 Óscar Rodríguez Arnaiz,Óscar Rodríguez
 Yassine Bounou,Bono
@@ -76,7 +75,6 @@ Alejandro Blanco,Álex Blanco
 Rubén,Rubén Martínez
 Darko Brašanac,Darko Brasanac
 Ivan Šaponjić,Ivan Saponjic
-Xabier Etxeita,Xabi Etxeita
 Mathías Olivera,Mathí­as Olivera
 John Patrick,John Joe Patrick Finn
 Yoel,Yoel Rodríguez

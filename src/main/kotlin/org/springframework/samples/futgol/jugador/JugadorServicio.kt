@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -226,6 +227,7 @@ class JugadorServicio {
         return equipo?.jugadores?.any { x -> x.id == idJugador }!!
     }
 
+    @Transactional
     fun eliminarJugadoresSinPosicionFbref() {
         var jugadores = this.buscarJugadoresSinPosicion()
         if (jugadores != null) {
@@ -335,31 +337,16 @@ class JugadorServicio {
 
         }
 
-        var l: List<String?> = ArrayList()
-        try {
-            l = Files.lines(Paths.get("src/main/resources/wsFiles/CambioNombresJugadores.txt"))
-                .collect(Collectors.toList())
-        } catch (e: IOException) {
-            println("No se puede leer el fichero de nombres.")
-        }
+        var l= MetodosAux().leerFichero("src/main/resources/wsFiles/CambioNombresJugadores.txt")
 
         for (linkJugador in linksJug) {
             var doc3 = Jsoup.connect(urlBase + linkJugador).get()
             var nombreJugador = doc3.select("h1[itemprop=name]").text().trim()
             var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
             if (equipoRealServicio?.existeEquipoReal(equipo) == true) {
-                for (element in l) {
-                    var linea = element?.split(",")
-                    if (linea?.size!! >= 3) {
-                        if (linea[2] == equipo && linea[0] == nombreJugador) {
-                            nombreJugador = linea[1]
-                        }
-                    } else {
-                        if (linea[0] == nombreJugador) {
-                            nombreJugador = linea[1]
-                        }
-                    }
-                }
+
+                nombreJugador= MetodosAux().modificarNombreJugador(l,equipo, nombreJugador)
+
                 if (this.existeJugadorEquipo(nombreJugador, equipo) == true) {
                     var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)
                     if (j?.posicion == "") {
@@ -403,6 +390,4 @@ class JugadorServicio {
             }
         }
     }
-
-
 }

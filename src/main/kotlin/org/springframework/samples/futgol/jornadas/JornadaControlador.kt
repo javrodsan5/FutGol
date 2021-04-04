@@ -91,7 +91,7 @@ class JornadaControlador(
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             if (jornada?.partidos?.stream()?.allMatch { p -> p.resultado != "" } == true) {
                 if (this.estadisticaJugadorServicio.existeEstadisticasJornada(jornadaId) == true) {
-                    if (jornada.jugadores.isEmpty() == true) {
+                    if (jornada.jugadores.isEmpty()) {
                         if (jornada.mejorJugador == null) {
                             jornada.mejorJugador = this.estadisticaJugadorServicio.mejorJugadorJornada(jornadaId)
                             jornadaServicio.guardarJornada(jornada)

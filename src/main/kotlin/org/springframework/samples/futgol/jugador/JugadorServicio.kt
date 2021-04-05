@@ -9,13 +9,8 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.util.MetodosAux
-import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.HashSet
@@ -106,84 +101,82 @@ class JugadorServicio {
     @Transactional(readOnly = true)
     fun mediaEstadisticasJugador(idJugador: Int): List<Double>? {
         var medias: MutableList<Double> = ArrayList()
-        if (existeJugadorId(idJugador) == true && tieneEstadisticas(idJugador) == true) {
-            var jugador = buscaJugadorPorId(idJugador)
-            var estadisticasJugador = jugador!!.estadisticas
-            var puntos = 0.0
-            var minutos = 0.0
-            var tAmarillas = 0.0
-            var tRojas = 0.0
-            var numeroEstadisticas = estadisticasJugador.size
-            if (jugador.posicion == "PO") {
-                var salvadas = 0.0
-                var disparosRecibidos = 0.0
-                var golesRecibidos = 0.0
-                for (e in estadisticasJugador) {
-                    salvadas += e.salvadas
-                    disparosRecibidos += e.disparosRecibidos
-                    golesRecibidos += e.golesRecibidos
-                    puntos += e.puntos
-                    minutos += e.minutosJugados
-                    tAmarillas += e.tarjetasAmarillas
-                    tRojas += e.tarjetasRojas
-                }
-                medias.add(Math.round(salvadas / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(disparosRecibidos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(golesRecibidos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
-            } else if (jugador.posicion == "DF") {
-                var robos = 0.0
-                var bloqueos = 0.0
-                var asistencias = 0.0
-                for (e in estadisticasJugador) {
-                    robos += e.robos
-                    bloqueos += e.bloqueos
-                    asistencias += e.asistencias
-                    puntos += e.puntos
-                    minutos += e.minutosJugados
-                    tAmarillas += e.tarjetasAmarillas
-                    tRojas += e.tarjetasRojas
-                }
-                medias.add(Math.round(robos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(bloqueos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
-            } else {
-                var goles = 0.0
-                var dispPuerta = 0.0
-                var dispTotales = 0.0
-                var asistencias = 0.0
-                var penaltisMarcados = 0.0
-                var penaltisLanzados = 0.0
-                for (e in estadisticasJugador) {
-                    goles += e.goles
-                    dispPuerta += e.disparosPuerta
-                    dispTotales += e.disparosTotales
-                    penaltisLanzados += e.penaltisLanzados
-                    penaltisMarcados += e.penaltisMarcados
-                    asistencias += e.asistencias
-                    puntos += e.puntos
-                    minutos += e.minutosJugados
-                    tAmarillas += e.tarjetasAmarillas
-                    tRojas += e.tarjetasRojas
-                }
-                medias.add(Math.round(goles / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(dispPuerta / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(dispTotales / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(penaltisLanzados / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(penaltisMarcados / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
-                medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+        var jugador = buscaJugadorPorId(idJugador)
+        var estadisticasJugador = jugador!!.estadisticas
+        var puntos = 0.0
+        var minutos = 0.0
+        var tAmarillas = 0.0
+        var tRojas = 0.0
+        var numeroEstadisticas = estadisticasJugador.size
+        if (jugador.posicion == "PO") {
+            var salvadas = 0.0
+            var disparosRecibidos = 0.0
+            var golesRecibidos = 0.0
+            for (e in estadisticasJugador) {
+                salvadas += e.salvadas
+                disparosRecibidos += e.disparosRecibidos
+                golesRecibidos += e.golesRecibidos
+                puntos += e.puntos
+                minutos += e.minutosJugados
+                tAmarillas += e.tarjetasAmarillas
+                tRojas += e.tarjetasRojas
             }
+            medias.add(Math.round(salvadas / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(disparosRecibidos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(golesRecibidos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+        } else if (jugador.posicion == "DF") {
+            var robos = 0.0
+            var bloqueos = 0.0
+            var asistencias = 0.0
+            for (e in estadisticasJugador) {
+                robos += e.robos
+                bloqueos += e.bloqueos
+                asistencias += e.asistencias
+                puntos += e.puntos
+                minutos += e.minutosJugados
+                tAmarillas += e.tarjetasAmarillas
+                tRojas += e.tarjetasRojas
+            }
+            medias.add(Math.round(robos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(bloqueos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
+        } else {
+            var goles = 0.0
+            var dispPuerta = 0.0
+            var dispTotales = 0.0
+            var asistencias = 0.0
+            var penaltisMarcados = 0.0
+            var penaltisLanzados = 0.0
+            for (e in estadisticasJugador) {
+                goles += e.goles
+                dispPuerta += e.disparosPuerta
+                dispTotales += e.disparosTotales
+                penaltisLanzados += e.penaltisLanzados
+                penaltisMarcados += e.penaltisMarcados
+                asistencias += e.asistencias
+                puntos += e.puntos
+                minutos += e.minutosJugados
+                tAmarillas += e.tarjetasAmarillas
+                tRojas += e.tarjetasRojas
+            }
+            medias.add(Math.round(goles / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(asistencias / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(dispPuerta / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(dispTotales / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(penaltisLanzados / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(penaltisMarcados / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(puntos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(minutos / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tAmarillas / numeroEstadisticas * 100) / 100.0)
+            medias.add(Math.round(tRojas / numeroEstadisticas * 100) / 100.0)
         }
         return medias
 
@@ -337,7 +330,7 @@ class JugadorServicio {
 
         }
 
-        var l= MetodosAux().leerFichero("src/main/resources/wsFiles/CambioNombresJugadores.txt")
+        var l = MetodosAux().leerFichero("src/main/resources/wsFiles/CambioNombresJugadores.txt")
 
         for (linkJugador in linksJug) {
             var doc3 = Jsoup.connect(urlBase + linkJugador).get()
@@ -345,7 +338,7 @@ class JugadorServicio {
             var equipo = doc3.select("div#meta p").last().text().replace("Club : ", "").trim()
             if (equipoRealServicio?.existeEquipoReal(equipo) == true) {
 
-                nombreJugador= MetodosAux().modificarNombreJugador(l,equipo, nombreJugador)
+                nombreJugador = MetodosAux().modificarNombreJugador(l, equipo, nombreJugador)
 
                 if (this.existeJugadorEquipo(nombreJugador, equipo) == true) {
                     var j = this.buscaJugadorPorNombreYEquipo(nombreJugador, equipo)

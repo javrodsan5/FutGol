@@ -54,7 +54,11 @@ class JugadorControlador(
         return if (jugadorServicio.existeJugadorId(idJugador) == true) {
             val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
-            model["medias"] = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+            var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+            if (mediasJug.isNotEmpty()) {
+                model["tieneMedias"] = true
+                model["medias"] = mediasJug
+            }
             model["esPortero"] = jugador.posicion == "PO"
             model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
             model["esDF"] = jugador.posicion == "DF"
@@ -107,12 +111,17 @@ class JugadorControlador(
         @PathVariable idEquipo: Int,
         @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
     ): String {
-        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-        if (jugadorServicio.existeJugadorEnEquipo(idJugador, idEquipo)) {
+        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo)) {
+            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
-                model["medias"] = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+                var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+                if (mediasJug.isNotEmpty()) {
+                    model["tieneMedias"] = true
+                    model["medias"] = mediasJug
+                }
                 model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
                 model["esDF"] = jugador.posicion == "DF"
             }

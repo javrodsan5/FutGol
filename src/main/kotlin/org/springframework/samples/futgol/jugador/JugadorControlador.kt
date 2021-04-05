@@ -51,7 +51,7 @@ class JugadorControlador(
         @PathVariable idJugador: Int,
         @PathVariable numeroJornada: Int
     ): String {
-        return if (jugadorServicio.existeJugadorId(idJugador) == true) {
+        return if (jugadorServicio.existeJugadorId(idJugador) == true && jornadaServicio.existeJornada(numeroJornada) == true) {
             val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
@@ -112,16 +112,16 @@ class JugadorControlador(
         @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
     ): String {
         if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
-                idJugador, idEquipo)) {
+                idJugador, idEquipo
+            ) && jornadaServicio.existeJornada(numeroJornada) == true
+        ) {
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
                 var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
-                if (mediasJug.isNotEmpty()) {
-                    model["tieneMedias"] = true
-                    model["medias"] = mediasJug
-                }
+                model["tieneMedias"] = true
+                model["medias"] = mediasJug
                 model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
                 model["esDF"] = jugador.posicion == "DF"
             }
@@ -146,7 +146,6 @@ class JugadorControlador(
 
             if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
                 model["loTengoEnMiEquipo"] = true
-
             }
         } else {
             return "redirect:/"
@@ -160,16 +159,16 @@ class JugadorControlador(
         @PathVariable("idJugador") idJugador: Int,
         @PathVariable("idEquipo") idEquipo: Int, principal: Principal?
     ): String {
-        var equipo = equipoServicio.buscaEquiposPorId(idEquipo)
-        var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
-        if (usuario != null) {
-            if (equipo!!.usuario?.user?.username == usuario.user?.username) {
-                if (jugadorServicio.existeJugadorEnEquipo(idJugador, idEquipo)) {
-                    model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
-                }
-            } else {
-                return "redirect:/jugador/" + idJugador
+        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo
+            )
+        ) {
+            var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
+            if (usuario != null && equipoServicio.buscaEquiposPorId(idEquipo)!!.usuario?.user?.username == usuario.user?.username) {
+                model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
             }
+        } else {
+            return "redirect:/jugador/" + idJugador
         }
         return VISTA_CLAUSULA_JUGADOR
     }

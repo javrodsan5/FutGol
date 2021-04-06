@@ -58,7 +58,7 @@ class EquipoControlador(
         var liga = this.ligaServicio.buscarLigaPorId(idLiga)
         if (liga != null) {
             if (liga.id?.let { equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) }!!) {
-                result.addError(FieldError("equipo", "name", "Ya existe una equipo con ese nombre en esta liga"))
+                result.addError(FieldError("equipo", "name", "Ya existe un equipo con ese nombre en esta liga"))
             }
         }
         return if (result.hasErrors()) {
@@ -71,11 +71,14 @@ class EquipoControlador(
             var onceInicial = ArrayList<Jugador>()
 
             onceInicial.add(misJugadores.sortedBy { x -> -x.valor }
-                .single { x -> x.posicion == "PO" && x.estadoLesion == "En forma" })
+                .filter { x -> x.posicion == "PO" && x.estadoLesion == "En forma" }.sortedBy { x -> -x.valor }[0])
+
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DF" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }.subList(0, 4))
+
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "CC" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }.subList(0, 4))
+
             onceInicial.addAll(misJugadores.filter { x -> x.posicion == "DL" && x.estadoLesion == "En forma" }
                 .sortedBy { x -> -x.valor }.subList(0, 2))
 

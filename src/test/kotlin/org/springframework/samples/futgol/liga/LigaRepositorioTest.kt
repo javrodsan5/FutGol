@@ -12,19 +12,31 @@ class LigaRepositorioTest(@Autowired private val ligaRepositorio: LigaRepositori
 
     @Test
     fun buscaLigaPorNombreTest() {
-        var liga = this.ligaRepositorio.findLigaByName("miligaFerki2")
-        Assertions.assertThat(liga.admin?.user?.username).isEqualTo("administrador1")
+        var liga = this.ligaRepositorio.findLigaByName("Ferki Liga")
+        Assertions.assertThat(liga.admin?.user?.username).isEqualTo("ferki")
     }
 
     @Test
     fun buscaLigaPorIdTest() {
-        var liga = this.ligaRepositorio.buscarLigaPorId(1)
-        Assertions.assertThat(liga.admin?.user?.username).isEqualTo("ferki")
+        var liga = this.ligaRepositorio.buscarLigaPorId(35)
+        Assertions.assertThat(liga.admin?.user?.username).isEqualTo("javi")
     }
 
     @Test
     fun buscaTodasLigasTest() {
         var ligas = this.ligaRepositorio.findAll()
-        Assertions.assertThat(ligas.size).isEqualTo(11)
+        Assertions.assertThat(ligas.size).isEqualTo(3)
+    }
+
+    @Test
+    fun comprobarSiExisteLigaTest() {
+        var b = this.ligaRepositorio.comprobarSiExisteLiga("Javi Liga")
+        Assertions.assertThat(b).isEqualTo(true)
+    }
+
+    @Test
+    fun comprobarSiExisteLiga2Test() {
+        var b = this.ligaRepositorio.comprobarSiExisteLiga2(33)
+        Assertions.assertThat(b).isEqualTo(true)
     }
 }

@@ -16,4 +16,23 @@ class JornadaRepositorioTest(@Autowired private val jornadaRepositorio: JornadaR
         val jornada = jornadaRepositorio.findJornadaByNumeroJornada(11)
         Assertions.assertThat(jornada.id).isEqualTo(11)
     }
+
+    @Test
+    fun existeJornadaTest() {
+        val b = jornadaRepositorio.existeJornada(1)
+        Assertions.assertThat(b).isEqualTo(true)
+    }
+
+    @Test
+    fun buscarJornadasTest() {
+        val jornadas = jornadaRepositorio.findAll()
+        Assertions.assertThat(jornadas.size).isEqualTo(38)
+    }
+
+    @Test
+    fun buscaJornadaPorIDTest() {
+        val jornada = jornadaRepositorio.findJornadaById(1)
+        Assertions.assertThat(jornada.id).isEqualTo(1)
+    }
+
 }

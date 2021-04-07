@@ -15,4 +15,17 @@ class EquipoRealRepositorioTest(@Autowired private val equipoRealRepositorio: Eq
         var equipoReal = this.equipoRealRepositorio.buscarEquipoRealPorNombre("Osasuna")
         Assertions.assertThat(equipoReal.id).isEqualTo(93)
     }
+
+    @Test
+    fun existeEquipoRealTest() {
+        val b = this.equipoRealRepositorio.existeEquipoReal("Osasuna")
+        Assertions.assertThat(b).isEqualTo(true)
+    }
+
+    @Test
+    fun buscarTodosEquiposTest() {
+        val equipos = this.equipoRealRepositorio.findAll()
+        Assertions.assertThat(equipos.size).isEqualTo(20)
+    }
+
 }

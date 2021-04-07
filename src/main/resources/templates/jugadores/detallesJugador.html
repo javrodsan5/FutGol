@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'detallesJugadorEquipo')}">
 
 <body>
 <div class="caja" style="float: left;">
@@ -16,6 +16,15 @@
 </div>
 <h2>Valor: <b th:text="${jugador.valor}"></b>000.000€</h2>
 <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
+<h2 th:if="${clausula}">Clausula: <b th:text="${clausula.valorClausula}"></b>€</h2>
+<br>
+<h2 th:if="${loTengoEnMiEquipo}">
+    <div>
+        <a class="btn btn-default"
+           th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
+            clausula</a>
+    </div>
+</h2>
 
 <br>
 <div id="medias">
@@ -57,9 +66,6 @@
     </div>
 </div>
 
-<br>
-<br>
-<br>
 <div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="true">
@@ -73,10 +79,12 @@
         </li>
     </ul>
 </div>
+<br>
 
 <div th:if="${tieneEstadistica}">
     <h2>Estadísticas de la jornada <b th:text="${est.partido.jornada.numeroJornada}"/></h2>
     <ul>
+        <li>Jornada: <b th:text="${est.partido.jornada.numeroJornada}"></b></li>
         <li>Minutos jugados: <b th:text="${est.minutosJugados}"></b></li>
         <li>Goles: <b th:text="${est.goles}"></b></li>
         <li>Asistencias: <b th:text="${est.asistencias}"></b></li>
@@ -100,7 +108,5 @@
 <div th:if="${tieneEstadistica== false}">
     <h1>El jugador no participó en esta jornada.</h1>
 </div>
-
 </body>
-
 </html>

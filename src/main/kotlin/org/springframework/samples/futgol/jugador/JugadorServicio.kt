@@ -8,9 +8,12 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.ui.Model
+import org.springframework.ui.set
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.HashSet
@@ -28,6 +31,9 @@ class JugadorServicio {
 
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
+
+    @Autowired
+    private val jornadaServicio: JornadaServicio? = null
 
     @Autowired
     private val estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
@@ -96,6 +102,31 @@ class JugadorServicio {
     @Throws(DataAccessException::class)
     fun tieneEstadisticas(idJugador: Int): Boolean? {
         return estadisticaJugadorServicio?.tieneAlgunaEstadisticaJugador(idJugador)
+    }
+
+    fun auxDetallesJugador(idJugador: Int, numeroJornada: Int, model: Model) {
+        val jugador = buscaJugadorPorId(idJugador)!!
+        model["jugador"] = jugador
+        if (tieneEstadisticas(idJugador) == true) {
+            var mediasJug = mediaEstadisticasJugador(idJugador)!!
+            model["tieneMedias"] = true
+            model["medias"] = mediasJug
+            model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
+            model["esDF"] = jugador.posicion == "DF"
+        }
+        model["esPortero"] = jugador.posicion == "PO"
+
+        if (jugador.id?.let {
+                estadisticaJugadorServicio?.existeEstadisticaJugadorJornada(
+                    it, numeroJornada) } == true) {
+            model["tieneEstadistica"] = true
+            model["est"] =
+                estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+        } else {
+
+            model["tieneEstadistica"] = false
+        }
+        model["jornadas"] = jornadaServicio?.buscarTodasJornadas()!!
     }
 
     @Transactional(readOnly = true)

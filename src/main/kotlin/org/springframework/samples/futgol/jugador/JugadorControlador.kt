@@ -34,9 +34,8 @@ class JugadorControlador(
     val jornadaServicio: JornadaServicio
 ) {
 
-    private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
-    private val VISTA_DETALLES_JUGADOR_EQUIPO = "jugadores/detallesJugadorEquipo"
+    private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_BUSCAR_JUGADOR = "jugadores/buscaJugador"
 
     @InitBinder("clausula")
@@ -52,33 +51,36 @@ class JugadorControlador(
         @PathVariable numeroJornada: Int
     ): String {
         return if (jugadorServicio.existeJugadorId(idJugador) == true && jornadaServicio.existeJornada(numeroJornada) == true) {
-            val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            model["jugador"] = jugador
-            var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
-            if (mediasJug.isNotEmpty()) {
-                model["tieneMedias"] = true
-                model["medias"] = mediasJug
-            }
-            model["esPortero"] = jugador.posicion == "PO"
-            model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
-            model["esDF"] = jugador.posicion == "DF"
-            if (jugador.id?.let {
-                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
-                        it,
-                        numeroJornada
-                    )
-                } == true) {
-                model["tieneEstadistica"] = true
-                model["est"] =
-                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
-            } else {
-                model["tieneEstadistica"] = false
-            }
-            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
+            jugadorServicio.auxDetallesJugador(idJugador, numeroJornada, model)
             VISTA_DETALLES_JUGADOR
         } else {
             "redirect:/"
         }
+    }
+
+
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada}")
+    fun detallesJugadorEquipo(
+        model: Model,
+        @PathVariable idEquipo: Int,
+        @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
+    ): String {
+        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo
+            ) && jornadaServicio.existeJornada(numeroJornada) == true
+        ) {
+            val equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+            jugadorServicio.auxDetallesJugador(idJugador, numeroJornada, model)
+            model["equipo"] = equipo
+            model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+
+            if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
+                model["loTengoEnMiEquipo"] = true
+            }
+        } else {
+            return "redirect:/"
+        }
+        return VISTA_DETALLES_JUGADOR
     }
 
     @GetMapping("/topJugadores")
@@ -105,53 +107,7 @@ class JugadorControlador(
         }
     }
 
-    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada}")
-    fun detallesJugadorEquipo(
-        model: Model,
-        @PathVariable idEquipo: Int,
-        @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
-    ): String {
-        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
-                idJugador, idEquipo
-            ) && jornadaServicio.existeJornada(numeroJornada) == true
-        ) {
-            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            model["jugador"] = jugador
-            if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
-                var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
-                model["tieneMedias"] = true
-                model["medias"] = mediasJug
-                model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
-                model["esDF"] = jugador.posicion == "DF"
-            }
-            model["esPortero"] = jugador.posicion == "PO"
 
-            if (jugador.id?.let {
-                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
-                        it,
-                        numeroJornada
-                    )
-                } == true) {
-                model["tieneEstadistica"] = true
-                model["est"] =
-                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
-            } else {
-
-                model["tieneEstadistica"] = false
-            }
-            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
-            model["equipo"] = equipo
-            model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
-
-            if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
-                model["loTengoEnMiEquipo"] = true
-            }
-        } else {
-            return "redirect:/"
-        }
-        return VISTA_DETALLES_JUGADOR_EQUIPO
-    }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
     fun clausulaJugador(

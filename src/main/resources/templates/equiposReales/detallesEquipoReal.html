@@ -23,12 +23,13 @@
 
         }
     }
-
+</script>
+<script>
     function coloresPuntuaciones() {
         var puntuaciones = document.getElementsByClassName("circulo");
 
         for (i = 0; i < puntuaciones.length; i++) {
-            var clase = puntuaciones[i]
+            var clase = puntuaciones[i];
             var puntuacion = parseInt(puntuaciones[i].innerHTML.replace("<p>", "").replace("</p>", ""));
 
             if (puntuacion < 0) {

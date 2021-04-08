@@ -4,8 +4,9 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
+<h2 th:if="${sonDeUsuario==true}">Tus últimos movimientos en la liga</h2>
+<h2 th:if="${sonDeLiga==true}">Últimos movimientos de la liga</h2>
 
-<h2>Tus últimos movimientos en la liga</h2>
 
 <ul>
     <li th:each="movimiento : ${movimientos}">

@@ -32,8 +32,8 @@ class MetodosAux {
         return l
     }
 
-    open fun modificarNombreJugador(l: List<String?>, equipo:String, nombreJugador:String): String{
-        var res= nombreJugador
+    open fun modificarNombreJugador(l: List<String?>, equipo: String, nombreJugador: String): String {
+        var res = nombreJugador
         for (element in l) {
             var linea = element?.split(",")
             if (linea?.size!! >= 3) {
@@ -49,10 +49,15 @@ class MetodosAux {
         return res
     }
 
-    open fun modificarNombreJugadorFcStats(l: List<String?>, equipo:String, l2: MutableList<String>?, r: Int): MutableList<String>? {
+    open fun modificarNombreJugadorFcStats(
+        l: List<String?>,
+        equipo: String,
+        l2: MutableList<String>?,
+        r: Int
+    ): MutableList<String>? {
         for (element in l) {
             var linea = element?.split(",")
-            if(l2!=null) {
+            if (l2 != null) {
                 if (linea?.size!! >= 3) {
                     if (linea[2] == equipo && linea[0] == l2[r]
                     ) {

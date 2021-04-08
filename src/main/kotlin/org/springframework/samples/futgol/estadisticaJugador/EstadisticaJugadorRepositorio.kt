@@ -28,7 +28,7 @@ interface EstadisticaJugadorRepositorio : Repository<EstadisticaJugador, Int> {
     fun mejorJugadorJornada(idJornada: Int): Collection<EstadisticaJugador>
 
     @Query("SELECT e.jugador FROM EstadisticaJugador e where e.partido.jornada.id = ?1 order by e.puntos desc ")
-    fun jugadoresParticipantesEnJornadaMasPuntos (idJornada: Int): Collection<Jugador>
+    fun jugadoresParticipantesEnJornadaMasPuntos(idJornada: Int): Collection<Jugador>
 
     @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM EstadisticaJugador e where e.jugador.name = ?1 AND e.jugador.club.name = ?2 AND e.partido.id = ?3")
     fun existeEstadisticaJugEqPart(nombreJugador: String, nombreEquipo: String, idPartido: Int?): Boolean

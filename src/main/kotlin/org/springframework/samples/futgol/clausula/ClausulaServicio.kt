@@ -45,7 +45,7 @@ class ClausulaServicio {
             }
         }
         var clau = Clausula()
-        clau.valorClausula=0
+        clau.valorClausula = 0
         clau.equipo = equipoServicio?.buscaEquiposPorId(idEquipo)
         clau.jugador = jugadorServicio?.buscaJugadorPorId(idJugador)
         guardarClausula(clau)

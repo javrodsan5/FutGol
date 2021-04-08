@@ -3,7 +3,7 @@ package org.springframework.samples.futgol.equipoReal
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.Repository
 
-interface EquipoRealRepositorio: Repository<EquipoReal, Int> {
+interface EquipoRealRepositorio : Repository<EquipoReal, Int> {
 
     fun findAll(): Collection<EquipoReal>
 

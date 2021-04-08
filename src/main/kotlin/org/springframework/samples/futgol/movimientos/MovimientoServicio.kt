@@ -30,10 +30,19 @@ class MovimientoServicio {
     fun buscarMovimientosUsuario(nombreUsuario: String): Collection<Movimiento>? {
         return movimientoRepositorio?.buscarMovimientosPorUsuario(nombreUsuario)
     }
+    fun buscaVendedores(movimientos: Collection<Movimiento>?): MutableList<Usuario> {
+        val vendedores: MutableList<Usuario> = ArrayList()
+        if (movimientos != null) {
+            for (m in movimientos) {
+                m.jugador?.name?.let { m.liga?.id?.let { it1 -> buscaVendedor(it, it1) } }?.let { vendedores.add(it) }
+            }
+        }
+        return vendedores
+    }
 
     @Transactional(readOnly = true)
-    fun buscaVendedor(nombreJugador: String): Usuario? {
-        val equipos = equipoServicio?.buscaTodosEquipos()
+    fun buscaVendedor(nombreJugador: String, idLiga: Int): Usuario? {
+        val equipos = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)
         if (equipos != null) {
             for (e in equipos) {
                 for (jugador in e.jugadores) {

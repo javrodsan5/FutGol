@@ -2,14 +2,10 @@ package org.springframework.samples.futgol.estadisticaJugador
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.model.BaseEntity
-import org.springframework.samples.futgol.model.NamedEntity
 import org.springframework.samples.futgol.partido.Partido
-import java.util.HashSet
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Getter
 @Setter

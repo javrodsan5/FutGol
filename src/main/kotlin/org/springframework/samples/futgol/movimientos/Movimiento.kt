@@ -2,13 +2,14 @@ package org.springframework.samples.futgol.movimientos
 
 import lombok.Getter
 import lombok.Setter
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.liga.Liga
 import org.springframework.samples.futgol.model.BaseEntity
 import org.springframework.samples.futgol.usuario.Usuario
-import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Getter
 @Setter
@@ -25,7 +26,7 @@ class Movimiento : BaseEntity() {
     var creadorMovimiento: Usuario? = null
 
     @ManyToOne()
-    @JoinColumn(name = "jugador", referencedColumnName = "name")
+    @JoinColumn(name = "jugador", referencedColumnName = "id")
     var jugador: Jugador? = null
 
 }

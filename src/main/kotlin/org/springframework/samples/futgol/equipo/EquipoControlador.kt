@@ -136,7 +136,9 @@ class EquipoControlador(
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
         if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(
-                idEquipo) == true) {
+                idEquipo
+            ) == true
+        ) {
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
             if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {

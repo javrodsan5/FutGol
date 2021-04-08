@@ -3,10 +3,8 @@ package org.springframework.samples.futgol.partido
 import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.equipoReal.EquipoReal
-import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.jornadas.Jornada
 import org.springframework.samples.futgol.model.BaseEntity
-import java.util.*
 import javax.persistence.*
 
 @Getter

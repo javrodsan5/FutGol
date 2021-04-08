@@ -5,14 +5,11 @@ import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import java.util.stream.Collectors
 
 @EnableScheduling
 @Controller

@@ -43,6 +43,16 @@ class EstadisticaJugadorRepositorioTest(@Autowired private val estadisticaJugado
     }
 
     @Test
+    fun mejorJugadorJornadaTest() {
+        Assertions.assertThat(this.estadisticaJugadorRepositorio.mejorJugadorJornada(13).isNotEmpty())
+    }
+
+    @Test
+    fun buscaEstadisticasPuntosPorJornadaTest() {
+        Assertions.assertThat(this.estadisticaJugadorRepositorio.jugadoresParticipantesEnJornadaMasPuntos(13).isNotEmpty())
+    }
+
+    @Test
     fun existeEstadisticaJugJornTest() {
         Assertions.assertThat(this.estadisticaJugadorRepositorio.existeEstadisticaJugadorJornada(3131, 4))
     }

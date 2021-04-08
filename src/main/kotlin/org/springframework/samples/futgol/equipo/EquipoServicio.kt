@@ -100,6 +100,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun tengoEquipoLiga(idLiga: Int, idUsuario: Int): Boolean? {
+        return equipoRepositorio?.tengoEquipoLiga(idLiga, idUsuario)
+    }
+
+    @Transactional(readOnly = true)
     fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo? {
         return equipoRepositorio?.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
     }

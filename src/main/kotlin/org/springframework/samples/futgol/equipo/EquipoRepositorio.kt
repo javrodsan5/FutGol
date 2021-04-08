@@ -34,5 +34,8 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
     @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM Equipo e where e.id = ?1")
     fun existeEquipo(idEquipo: Int): Boolean
 
+    @Query(value = "SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM Equipo e where e.liga.id = ?1 AND e.usuario.id= ?2")
+    fun tengoEquipoLiga(idLiga: Int, idUsuario: Int): Boolean
+
 
 }

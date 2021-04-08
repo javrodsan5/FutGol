@@ -128,6 +128,43 @@ class EquipoControlador(
         return "redirect:/misligas"
     }
 
+
+    @GetMapping("liga/{nombreLiga}/equipos/{idEquipo}")
+    fun detallesEquipo(
+        model: Model, @PathVariable("nombreLiga") nombreLiga: String,
+        principal: Principal,
+        @PathVariable("idEquipo") idEquipo: Int
+    ): String {
+        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(
+                idEquipo
+            ) == true
+        ) {
+            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
+            if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
+                model["liga"] = liga
+                model["equipo"] = equipo
+                model["tengoEquipo"] = true
+                model["valorEquipo"] = equipo.name?.let { equipoServicio.calcularValorEquipo(it, liga.id!!) }!!
+                model["ptosJorEq"] = equipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+                return if (usuarioServicio.usuarioLogueado(principal)?.id?.let {
+                        equipoServicio.tengoEquipoLiga(liga.id!!, it)
+                    } == false || equipo.name != liga.id?.let {
+                        equipoServicio.buscaMiEquipoEnLiga(it, principal).name
+                    }) {
+                    model["miEquipo"] = false
+                    VISTA_DETALLES_EQUIPO
+                } else {
+                    "redirect:/liga/" + liga.id + "/miEquipo"
+                }
+            } else {
+                return "redirect:/"
+            }
+        } else {
+            return "redirect:/"
+        }
+    }
+
     @GetMapping("liga/{idLiga}/miEquipo/cambiarFormacion/{formacion}")
     fun cambiarFormacion(
         model: Model, principal: Principal, @PathVariable idLiga: Int, @PathVariable formacion: String
@@ -335,38 +372,6 @@ class EquipoControlador(
         return "redirect:/liga/$idLiga/miEquipo"
     }
 
-    @GetMapping("liga/{nombreLiga}/equipos/{idEquipo}")
-    fun detallesEquipo(
-        model: Model, @PathVariable("nombreLiga") nombreLiga: String,
-        principal: Principal,
-        @PathVariable("idEquipo") idEquipo: Int
-    ): String {
-        if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(
-                idEquipo
-            ) == true
-        ) {
-            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
-            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
-            model["liga"] = liga
-            if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
-                model["equipo"] = equipo
-                model["tengoEquipo"] = true
-
-                model["valorEquipo"] = equipo.name?.let { equipoServicio.calcularValorEquipo(it, liga.id!!) }!!
-                model["ptosJorEq"] = equipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
-                return if (equipo.name != liga.id?.let { equipoServicio.buscaMiEquipoEnLiga(it, principal).name }) {
-                    model["miEquipo"] = false
-                    VISTA_DETALLES_EQUIPO
-                } else {
-                    "redirect:/liga/" + liga.id + "/miEquipo"
-                }
-            } else {
-                return "redirect:/"
-            }
-        } else {
-            return "redirect:/"
-        }
-    }
 
     @GetMapping("liga/{idLiga}/miEquipo/cambiarOnce/{idJugador}")
     fun sustitutosPosibles(

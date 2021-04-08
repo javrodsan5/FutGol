@@ -24,8 +24,7 @@ class LigaRepositorioTest(@Autowired private val ligaRepositorio: LigaRepositori
 
     @Test
     fun buscaTodasLigasTest() {
-        var ligas = this.ligaRepositorio.findAll()
-        Assertions.assertThat(ligas.size).isEqualTo(3)
+        Assertions.assertThat(this.ligaRepositorio.findAll().size).isEqualTo(3)
     }
 
     @Test

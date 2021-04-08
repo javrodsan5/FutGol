@@ -16,7 +16,8 @@ class UserLoginServicio : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
         var user: User? =
-            userService?.buscarUser(username) ?: throw UsernameNotFoundException("Usuario " + username + "no encontrado.")
+            userService?.buscarUser(username)
+                ?: throw UsernameNotFoundException("Usuario " + username + "no encontrado.")
 
         var grantedAuthorities = ArrayList<GrantedAuthority>()
         grantedAuthorities.add(SimpleGrantedAuthority("usuario"))

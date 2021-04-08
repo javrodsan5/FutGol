@@ -9,7 +9,6 @@ interface UsuarioRepositorio : Repository<Usuario, Int> {
     @Query("SELECT u.user.username FROM Usuario u")
     fun buscaTodosNombresusuario(): MutableList<String>
 
-
     @Query("SELECT u FROM Usuario u where u.user.username = ?1")
     fun buscarUsuarioPorNombreUsuario(nombreUsuario: String): Usuario
 

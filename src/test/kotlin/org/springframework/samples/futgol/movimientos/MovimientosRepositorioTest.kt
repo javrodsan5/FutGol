@@ -20,4 +20,9 @@ class MovimientosRepositorioTest(@Autowired private val movimientoRepositorio: M
         Assertions.assertThat(this.movimientoRepositorio.buscarMovimientosDeLigaPorId(35).size==1)
     }
 
+    @Test
+    fun buscanMovimientosUsuarioTest() {
+        Assertions.assertThat(this.movimientoRepositorio.buscarMovimientosPorUsuario("javi").size==1)
+    }
+
 }

@@ -35,6 +35,11 @@ class EquipoRepositorioTest(@Autowired private val equipoRepositorio: EquipoRepo
     }
 
     @Test
+    fun tengoEquipoLigaTest() {
+        Assertions.assertThat(equipoRepositorio.tengoEquipoLiga(35, 16))
+    }
+
+    @Test
     fun existeEquipoTest() {
         val b = equipoRepositorio.existeEquipo(34)
         Assertions.assertThat(b).isEqualTo(true)

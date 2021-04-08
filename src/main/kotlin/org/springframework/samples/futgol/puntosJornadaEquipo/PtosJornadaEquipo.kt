@@ -12,7 +12,7 @@ import javax.persistence.*
 @Setter
 @Entity
 @Table(name = "puntosjornadaequipo")
-class PtosJornadaEquipo : BaseEntity(){
+class PtosJornadaEquipo : BaseEntity() {
 
     @ManyToOne
     @JoinColumn(name = "jornada", referencedColumnName = "numero_jornada")

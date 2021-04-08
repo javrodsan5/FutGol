@@ -2,12 +2,10 @@ package org.springframework.samples.futgol.jornadas
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.stream.Collectors
 
 @Service
 class JornadaServicio {
@@ -120,11 +118,36 @@ class JornadaServicio {
         var puntos451: Int
 
         if (idJornada != 0 && nombreEquipo == "") { //significa que es jornadas y no equipo real
-            puntos442 = jug442.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
-            puntos433 = jug433.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
-            puntos352 = jug352.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
-            puntos532 = jug532.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
-            puntos451 = jug451.sumBy { x-> this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(x?.id!!,idJornada)?.puntos!! }
+            puntos442 = jug442.sumBy { x ->
+                this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(
+                    x?.id!!,
+                    idJornada
+                )?.puntos!!
+            }
+            puntos433 = jug433.sumBy { x ->
+                this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(
+                    x?.id!!,
+                    idJornada
+                )?.puntos!!
+            }
+            puntos352 = jug352.sumBy { x ->
+                this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(
+                    x?.id!!,
+                    idJornada
+                )?.puntos!!
+            }
+            puntos532 = jug532.sumBy { x ->
+                this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(
+                    x?.id!!,
+                    idJornada
+                )?.puntos!!
+            }
+            puntos451 = jug451.sumBy { x ->
+                this.estadisticaJugadorServicio?.buscarEstadisticasPorJugadorJornada(
+                    x?.id!!,
+                    idJornada
+                )?.puntos!!
+            }
 
         } else {
             puntos442 = jug442.sumBy { x -> x?.puntos!! }
@@ -135,7 +158,7 @@ class JornadaServicio {
 
         }
 
-        return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532 && puntos352>= puntos451) {
+        return if (puntos352 >= puntos433 && puntos352 >= puntos442 && puntos352 >= puntos532 && puntos352 >= puntos451) {
             map = mapOf("3-5-2" to jug352)
             map
         } else if (puntos442 >= puntos433 && puntos442 >= puntos352 && puntos442 >= puntos532 && puntos442 >= puntos451) {
@@ -144,7 +167,7 @@ class JornadaServicio {
         } else if (puntos433 >= puntos352 && puntos433 >= puntos442 && puntos433 >= puntos532 && puntos433 >= puntos451) {
             map = mapOf("4-3-3" to jug433)
             map
-        }else if (puntos451 >= puntos352 && puntos451 >= puntos442 && puntos451 >= puntos532 && puntos451>=puntos433) {
+        } else if (puntos451 >= puntos352 && puntos451 >= puntos442 && puntos451 >= puntos532 && puntos451 >= puntos433) {
             map = mapOf("4-5-1" to jug451)
             map
         } else {

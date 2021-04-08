@@ -10,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 class ClausulaRepositorioTest(@Autowired private val clausulaRepositorio: ClausulaRepositorio) {
 
-//    @Test
-//    fun buscaEquipoPorIdTest() {
-//        val clausulas = clausulaRepositorio.findClausulasByJugadorId(3317)
-//        Assertions.assertThat(clausulas.size).isEqualTo(1)
-//    }
+    @Test
+    fun buscaEquipoPorIdTest() {
+        val clausulas = clausulaRepositorio.findClausulasByJugadorId(3366)
+        Assertions.assertThat(clausulas.size).isEqualTo(1)
+    }
 }

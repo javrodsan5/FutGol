@@ -4,7 +4,10 @@ import lombok.Getter
 import lombok.Setter
 import org.springframework.samples.futgol.model.BaseEntity
 import org.springframework.validation.annotation.Validated
-import javax.persistence.*
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.OneToMany
+import javax.persistence.Table
 import javax.validation.constraints.NotBlank
 
 @Getter

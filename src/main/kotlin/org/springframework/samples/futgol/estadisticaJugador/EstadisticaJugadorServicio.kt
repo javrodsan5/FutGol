@@ -7,13 +7,8 @@ import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
 import org.springframework.samples.futgol.util.MetodosAux
-import org.springframework.scheduling.annotation.EnableScheduling
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.io.IOException
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.stream.Collectors
 
 @Service
@@ -173,7 +168,7 @@ class EstadisticaJugadorServicio {
                             }
                             for (r in 0 until nombresTL.size) {
 
-                                nombresTL = MetodosAux().modificarNombreJugadorFcStats(l,equipoLocal,nombresTL,r)
+                                nombresTL = MetodosAux().modificarNombreJugadorFcStats(l, equipoLocal, nombresTL, r)
 
                                 if (this.jugadorServicio?.existeJugadorEquipo(nombresTL[r], equipoLocal) == true) {
                                     var pId =
@@ -218,7 +213,7 @@ class EstadisticaJugadorServicio {
 
                             for (s in 0 until nombresTV.size) {
 
-                                nombresTV = MetodosAux().modificarNombreJugadorFcStats(l,equipoVisitante,nombresTV,s)
+                                nombresTV = MetodosAux().modificarNombreJugadorFcStats(l, equipoVisitante, nombresTV, s)
 
                                 if (this.jugadorServicio?.existeJugadorEquipo(
                                         nombresTV[s],
@@ -280,7 +275,7 @@ class EstadisticaJugadorServicio {
 
                                 for (p in 0 until nombresSL.size) {
 
-                                    nombresSL = MetodosAux().modificarNombreJugadorFcStats(l,equipoLocal,nombresSL,p)
+                                    nombresSL = MetodosAux().modificarNombreJugadorFcStats(l, equipoLocal, nombresSL, p)
 
                                     if (this.jugadorServicio?.existeJugadorEquipo(nombresSL[p], equipoLocal) == true) {
                                         var pId =
@@ -321,7 +316,8 @@ class EstadisticaJugadorServicio {
 
                                 for (f in 0 until nombresSV.size) {
 
-                                    nombresSV = MetodosAux().modificarNombreJugadorFcStats(l,equipoVisitante,nombresSV,f)
+                                    nombresSV =
+                                        MetodosAux().modificarNombreJugadorFcStats(l, equipoVisitante, nombresSV, f)
 
                                     if (this.jugadorServicio?.existeJugadorEquipo(
                                             nombresSV[f],

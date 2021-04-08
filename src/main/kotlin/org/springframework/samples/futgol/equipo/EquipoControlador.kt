@@ -136,9 +136,7 @@ class EquipoControlador(
         @PathVariable("idEquipo") idEquipo: Int
     ): String {
         if (this.ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && this.equipoServicio.comprobarSiExisteEquipo(
-                idEquipo
-            ) == true
-        ) {
+                idEquipo) == true) {
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)!!
             if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
@@ -147,6 +145,7 @@ class EquipoControlador(
                 model["tengoEquipo"] = true
                 model["valorEquipo"] = equipo.name?.let { equipoServicio.calcularValorEquipo(it, liga.id!!) }!!
                 model["ptosJorEq"] = equipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+
                 return if (usuarioServicio.usuarioLogueado(principal)?.id?.let {
                         equipoServicio.tengoEquipoLiga(liga.id!!, it)
                     } == false || equipo.name != liga.id?.let {

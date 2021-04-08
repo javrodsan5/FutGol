@@ -12,4 +12,7 @@ interface MovimientoRepositorio : Repository<Movimiento, Int> {
     @Query("SELECT m FROM Movimiento m where m.creadorMovimiento.user.username = ?1")
     fun buscarMovimientosPorUsuario(nombreUsuario: String): Collection<Movimiento>
 
+    @Query(value = "SELECT CASE WHEN count(m)> 0 THEN TRUE ELSE FALSE END FROM Movimiento m where m.liga.id = ?1")
+    fun existenMovimientosLiga(idLiga: Int): Boolean
+
 }

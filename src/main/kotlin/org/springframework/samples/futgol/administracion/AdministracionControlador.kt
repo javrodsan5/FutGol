@@ -21,7 +21,7 @@ class AdministracionControlador(
     val equipoRealServicio: EquipoRealServicio
 ) {
 
-    @Scheduled(cron = "0 0 2 * * THU ")
+    @Scheduled(cron = "0 0 1 * * MON ")
     fun administrarWebScraping() {
         this.equipoRealServicio.webScrapingEquipos()
         this.partidoServicio.wsPartidos()

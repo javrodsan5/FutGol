@@ -12,6 +12,7 @@
     <tr>
         <th>Nombre</th>
         <th>Valor</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td><a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"
                th:text="${jugador.name}"/></a></td>
         <td><h3><b th:text="${jugador.valor}"></b> mill. €</h3></td>
+        <td><a th:href="@{/liga/{idLiga}/subastas/{idJugador} (idLiga= ${liga.id},idJugador= ${jugador.id})}">Pujar</td>
     </tr>
     </tbody>
 </table>

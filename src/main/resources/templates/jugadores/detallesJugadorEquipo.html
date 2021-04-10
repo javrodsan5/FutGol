@@ -24,6 +24,11 @@
            th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
             clausula</a>
     </div>
+
+    <div>
+        <a class="btn btn-default"
+           th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Sacar a subasta</a>
+    </div>
 </h2>
 
 <br>

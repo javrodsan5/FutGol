@@ -34,6 +34,10 @@ class AdministracionControlador(
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
         this.equipoServicio.asignarPuntosEquipo()
+    }
+
+    @Scheduled(cron = "0 0 1 * * * ")
+    fun autoSubastas() {
         this.subastaServicio.autoNuevaSubasta()
     }
 

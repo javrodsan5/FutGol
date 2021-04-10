@@ -110,9 +110,8 @@ class EquipoServicio {
     }
 
     @Transactional
-    fun asignaPuntosEquipo(nombreEquipo: String, idLiga: Int) {
+    fun asignaPuntosDineroEquipo(nombreEquipo: String, idLiga: Int) {
         if (comprobarSiExisteEquipoLiga(nombreEquipo, idLiga)) {
-
             var equipo = buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)!!
             var jornada = this.jornadaServicio?.buscarTodasJornadas()?.stream()
                 ?.filter { x -> x.partidos.stream().allMatch { p -> p.resultado == "" } }
@@ -128,6 +127,7 @@ class EquipoServicio {
             }
             ptosJornadaEquipoServicio?.guardarPtosJornadaEquipo(ptoJEq)
             equipo.puntos += ptoJEq.puntos
+            equipo.dineroRestante += ptoJEq.puntos * 400000
             guardarEquipo(equipo)
         }
     }
@@ -138,7 +138,7 @@ class EquipoServicio {
             var equipos = l.id?.let { this.buscaEquiposDeLigaPorId(it) }
             if (equipos != null) {
                 for (e in equipos) {
-                    e.name?.let { l.id?.let { it1 -> this.asignaPuntosEquipo(it, it1) } }
+                    e.name?.let { l.id?.let { it1 -> this.asignaPuntosDineroEquipo(it, it1) } }
                 }
             }
         }

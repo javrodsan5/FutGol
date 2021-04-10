@@ -31,7 +31,6 @@ class LigaControlador(
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
-    private val VISTA_SUBASTA_LIGA = "liga/subastas"
 
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
@@ -162,20 +161,4 @@ class LigaControlador(
         return "redirect:/misligas"
     }
 
-    @GetMapping("/liga/{nombreLiga}/subastas")
-    fun jugadoresLibresSubasta(@PathVariable nombreLiga: String, model: Model): String {
-        return if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
-            var liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
-            var jugadoresSinEquipo =
-                liga?.id?.let {
-                    ligaServicio.buscarJugadoresSinEquipoEnLiga(it).shuffled().stream().limit(15)
-                        .collect(Collectors.toList())
-                }
-            model["jugadoresSinEquipo"] = jugadoresSinEquipo!!
-            model["liga"] = liga!!
-            VISTA_SUBASTA_LIGA
-        } else {
-            "redirect:/misligas"
-        }
-    }
 }

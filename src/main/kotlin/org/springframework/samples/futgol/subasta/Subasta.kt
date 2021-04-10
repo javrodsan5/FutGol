@@ -2,6 +2,7 @@ package org.springframework.samples.futgol.subasta
 
 import lombok.Getter
 import lombok.Setter
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugador
 import org.springframework.samples.futgol.jornadas.Jornada
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.liga.Liga
@@ -26,9 +27,5 @@ class Subasta: BaseEntity() {
         inverseJoinColumns = [JoinColumn(name = "jugador_id")]
     )
     var jugadores: MutableList<Jugador> = ArrayList()
-
-
-
-
 
 }

@@ -6,9 +6,11 @@ import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorS
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.partido.PartidoServicio
+import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 
 @EnableScheduling
 @Controller
@@ -18,7 +20,8 @@ class AdministracionControlador(
     val jugadorServicio: JugadorServicio,
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
-    val equipoRealServicio: EquipoRealServicio
+    val equipoRealServicio: EquipoRealServicio,
+    val subastaServicio: SubastaServicio
 ) {
 
     @Scheduled(cron = "0 0 1 * * MON ")
@@ -31,5 +34,9 @@ class AdministracionControlador(
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
         this.equipoServicio.asignarPuntosEquipo()
+        this.subastaServicio.autoNuevaSubasta()
     }
+
+
+
 }

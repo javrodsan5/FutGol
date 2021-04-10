@@ -2,6 +2,7 @@ package org.springframework.samples.futgol.subasta
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,6 +15,9 @@ class SubastaServicio {
 
     @Autowired
     private val ligaServicio: LigaServicio? = null
+
+    @Autowired
+    private val jugadorServicio: JugadorServicio? = null
 
     @Autowired
     fun SubastaServicio(subastaRepositorio: SubastaRepositorio) {
@@ -61,5 +65,10 @@ class SubastaServicio {
         for (l in ligas) {
             l.id?.let { subasta(it) }
         }
+    }
+
+    @Transactional
+    fun sacarJugadorSubasta(idJugador: Int, subasta: Subasta) {
+        subasta.jugadores.add(jugadorServicio?.buscaJugadorPorId(idJugador)!!)
     }
 }

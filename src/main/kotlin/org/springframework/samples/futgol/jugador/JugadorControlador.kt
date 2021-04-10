@@ -142,6 +142,7 @@ class JugadorControlador(
             }
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo
+            model["liga"] = equipo.liga!!
             model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
 
             if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {

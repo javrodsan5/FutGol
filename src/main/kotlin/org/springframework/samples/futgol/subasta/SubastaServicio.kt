@@ -35,7 +35,7 @@ class SubastaServicio {
         return subastaRepositorio?.findSubastaByLigaId(idLiga)
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     fun borraSubastaPorLigaId(idLiga: Int): Unit? {
         return subastaRepositorio?.removeSubastaByLigaId(idLiga)
     }

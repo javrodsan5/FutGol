@@ -25,4 +25,14 @@ class PujaServicio {
     fun buscarSubastaPorLigaId(idPuja: Int): Puja? {
         return pujaRepositorio?.findPujaById(idPuja)
     }
+
+    @Transactional
+    fun borraPujaPorEquipoYJugador(idEquipo: Int, idJugador: Int): Unit? {
+        return pujaRepositorio?.removePujaByEquipoIdAndJugadorId(idEquipo, idJugador)
+    }
+
+    @Transactional(readOnly = true)
+    fun existePujaPorEquipoyJugador(idEquipo: Int, idJugador: Int): Boolean? {
+        return pujaRepositorio?.existePujaEquipo(idEquipo, idJugador)
+    }
 }

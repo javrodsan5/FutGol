@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
-import javax.validation.Valid
 
 @Controller
 class PujaControlador(
@@ -30,7 +29,6 @@ class PujaControlador(
         dataBinder.validator = PujaValidador()
     }
 
-
     @GetMapping("/liga/{idLiga}/subastas/{idJugador}")
     fun iniciarPujaJugador(
         @PathVariable idLiga: Int,
@@ -41,20 +39,15 @@ class PujaControlador(
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(
                 idLiga, principal
             ) && jugadorServicio.existeJugadorId(idJugador) == true && equipoServicio.tengoEquipo(
-                idLiga,
-                principal
+                idLiga, principal
             ) && subastaServicio.existeSubastaPorLigaId(idLiga) == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
             val jugador = jugadorServicio.buscaJugadorPorId(idJugador)
             if (!miEquipo.id?.let {
-                    jugadorServicio.existeJugadorEnEquipo(
-                        idJugador,
-                        it
-                    )
-                }!! && jugador in subasta!!.jugadores
-            ) {
+                    jugadorServicio.existeJugadorEnEquipo(idJugador, it)
+                }!! && jugador in subasta!!.jugadores) {
                 model["equipo"] = miEquipo
                 model["puja"] = Puja()
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
@@ -68,22 +61,24 @@ class PujaControlador(
     }
 
     @PostMapping("/liga/{idLiga}/subastas/{idJugador}")
-    fun pujarJugador(puja: Puja, result: BindingResult,
-        @PathVariable idLiga: Int,
-        @PathVariable idJugador: Int, model: Model,
-        principal: Principal
+    fun pujarJugador(
+        puja: Puja, result: BindingResult, @PathVariable idLiga: Int,
+        @PathVariable idJugador: Int, model: Model, principal: Principal
     ): String {
+        val liga = ligaServicio.buscarLigaPorId(idLiga)!!
         if (result.hasErrors()) {
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["liga"] = liga
+            model["equipo"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             model["puja"] = puja
             return VISTA_PUJA
         }
+        val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
         val equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        if (equipo.id?.let { pujaServicio.existePujaPorEquipoyJugador(it, idJugador) } == true) {
-            pujaServicio.borraPujaPorEquipoYJugador(equipo.id!!, idJugador)
+        if (subasta.id?.let { pujaServicio.existePujaEqJugSub(equipo.id!!, idJugador, it) } == true) {
+            pujaServicio.borraPujaByEquipoJugadorSubasta(equipo.id!!, idJugador, subasta.id!!)
         }
         puja.equipo = equipo
-        puja.subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
+        puja.subasta = subasta
         puja.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
         pujaServicio.guardarPuja(puja)
         return "redirect:/liga/$idLiga/subastas"

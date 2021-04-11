@@ -5,15 +5,13 @@ import org.springframework.validation.Validator
 
 class PujaValidador : Validator {
 
-    private val REQUERIDO = "Campo requerido."
-
     override fun validate(target: Any, errors: Errors) {
         var puja = target as Puja
         var cantidad = puja.cantidad
         var equipo = puja.equipo!!
 
         if (cantidad == null) {
-            errors.rejectValue("cantidad", REQUERIDO, REQUERIDO)
+            errors.rejectValue("cantidad", "Campo requerido.", "Campo requerido.")
         }
 
         if (cantidad <= 0) {
@@ -23,8 +21,8 @@ class PujaValidador : Validator {
         if (cantidad > equipo.dineroRestante) {
             errors.rejectValue(
                 "cantidad",
-                "No puedes puajr por más dinero del que tienes",
-                "No puedes puajr por más dinero del que tienes"
+                "No puedes pujar por más dinero del que tienes",
+                "No puedes pujar por más dinero del que tienes"
             )
         }
     }

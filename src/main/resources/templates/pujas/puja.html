@@ -3,9 +3,9 @@
 
 <body>
 
-<h2>
-    Cantidad a pujar
-</h2>
+<h2>Cantidad a pujar</h2>
+<h2> Dinero restante: <b th:text="${equipo.dineroRestante}"/></h2>
+
 <form th:object="${puja}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
@@ -15,7 +15,8 @@
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <button
-                    class="btn btn-default" type="submit">Pujar</button>
+                    class="btn btn-default" type="submit">Pujar
+            </button>
         </div>
     </div>
 </form>

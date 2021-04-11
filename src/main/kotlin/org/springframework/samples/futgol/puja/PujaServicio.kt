@@ -22,17 +22,22 @@ class PujaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscarSubastaPorLigaId(idPuja: Int): Puja? {
-        return pujaRepositorio?.findPujaById(idPuja)
+    fun buscarPujasJugadorLiga(idJugador: Int, idLiga: Int): Collection<Puja>? {
+        return pujaRepositorio?.buscarPujasJugadorLiga(idJugador, idLiga)
     }
 
     @Transactional
-    fun borraPujaPorEquipoYJugador(idEquipo: Int, idJugador: Int): Unit? {
-        return pujaRepositorio?.removePujaByEquipoIdAndJugadorId(idEquipo, idJugador)
+    fun borraPujaByEquipoJugadorSubasta(idEquipo: Int, idJugador: Int, idSubasta: Int): Unit? {
+        return pujaRepositorio?.removePujaByEquipoJugadorSubasta(idEquipo, idJugador, idSubasta)
     }
 
     @Transactional(readOnly = true)
-    fun existePujaPorEquipoyJugador(idEquipo: Int, idJugador: Int): Boolean? {
-        return pujaRepositorio?.existePujaEquipo(idEquipo, idJugador)
+    fun existePujaEqJugSub(idEquipo: Int, idJugador: Int, idSubasta: Int): Boolean? {
+        return pujaRepositorio?.existePujaEqJugSub(idEquipo, idJugador, idSubasta)
+    }
+
+    @Transactional(readOnly = true)
+    fun existePujaJugSub(idJugador: Int, idSubasta: Int): Boolean? {
+        return pujaRepositorio?.existePujaEqJug(idJugador, idSubasta)
     }
 }

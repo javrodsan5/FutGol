@@ -3,7 +3,9 @@
 
 <body>
 
-<h2> Dinero restante: <b th:text="${equipo.dineroRestante}"/></h2>
+<h2> Dinero restante: <b th:text="${equipo.dineroRestante}"/> €</h2>
+<h2> Valor del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
+<h3>Debes pujar al menos el valor del jugador para llevártelo.</h3>
 
 <form th:object="${puja}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">

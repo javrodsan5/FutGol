@@ -63,7 +63,7 @@ class SubastaControlador(
     //BORRAR CUANDO SE DEJE DE PROBAR
     @GetMapping("/subastitas")
     fun ganarSubasta(): String {
-        subastaServicio.ganarSubasta(35)
+        subastaServicio.ganarSubasta(33)
         return "redirect:/misligas"
     }
 

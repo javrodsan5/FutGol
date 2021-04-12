@@ -146,6 +146,11 @@
             <button class="btn">Detalles</button>
         </a>
         </div>
+        <div th:if="${miEquipo}">
+            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= ${jugador.id})}">
+                <button class="botonSust">Sacar a subasta</button>
+            </a>
+        </div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>
     </div>
 </h2>

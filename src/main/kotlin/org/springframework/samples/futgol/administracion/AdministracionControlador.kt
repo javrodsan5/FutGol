@@ -36,7 +36,7 @@ class AdministracionControlador(
         this.equipoServicio.asignarPuntosEquipo()
     }
 
-    @Scheduled(cron = "0 0 1 * * * ")
+    @Scheduled(cron = "0 0 2 * * * ")
     fun autoSubastas() {
         this.subastaServicio.autoGanaryGenerarSubasta()
     }

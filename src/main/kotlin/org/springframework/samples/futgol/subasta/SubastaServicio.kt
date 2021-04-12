@@ -54,6 +54,13 @@ class SubastaServicio {
         return subastaRepositorio?.existeSubastaLiga(idLiga)
     }
 
+    @Transactional(readOnly = true)
+    fun estaJugadorEnSubasta(subasta: Subasta, idJugador: Int): Boolean? {
+        val jugador = jugadorServicio!!.buscaJugadorPorId(idJugador)
+        return subasta.jugadores.contains(jugador)
+    }
+
+
     @Transactional
     fun subasta(idLiga: Int) {
         if (existeSubastaPorLigaId(idLiga) == true) {
@@ -78,7 +85,7 @@ class SubastaServicio {
                 var pujaMayor = j.id?.let { pujaServicio?.buscarPujasJugadorLiga(it, idLiga) }!!.stream()
                     .max(Comparator.comparing { x -> x.cantidad }).orElse(null)
 
-                if (pujaMayor.cantidad > (j.valor * 1000000)) {
+                if (pujaMayor.cantidad >= (j.valor * 1000000)) {
                     var equipoPujaMayor = pujaMayor.equipo!!
                     equipoPujaMayor.jugadores.add(j)
                     equipoPujaMayor.jugBanquillo.add(j)
@@ -86,7 +93,7 @@ class SubastaServicio {
                     var money = equipoPujaMayor.dineroRestante - pujaMayor.cantidad
                     equipoPujaMayor.dineroRestante = money
                     equipoServicio!!.guardarEquipo(equipoPujaMayor)
-                }else {
+                } else {
                     noPujasJugador(idLiga, j)
                 }
             } else {
@@ -99,12 +106,11 @@ class SubastaServicio {
         var equiposLiga = equipoServicio?.buscaEquiposDeLigaPorId(idLiga)!!
         for (eq in equiposLiga) {
             if (j.id?.let { eq.id?.let { it1 -> jugadorServicio!!.existeJugadorEnEquipo(it, it1) } } == true) {
-                //Revisar los remove
-                eq.jugadores.remove(j)
-                if (j in eq.jugBanquillo) eq.jugBanquillo.remove(j)
-                if (j in eq.onceInicial) eq.onceInicial.remove(j)
+                eq.jugadores.removeIf { it.id == j.id }
+                eq.jugBanquillo.removeIf { it.id == j.id }
+                eq.onceInicial.removeIf { it.id == j.id }
 
-                var dineroNuevo = eq.dineroRestante + j.valor
+                var dineroNuevo = eq.dineroRestante + j.valor * 1000000
                 eq.dineroRestante = dineroNuevo.toInt()
             }
             equipoServicio!!.guardarEquipo(eq)
@@ -122,6 +128,7 @@ class SubastaServicio {
 
     @Transactional
     fun sacarJugadorSubasta(idJugador: Int, subasta: Subasta) {
-        subasta.jugadores.add(jugadorServicio?.buscaJugadorPorId(idJugador)!!)
+        if (estaJugadorEnSubasta(subasta, idJugador) == false)
+            subasta.jugadores.add(jugadorServicio?.buscaJugadorPorId(idJugador)!!)
     }
 }

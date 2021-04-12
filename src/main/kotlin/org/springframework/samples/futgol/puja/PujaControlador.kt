@@ -50,6 +50,7 @@ class PujaControlador(
                 }!! && jugador in subasta!!.jugadores) {
                 model["equipo"] = miEquipo
                 model["jugador"] = jugador
+                model["numPujas"] = subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
                 model["puja"] = Puja()
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                 return VISTA_PUJA

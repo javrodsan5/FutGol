@@ -81,8 +81,8 @@ class SubastaServicio {
         var subasta = buscarSubastaPorLigaId(idLiga)!!
         for (j in subasta.jugadores) {
             if (subasta.id?.let { j.id?.let { it1 -> pujaServicio!!.existePujaJugSub(it1, it) } } == true) {
-
-                var pujaMayor = j.id?.let { pujaServicio?.buscarPujasJugadorLiga(it, idLiga) }!!.stream()
+                val idSubasta = buscarSubastaPorLigaId(idLiga)?.id!!
+                var pujaMayor = j.id?.let { pujaServicio?.buscarPujasJugadorSubasta(it, idSubasta) }!!.stream()
                     .max(Comparator.comparing { x -> x.cantidad }).orElse(null)
 
                 if (pujaMayor.cantidad >= (j.valor * 1000000)) {

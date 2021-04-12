@@ -22,8 +22,8 @@ class PujaServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscarPujasJugadorLiga(idJugador: Int, idLiga: Int): Collection<Puja>? {
-        return pujaRepositorio?.buscarPujasJugadorLiga(idJugador, idLiga)
+    fun buscarPujasJugadorSubasta(idJugador: Int, idSubasta: Int): Collection<Puja>? {
+        return pujaRepositorio?.buscarPujasJugadorSubasta(idJugador, idSubasta)
     }
 
     @Transactional

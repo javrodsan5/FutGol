@@ -73,6 +73,80 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun compruebajugadoresEquipo(idEquipo: Int): Boolean? {
+        val once = buscaEquiposPorId(idEquipo)?.onceInicial!!
+        val defensasOnce = once.filter { x -> x.posicion == "DF" }.size
+        val centroCampistasOnce = once.filter { x -> x.posicion == "CC" }.size
+        val delanterosOnce = once.filter { x -> x.posicion == "DL" }.size
+        val porteroOnce = once.filter { x -> x.posicion == "PO" }.size
+        if (defensasOnce < 0 || centroCampistasOnce < 0 || delanterosOnce < 0 || porteroOnce < 0) {
+            return false
+        }
+        return true
+    }
+
+    fun queFormacionMeVale(numDF: Int, numCC: Int, numDL: Int): String {
+        if (numDF >= 4 && numCC >= 4 && numDL >= 2) {
+            return "4-4-2"
+        } else if (numDF >= 4 && numCC >= 3 && numDL >= 3) {
+            return "4-3-3"
+        } else if (numDF >= 4 && numCC >= 5 && numDL >= 1) {
+            return "4-5-1"
+        } else if (numDF >= 5 && numCC >= 3 && numDL >= 2) {
+            return "5-3-2"
+        } else if (numDF >= 3 && numCC >= 5 && numDL >= 2) {
+            return "3-5-2"
+        }
+        return "4-4-2"
+    }
+
+    @Transactional
+    fun cambiaFormacion(formacion: String, equipo: Equipo) {
+        val once = equipo.onceInicial
+        val numDF = once.filter { x -> x.posicion == "DF" }.size
+        val numCC = once.filter { x -> x.posicion == "CC" }.size
+        val numDL = once.filter { x -> x.posicion == "DL" }.size
+        val formacionNueva = queFormacionMeVale(numDF, numCC, numDL)
+        equipo.formacion = formacionNueva
+        guardarEquipo(equipo)
+    }
+
+    @Transactional
+    fun compruebaBuenaFormacion(formacion: String, equipo: Equipo): Boolean? {
+        val once = equipo?.onceInicial!!
+        val numDF = once.filter { x -> x.posicion == "DF" }.size
+        val numCC = once.filter { x -> x.posicion == "CC" }.size
+        val numDL = once.filter { x -> x.posicion == "DL" }.size
+        when (formacion) {
+            "4-4-2" -> return numDF >= 4 && numCC >= 4 && numDL >= 2
+            "4-5-1" -> return numDF >= 4 && numCC >= 5 && numDL >= 1
+            "4-3-3" -> return numDF >= 4 && numCC >= 3 && numDL >= 3
+            "3-5-2" -> return numDF >= 3 && numCC >= 5 && numDL >= 2
+            "5-3-2" -> return numDF >= 5 && numCC >= 3 && numDL >= 2
+        }
+        return true
+    }
+
+    @Transactional(readOnly = true)
+    fun puedoVenderJugador(idEquipo: Int, idJugador: Int): Boolean? {
+        val banq = buscaEquiposPorId(idEquipo)?.jugBanquillo!!
+        val posicionJug = jugadorServicio?.buscaJugadorPorId(idJugador)?.posicion
+        if (posicionJug == "DF") {
+            return banq.filter { x -> x.posicion == "DF" }.isNotEmpty()
+        }
+        if (posicionJug == "PO") {
+            return banq.filter { x -> x.posicion == "PO" }.isNotEmpty()
+        }
+        if (posicionJug == "CC") {
+            return banq.filter { x -> x.posicion == "CC" }.isNotEmpty()
+        }
+        if (posicionJug == "DL") {
+            return banq.filter { x -> x.posicion == "Dl" }.isNotEmpty()
+        }
+        return true
+    }
+
+    @Transactional(readOnly = true)
     fun buscaTodosEquipos(): Collection<Equipo>? {
         return equipoRepositorio?.findAll()
     }

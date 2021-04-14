@@ -113,14 +113,22 @@ class EquipoControlador(
             if (!equipoServicio.tengoEquipo(idLiga, principal)) {
                 model["SinEquipo"] = true
             } else {
-
-                var miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-
-                model["tengoEquipo"] = true
-                model["miEquipo"] = true
-                model["equipo"] = miEquipo
-                model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
-                model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+                val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+                var formacion = miEquipo.formacion
+                if (equipoServicio.compruebaBuenaFormacion(formacion, miEquipo) == true) {
+                    model["tengoEquipo"] = true
+                    model["miEquipo"] = true
+                    model["equipo"] = miEquipo
+                    model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
+                    model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+                } else {
+                    equipoServicio.cambiaFormacion(formacion, miEquipo)
+                    model["tengoEquipo"] = true
+                    model["miEquipo"] = true
+                    model["equipo"] = miEquipo
+                    model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
+                    model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+                }
             }
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             return VISTA_DETALLES_EQUIPO

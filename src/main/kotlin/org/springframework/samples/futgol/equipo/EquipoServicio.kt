@@ -72,19 +72,6 @@ class EquipoServicio {
         return equipoRepositorio?.buscaEquiposPorId(idEquipo)
     }
 
-    @Transactional(readOnly = true)
-    fun compruebajugadoresEquipo(idEquipo: Int): Boolean? {
-        val once = buscaEquiposPorId(idEquipo)?.onceInicial!!
-        val defensasOnce = once.filter { x -> x.posicion == "DF" }.size
-        val centroCampistasOnce = once.filter { x -> x.posicion == "CC" }.size
-        val delanterosOnce = once.filter { x -> x.posicion == "DL" }.size
-        val porteroOnce = once.filter { x -> x.posicion == "PO" }.size
-        if (defensasOnce < 0 || centroCampistasOnce < 0 || delanterosOnce < 0 || porteroOnce < 0) {
-            return false
-        }
-        return true
-    }
-
     fun queFormacionMeVale(numDF: Int, numCC: Int, numDL: Int): String {
         if (numDF >= 4 && numCC >= 4 && numDL >= 2) {
             return "4-4-2"
@@ -106,9 +93,13 @@ class EquipoServicio {
         val numDF = once.filter { x -> x.posicion == "DF" }.size
         val numCC = once.filter { x -> x.posicion == "CC" }.size
         val numDL = once.filter { x -> x.posicion == "DL" }.size
-        val formacionNueva = queFormacionMeVale(numDF, numCC, numDL)
-        equipo.formacion = formacionNueva
+        equipo.formacion = queFormacionMeVale(numDF, numCC, numDL)
         guardarEquipo(equipo)
+    }
+
+    @Transactional
+    fun ajustaOnce(formacionAntigua: String, formacionNueva: String, equipo: Equipo) {
+
     }
 
     @Transactional

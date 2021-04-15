@@ -114,15 +114,17 @@ class EquipoControlador(
                 model["SinEquipo"] = true
             } else {
                 val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-                var formacion = miEquipo.formacion
-                if (equipoServicio.compruebaBuenaFormacion(formacion, miEquipo) == true) {
+                var formacionAnt = miEquipo.formacion
+                if (equipoServicio.compruebaBuenaFormacion(formacionAnt, miEquipo) == true) {
                     model["tengoEquipo"] = true
                     model["miEquipo"] = true
                     model["equipo"] = miEquipo
                     model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
                     model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
                 } else {
-                    equipoServicio.cambiaFormacion(formacion, miEquipo)
+                    equipoServicio.cambiaFormacion(formacionAnt, miEquipo)
+                    var formacionNue = miEquipo.formacion
+                    equipoServicio.ajustaOnce(formacionAnt, formacionNue, miEquipo)
                     model["tengoEquipo"] = true
                     model["miEquipo"] = true
                     model["equipo"] = miEquipo

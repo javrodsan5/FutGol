@@ -43,17 +43,21 @@ class PujaControlador(
             ) && subastaServicio.existeSubastaPorLigaId(idLiga) == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
-            val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            if (!miEquipo.id?.let {
-                    jugadorServicio.existeJugadorEnEquipo(idJugador, it)
-                }!! && jugador in subasta!!.jugadores) {
-                model["equipo"] = miEquipo
-                model["jugador"] = jugador
-                model["numPujas"] = subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
-                model["puja"] = Puja()
-                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-                return VISTA_PUJA
+            println(miEquipo.jugadores.size)
+            if (miEquipo.jugadores.size < 24) {
+                val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
+                val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                if (!miEquipo.id?.let {
+                        jugadorServicio.existeJugadorEnEquipo(idJugador, it)
+                    }!! && jugador in subasta!!.jugadores) {
+                    model["equipo"] = miEquipo
+                    model["jugador"] = jugador
+                    model["numPujas"] =
+                        subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
+                    model["puja"] = Puja()
+                    model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                    return VISTA_PUJA
+                }
             }
         } else {
             return "redirect:/misligas"

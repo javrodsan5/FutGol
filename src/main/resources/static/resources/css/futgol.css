@@ -7975,3 +7975,29 @@ footer{
     text-align: center;
     width: 1.6em;
 }
+
+.reloj {
+    display: inline-block;
+    font-size: 1.5em;
+    list-style-type: none;
+    padding: 1em;
+    text-transform: uppercase;
+}
+
+.reloj span {
+    display: block;
+    font-size: 4.5rem;
+}
+
+
+@media all and (max-width: 768px) {
+
+    .reloj {
+        font-size: 1.125rem;
+        padding: .75rem;
+    }
+
+    .reloj span {
+        font-size: 3.375rem;
+    }
+}

@@ -43,7 +43,7 @@ class PujaControlador(
             ) && subastaServicio.existeSubastaPorLigaId(idLiga) == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            println(miEquipo.jugadores.size)
+
             if (miEquipo.jugadores.size < 24) {
                 val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
                 val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!

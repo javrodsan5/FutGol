@@ -2,7 +2,78 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
-<h2> Número de pujas ya realizadas: <b th:text="${numPujas}" /></h2>
+<script>
+
+    (function () {
+        const second = 1000,
+                minute = second * 60,
+                hour = minute * 60,
+                day = hour * 24;
+        var d = new Date();
+        var dt = new Date();
+
+        if (dt.getHours() !== 0 || d.getHours() !== 1) {
+            dt.setDate(d.getDate() + 1);
+        }
+        dt.setHours(2);
+        dt.setMinutes(0);
+        dt.setSeconds(0);
+
+        countDown = new Date(dt).getTime(),
+                x = setInterval(function () {
+
+                    let now = new Date().getTime(),
+                            distance = countDown - now;
+
+                    document.getElementById("days").innerText = Math.floor(distance / (day)),
+                            document.getElementById("hours").innerText = Math.floor((distance % (day)) / (hour)),
+                            document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute)),
+                            document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
+
+                    //do something later when date is reached
+                    if (distance < 0) {
+                        let headline = document.getElementById("headline"),
+                                countdown = document.getElementById("countdown"),
+                                content = document.getElementById("content");
+
+                        headline.innerText = "It's my birthday!";
+                        countdown.style.display = "none";
+                        content.style.display = "block";
+
+                        clearInterval(x);
+                    }
+                    //seconds
+                }, 0)
+    }());
+
+</script>
+<script>
+
+    function formatoNumero(val) {
+        while (/(\d+)(\d{3})/.test(val.toString())) {
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1' + '.' + '$2');
+        }
+        return val;
+    }
+
+    function valorADinero() {
+        var valor = document.getElementById("valor").value;
+
+        document.getElementById("resultado").innerHTML = 'Vas a pujar ' + formatoNumero(valor) + '€';
+    }
+
+</script>
+
+<style>
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<h2> Número de pujas ya realizadas: <b th:text="${numPujas}"/></h2>
 
 <h2> Dinero restante: <b th:text="${equipo.dineroRestante}"/> €</h2>
 <h2> Valor del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
@@ -10,57 +81,69 @@
 <h3>Debes pujar al menos el valor del jugador para llevártelo.</h3>
 
 
-<div style="margin-left:45px;">
-    <div style="display: inline-block">
-        <div class="row">
-            <div class="col s12 m7">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" th:src="${jugador.foto}" width="210" height="295"/>
-                        <span class="card-title" th:text="${jugador.name}"></span>
-                    </div>
-                    <div><b th:text="${jugador.puntos}"/> puntos</div>
-                    <div class="card-reveal">
+<div style="margin-left:45px;display: inline-block">
+    <div class="row">
+        <div class="col s12 m7">
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" th:src="${jugador.foto}" width="210" height="295"/>
+                    <span class="card-title" th:text="${jugador.name}"></span>
+                </div>
+                <div><b th:text="${jugador.puntos}"/> puntos</div>
+                <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4" th:text="${jugador.name}"><i
                                 class="material-icons right">close</i></span>
-                        <ul>
-                            <li>Equipo:
-                                <b th:text="${jugador.club.name}"></b>
-                            </li>
-                            <li>Valor:
-                                <b th:text="${jugador.valor}"> mill.€</b>
-                            </li>
-                            <li>Estado:
-                                <b th:text="${jugador.estadoLesion}"></b>
-                            </li>
+                    <ul>
+                        <li>Equipo:
+                            <b th:text="${jugador.club.name}"></b>
+                        </li>
+                        <li>Valor:
+                            <b th:text="${jugador.valor}"> mill.€</b>
+                        </li>
+                        <li>Estado:
+                            <b th:text="${jugador.estadoLesion}"></b>
+                        </li>
 
-                        </ul>
-                    </div>
-                    <div class="card-action">
-                        <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
-                            Ver detalles jugador</a>
-                    </div>
-
-                    </a>
+                    </ul>
                 </div>
+                <div class="card-action">
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
+                        Ver detalles jugador</a>
+                </div>
+
+                </a>
             </div>
         </div>
     </div>
 </div>
-<br>
-<form th:object="${puja}" class="form-horizontal" method="post">
-    <div class="form-group has-feedback">
-        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-        <input
-                th:replace="~{fragments/inputField :: input ('Cantidad a pujar', 'cantidad', 'text')}"/>
+<div style="display: inline-block; float: right; text-align: center">
+    <h1>La puja finalizará en:</h1>
+    <div id="countdown">
+        <ul>
+            <li style="display: none" class="reloj"><span id="days"></span>días</li>
+            <li class="reloj"><span id="hours"></span>Horas</li>
+            <li class="reloj"><span id="minutes"></span>Minutos</li>
+            <li class="reloj"><span id="seconds"></span>Segundos</li>
+        </ul>
     </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-default" type="submit">Pujar</button>
-            <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
-            >Cancelar</a></button>
+    <br><br>
+    <h1 id="resultado"></h1>
+    <br>
+    <form th:object="${puja}" class="form-horizontal" method="post">
+        <div class="form-group has-feedback">
+            <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+            <input type="number" class="form-control" id="valor" onkeyup="valorADinero()" name="cantidad" required
+                   min="0" max="1000000000">
+
         </div>
-    </div>
-</form>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default" type="submit">Pujar</button>
+                <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+                >Cancelar</a></button>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

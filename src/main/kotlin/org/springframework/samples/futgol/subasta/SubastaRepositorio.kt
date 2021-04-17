@@ -9,8 +9,6 @@ interface SubastaRepositorio : Repository<Subasta, Int> {
 
     fun removeSubastaByLigaId(idLiga: Int)
 
-    fun findSubastaById(id: Int): Subasta
-
     @Query("SELECT s FROM Subasta s where s.liga.id = ?1")
     fun findSubastaByLigaId(id: Int): Subasta
 

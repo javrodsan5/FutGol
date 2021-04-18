@@ -15,21 +15,13 @@ class MovimientoControlador(
 ) {
     private val VISTA_MOVIMIENTOS = "movimiento/movimientos"
 
-
-    fun auxMovimientos(model: Model, movimientos: Collection<Movimiento>, idLiga: Int) {
-        if (movimientos != null) {
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            model["movimientos"] = movimientos
-            model["vendedores"] = movimientoServicio.buscaVendedores(movimientos)
-        }
-    }
-
     @GetMapping("/liga/{idLiga}/movimientos")
     fun movimientosLiga(model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal): String {
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)) {
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             val movimientos = movimientoServicio.buscarMovimientosDeLigaPorId(idLiga)
             if (movimientos != null) {
-                auxMovimientos(model, movimientos, idLiga)
+                model["movimientos"] = movimientos
             }
             model["sonDeLiga"] = true
 
@@ -42,11 +34,11 @@ class MovimientoControlador(
     @GetMapping("/liga/{idLiga}/misMovimientos")
     fun movimientosUsuario(model: Model, @PathVariable("idLiga") idLiga: Int, principal: Principal): String {
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)) {
-            val movimientos = usuarioServicio.usuarioLogueado(principal)?.user?.let {
-                movimientoServicio.buscarMovimientosUsuario(it.username)
-            }
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+
+            val movimientos = this.movimientoServicio.buscarMovimientosPorUsuarioYLiga(principal.name, idLiga)
             if (movimientos != null) {
-                auxMovimientos(model, movimientos, idLiga)
+                model["misMovimientos"] = movimientos
             }
             model["sonDeUsuario"] = true
             return VISTA_MOVIMIENTOS

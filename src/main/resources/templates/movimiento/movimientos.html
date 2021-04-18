@@ -7,15 +7,13 @@
 <h2 th:if="${sonDeUsuario==true}">Tus últimos movimientos en la liga</h2>
 <h2 th:if="${sonDeLiga==true}">Últimos movimientos de la liga</h2>
 
+<div th:if="${sonDeUsuario==true}" th:each="movimiento : ${misMovimientos}">
+    <p th:text="*{movimiento.textoPropio}"></p>
+</div>
 
-<ul>
-    <li th:each="movimiento : ${movimientos}">
-        <p>Has comprado a </p>
-        <p th:text="${movimiento.jugador.name}"> de </p>
-    </li>
-    <li th:each="vendedor : ${vendedores}">
-        <p th:text="${vendedor.user.username}"></p>
-    </li>
-</ul>
+<div th:if="${sonDeLiga==true}" th:each="movimiento : ${movimientos}">
+    <p th:text="*{movimiento.texto}"></p>
+</div>
+
 </body>
 </html>

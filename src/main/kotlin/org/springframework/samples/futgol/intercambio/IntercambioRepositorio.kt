@@ -8,11 +8,14 @@ interface IntercambioRepositorio : Repository<Intercambio, Int> {
 
     fun save(intercambio: Intercambio)
 
-    @Query("SELECT i FROM Intercambio i where i.equipoCreadorIntercambio.usuario.id = ?1")
+    @Query("SELECT i FROM Intercambio i where i.otroEquipo.usuario.id = ?1")
     fun buscarIntercambiosPorIdUsuario(idUsuario: Int): Collection<Intercambio>
 
-    @Query(value = "SELECT CASE WHEN count(i)> 0 THEN TRUE ELSE FALSE END FROM Intercambio i where i.equipoCreadorIntercambio.usuario.id = ?1")
+    @Query(value = "SELECT CASE WHEN count(i)> 0 THEN TRUE ELSE FALSE END FROM Intercambio i where i.otroEquipo.usuario.id = ?1")
     fun existenIntercambiosPorIdUsuario(idUsuario: Int): Boolean
+
+    @Query(value = "SELECT CASE WHEN count(i)> 0 THEN TRUE ELSE FALSE END FROM Intercambio i where i.id =  ?1 AND i.otroEquipo.usuario.id =?2")
+    fun existeIntercambioPorIdIntercIdUsuario(idIntercambio: Int, idUsuario: Int): Boolean
 
     @Modifying
     @Query("DELETE FROM Intercambio i WHERE i.id = ?1")

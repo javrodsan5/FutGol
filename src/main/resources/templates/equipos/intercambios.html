@@ -4,26 +4,39 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
+<h2 th:if="${tienesIntercambios}">
+    <h2>Mis intercambios</h2>
+    <table id="intercambios" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Jugador</th>
+            <th>Equipo</th>
+            <th>Dinero</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="intercambio : ${intercambios}">
+            <td th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}"/>
+            <td th:text="${intercambio.jugadorCreadorIntercambio.name}"/>
+            <td th:text="${intercambio.equipoCreadorIntercambio.name}"/>
+            <td th:text="${intercambio.dinero}"/>
+            <td>
+                <div style="float: right;">
+                    <a th:href="@{/liga/{idLiga}/equipos/{idEquipo}/intercambio/{idIntercambio}/aceptar (idLiga=${liga.id}, idEquipo=${intercambio.otroEquipo.id}, idIntercambio=${intercambio.id})}"><i
+                            class="fa fa-check fa-2x" aria-hidden="true"></i></a>
+                    <a th:href="@{/liga/{idLiga}/equipos/{idEquipo}/intercambio/{idIntercambio}/rechazar (idLiga=${liga.id}, idEquipo=${intercambio.otroEquipo.id}, idIntercambio=${intercambio.id})}"><i
+                            class="fa fa-times fa-2x" aria-hidden="true"></i></a>
+                </div>
+            </td>
+        </tr>
 
-<h2>Mis intercambios</h2>
-<table id="intercambios" class="table table-striped">
-    <thead>
-    <tr>
-        <th>Usuario</th>
-        <th>Jugador</th>
-        <th>Equipo</th>
-        <th>Dinero</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="intercambio : ${intercambios}">
-        <td th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}"/>
-        <td th:text="${intercambio.jugadorCreadorIntercambio.name}"/>
-        <td th:text="${intercambio.equipoCreadorIntercambio.name}"/>
-        <td th:text="${intercambio.dinero}"/>
-    </tr>
-
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</h2>
+<h2 th:if="${tienesIntercambios == false}">
+Todavía no te han ofrecido ningún intercambio.
+</h2>
 </body>
 </html>

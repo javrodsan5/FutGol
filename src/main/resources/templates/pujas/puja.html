@@ -132,8 +132,7 @@
     <form th:object="${puja}" class="form-horizontal" method="post">
         <div class="form-group has-feedback">
             <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-            <input type="number" class="form-control" id="valor" onkeyup="valorADinero()" name="cantidad" required
-                   min="0" max="1000000000">
+            <input  type="number" th:min="0" th:max="${equipo.dineroRestante}" class="form-control" id="valor" onkeyup="valorADinero()" name="cantidad" required>
 
         </div>
         <div class="form-group">

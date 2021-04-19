@@ -10,7 +10,7 @@
 <div style="text-align: -webkit-center">
 <div th:if="${sonDeUsuario==true}" th:each="movimiento : ${misMovimientos}">
     <div class="content">
-        <div class="card">
+        <div class="card2">
             <div class="firstinfo"><img th:src="*{movimiento.jugador.foto}"/>
                 <div class="profileinfo">
                     <h3 th:text="*{movimiento.textoPropio}"></h3>
@@ -23,7 +23,7 @@
 
 <div th:if="${sonDeLiga==true}" th:each="movimiento : ${movimientos}">
     <div class="content">
-        <div class="card">
+        <div class="card2">
             <div class="firstinfo"><img th:src="*{movimiento.jugador.foto}"/>
                 <div class="profileinfo">
                     <h3 th:text="*{movimiento.texto}"></h3>

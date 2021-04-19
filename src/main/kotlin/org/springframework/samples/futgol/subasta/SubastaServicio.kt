@@ -6,6 +6,8 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.movimientos.Movimiento
+import org.springframework.samples.futgol.movimientos.MovimientoServicio
 import org.springframework.samples.futgol.puja.PujaServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,6 +20,9 @@ class SubastaServicio {
 
     @Autowired
     private val ligaServicio: LigaServicio? = null
+
+    @Autowired
+    private val movimientoServicio: MovimientoServicio? = null
 
     @Autowired
     private val jugadorServicio: JugadorServicio? = null
@@ -86,6 +91,15 @@ class SubastaServicio {
                     .max(Comparator.comparing { x -> x.cantidad }).orElse(null)
 
                 if (pujaMayor.cantidad >= (j.valor * 1000000)) {
+                    var movimiento = Movimiento()
+                    var liga = this.ligaServicio?.buscarLigaPorId(idLiga)
+                    movimiento.jugador = j
+                    movimiento.liga = liga
+                    movimiento.creadorMovimiento = pujaMayor.equipo?.usuario
+                    movimiento.texto =
+                        pujaMayor.equipo?.usuario?.user?.username + "ha comprado a " + j.name + " por " + pujaMayor.cantidad + "."
+                    movimiento.textoPropio = "Has comprado a " + j.name + " por " + pujaMayor.cantidad + "."
+
                     var equipoPujaMayor = pujaMayor.equipo!!
                     equipoPujaMayor.jugadores.add(j)
                     equipoPujaMayor.jugBanquillo.add(j)
@@ -93,6 +107,8 @@ class SubastaServicio {
                     var money = equipoPujaMayor.dineroRestante - pujaMayor.cantidad
                     equipoPujaMayor.dineroRestante = money
                     equipoServicio!!.guardarEquipo(equipoPujaMayor)
+                    movimientoServicio?.guardarMovimiento(movimiento)
+
                 } else {
                     noPujasJugador(idLiga, j)
                 }

@@ -7,12 +7,31 @@
 <h2 th:if="${sonDeUsuario==true}">Tus últimos movimientos en la liga</h2>
 <h2 th:if="${sonDeLiga==true}">Últimos movimientos de la liga</h2>
 
+<div style="text-align: -webkit-center">
 <div th:if="${sonDeUsuario==true}" th:each="movimiento : ${misMovimientos}">
-    <p th:text="*{movimiento.textoPropio}"></p>
+    <div class="content">
+        <div class="card">
+            <div class="firstinfo"><img th:src="*{movimiento.jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{movimiento.textoPropio}"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div th:if="${sonDeLiga==true}" th:each="movimiento : ${movimientos}">
-    <p th:text="*{movimiento.texto}"></p>
+    <div class="content">
+        <div class="card">
+            <div class="firstinfo"><img th:src="*{movimiento.jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{movimiento.texto}"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 
 </body>

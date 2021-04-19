@@ -70,6 +70,12 @@ class JugadorServicio {
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
+    fun existeJugadorEnLiga(nombreJugador: String, idLiga: Int): Boolean? {
+        return this.buscaTodosJugadores()?.any { x-> x.equipos.any { e-> e.liga?.id==idLiga } && x.name==nombreJugador}
+    }
+
+    @Transactional(readOnly = true)
+    @Throws(DataAccessException::class)
     fun buscaTodosJugadores(): Collection<Jugador>? {
         return jugadorRepositorio?.findAll()
     }

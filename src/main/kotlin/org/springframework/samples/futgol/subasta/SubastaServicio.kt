@@ -97,7 +97,37 @@ class SubastaServicio {
 
                 if (pujaMayor.cantidad >= (j.valor * 1000000)) {
                     var movimiento = Movimiento()
+                    var movimiento2 = Movimiento()
+
                     var liga = this.ligaServicio?.buscarLigaPorId(idLiga)
+                    if (j.name?.let { this.jugadorServicio?.existeJugadorEnLiga(it, idLiga) } == true) {
+                        var equipoAntiguo = this.equipoServicio?.buscarEquipoPorJugadorYLiga(j.name!!, idLiga)
+                        movimiento2.jugador = j
+                        movimiento2.liga = liga
+                        movimiento2.creadorMovimiento = equipoAntiguo?.usuario
+                        movimiento2.texto =
+                            equipoAntiguo?.usuario?.user?.username + " ha vendido a " + j.name + " por " + MetodosAux().enteroAEuros(
+                                pujaMayor.cantidad
+                            ) + "."
+                        movimiento2.textoPropio =
+                            "Has vendido a " + j.name + " por " + MetodosAux().enteroAEuros(pujaMayor.cantidad) + "."
+
+                        if (equipoAntiguo?.onceInicial?.any { x -> x.name == j.name } == true) {
+                            equipoAntiguo.onceInicial.remove(j)
+                            equipoAntiguo.onceInicial.add(equipoAntiguo.jugBanquillo.filter { x -> x.posicion == j.posicion }
+                                .random())
+
+                        } else {
+                            equipoAntiguo?.jugBanquillo?.remove(j)
+                        }
+                        equipoAntiguo?.jugadores?.remove(j)
+
+                        var money2 = equipoAntiguo?.dineroRestante!! + pujaMayor.cantidad
+                        equipoAntiguo.dineroRestante = money2
+                        equipoServicio!!.guardarEquipo(equipoAntiguo)
+                        movimientoServicio?.guardarMovimiento(movimiento2)
+
+                    }
                     movimiento.jugador = j
                     movimiento.liga = liga
                     movimiento.creadorMovimiento = pujaMayor.equipo?.usuario

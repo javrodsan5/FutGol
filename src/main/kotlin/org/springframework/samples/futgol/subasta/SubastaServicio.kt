@@ -9,9 +9,13 @@ import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.movimientos.Movimiento
 import org.springframework.samples.futgol.movimientos.MovimientoServicio
 import org.springframework.samples.futgol.puja.PujaServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.NumberFormat
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.Comparator
 
 @Service
 class SubastaServicio {
@@ -84,6 +88,7 @@ class SubastaServicio {
     @Transactional
     fun ganarSubasta(idLiga: Int) {
         var subasta = buscarSubastaPorLigaId(idLiga)!!
+
         for (j in subasta.jugadores) {
             if (subasta.id?.let { j.id?.let { it1 -> pujaServicio!!.existePujaJugSub(it1, it) } } == true) {
                 val idSubasta = buscarSubastaPorLigaId(idLiga)?.id!!
@@ -96,9 +101,13 @@ class SubastaServicio {
                     movimiento.jugador = j
                     movimiento.liga = liga
                     movimiento.creadorMovimiento = pujaMayor.equipo?.usuario
+
                     movimiento.texto =
-                        pujaMayor.equipo?.usuario?.user?.username + "ha comprado a " + j.name + " por " + pujaMayor.cantidad + "."
-                    movimiento.textoPropio = "Has comprado a " + j.name + " por " + pujaMayor.cantidad + "."
+                        pujaMayor.equipo?.usuario?.user?.username + " ha comprado a " + j.name + " por " + MetodosAux().enteroAEuros(
+                            pujaMayor.cantidad
+                        ) + "."
+                    movimiento.textoPropio =
+                        "Has comprado a " + j.name + " por " + MetodosAux().enteroAEuros(pujaMayor.cantidad) + "."
 
                     var equipoPujaMayor = pujaMayor.equipo!!
                     equipoPujaMayor.jugadores.add(j)
@@ -129,11 +138,11 @@ class SubastaServicio {
                 var dineroNuevo = eq.dineroRestante + j.valor * 1000000
                 eq.dineroRestante = dineroNuevo.toInt()
             }
-            equipoServicio!!.guardarEquipo(eq)
+            equipoServicio.guardarEquipo(eq)
         }
     }
 
-
+    @Transactional
     fun autoGanaryGenerarSubasta() {
         var ligas = this.ligaServicio?.buscarTodasLigas()!!
         for (l in ligas) {

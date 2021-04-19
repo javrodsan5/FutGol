@@ -3,7 +3,10 @@ package org.springframework.samples.futgol.util
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.text.NumberFormat
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 class MetodosAux {
 
@@ -74,4 +77,11 @@ class MetodosAux {
         }
         return l2
     }
+
+    open fun enteroAEuros(entero: Int): String {
+        var n: NumberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY)
+        n.maximumFractionDigits = 0
+        return n.format(entero)
+    }
+
 }

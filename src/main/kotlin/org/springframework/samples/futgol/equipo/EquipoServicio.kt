@@ -174,6 +174,12 @@ class EquipoServicio {
         return equipoRepositorio?.buscarEquipoPorNombreYLiga(nombreEquipo, idLiga)
     }
 
+    @Transactional(readOnly = true)
+    fun buscarEquipoPorJugadorYLiga(nombreJugador: String, idLiga: Int): Equipo? {
+        return equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)?.filter { x-> x.jugadores.any { j-> j.name==nombreJugador } }
+            ?.get(0)
+    }
+
     @Transactional
     fun asignaPuntosDineroEquipo(nombreEquipo: String, idLiga: Int) {
         if (comprobarSiExisteEquipoLiga(nombreEquipo, idLiga)) {

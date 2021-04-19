@@ -25,22 +25,25 @@ class AdministracionControlador(
 ) {
 
     @Scheduled(cron = "0 0 1 * * MON ")
-    fun administrarWebScraping() {
+    fun administrarWebScrapingSemanal() {
         this.equipoRealServicio.webScrapingEquipos()
         this.partidoServicio.wsPartidos()
-        this.jugadorServicio.webScrapingJugadoresTransfermarkt()
-        this.jugadorServicio.webScrapingJugadoresFbref()
-        this.jugadorServicio.eliminarJugadoresSinPosicionFbref()
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
         this.equipoServicio.asignarPuntosEquipo()
     }
 
-    @Scheduled(cron = "0 0 2 * * * ")
+    @Scheduled(cron = "0 0 1 * * ? ")
+    fun administrarWebScrapingDiario() {
+        this.jugadorServicio.webScrapingJugadoresTransfermarkt()
+        this.jugadorServicio.webScrapingJugadoresFbref()
+        this.jugadorServicio.eliminarJugadoresSinPosicionFbref()
+
+    }
+
+    @Scheduled(cron = "0 0 1 * * ? ")
     fun autoSubastas() {
         this.subastaServicio.autoGanaryGenerarSubasta()
     }
-
-
 
 }

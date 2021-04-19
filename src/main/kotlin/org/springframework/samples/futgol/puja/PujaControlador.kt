@@ -4,6 +4,7 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.subasta.SubastaServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -56,6 +57,7 @@ class PujaControlador(
                         subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
                     model["puja"] = Puja()
                     model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                    model["dineroRestante"] = MetodosAux().enteroAEuros((miEquipo.dineroRestante))
                     return VISTA_PUJA
                 }
             }

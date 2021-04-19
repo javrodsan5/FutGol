@@ -115,22 +115,24 @@ class EquipoControlador(
             } else {
                 val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
                 var formacionAnt = miEquipo.formacion
-                if (equipoServicio.compruebaBuenaFormacion(formacionAnt, miEquipo) == true) {
-                    model["tengoEquipo"] = true
-                    model["miEquipo"] = true
-                    model["equipo"] = miEquipo
-                    model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
-                    model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
-                } else {
+                if (equipoServicio.compruebaBuenaFormacion(formacionAnt, miEquipo) == false) {
                     equipoServicio.cambiaFormacion(formacionAnt, miEquipo)
                     var formacionNue = miEquipo.formacion
                     equipoServicio.ajustaOnce(formacionAnt, formacionNue, miEquipo)
-                    model["tengoEquipo"] = true
-                    model["miEquipo"] = true
-                    model["equipo"] = miEquipo
-                    model["valorEquipo"] = miEquipo.name?.let { equipoServicio.calcularValorEquipo(it, idLiga) }!!
-                    model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
                 }
+                model["tengoEquipo"] = true
+                model["miEquipo"] = true
+                model["equipo"] = miEquipo
+                model["dineroRestante"] = MetodosAux().enteroAEuros(miEquipo.dineroRestante)
+
+                model["ptosJorEq"] = miEquipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
+
+                model["valorEquipo"] = MetodosAux().enteroAEuros((miEquipo.name?.let {
+                    equipoServicio.calcularValorEquipo(
+                        it,
+                        idLiga
+                    )
+                }!! * 1000000).toInt())
             }
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
             return VISTA_DETALLES_EQUIPO
@@ -155,7 +157,12 @@ class EquipoControlador(
                 model["liga"] = liga
                 model["equipo"] = equipo
                 model["tengoEquipo"] = true
-                model["valorEquipo"] = equipo.name?.let { equipoServicio.calcularValorEquipo(it, liga.id!!) }!!
+                model["valorEquipo"] = MetodosAux().enteroAEuros((equipo.name?.let {
+                    equipoServicio.calcularValorEquipo(
+                        it,
+                        liga.id!!
+                    )
+                }!! * 1000000).toInt())
                 model["ptosJorEq"] = equipo.id?.let { ptosJornadaEquipoServicio.buscarPtosJEPorEquipo(it) }!!
 
                 return if (usuarioServicio.usuarioLogueado(principal)?.id?.let {

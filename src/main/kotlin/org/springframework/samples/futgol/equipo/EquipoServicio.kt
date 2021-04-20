@@ -6,10 +6,13 @@ import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.movimientos.Movimiento
+import org.springframework.samples.futgol.movimientos.MovimientoServicio
 import org.springframework.samples.futgol.partido.Partido
 import org.springframework.samples.futgol.puntosJornadaEquipo.PtosJornadaEquipo
 import org.springframework.samples.futgol.puntosJornadaEquipo.PtosJornadaEquipoServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
@@ -38,6 +41,9 @@ class EquipoServicio {
 
     @Autowired
     private var ligaServicio: LigaServicio? = null
+
+    @Autowired
+    private var movimientoServicio: MovimientoServicio? = null
 
 
     @Transactional
@@ -176,7 +182,8 @@ class EquipoServicio {
 
     @Transactional(readOnly = true)
     fun buscarEquipoPorJugadorYLiga(nombreJugador: String, idLiga: Int): Equipo? {
-        return equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)?.filter { x-> x.jugadores.any { j-> j.name==nombreJugador } }
+        return equipoRepositorio?.buscarEquiposDeLigaPorId(idLiga)
+            ?.filter { x -> x.jugadores.any { j -> j.name == nombreJugador } }
             ?.get(0)
     }
 
@@ -198,8 +205,22 @@ class EquipoServicio {
             }
             ptosJornadaEquipoServicio?.guardarPtosJornadaEquipo(ptoJEq)
             equipo.puntos += ptoJEq.puntos
-            equipo.dineroRestante += ptoJEq.puntos * 400000
-            guardarEquipo(equipo)
+            val dineroJEq = ptoJEq.puntos * 400000
+            equipo.dineroRestante += dineroJEq
+            val movimiento = Movimiento()
+            movimiento.creadorMovimiento = equipo.usuario
+            movimiento.liga = this.ligaServicio?.buscarLigaPorId(idLiga)
+            movimiento.jugador = null
+            movimiento.texto =
+                equipo.usuario?.user?.username + " ha ganado " + MetodosAux().enteroAEuros(
+                    dineroJEq
+                ) + " por puntos en la jornada " + ptoJEq.jornada?.numeroJornada + "."
+            movimiento.textoPropio =
+                "Has ganado " + MetodosAux().enteroAEuros(
+                    dineroJEq
+                ) + " por puntos en la jornada " + ptoJEq.jornada?.numeroJornada + "."
+            this.guardarEquipo(equipo)
+            this.movimientoServicio?.guardarMovimiento(movimiento)
         }
     }
 

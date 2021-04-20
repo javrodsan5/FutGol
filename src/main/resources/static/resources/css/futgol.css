@@ -7183,6 +7183,14 @@ hr {
     background-color: #F1A111;
 }
 
+#snav li:nth-child(10n+5) span, #snav li:nth-child(10n+5) a:hover .fa {
+    background-color: #2062ee;
+}
+
+#snav li:nth-child(10n+6) span, #snav li:nth-child(10n+6) a:hover .fa {
+    background-color: #d9193f;
+}
+
 .message-container {
     width: 300px;
 }

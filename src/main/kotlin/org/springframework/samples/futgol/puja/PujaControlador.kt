@@ -25,11 +25,6 @@ class PujaControlador(
 ) {
     private val VISTA_PUJA = "pujas/puja"
 
-    @InitBinder("puja")
-    fun initPujaBinder(dataBinder: WebDataBinder) {
-        dataBinder.validator = PujaValidador()
-    }
-
     @GetMapping("/liga/{idLiga}/subastas/{idJugador}")
     fun iniciarPujaJugador(
         @PathVariable idLiga: Int,
@@ -73,13 +68,6 @@ class PujaControlador(
         puja: Puja, result: BindingResult, @PathVariable idLiga: Int,
         @PathVariable idJugador: Int, model: Model, principal: Principal
     ): String {
-        val liga = ligaServicio.buscarLigaPorId(idLiga)!!
-        if (result.hasErrors()) {
-            model["liga"] = liga
-            model["equipo"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-            model["puja"] = puja
-            return VISTA_PUJA
-        }
         val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
         val equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
         if (subasta.id?.let { pujaServicio.existePujaEqJugSub(equipo.id!!, idJugador, it) } == true) {

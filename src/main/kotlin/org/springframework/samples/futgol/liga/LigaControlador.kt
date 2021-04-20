@@ -3,6 +3,8 @@ package org.springframework.samples.futgol.liga
 
 import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.subasta.Subasta
+import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -23,7 +25,8 @@ import javax.validation.Valid
 class LigaControlador(
     val ligaServicio: LigaServicio,
     val usuarioServicio: UsuarioServicio,
-    val equipoServicio: EquipoServicio
+    val equipoServicio: EquipoServicio,
+    val subastaServicio: SubastaServicio
 ) {
 
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
@@ -69,6 +72,7 @@ class LigaControlador(
             if (usuario != null) {
                 liga.usuarios.add(usuario)
                 this.ligaServicio.guardarLiga(liga)
+                this.subastaServicio.subasta(liga.id!!)
 
             }
             "redirect:/liga/" + liga.id + "/nuevoEquipo"

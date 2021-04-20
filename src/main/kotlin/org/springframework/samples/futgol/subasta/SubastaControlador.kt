@@ -27,8 +27,8 @@ class SubastaControlador(
             )
         ) {
             val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
-            model["jugadoresSinEquipo"] = subasta.jugadores!!
-            model["liga"] = ligaServicio!!.buscarLigaPorId(idLiga)!!
+            model["jugadoresSinEquipo"] = subasta.jugadores
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
 
             VISTA_SUBASTA_LIGA
         } else {

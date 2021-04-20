@@ -1,5 +1,7 @@
 package org.springframework.samples.futgol.equipo
 
+import org.springframework.samples.futgol.clausula.Clausula
+import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
@@ -24,7 +26,9 @@ class EquipoControlador(
     val equipoServicio: EquipoServicio,
     val jugadorServicio: JugadorServicio,
     val usuarioServicio: UsuarioServicio,
-    val ptosJornadaEquipoServicio: PtosJornadaEquipoServicio
+    val ptosJornadaEquipoServicio: PtosJornadaEquipoServicio,
+    val clausulaServicio: ClausulaServicio
+
 ) {
 
     private val VISTA_CREAEQUIPOS = "equipos/crearEditarEquipoUsuario"
@@ -100,6 +104,15 @@ class EquipoControlador(
             equipo.formacion = "4-4-2"
 
             this.equipoServicio.guardarEquipo(equipo)
+
+            for (jg in misJugadores) {
+                var clausula = Clausula()
+                clausula.equipo = equipo
+                clausula.jugador = jg
+                clausula.valorClausula = ((jg.valor + (jg.valor * 0.5))*1000000).toInt()
+                this.clausulaServicio.guardarClausula(clausula)
+
+            }
             "redirect:/liga/$idLiga/miEquipo"
         }
     }

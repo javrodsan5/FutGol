@@ -9,6 +9,7 @@ import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -118,6 +119,9 @@ class JugadorControlador(
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
+            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador,idEquipo)
+            model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
                 var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
                 model["tieneMedias"] = true
@@ -143,7 +147,6 @@ class JugadorControlador(
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             model["equipo"] = equipo
             model["liga"] = equipo.liga!!
-            model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
 
             if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
                 model["loTengoEnMiEquipo"] = true
@@ -155,7 +158,7 @@ class JugadorControlador(
     }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
-    fun clausulaJugador(
+    fun iniciarActualizacionClausulaJugador(
         model: Model,
         @PathVariable("idJugador") idJugador: Int,
         @PathVariable("idEquipo") idEquipo: Int, principal: Principal?
@@ -175,7 +178,7 @@ class JugadorControlador(
     }
 
     @PostMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
-    fun actualizarClausulaJugador(
+    fun procesarActualizacionClausulaJugador(
         @Valid clausula: Clausula,
         result: BindingResult,
         model: Model,
@@ -187,10 +190,20 @@ class JugadorControlador(
             model["clausula"] = clausula
             return VISTA_CLAUSULA_JUGADOR
         } else {
-            clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
-            clausula.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
-            clausulaServicio.guardarClausula(clausula)
+            val j = jugadorServicio.buscaJugadorPorId(idJugador)
+            return if (clausula.valorClausula < (j?.valor?.times(1000000)!!)) {
+                result.rejectValue(
+                    "valorClausula",
+                    "La cláusula no puede ser inferior al valor del jugador",
+                    "La cláusula no puede ser inferior al valor del jugador"
+                )
+                VISTA_CLAUSULA_JUGADOR
+            } else {
+                clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
+                clausula.jugador = j
+                clausulaServicio.guardarClausula(clausula)
+                return "redirect:/equipo/$idEquipo/jugador/" + idJugador + "/jornada/1"
+            }
         }
-        return "redirect:/equipo/$idEquipo/jugador/" + idJugador + "/jornada/1"
     }
 }

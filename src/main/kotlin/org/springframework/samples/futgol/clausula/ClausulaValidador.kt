@@ -6,8 +6,8 @@ import org.springframework.validation.Validator
 class ClausulaValidador : Validator {
 
     override fun validate(target: Any, errors: Errors) {
-        var clausula = target as Clausula
-        var valor = clausula.valorClausula
+        val clausula = target as Clausula
+        val valor = clausula.valorClausula
         when {
             valor == null -> errors.rejectValue(
                 "valorClausula",

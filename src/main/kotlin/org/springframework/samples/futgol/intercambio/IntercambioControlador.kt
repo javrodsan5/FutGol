@@ -107,13 +107,15 @@ class IntercambioControlador(
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (!jugadorServicio.existeJugadorEnEquipo(idJugador, miEquipo.id!!)) {
                 model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                model["dineroRestante"] = miEquipo.dineroRestante
                 model["intercambio"] = Intercambio()
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                 model["misJugadores"] = miEquipo.jugadores
+                return VISTA_CREAR_INTERCAMBIOS
             }
         }
+        return "redirect:/misligas"
 
-        return VISTA_CREAR_INTERCAMBIOS
     }
 
     @PostMapping("liga/{idLiga}/nuevoIntercambio/{idJugador}")
@@ -123,7 +125,10 @@ class IntercambioControlador(
     ): String {
 
         return if (result.hasErrors()) {
+            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["intercambio"] = intercambio
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["misJugadores"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).jugadores
             VISTA_CREAR_INTERCAMBIOS
         } else {
             intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)

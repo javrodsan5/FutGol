@@ -1,17 +1,63 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
+
+<h1> Vas a realizar un intercambio por el siguiente jugador</h1>
+<div style="margin-left:45px;display: inline-block">
+    <div class="row">
+        <div class="col s12 m7">
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img class="activator" th:src="${jugador.foto}" width="210" height="295"/>
+                    <span class="card-title" th:text="${jugador.name}"></span>
+                </div>
+                <div><b th:text="${jugador.puntos}"/> puntos</div>
+                <div class="card-reveal">
+                        <span class="card-title grey-text text-darken-4" th:text="${jugador.name}"><i
+                                class="material-icons right">close</i></span>
+                    <ul>
+                        <li>Equipo:
+                            <b th:text="${jugador.club.name}"></b>
+                        </li>
+                        <li>Valor:
+                            <b th:text="${jugador.valor}"> mill.€</b>
+                        </li>
+                        <li>Estado:
+                            <b th:text="${jugador.estadoLesion}"></b>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="card-action">
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
+                        Ver detalles jugador</a>
+                </div>
+
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 <h1>¿Quieres añadir dinero a tu intercambio para convencerlo?</h1>
 <form th:object="${intercambio}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-        <input
-                th:replace="~{fragments/inputField :: input ('Dinero', 'dinero', 'text')}"/>
+        <input  type="number" th:min="0" th:max="${dineroRestante}" class="form-control" id="valor" onkeyup="valorADinero()" name="dinero" required>
+
+        <h2>Elige el jugador que le quieras ofrecer</h2>
+        <select name="jugadorCreadorIntercambio">
+            <option th:each="jugador : ${misJugadores}"
+                    th:value="${jugador.id}"
+                    th:text="${jugador.name}"
+                    th:selected="false"
+            />
+        </select>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <button
-                    class="btn btn-default" type="submit">Ofrecer intercambio </button>
+                    class="btn btn-default" type="submit">Ofrecer intercambio
+            </button>
         </div>
     </div>
 </form>

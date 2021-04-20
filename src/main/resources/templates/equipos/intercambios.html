@@ -4,14 +4,14 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
-<h2 th:if="${tienesIntercambios}">
+<h2 th:if="${tienesInt==true}">
     <h2>Mis intercambios</h2>
     <table id="intercambios" class="table table-striped">
         <thead>
         <tr>
             <th>Usuario</th>
-            <th>Jugador</th>
-            <th>Equipo</th>
+            <th>Mi Jugador</th>
+            <th>Su jugador</th>
             <th>Dinero</th>
             <th>Acciones</th>
         </tr>
@@ -19,8 +19,8 @@
         <tbody>
         <tr th:each="intercambio : ${intercambios}">
             <td th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}"/>
+            <td th:text="${intercambio.otroJugador.name}"/>
             <td th:text="${intercambio.jugadorCreadorIntercambio.name}"/>
-            <td th:text="${intercambio.equipoCreadorIntercambio.name}"/>
             <td th:text="${intercambio.dinero}"/>
             <td>
                 <div style="float: right;">
@@ -35,7 +35,7 @@
         </tbody>
     </table>
 </h2>
-<h2 th:if="${tienesIntercambios == false}">
+<h2 th:if="${tienesInt == false}">
 Todavía no te han ofrecido ningún intercambio.
 </h2>
 </body>

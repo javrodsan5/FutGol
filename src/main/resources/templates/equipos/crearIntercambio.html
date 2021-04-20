@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+<h1>¿Quieres añadir dinero a tu intercambio para convencerlo?</h1>
+<form th:object="${intercambio}" class="form-horizontal" method="post">
+    <div class="form-group has-feedback">
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <input
+                th:replace="~{fragments/inputField :: input ('Dinero', 'dinero', 'text')}"/>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button
+                    class="btn btn-default" type="submit">Ofrecer intercambio </button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

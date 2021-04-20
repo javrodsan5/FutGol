@@ -72,6 +72,26 @@ class EquipoServicio {
         return equipo?.jugBanquillo?.filter { x -> x.posicion == posicion } as MutableList<Jugador>
     }
 
+    @Transactional(readOnly = true)
+    fun estaJugadorEnEquiposLiga(idLiga: Int, idJugador: Int): Boolean {
+        val equipos = buscaEquiposDeLigaPorId(idLiga)!!
+        val jugador = jugadorServicio!!.buscaJugadorPorId(idJugador)!!
+        for(e in equipos) {
+            if(e.jugadores.contains(jugador)) return true
+        }
+        return false
+    }
+
+    @Transactional(readOnly = true)
+    fun buscarEquipoLigaJugador(idLiga: Int, idJugador: Int): Equipo {
+        val equipos = buscaEquiposDeLigaPorId(idLiga)!!
+        val jugador = jugadorServicio!!.buscaJugadorPorId(idJugador)!!
+        for(e in equipos) {
+            if(e.jugadores.contains(jugador)) return e
+        }
+        return Equipo()
+    }
+
 
     @Transactional(readOnly = true)
     fun buscaEquiposPorId(idEquipo: Int): Equipo? {

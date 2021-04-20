@@ -23,8 +23,8 @@ class IntercambioServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscarIntercambiosUsuario(idUsuario: Int): Collection<Intercambio>? {
-        return intercambioRepositorio?.buscarIntercambiosPorIdUsuario(idUsuario)
+    fun buscarIntercambiosEquipo(idEquipo: Int): Collection<Intercambio>? {
+        return intercambioRepositorio?.buscarIntercambiosPorIdEquipo(idEquipo)
     }
 
     @Transactional(readOnly = true)
@@ -33,13 +33,13 @@ class IntercambioServicio {
     }
 
     @Transactional(readOnly = true)
-    fun existenIntercambiosUsuario(idUsuario: Int): Boolean? {
-        return intercambioRepositorio?.existenIntercambiosPorIdUsuario(idUsuario)
+    fun existenIntercambiosEquipo(idEquipo: Int): Boolean? {
+        return intercambioRepositorio?.existenIntercambiosPorIdEquipo(idEquipo)
     }
 
     @Transactional(readOnly = true)
-    fun existeIntercambioPorIdIntercIdUsuario(idIntercambio: Int, idUsuario: Int): Boolean? {
-        return intercambioRepositorio?.existeIntercambioPorIdIntercIdUsuario(idIntercambio, idUsuario)
+    fun existeIntercambioPorIdIntercIdEquipo(idIntercambio: Int, idEquipo: Int): Boolean? {
+        return intercambioRepositorio?.existeIntercambioPorIdIntercIdEquipo(idIntercambio, idEquipo)
     }
 
     @Transactional

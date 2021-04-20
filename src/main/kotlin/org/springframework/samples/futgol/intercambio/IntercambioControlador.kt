@@ -7,8 +7,10 @@ import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
 
 @Controller
@@ -21,6 +23,7 @@ class IntercambioControlador(
 ) {
 
     private val VISTA_INTERCAMBIOS = "equipos/intercambios"
+    private val VISTA_CREAR_INTERCAMBIOS = "equipos/crearIntercambio"
 
 
     @GetMapping("liga/{idLiga}/misIntercambios")
@@ -32,14 +35,13 @@ class IntercambioControlador(
             ) && equipoServicio.tengoEquipo(idLiga, principal)
         ) {
             model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            val idUsuario = usuarioServicio.usuarioLogueado(principal)!!.id!!
-            if (intercambioServicio.existenIntercambiosUsuario(idUsuario) == true) {
-                if (intercambioServicio.existenIntercambiosUsuario(idUsuario) == true) {
-                    model["intercambios"] = intercambioServicio.buscarIntercambiosUsuario(idUsuario)!!
-                }
-                model["tienesIntercambios"] = true
+            val miEquipoId = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).id!!
+            if (intercambioServicio.existenIntercambiosEquipo(miEquipoId) == true) {
+                model["tienesInt"] = true
+                model["intercambios"] = intercambioServicio.buscarIntercambiosEquipo(miEquipoId)!!
+            } else {
+                model["tienesInt"] = false
             }
-            model["tienesIntercambios"] = false
             return VISTA_INTERCAMBIOS
         }
         return "redirect:/misligas"
@@ -52,9 +54,9 @@ class IntercambioControlador(
     ): String {
         val usuario = usuarioServicio.usuarioLogueado(principal)!!
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
-            && equipoServicio.tengoEquipo(idLiga, principal) && usuario.id?.let {
-                intercambioServicio.existeIntercambioPorIdIntercIdUsuario(idIntercambio, it)
-            } == true
+            && equipoServicio.tengoEquipo(idLiga, principal) &&
+            intercambioServicio.existeIntercambioPorIdIntercIdEquipo(idIntercambio, idEquipo)
+            == true
         ) {
             var intercambio = intercambioServicio.buscaIntercambioPorId(idIntercambio)!!
             var otroEquipo = intercambio.otroEquipo!!
@@ -76,7 +78,7 @@ class IntercambioControlador(
 
             intercambioServicio.borraIntercambio(idIntercambio)
         }
-        return "redirect:/liga/$idLiga/equipos/$idEquipo/intercambios"
+        return "redirect:/liga/$idLiga/misIntercambios"
     }
 
     @GetMapping("liga/{idLiga}/equipos/{idEquipo}/intercambio/{idIntercambio}/rechazar")
@@ -84,14 +86,58 @@ class IntercambioControlador(
         model: Model, @PathVariable idLiga: Int, principal: Principal,
         @PathVariable idEquipo: Int, @PathVariable idIntercambio: Int
     ): String {
-        val usuario = usuarioServicio.usuarioLogueado(principal)!!
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
-            && equipoServicio.tengoEquipo(idLiga, principal) && usuario.id?.let {
-                intercambioServicio.existeIntercambioPorIdIntercIdUsuario(idIntercambio, it) } == true) {
-            var intercambio = intercambioServicio.buscaIntercambioPorId(idIntercambio)!!
+            && equipoServicio.tengoEquipo(idLiga, principal) &&
+            intercambioServicio.existeIntercambioPorIdIntercIdEquipo(idIntercambio, idEquipo) == true
+        ) {
             intercambioServicio.borraIntercambio(idIntercambio)
         }
-        return "redirect:/liga/$idLiga/equipos/$idEquipo/intercambios"
+        return "redirect:/liga/$idLiga/misIntercambios"
+    }
+
+    @GetMapping("liga/{idLiga}/nuevoIntercambio/{idJugador}")
+    fun initOfrecerIntercambio(
+        model: Model, @PathVariable idLiga: Int, principal: Principal, @PathVariable idJugador: Int
+    ): String {
+
+        if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
+            && equipoServicio.tengoEquipo(idLiga, principal) && jugadorServicio.existeJugadorId(idJugador) == true
+            && equipoServicio.estaJugadorEnEquiposLiga(idLiga, idJugador)
+        ) {
+            val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+            if (!jugadorServicio.existeJugadorEnEquipo(idJugador, miEquipo.id!!)) {
+                model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                model["dineroRestante"] = miEquipo.dineroRestante
+                model["intercambio"] = Intercambio()
+                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+                model["misJugadores"] = miEquipo.jugadores
+                return VISTA_CREAR_INTERCAMBIOS
+            }
+        }
+        return "redirect:/misligas"
+
+    }
+
+    @PostMapping("liga/{idLiga}/nuevoIntercambio/{idJugador}")
+    fun postOfrecerIntercambio(
+        intercambio: Intercambio, result: BindingResult, model: Model, @PathVariable idLiga: Int,
+        principal: Principal, @PathVariable idJugador: Int
+    ): String {
+
+        return if (result.hasErrors()) {
+            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["intercambio"] = intercambio
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["misJugadores"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).jugadores
+            VISTA_CREAR_INTERCAMBIOS
+        } else {
+            intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+
+            intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
+            intercambioServicio.guardarIntercambio(intercambio)
+            return "redirect:/liga/$idLiga/miEquipo"
+        }
     }
 
 

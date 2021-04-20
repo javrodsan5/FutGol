@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,10 +28,10 @@ class JugadorServicio {
     private val equipoServicio: EquipoServicio? = null
 
     @Autowired
-    private val jugadorServicio: JugadorServicio? = null
+    private val estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
 
     @Autowired
-    private val estadisticaJugadorServicio: EstadisticaJugadorServicio? = null
+    private val subastaServicio: SubastaServicio? = null
 
     @Autowired
     fun JugadorServicio(jugadorRepositorio: JugadorRepositorio) {
@@ -189,7 +190,9 @@ class JugadorServicio {
     }
 
     fun jugadoresAsignablesLiga(idLiga: Int): Collection<Jugador>? {
-        return this.buscaTodosJugadores()?.filter { x -> x.equipos.none { y -> y.liga?.id == idLiga } }
+        return this.buscaTodosJugadores()?.filter { x -> x.equipos.none { y -> y.liga?.id == idLiga }
+                && this.subastaServicio?.buscarSubastaPorLigaId(idLiga)?.jugadores?.none { j-> j.name==x.name } == true
+        }
     }
 
     fun asignarjugadoresNuevoEquipo(idLiga: Int): MutableSet<Jugador> {

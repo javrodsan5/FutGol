@@ -76,8 +76,8 @@ class EquipoServicio {
     fun estaJugadorEnEquiposLiga(idLiga: Int, idJugador: Int): Boolean {
         val equipos = buscaEquiposDeLigaPorId(idLiga)!!
         val jugador = jugadorServicio!!.buscaJugadorPorId(idJugador)!!
-        for(e in equipos) {
-            if(e.jugadores.contains(jugador)) return true
+        for (e in equipos) {
+            if (e.jugadores.contains(jugador)) return true
         }
         return false
     }
@@ -86,8 +86,8 @@ class EquipoServicio {
     fun buscarEquipoLigaJugador(idLiga: Int, idJugador: Int): Equipo {
         val equipos = buscaEquiposDeLigaPorId(idLiga)!!
         val jugador = jugadorServicio!!.buscaJugadorPorId(idJugador)!!
-        for(e in equipos) {
-            if(e.jugadores.contains(jugador)) return e
+        for (e in equipos) {
+            if (e.jugadores.contains(jugador)) return e
         }
         return Equipo()
     }
@@ -231,6 +231,8 @@ class EquipoServicio {
             movimiento.creadorMovimiento = equipo.usuario
             movimiento.liga = this.ligaServicio?.buscarLigaPorId(idLiga)
             movimiento.jugador = null
+            movimiento.jugador2 = null
+            movimiento.creadorMovimiento2 = null
             movimiento.texto =
                 equipo.usuario?.user?.username + " ha ganado " + MetodosAux().enteroAEuros(
                     dineroJEq

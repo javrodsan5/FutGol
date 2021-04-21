@@ -111,6 +111,8 @@ class SubastaServicio {
                             ) + "."
                         movimiento2.textoPropio =
                             "Has vendido a " + j.name + " por " + MetodosAux().enteroAEuros(pujaMayor.cantidad) + "."
+                        movimiento2.creadorMovimiento2=null
+                        movimiento2.jugador2=null
 
                         if (equipoAntiguo?.onceInicial?.any { x -> x.name == j.name } == true) {
                             equipoAntiguo.onceInicial.remove(j)
@@ -131,6 +133,8 @@ class SubastaServicio {
                     movimiento.jugador = j
                     movimiento.liga = liga
                     movimiento.creadorMovimiento = pujaMayor.equipo?.usuario
+                    movimiento.jugador2=null
+                    movimiento.creadorMovimiento2=null
 
                     movimiento.texto =
                         pujaMayor.equipo?.usuario?.user?.username + " ha comprado a " + j.name + " por " + MetodosAux().enteroAEuros(

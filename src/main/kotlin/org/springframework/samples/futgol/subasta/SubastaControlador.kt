@@ -51,7 +51,7 @@ class SubastaControlador(
 
                 var subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
                 subastaServicio.sacarJugadorSubasta(idJugador, subasta)
-                model["liga"] = ligaServicio!!.buscarLigaPorId(idLiga)!!
+                model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                 return "redirect:/liga/$idLiga/subastas"
             }else {
                 return "redirect:/liga/$idLiga/miEquipo"
@@ -59,7 +59,6 @@ class SubastaControlador(
         } else {
             return "redirect:/misligas"
         }
-        return "redirect:/misligas"
     }
 
     //BORRAR CUANDO SE DEJE DE PROBAR

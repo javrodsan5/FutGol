@@ -3,8 +3,11 @@ package org.springframework.samples.futgol.intercambio
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.movimientos.Movimiento
+import org.springframework.samples.futgol.movimientos.MovimientoServicio
 import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -21,7 +24,8 @@ class IntercambioControlador(
     val equipoServicio: EquipoServicio,
     val jugadorServicio: JugadorServicio,
     val usuarioServicio: UsuarioServicio,
-    val subastaServicio: SubastaServicio
+    val subastaServicio: SubastaServicio,
+    val movimientoServicio: MovimientoServicio
 ) {
 
     private val VISTA_INTERCAMBIOS = "equipos/intercambios"
@@ -62,25 +66,57 @@ class IntercambioControlador(
         ) {
             var intercambio = intercambioServicio.buscaIntercambioPorId(idIntercambio)!!
             var otroEquipo = intercambio.otroEquipo!!
-            otroEquipo.jugadores?.add(intercambio.jugadorCreadorIntercambio!!)
-            otroEquipo.jugBanquillo?.add(intercambio.jugadorCreadorIntercambio!!)
+            otroEquipo.jugadores.add(intercambio.jugadorCreadorIntercambio!!)
+            otroEquipo.jugBanquillo.add(intercambio.jugadorCreadorIntercambio!!)
             otroEquipo.dineroRestante = intercambio.otroEquipo?.dineroRestante?.plus(intercambio.dinero)!!
-            otroEquipo.jugadores?.removeIf { x -> x.id == intercambio.otroJugador?.id }
-            otroEquipo.jugBanquillo?.removeIf { x -> x.id == intercambio.otroJugador?.id }
+            otroEquipo.jugadores.removeIf { x -> x.id == intercambio.otroJugador?.id }
+            otroEquipo.jugBanquillo.removeIf { x -> x.id == intercambio.otroJugador?.id }
             equipoServicio.guardarEquipo(otroEquipo)
 
             var equipoCreadorIntercambio = intercambio.equipoCreadorIntercambio!!
-            equipoCreadorIntercambio.jugadores?.add(intercambio.otroJugador!!)
-            equipoCreadorIntercambio.jugBanquillo?.add(intercambio.otroJugador!!)
-            equipoCreadorIntercambio.jugadores?.removeIf { x -> x.id == intercambio.jugadorCreadorIntercambio?.id }
-            equipoCreadorIntercambio.jugBanquillo?.removeIf { x -> x.id == intercambio.jugadorCreadorIntercambio?.id }
+            equipoCreadorIntercambio.jugadores.add(intercambio.otroJugador!!)
+            equipoCreadorIntercambio.jugBanquillo.add(intercambio.otroJugador!!)
+            equipoCreadorIntercambio.jugadores.removeIf { x -> x.id == intercambio.jugadorCreadorIntercambio?.id }
+            equipoCreadorIntercambio.jugBanquillo.removeIf { x -> x.id == intercambio.jugadorCreadorIntercambio?.id }
             equipoCreadorIntercambio.dineroRestante =
                 intercambio.equipoCreadorIntercambio?.dineroRestante?.minus(intercambio.dinero)!!
             equipoServicio.guardarEquipo(equipoCreadorIntercambio)
+            var movimiento = Movimiento()
+            movimiento.jugador = intercambio.jugadorCreadorIntercambio
+            movimiento.jugador2 = intercambio.otroJugador
+            movimiento.creadorMovimiento = intercambio.equipoCreadorIntercambio?.usuario
+            movimiento.creadorMovimiento2 = intercambio.otroEquipo?.usuario
+            movimiento.liga = this.ligaServicio.buscarLigaPorId(idLiga)
+            movimiento.texto = movimiento.creadorMovimiento?.user?.username + " ha intercambiado con " +
+                    movimiento.creadorMovimiento2?.user?.username + " al jugador " +
+                    movimiento.jugador?.name + " por el jugador" + movimiento.jugador2?.name + " y una diferencia de " +
+                    MetodosAux().enteroAEuros(intercambio.dinero) + "."
+            movimiento.textoPropio = "Has intercambiado con " +
+                    movimiento.creadorMovimiento2?.user?.username + " al jugador " +
+                    movimiento.jugador?.name + " por el jugador " + movimiento.jugador2?.name + " y una diferencia de " +
+                    MetodosAux().enteroAEuros(intercambio.dinero) + "."
+
+            var movimiento2 = Movimiento()
+            movimiento2.jugador = intercambio.otroJugador
+            movimiento2.jugador2 = intercambio.jugadorCreadorIntercambio
+            movimiento2.creadorMovimiento = intercambio.otroEquipo?.usuario
+            movimiento2.creadorMovimiento2 = intercambio.equipoCreadorIntercambio?.usuario
+            movimiento2.liga = this.ligaServicio.buscarLigaPorId(idLiga)
+            movimiento2.texto = movimiento2.creadorMovimiento?.user?.username + " ha intercambiado con " +
+                    movimiento2.creadorMovimiento2?.user?.username + " al jugador " +
+                    movimiento2.jugador?.name + " por el jugador " + movimiento2.jugador2?.name + " y una diferencia de " +
+                    MetodosAux().enteroAEuros(intercambio.dinero) + "."
+            movimiento2.textoPropio = "Has intercambiado con " +
+                    movimiento2.creadorMovimiento2?.user?.username + " al jugador " +
+                    movimiento2.jugador?.name + " por el jugador " + movimiento2.jugador2?.name + " y una diferencia de " +
+                    MetodosAux().enteroAEuros(intercambio.dinero) + "."
+
+            this.movimientoServicio.guardarMovimiento(movimiento)
+            this.movimientoServicio.guardarMovimiento(movimiento2)
 
             var intercambiosotroEquipo = intercambioServicio.buscarIntercambiosEquipo(otroEquipo.id!!)!!
-            for(i in intercambiosotroEquipo) {
-                if(i.id!= intercambio.id && i.otroJugador!!.id==intercambio.otroJugador!!.id) {
+            for (i in intercambiosotroEquipo) {
+                if (i.id != intercambio.id && i.otroJugador!!.id == intercambio.otroJugador!!.id) {
                     intercambioServicio.borraIntercambio(i.id!!)
                 }
             }
@@ -111,7 +147,9 @@ class IntercambioControlador(
 
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
             && equipoServicio.tengoEquipo(idLiga, principal) && jugadorServicio.existeJugadorId(idJugador) == true
-            && equipoServicio.estaJugadorEnEquiposLiga(idLiga, idJugador) && subastaServicio?.buscarSubastaPorLigaId(idLiga)?.jugadores?.none { j-> j.id==idJugador } == true
+            && equipoServicio.estaJugadorEnEquiposLiga(idLiga, idJugador) && subastaServicio.buscarSubastaPorLigaId(
+                idLiga
+            )?.jugadores?.none { j -> j.id == idJugador } == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (!jugadorServicio.existeJugadorEnEquipo(idJugador, miEquipo.id!!)) {

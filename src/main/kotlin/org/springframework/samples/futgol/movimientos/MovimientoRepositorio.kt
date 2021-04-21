@@ -10,7 +10,7 @@ interface MovimientoRepositorio : Repository<Movimiento, Int> {
     @Query("SELECT m FROM Movimiento m where m.liga.id = ?1")
     fun buscarMovimientosDeLigaPorId(idLiga: Int): Collection<Movimiento>
 
-    @Query("SELECT m FROM Movimiento m where m.creadorMovimiento.user.username = ?1")
+    @Query("SELECT m FROM Movimiento m where m.creadorMovimiento.user.username = ?1 OR m.creadorMovimiento2.user.username = ?1")
     fun buscarMovimientosPorUsuario(nombreUsuario: String): Collection<Movimiento>
 
     @Query("SELECT m FROM Movimiento m where m.creadorMovimiento.user.username = ?1 AND m.liga.id = ?2")

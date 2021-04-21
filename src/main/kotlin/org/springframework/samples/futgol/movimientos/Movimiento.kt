@@ -24,8 +24,16 @@ class Movimiento : BaseEntity() {
     var creadorMovimiento: Usuario? = null
 
     @ManyToOne()
+    @JoinColumn(name = "creador_movimiento_2", referencedColumnName = "username")
+    var creadorMovimiento2: Usuario? = null
+
+    @ManyToOne()
     @JoinColumn(name = "jugador", referencedColumnName = "id")
     var jugador: Jugador? = null
+
+    @ManyToOne()
+    @JoinColumn(name = "jugador_2", referencedColumnName = "id")
+    var jugador2: Jugador? = null
 
     @NotBlank
     @Column(name = "texto")

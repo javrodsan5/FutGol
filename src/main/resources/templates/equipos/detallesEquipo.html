@@ -83,12 +83,10 @@
             });
         </script>
     </div>
-    <div>
-        <ul style="display: inline-block;">
-            <li th:each="pje : ${ptosJorEq}">J <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b> <b
+    <div class="puntosEquipo">
+            <div class="ptosJorEq" th:each="pje : ${ptosJorEq}">J <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b> <b
                     th:text="${pje.puntos}"/> puntos
-            </li>
-        </ul>
+            </div>
     </div>
 
     <br><br>

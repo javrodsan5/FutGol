@@ -89,7 +89,7 @@ class IntercambioControlador(
             movimiento.liga = this.ligaServicio.buscarLigaPorId(idLiga)
             movimiento.texto = movimiento.creadorMovimiento?.user?.username + " ha intercambiado con " +
                     movimiento.creadorMovimiento2?.user?.username + " al jugador " +
-                    movimiento.jugador?.name + " por el jugador" + movimiento.jugador2?.name + " y una diferencia de " +
+                    movimiento.jugador?.name + " por el jugador " + movimiento.jugador2?.name + " y una diferencia de " +
                     MetodosAux().enteroAEuros(intercambio.dinero) + "."
             movimiento.textoPropio = "Has intercambiado con " +
                     movimiento.creadorMovimiento2?.user?.username + " al jugador " +

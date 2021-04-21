@@ -1,6 +1,31 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
+<script>
+
+    function formatoNumero(val) {
+        while (/(\d+)(\d{3})/.test(val.toString())) {
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1' + '.' + '$2');
+        }
+        return val;
+    }
+
+    function valorADinero() {
+        var valor = document.getElementById("valor").value;
+
+        document.getElementById("resultado").innerHTML = 'Vas a ofrecerle ' + formatoNumero(valor) + '€';
+    }
+
+</script>
+
+<style>
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
 
 <h1> Vas a realizar un intercambio por el siguiente jugador</h1>
 <div style="margin-left:45px;display: inline-block">
@@ -42,15 +67,15 @@
 <form th:object="${intercambio}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-        <input  type="number" th:min="0" th:max="${dineroRestante}" class="form-control" id="valor" onkeyup="valorADinero()" name="dinero" required>
-
+        <input type="number" th:min="0" th:max="${dineroRestante}" class="form-control" id="valor"
+               onkeyup="valorADinero()" name="dinero">
+        <br>
         <h2>Elige el jugador que le quieras ofrecer</h2>
+        <h5>Jugador:Posición:Puntos</h5>
         <select name="jugadorCreadorIntercambio">
             <option th:each="jugador : ${misJugadores}"
                     th:value="${jugador.id}"
-                    th:text="${jugador.name}"
-                    th:selected="false"
-            />
+                    th:text="${jugador.name}+' : '+${jugador.posicion}+' : '+${jugador.puntos}"/>
         </select>
     </div>
     <div class="form-group">
@@ -61,5 +86,6 @@
         </div>
     </div>
 </form>
+
 </body>
 </html>

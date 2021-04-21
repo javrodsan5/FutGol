@@ -39,6 +39,7 @@ class IntercambioControlador(
             if (intercambioServicio.existenIntercambiosEquipo(miEquipoId) == true) {
                 model["tienesInt"] = true
                 model["intercambios"] = intercambioServicio.buscarIntercambiosEquipo(miEquipoId)!!
+                model["miEquipoId"] = miEquipoId
             } else {
                 model["tienesInt"] = false
             }
@@ -124,20 +125,11 @@ class IntercambioControlador(
         principal: Principal, @PathVariable idJugador: Int
     ): String {
 
-        return if (result.hasErrors()) {
-            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            model["intercambio"] = intercambio
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            model["misJugadores"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).jugadores
-            VISTA_CREAR_INTERCAMBIOS
-        } else {
-            intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-
-            intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
-            intercambioServicio.guardarIntercambio(intercambio)
-            return "redirect:/liga/$idLiga/miEquipo"
-        }
+        intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+        intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
+        intercambioServicio.guardarIntercambio(intercambio)
+        return "redirect:/liga/$idLiga/miEquipo"
     }
 
 

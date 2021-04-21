@@ -60,6 +60,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -105,6 +110,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -150,6 +160,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -195,6 +210,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -240,6 +260,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -285,6 +310,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -330,6 +360,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -375,6 +410,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -420,6 +460,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -465,6 +510,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
@@ -510,6 +560,11 @@
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
                         <div th:if="${miEquipo}">
                             <br><br>
                             <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">

@@ -18,9 +18,9 @@
         </thead>
         <tbody>
         <tr th:each="intercambio : ${intercambios}">
-            <td th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}"/>
-            <td th:text="${intercambio.otroJugador.name}"/>
-            <td th:text="${intercambio.jugadorCreadorIntercambio.name}"/>
+            <td><a th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}" th:href="@{/usuarios/{username}/ (username=${intercambio.equipoCreadorIntercambio.usuario.user.username})}"/></td>
+            <td><a th:text="${intercambio.otroJugador.name}" th:href="@{/equipo/{idMiEquipo}/jugador/{idJugador}/jornada/1 (idJugador=${intercambio.otroJugador.id}, idMiEquipo=${miEquipoId})}"/></td>
+            <td><a th:text="${intercambio.jugadorCreadorIntercambio.name}" th:href="@{/jugador/{idJugador}/jornada/1 (idJugador=${intercambio.otroJugador.id})}"/></td>
             <td th:text="${intercambio.dinero}"/>
             <td>
                 <div style="float: right;">
@@ -36,7 +36,7 @@
     </table>
 </h2>
 <h2 th:if="${tienesInt == false}">
-Todavía no te han ofrecido ningún intercambio.
+    Todavía no te han ofrecido ningún intercambio.
 </h2>
 </body>
 </html>

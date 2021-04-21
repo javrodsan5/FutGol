@@ -169,6 +169,7 @@ class EquipoControlador(
             if (liga.id?.let { this.equipoServicio.comprobarSiExisteEquipoLiga(equipo.name, it) } == true) {
                 model["liga"] = liga
                 model["equipo"] = equipo
+                model["otroEquipo"] = true
                 model["tengoEquipo"] = true
                 model["valorEquipo"] = MetodosAux().enteroAEuros((equipo.name?.let {
                     equipoServicio.calcularValorEquipo(

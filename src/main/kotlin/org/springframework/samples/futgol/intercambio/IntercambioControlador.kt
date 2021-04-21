@@ -3,6 +3,7 @@ package org.springframework.samples.futgol.intercambio
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.jugador.JugadorServicio
 import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -19,7 +20,8 @@ class IntercambioControlador(
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
     val jugadorServicio: JugadorServicio,
-    val usuarioServicio: UsuarioServicio
+    val usuarioServicio: UsuarioServicio,
+    val subastaServicio: SubastaServicio
 ) {
 
     private val VISTA_INTERCAMBIOS = "equipos/intercambios"
@@ -39,6 +41,7 @@ class IntercambioControlador(
             if (intercambioServicio.existenIntercambiosEquipo(miEquipoId) == true) {
                 model["tienesInt"] = true
                 model["intercambios"] = intercambioServicio.buscarIntercambiosEquipo(miEquipoId)!!
+                model["miEquipoId"] = miEquipoId
             } else {
                 model["tienesInt"] = false
             }
@@ -52,7 +55,6 @@ class IntercambioControlador(
         model: Model, @PathVariable idLiga: Int, principal: Principal,
         @PathVariable idEquipo: Int, @PathVariable idIntercambio: Int
     ): String {
-        val usuario = usuarioServicio.usuarioLogueado(principal)!!
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
             && equipoServicio.tengoEquipo(idLiga, principal) &&
             intercambioServicio.existeIntercambioPorIdIntercIdEquipo(idIntercambio, idEquipo)
@@ -76,7 +78,14 @@ class IntercambioControlador(
                 intercambio.equipoCreadorIntercambio?.dineroRestante?.minus(intercambio.dinero)!!
             equipoServicio.guardarEquipo(equipoCreadorIntercambio)
 
+            var intercambiosotroEquipo = intercambioServicio.buscarIntercambiosEquipo(otroEquipo.id!!)!!
+            for(i in intercambiosotroEquipo) {
+                if(i.id!= intercambio.id && i.otroJugador!!.id==intercambio.otroJugador!!.id) {
+                    intercambioServicio.borraIntercambio(i.id!!)
+                }
+            }
             intercambioServicio.borraIntercambio(idIntercambio)
+
         }
         return "redirect:/liga/$idLiga/misIntercambios"
     }
@@ -102,7 +111,7 @@ class IntercambioControlador(
 
         if (ligaServicio.comprobarSiExisteLiga2(idLiga) == true && ligaServicio.estoyEnLiga2(idLiga, principal)
             && equipoServicio.tengoEquipo(idLiga, principal) && jugadorServicio.existeJugadorId(idJugador) == true
-            && equipoServicio.estaJugadorEnEquiposLiga(idLiga, idJugador)
+            && equipoServicio.estaJugadorEnEquiposLiga(idLiga, idJugador) && subastaServicio?.buscarSubastaPorLigaId(idLiga)?.jugadores?.none { j-> j.id==idJugador } == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (!jugadorServicio.existeJugadorEnEquipo(idJugador, miEquipo.id!!)) {
@@ -124,20 +133,11 @@ class IntercambioControlador(
         principal: Principal, @PathVariable idJugador: Int
     ): String {
 
-        return if (result.hasErrors()) {
-            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            model["intercambio"] = intercambio
-            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-            model["misJugadores"] = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).jugadores
-            VISTA_CREAR_INTERCAMBIOS
-        } else {
-            intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-
-            intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-            intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
-            intercambioServicio.guardarIntercambio(intercambio)
-            return "redirect:/liga/$idLiga/miEquipo"
-        }
+        intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+        intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
+        intercambioServicio.guardarIntercambio(intercambio)
+        return "redirect:/liga/$idLiga/miEquipo"
     }
 
 

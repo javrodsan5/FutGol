@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.*
 import javax.validation.Valid
+import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 @Controller
@@ -109,6 +111,9 @@ class EquipoControlador(
                 var clausula = Clausula()
                 clausula.equipo = equipo
                 clausula.jugador = jg
+                var fecha = Calendar.getInstance()
+                fecha.add(Calendar.DAY_OF_YEAR, -9)
+                clausula.ultModificacion= fecha.time
                 clausula.valorClausula = ((jg.valor + (jg.valor * 0.5))*1000000).toInt()
                 this.clausulaServicio.guardarClausula(clausula)
 

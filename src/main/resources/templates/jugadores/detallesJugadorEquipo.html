@@ -19,7 +19,8 @@
 <h2>Clausula: <b th:text="${clausula}"></b></h2>
 <br>
 <h2 th:if="${loTengoEnMiEquipo}">
-    <div>
+    <h3>Solo se puede actualizar la clausula una vez cada 8 días.</h3>
+    <div th:if="${puedeActualizarClausula}">
         <a class="btn btn-default"
            th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
             clausula</a>

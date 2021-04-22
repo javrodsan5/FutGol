@@ -40,18 +40,6 @@
                 <div class="card-reveal">
                         <span class="card-title grey-text text-darken-4" th:text="${jugador.name}"><i
                                 class="material-icons right">close</i></span>
-                    <ul>
-                        <li>Equipo:
-                            <b th:text="${jugador.club.name}"></b>
-                        </li>
-                        <li>Valor:
-                            <b th:text="${jugador.valor}"> mill.€</b>
-                        </li>
-                        <li>Estado:
-                            <b th:text="${jugador.estadoLesion}"></b>
-                        </li>
-
-                    </ul>
                 </div>
                 <div class="card-action">
                     <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
@@ -63,20 +51,34 @@
         </div>
     </div>
 </div>
+<div style="float: right">
+    <h2>Valor jugador: <b th:text="${jugador.valor}"/> mill.€</h2>
+</div>
+
 <h1>¿Quieres añadir dinero a tu intercambio para convencerlo?</h1>
 <h1 id="resultado"></h1>
 
 <form th:object="${intercambio}" class="form-horizontal" method="post">
+    <div class="form-group has-feedback">
     <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-    <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
-        <div class="col-sm-10">
-            <input type="number" class="form-control" id="valor" onkeyup="valorADinero()" name="dinero" required>
-            <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
-                  aria-hidden="true"></span>
-            <span th:if="${!valido}" class="glyphicon glyphicon-remove form-control-feedback"
-                  aria-hidden="true"></span>
-            <span class="help-inline" th:errors="*{dinero}">Error</span>
-        </div>
+      <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
+          <div class="col-sm-10">
+              <input type="number" class="form-control" id="valor" onkeyup="valorADinero()" name="dinero" required>
+              <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
+                    aria-hidden="true"></span>
+              <span th:if="${!valido}" class="glyphicon glyphicon-remove form-control-feedback"
+                    aria-hidden="true"></span>
+              <span class="help-inline" th:errors="*{dinero}">Error</span>
+          </div>
+          <br>
+          <h2>Elige el jugador que le quieras ofrecer</h2>
+          <h5>Jugador:Puntos:Posición:Valor</h5>
+          <select name="jugadorCreadorIntercambio">
+              <option th:each="j : ${misJugadores}"
+                      th:value="${j.id}"
+                      data-thumbnail= "${j.foto}"
+                      th:text="${j.name}+' : '+${j.puntos}+' : '+${j.posicion}+' : '+${j.valor}"/>
+          </select>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">

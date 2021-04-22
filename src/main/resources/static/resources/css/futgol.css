@@ -8116,3 +8116,10 @@ footer{
     }
 }
 
+.ptosJorEq{
+    display: inline-block;
+    border: 1px #8FBC8F;
+}
+.puntosEquipo{
+    border: 2px solid #3c3834;
+}

@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
+import java.util.*
 import java.util.stream.Collectors
 import javax.validation.Valid
+import kotlin.Comparator
 
 
 @Controller
@@ -119,8 +121,11 @@ class JugadorControlador(
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
-            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador,idEquipo)
-            model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            if((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
+                model["puedeActualizarClausula"] = true
+                model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+            }
 
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
                 var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
@@ -168,12 +173,18 @@ class JugadorControlador(
             )
         ) {
             model["valido"] = true
-            var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
-            if (usuario != null && equipoServicio.buscaEquiposPorId(idEquipo)!!.usuario?.user?.username == usuario.user?.username) {
-                model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            if ((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
+                var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
+                if (usuario != null && equipoServicio.buscaEquiposPorId(idEquipo)!!.usuario?.user?.username == usuario.user?.username) {
+                    model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+                    return VISTA_CLAUSULA_JUGADOR
+                }
+                return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
             }
+            return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
         } else {
-            return "redirect:/jugador/" + idJugador
+            return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
         }
         return VISTA_CLAUSULA_JUGADOR
     }
@@ -203,6 +214,7 @@ class JugadorControlador(
                 VISTA_CLAUSULA_JUGADOR
             } else {
                 model["valido"] = true
+                clausula.ultModificacion = Date()
                 clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
                 clausula.jugador = j
                 clausulaServicio.guardarClausula(clausula)

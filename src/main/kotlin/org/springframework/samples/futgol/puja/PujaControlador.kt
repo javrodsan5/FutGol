@@ -39,7 +39,7 @@ class PujaControlador(
             ) && subastaServicio.existeSubastaPorLigaId(idLiga) == true
         ) {
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-
+            model["valido"] = true
             if (miEquipo.jugadores.size < 24) {
                 val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)
                 val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
@@ -70,15 +70,38 @@ class PujaControlador(
     ): String {
         val subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
         val equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        val jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+        model["equipo"] = equipo
+        model["jugador"] = jugador!!
+        model["subasta"] = subasta
+        model["valido"] = true
+
         if (subasta.id?.let { pujaServicio.existePujaEqJugSub(equipo.id!!, idJugador, it) } == true) {
             pujaServicio.borraPujaByEquipoJugadorSubasta(equipo.id!!, idJugador, subasta.id!!)
         }
-        puja.equipo = equipo
-        puja.subasta = subasta
-        puja.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
-        pujaServicio.guardarPuja(puja)
-        return "redirect:/liga/$idLiga/subastas"
-
+        return if (puja.cantidad > equipo.dineroRestante || puja.cantidad < jugador.valor || puja.cantidad <= 0) {
+            model["valido"] = false
+            model["puja"] = puja
+            model["numPujas"] =
+                subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
+            model["dineroRestante"] = MetodosAux().enteroAEuros((equipo.dineroRestante))
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            var mensaje = ""
+            when {
+                puja.cantidad > equipo.dineroRestante -> mensaje =
+                    "No tienes saldo suficiente para poder realizar la puja."
+                puja.cantidad <= 0 -> mensaje = "Tu puja no puede ser igual o inferior a 0€."
+                puja.cantidad < jugador.valor -> mensaje = "No puedes realizar una puja inferior al valor del jugador."
+            }
+            result.rejectValue("cantidad", mensaje, mensaje)
+            VISTA_PUJA
+        } else {
+            puja.equipo = equipo
+            puja.subasta = subasta
+            puja.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
+            pujaServicio.guardarPuja(puja)
+            "redirect:/liga/$idLiga/subastas"
+        }
     }
 
 }

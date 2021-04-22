@@ -151,6 +151,7 @@ class IntercambioControlador(
                 idLiga
             )?.jugadores?.none { j -> j.id == idJugador } == true
         ) {
+            model["valido"] = true
             val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
             if (!jugadorServicio.existeJugadorEnEquipo(idJugador, miEquipo.id!!)) {
                 model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
@@ -170,12 +171,30 @@ class IntercambioControlador(
         intercambio: Intercambio, result: BindingResult, model: Model, @PathVariable idLiga: Int,
         principal: Principal, @PathVariable idJugador: Int
     ): String {
-
-        intercambio.equipoCreadorIntercambio = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
-        intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
-        intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
-        intercambioServicio.guardarIntercambio(intercambio)
-        return "redirect:/liga/$idLiga/miEquipo"
+        var equipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)
+        return if (intercambio.dinero > equipo.dineroRestante || intercambio.dinero <= 0) {
+            model["valido"] = false
+            model["jugador"] = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["dineroRestante"] = equipo.dineroRestante
+            model["intercambio"] = Intercambio()
+            model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
+            model["misJugadores"] = equipo.jugadores
+            var mensaje = ""
+            when {
+                intercambio.dinero > equipo.dineroRestante -> mensaje =
+                    "No tienes saldo suficiente para añadir dinero al intercambio."
+                intercambio.dinero <= 0 -> mensaje = "No puedes añadir una cantidad igual o inferior a 0€."
+            }
+            result.rejectValue("dinero", mensaje, mensaje)
+            VISTA_CREAR_INTERCAMBIOS
+        } else {
+            model["valido"] = true
+            intercambio.equipoCreadorIntercambio = equipo
+            intercambio.otroJugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            intercambio.otroEquipo = equipoServicio.buscarEquipoLigaJugador(idLiga, idJugador)
+            intercambioServicio.guardarIntercambio(intercambio)
+            return "redirect:/liga/$idLiga/miEquipo"
+        }
     }
 
 

@@ -172,6 +172,7 @@ class JugadorControlador(
                 idJugador, idEquipo
             )
         ) {
+            model["valido"] = true
             var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
             if ((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
                 var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
@@ -198,11 +199,13 @@ class JugadorControlador(
     ): String {
 
         if (result.hasErrors()) {
+            model["valido"] = false
             model["clausula"] = clausula
             return VISTA_CLAUSULA_JUGADOR
         } else {
             val j = jugadorServicio.buscaJugadorPorId(idJugador)
             return if (clausula.valorClausula < (j?.valor?.times(1000000)!!)) {
+                model["valido"] = false
                 result.rejectValue(
                     "valorClausula",
                     "La cláusula no puede ser inferior al valor del jugador",
@@ -210,6 +213,7 @@ class JugadorControlador(
                 )
                 VISTA_CLAUSULA_JUGADOR
             } else {
+                model["valido"] = true
                 clausula.ultModificacion = Date()
                 clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
                 clausula.jugador = j

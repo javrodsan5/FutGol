@@ -121,8 +121,11 @@ class JugadorControlador(
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
-            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)
-            model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            if((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
+                model["puedeActualizarClausula"] = true
+                model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+            }
 
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
                 var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!

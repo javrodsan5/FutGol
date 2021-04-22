@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.administracion
 
+import org.springframework.samples.futgol.clausula.ClausulaServicio
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
@@ -22,7 +23,8 @@ class AdministracionControlador(
     val ligaServicio: LigaServicio,
     val equipoServicio: EquipoServicio,
     val equipoRealServicio: EquipoRealServicio,
-    val subastaServicio: SubastaServicio
+    val subastaServicio: SubastaServicio,
+    val clausulaServicio: ClausulaServicio
 ) {
 
     @Scheduled(cron = "0 0 1 * * MON ")
@@ -65,7 +67,8 @@ class AdministracionControlador(
         for (l in ligas) {
             for (e in l.equipos) {
                 for(j in e.jugadores) {
-                    e.dineroRestante-= (j.valor*4000).toInt()
+                    var clau =clausulaServicio.buscarClausulasPorJugadorYEquipo(j.id!!, e.id!!)!!
+                    e.dineroRestante-= (clau.valorClausula*0.01).toInt()
                 }
                 equipoServicio.guardarEquipo(e)
             }

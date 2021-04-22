@@ -32,6 +32,7 @@ class AdministracionControlador(
         this.estadisticaJugadorServicio.wsEstadisticas()
         this.estadisticaJugadorServicio.wsValoraciones()
         this.equipoServicio.asignarPuntosEquipo()
+        costeClausulasJornada()
     }
 
     @Scheduled(cron = "0 0 1 * * ? ")
@@ -59,7 +60,6 @@ class AdministracionControlador(
         return "welcome"
     }
 
-    @Scheduled(cron = "40 12 20 * * ? ")
     fun costeClausulasJornada() {
         val ligas = ligaServicio.buscarTodasLigas()!!
         for (l in ligas) {

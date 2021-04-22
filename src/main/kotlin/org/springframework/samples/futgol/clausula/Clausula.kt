@@ -5,6 +5,7 @@ import lombok.Setter
 import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.jugador.Jugador
 import org.springframework.samples.futgol.model.BaseEntity
+import java.util.*
 import javax.persistence.*
 
 @Getter
@@ -24,5 +25,6 @@ class Clausula : BaseEntity() {
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     var equipo: Equipo? = null
 
-
+    @Column(name = "ultModificacion")
+    var ultModificacion: Date = Date()
 }

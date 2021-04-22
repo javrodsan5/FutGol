@@ -50,7 +50,7 @@ class Equipo() : NamedEntity() {
     )
     var onceInicial: MutableList<Jugador> = ArrayList()
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "equipo_jugadores",
         joinColumns = [JoinColumn(name = "equipo_id")],

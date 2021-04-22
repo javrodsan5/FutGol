@@ -1,5 +1,6 @@
 package org.springframework.samples.futgol.administracion
 
+import org.springframework.samples.futgol.equipo.Equipo
 import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
@@ -57,5 +58,19 @@ class AdministracionControlador(
         this.equipoServicio.asignarPuntosEquipo()
         return "welcome"
     }
+
+    @Scheduled(cron = "40 12 20 * * ? ")
+    fun costeClausulasJornada() {
+        val ligas = ligaServicio.buscarTodasLigas()!!
+        for (l in ligas) {
+            for (e in l.equipos) {
+                for(j in e.jugadores) {
+                    e.dineroRestante-= (j.valor*4000).toInt()
+                }
+                equipoServicio.guardarEquipo(e)
+            }
+        }
+    }
+
 
 }

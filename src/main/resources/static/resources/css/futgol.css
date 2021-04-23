@@ -7667,7 +7667,7 @@ hr {
     font-weight: 400;
     color: #ffffff;
     background:#ffffff;
-    margin: 0px 100px 50px;
+    margin: 0px 10px;
     border-radius: 35px 0px 35px 0px;
     -moz-border-radius: 55px 0px 55px 0px;
     -webkit-border-radius: 55px 0px 55px 0px;
@@ -8122,4 +8122,17 @@ footer{
 }
 .puntosEquipo{
     border: 2px solid #3c3834;
+}
+
+.medias {
+    margin: 10px 10px;
+    border: 2px solid #008B8B;
+    border-radius: 4%;
+    padding: 40px;
+}
+.statsJornada{
+    margin: 10px 10px;
+    border: 2px solid #3DC25D;
+    border-radius: 4%;
+    padding: 40px;
 }

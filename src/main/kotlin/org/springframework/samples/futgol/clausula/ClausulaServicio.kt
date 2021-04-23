@@ -29,6 +29,11 @@ class ClausulaServicio {
         clausulaRepositorio?.save(clausula)
     }
 
+    @Transactional
+    fun borraClausulaByEquipoIdAndJugadorId(idEquipo: Int, idJugador: Int): Unit? {
+        return clausulaRepositorio?.removeClausulaByEquipoIdAndJugadorId(idEquipo, idJugador)
+    }
+
     @Transactional(readOnly = true)
     fun buscarClausulasPorIdJugador(idJugador: Int): Collection<Clausula>? {
         return clausulaRepositorio?.findClausulasByJugadorId(idJugador)

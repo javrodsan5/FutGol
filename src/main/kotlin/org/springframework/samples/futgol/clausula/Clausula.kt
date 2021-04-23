@@ -25,6 +25,6 @@ class Clausula : BaseEntity() {
     @JoinColumn(name = "equipo", referencedColumnName = "id")
     var equipo: Equipo? = null
 
-    @Column(name = "ultModificacion")
+    @Column(name = "ult_modificacion")
     var ultModificacion: Date = Date()
 }

@@ -8,6 +8,7 @@ import org.springframework.samples.futgol.equipo.EquipoServicio
 import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
 import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
 import org.springframework.samples.futgol.jornadas.JornadaServicio
+import org.springframework.samples.futgol.liga.LigaServicio
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
@@ -34,7 +35,8 @@ class JugadorControlador(
     val clausulaServicio: ClausulaServicio,
     val estadisticaJugadorServicio: EstadisticaJugadorServicio,
     val usuarioServicio: UsuarioServicio,
-    val jornadaServicio: JornadaServicio
+    val jornadaServicio: JornadaServicio,
+    val ligaServicio: LigaServicio
 ) {
 
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
@@ -122,9 +124,10 @@ class JugadorControlador(
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+
             if((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
                 model["puedeActualizarClausula"] = true
-                model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
             }
 
             if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
@@ -155,6 +158,8 @@ class JugadorControlador(
 
             if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
                 model["loTengoEnMiEquipo"] = true
+            }else {
+                model["noLoTengoEnMiEquipo"] = true
             }
         } else {
             return "redirect:/"
@@ -221,5 +226,44 @@ class JugadorControlador(
                 return "redirect:/equipo/$idEquipo/jugador/" + idJugador + "/jornada/1"
             }
         }
+    }
+
+    @GetMapping("/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula")
+    fun pagarClausula(
+        model: Model,
+        @PathVariable("idJugador") idJugador: Int, @PathVariable("idLiga") idLiga: Int,
+        @PathVariable("idEquipo") idEquipo: Int, principal: Principal): String {
+
+        if (ligaServicio.estoyEnLiga2(idLiga, principal) && equipoServicio.comprobarSiExisteEquipoLiga2(idEquipo, idLiga) && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo) && equipoServicio.tengoEquipo(idLiga, principal)) {
+            val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)!!
+            if(miEquipo.id!=idEquipo) {
+                var otroEquipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+                val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+                miEquipo.dineroRestante-= clausula.valorClausula
+                miEquipo.jugadores.add(jugador)
+                miEquipo.jugBanquillo.add(jugador)
+
+                otroEquipo.dineroRestante+= clausula.valorClausula
+                otroEquipo.jugBanquillo.removeIf { x -> x.id==idJugador }
+                otroEquipo.jugadores.removeIf { x -> x.id==idJugador }
+                otroEquipo.onceInicial.removeIf { x -> x.id==idJugador }
+
+                equipoServicio.guardarEquipo(miEquipo)
+                equipoServicio.guardarEquipo(otroEquipo)
+                clausulaServicio.borraClausulaByEquipoIdAndJugadorId(idEquipo, idJugador)
+
+                var clau = Clausula()
+                clau.equipo = miEquipo
+                clau.jugador = jugador
+                var fecha = Calendar.getInstance()
+                fecha.add(Calendar.DAY_OF_YEAR, -9)
+                clau.ultModificacion= fecha.time
+                clau.valorClausula = ((jugador.valor + (jugador.valor * 0.5))*1000000).toInt()
+                this.clausulaServicio.guardarClausula(clau)
+            }
+        }
+        return "redirect:/liga/$idLiga/miEquipo"
     }
 }

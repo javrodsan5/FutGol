@@ -186,6 +186,11 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
+    fun comprobarSiExisteEquipoLiga2(idEquipo: Int, idLiga: Int): Boolean {
+        return this.equipoRepositorio?.existeEquipoEnLiga2(idEquipo, idLiga)!!
+    }
+
+    @Transactional(readOnly = true)
     fun comprobarSiExisteEquipo(idEquipo: Int): Boolean? {
         return equipoRepositorio?.existeEquipo(idEquipo)
     }

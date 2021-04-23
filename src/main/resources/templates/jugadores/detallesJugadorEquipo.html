@@ -28,10 +28,17 @@
 
     <div>
         <a class="btn btn-default"
-           th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Sacar a subasta</a>
+           th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Sacar a
+            subasta</a>
     </div>
 </h2>
-
+<h2 th:if="${noLoTengoEnMiEquipo}">
+    <div>
+        <a class="btn btn-default"
+           th:href="@{/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula (idLiga = ${liga.id}, idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Pagar
+            clausula</a>
+    </div>
+</h2>
 <br>
 <div id="medias">
     <div th:if="${tieneMedias}">
@@ -81,7 +88,7 @@
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
         <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                               th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
+                                               th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada} (idEquipo =${equipo.id} ,idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
         </li>
     </ul>
 </div>

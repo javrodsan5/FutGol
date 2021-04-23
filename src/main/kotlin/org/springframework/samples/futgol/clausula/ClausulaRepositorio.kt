@@ -9,4 +9,6 @@ interface ClausulaRepositorio : Repository<Clausula, Int> {
 
     @Query("SELECT c FROM Clausula c where c.jugador.id = ?1")
     fun findClausulasByJugadorId(idJugador: Int): Collection<Clausula>
+
+    fun removeClausulaByEquipoIdAndJugadorId(idEquipo: Int, idJugador: Int)
 }

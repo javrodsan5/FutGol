@@ -1,31 +1,170 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'home')}">
+<html th:fragment="layout (template, menu)" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/jquery-ui/jquery-ui.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/resources/css/futgol.css}"/>
 
+</head>
 <body>
+<section class='hero'>
+    <header>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" th:href="@{/}"><span></span></a>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+                        <span class="sr-only"><os-p>Toggle navigation</os-p></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <span th:text="${text}">Template</span>
+                </div>
 
-<div class="row">
+                <div class="navbar-collapse collapse" id="main-navbar">
 
-    <div class="col-md-9">
-        <h1 style="font-size: 32px; font-weight: bold; line-height: 1.5;">Bienvenido a FútGol</h1>
+                    <div sec:authorize="isAuthenticated()">
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li th:class="${'home'==menu ? 'active' : ''}">
+                                <a href='/'>
+                                    <i class="fa fa-home"></i>
+                                    <span>Inicio</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                                <a href='/jornadas'>
+                                    <i class="fa fa-futbol-o"></i>
+                                    <span>Jornadas</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item dropdown" data-hover="dropdown">
+                                <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"> Rankings </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
+                                        Usuarios</a></li>
+                                    <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top
+                                        Jugadores
+                                    </a></li>
+                                </ul>
+                            </li>
+
+                            <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                                <a href='/equiposLiga'>
+                                    <i class="fa fa-shield"></i>
+                                    <span>Equipos</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'ligas'==menu ? 'active' : ''}">
+                                <a href='/misligas'>
+                                    <i class="fa fa-trophy"></i>
+                                    <span>Mis ligas</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'usuarios'==menu ? 'active' : ''}">
+                                <a href='/micuenta'>
+                                    <i class="fa fa-user-circle"></i>
+                                    <span>Mi cuenta</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href='/logout'>
+                                    <i class="fa fa-sign-out"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <li th:class="${'home'==menu ? 'active' : ''}">
+                                <a href='/'>
+                                    <i class="fa fa-home"></i>
+                                    <span>Inicio</span>
+                                </a>
+                            </li>
+                            fa fa-star
+                            <li class="nav-item dropdown" data-hover="dropdown">
+                                <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"> Rankings </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
+                                        Usuarios</a></li>
+                                    <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top
+                                        Jugadores
+                                    </a></li>
+                                </ul>
+                            </li>
+
+                            <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                                <a href='/jornadas'>
+                                    <i class="fa fa-futbol-o"></i>
+                                    <span>Jornadas</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                                <a href='/equiposLiga'>
+                                    <i class="fa fa-shield"></i>
+                                    <span>Equipos</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'registro'==menu ? 'active' : ''}">
+                                <a href='/usuarios/registro'>
+                                    <i class="fa fa-user-plus"></i>
+                                    <span>Registro</span>
+                                </a>
+                            </li>
+
+                            <li th:class="${'login'==menu ? 'active' : ''}">
+                                <a href='/login'>
+                                    <i class="fa fa-sign-in"></i>
+                                    <span>Login</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class='hero-content'>
+        <h2 class='hero-content__title'>¡Conviértete en<br><br>el mejor entrenador<br><br> de tu pandilla!</h2>
+
     </div>
-    <br>
-    <br>
-    <br><br>
-    <div id="container">
-        <div style="display: inline-block"><img width="125%" height="125%" th:src="@{/resources/images/portada.png}"/></div>
-        <div style="margin-left: 70%; display: inline-block">
-            <h2>Regístrate y juega gratuitamente</h2>
-            <ul>
-                <h4><li>¡Sé el mejor GM de tu pandilla!</li>
-                    <li>Ficha a tus jugadores favoritos</li>
-                    <li>Crea tus propias alineaciones</li></h4>
-            </ul>
-            <h4>¡Todo basándose en el rendimiento de los jugadores en la vida real!</h4>
+    <div class='hero-box-container'>
+        <div class='hero-box'>
+            <span class='hero-box__circle hero-box__circle--blue'></span>
+            <h2 class='hero-box__title'>Compite para ganar</h2>
+            <p class='hero-box__body'>Dirige tus equipos y compite contra tus amigos escalando puntos en la
+                clasificación para acabar primero.</p>
+        </div>
+        <div class='hero-box'>
+            <span class='hero-box__circle hero-box__circle--green'></span>
+            <h2 class='hero-box__title'>Tú eres el jefe</h2>
+            <p class='hero-box__body'>Dirige tus finanzas, formación y onces de cada jornada.</p>
+        </div>
+        <div class='hero-box'>
+            <span class='hero-box__circle hero-box__circle--orange'></span>
+            <h2 class='hero-box__title'>Mántente informado</h2>
+            <p class='hero-box__body'>Con FútGol, podrás consultar los resultados, clasificación real de la Liga, onces
+                ideales y estadísticas de jugadores y equipos. </p>
+            </a>
         </div>
     </div>
-</div>
-
+</section>
 </body>
-
 </html>

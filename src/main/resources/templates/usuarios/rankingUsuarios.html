@@ -4,7 +4,7 @@
       th:replace="~{fragments/layout :: layout (~{::body},'rankingUsuarios')}">
 <body>
 
-<h2>Clasificación</h2>
+<h2>Top 5 equipos de usuarios</h2>
 
 <table id="clasificacionGeneral" class="table table-striped">
     <thead>
@@ -12,7 +12,6 @@
         <th>Usuario</th>
         <th>Equipo</th>
         <th>Puntos</th>
-        <!--<th>Valor del equipo</th>-->
     </tr>
     </thead>
     <tbody>
@@ -20,7 +19,6 @@
         <td th:text="${equipo.usuario.user.username}"></td>
         <td th:text="${equipo.name}"></td>
         <td th:text="${equipo.puntos}"></td>
-        <!-- <td th:each="valor : ${valores}" th:text="${valor}"></td> -->
     </tr>
     </div>
     </tbody>

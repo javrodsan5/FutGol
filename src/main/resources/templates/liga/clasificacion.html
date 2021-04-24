@@ -5,26 +5,43 @@
 <body>
 
 <h1>Clasificación de <b th:text="${liga.name}"></b></h1>
-<h3>Equipos en la liga: <b th:text="${equiposLiga.size}"></b></h3>
-<table id="clasificacion" class="table table-striped">
-    <thead>
-    <tr>
-        <th>Posición</th>
-        <th>Usuario</th>
-        <th>Puntos</th>
-        <th>Valor del equipo</th>
-    </tr>
-    </thead>
-    <tbody>
-    <td th:each="posicion : ${posiciones}" th:text="${posicion}"></td>
-    <td th:each="valor : ${valores}" th:text="${valor}"></td>
-    <tr th:each="equipo : ${equiposLiga}">
-        <td th:text="${equipo.usuario.user.username}"></td>
-        <td th:text="${equipo.puntos}"></td>
-    </tr>
-    </div>
-    </tbody>
-</table>
+<div th:if="${puedeCalcularse}">
+    <h3>Nº equipos: <b th:text="${numEquipos}"></b></h3>
 
+    <div class="ganador">
+        <h4 th:text="${ganador.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/ganador.svg"
+             th:src="@{/resources/images/ganador.svg}"/>
+        <h4 th:text="${ganador.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${ganador.puntos}"/></h3>
+    </div>
+
+    <div class="segundo">
+        <h4 th:text="${segundo.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/segundo.svg"
+             th:src="@{/resources/images/segundo.svg}"/>
+        <h4 th:text="${segundo.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${segundo.puntos}"/></h3>
+    </div>
+
+    <div class="tercero">
+        <h4 th:text="${tercero.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/tercero.svg"
+             th:src="@{/resources/images/tercero.svg}"/>
+        <h4 th:text="${tercero.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${tercero.puntos}"/></h3>
+    </div>
+
+    <div class="resto" th:each="equipo : ${restoEquipos}">
+        <div style="display: block">
+            <h4><b th:text="${equipo.name}"/></h4>
+            <h4 th:text="${equipo.usuario.user.username}"/>
+            <h3>Puntos: <b th:text="${equipo.puntos}"/></h3>
+        </div>
+    </div>
+</div>
+<div th:if="${noPuedeCalcularse}">
+    <h1>Hasta que no haya 3 equipos al menos en la liga no se puede ver la clasifiación.</h1>
+</div>
 </body>
 </html>

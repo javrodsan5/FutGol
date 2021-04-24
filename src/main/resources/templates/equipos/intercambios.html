@@ -20,7 +20,7 @@
         <tr th:each="intercambio : ${intercambios}">
             <td><a th:text="${intercambio.equipoCreadorIntercambio.usuario.user.username}" th:href="@{/usuarios/{username}/ (username=${intercambio.equipoCreadorIntercambio.usuario.user.username})}"/></td>
             <td><a th:text="${intercambio.otroJugador.name}" th:href="@{/equipo/{idMiEquipo}/jugador/{idJugador}/jornada/1 (idJugador=${intercambio.otroJugador.id}, idMiEquipo=${miEquipoId})}"/></td>
-            <td><a th:text="${intercambio.jugadorCreadorIntercambio.name}" th:href="@{/jugador/{idJugador}/jornada/1 (idJugador=${intercambio.otroJugador.id})}"/></td>
+            <td><a th:text="${intercambio.jugadorCreadorIntercambio.name}" th:href="@{/jugador/{idJugador}/jornada/1 (idJugador=${intercambio.jugadorCreadorIntercambio.id})}"/></td>
             <td th:text="${intercambio.dinero}"/>
             <td>
                 <div style="float: right;">

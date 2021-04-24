@@ -150,15 +150,17 @@ class LigaControlador(
             val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
             model["liga"] = liga!!
             val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
-
-            model["posiciones"] = equiposLiga.indices
-            model["equiposLiga"] = equiposLiga
-            var valores: MutableList<Double> = ArrayList()
-            for (e in equiposLiga) {
-                e.liga?.id?.let { e.name?.let { it1 -> equipoServicio.calcularValorEquipo(it1, it) } }
-                    ?.let { valores.add(it) }
+            val tam = equiposLiga.size
+            if(tam>=3) {
+                model["puedeCalcularse"] = true
+                model["numEquipos"] = tam
+                model["ganador"] = equiposLiga[0]
+                model["segundo"] = equiposLiga[1]
+                model["tercero"] = equiposLiga[2]
+                model["restoEquipos"] = equiposLiga.drop(3)
+            }else {
+                model["noPuedeCalcularse"] = true
             }
-            model["valores"] = valores
             return VISTA_CLASIFICACION_LIGA
         }
         return "redirect:/misligas"

@@ -9531,7 +9531,7 @@ footer {
     width: 360px;
     justify-content: space-between;
     padding: 0.75rem 1.25rem 0.75rem 0.75rem;
-    background-color: var(--first-color-lighten);
+    background-color: #F0F8FF;
     box-shadow: 4px 4px 16px #e1e1e1, -2px -2px 16px #fff;
     border-radius: 2.5rem;
 }
@@ -9759,6 +9759,9 @@ footer {
     border: 2px solid #3DC25D;
     border-radius: 4%;
     padding: 40px;
+}
+.misinvitaciones{
+    margin: 0% 0% 0% 5%;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,900");

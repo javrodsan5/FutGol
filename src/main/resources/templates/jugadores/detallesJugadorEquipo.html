@@ -14,10 +14,10 @@
             <br>
             <img th:src="${jugador.foto}"><br><br><br>
         </div>
-        <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
-        <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
-        <h2>Clausula: <b th:text="${clausula}"></b></h2>
+
     </div>
+
+
     <div class="medias">
         <div th:if="${tieneMedias}">
 
@@ -102,26 +102,36 @@
         </div>
     </div>
 </div>
-<h2 th:if="${loTengoEnMiEquipo}">
-    <h3>Solo se puede actualizar la clausula una vez cada 8 días.</h3>
-    <div th:if="${puedeActualizarClausula}">
-        <a class="btn btn-default"
-           th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
-            clausula</a>
+<div>
+    <div style="float: left">
+        <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
+        <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
+        <h2>Clausula: <b th:text="${clausula}"></b></h2>
     </div>
+    <div style="float: right">
+        <h2 th:if="${loTengoEnMiEquipo}">
+            <h3>Solo se puede actualizar la clausula una vez cada 8 días.</h3>
+            <div th:if="${puedeActualizarClausula}">
+                <a class="btn btn-default"
+                   th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
+                    clausula</a>
+            </div>
+            <h3>La cláusula tiene un coste del 1% del valor y se te resta cada jornada</h3>
 
-    <div>
-        <a class="btn btn-default"
-           th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Sacar a
-            subasta</a>
+            <div>
+                <a class="btn btn-default"
+                   th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Sacar a
+                    subasta</a>
+            </div>
+        </h2>
+        <h2 th:if="${noLoTengoEnMiEquipo}">
+            <div>
+                <a class="btn btn-default"
+                   th:href="@{/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula (idLiga = ${liga.id}, idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Pagar
+                    clausula</a>
+            </div>
+        </h2>
     </div>
-</h2>
-<h2 th:if="${noLoTengoEnMiEquipo}">
-    <div>
-        <a class="btn btn-default"
-           th:href="@{/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula (idLiga = ${liga.id}, idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Pagar
-            clausula</a>
-    </div>
-</h2>
+</div>
 </body>
 </html>

@@ -7,27 +7,28 @@
 
 
 <h2>Mi cuenta</h2>
-<div class="profile-wrapper">
-    <div class="profile-body">
-        <img src="../../static/resources/images/userIcon.PNG" th:src="@{/resources/images/userIcon.PNG}" alt=""/>
-        <div class="profile-details">
-            <h1 th:text="${usuario.user.username}"></h1>
-            <p class="description" th:text="${usuario.email}"></p>
-            <p th:text="${usuario.name}"></p>
+<div style="display: inline-flex">
+    <div class="profile-wrapper">
+        <div class="profile-body">
+            <img src="../../static/resources/images/userIcon.PNG" th:src="@{/resources/images/userIcon.PNG}" alt=""/>
+            <div class="profile-details">
+                <h1 th:text="${usuario.user.username}"></h1>
+                <p class="description" th:text="${usuario.email}"></p>
+                <p th:text="${usuario.name}"></p>
+            </div>
+        </div>
+        <div>
+            <a class="btn btn-default" th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar
+                mis datos</a>
         </div>
     </div>
-</div>
 
 
-<a class="btn btn-default" th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar
-    mis datos</a>
+    <div class="misinvitaciones">
+        <div th:if="${usuario.invitaciones!=null and !usuario.invitaciones.empty}">
 
-<div style="float: right">
-    <div th:if="${usuario.invitaciones!=null and !usuario.invitaciones.empty}">
-
-        <h1>Mis Invitaciones</h1>
-        <div class="drop">
-            <div class="drop__container" id="drop-items">
+            <h1>Mis Invitaciones</h1>
+            <div>
                 <div th:each="invitacion : ${usuario.invitaciones}">
                     <div class="drop__card">
                         <div class="drop__data">
@@ -36,7 +37,8 @@
                         <div style="float: right;">
                             <a th:href="@{/micuenta/invitaciones/{nombreLiga}/aceptar (nombreLiga=${invitacion})}"><i
                                     class="fa fa-check fa-2x" aria-hidden="true"></i></a>
-                            <a style="margin-left: 10px;"th:href="@{/micuenta/invitaciones/{nombreLiga}/rechazar (nombreLiga=${invitacion})}"><i
+                            <a style="margin-left: 10px;"
+                               th:href="@{/micuenta/invitaciones/{nombreLiga}/rechazar (nombreLiga=${invitacion})}"><i
                                     class="fa fa-times fa-2x" aria-hidden="true"></i></a>
                         </div>
                     </div>
@@ -45,16 +47,14 @@
             </div>
         </div>
     </div>
-</div>
+
+
+    <div th:if="${usuario.invitaciones==null or usuario.invitaciones.empty}" style="float: right">
+        <h2>No tienes invitaciones invitaciones todavía.</h2>
+        <h2>Cuando tengas, aparecerán aquí.</h2>
+    </div>
 </div>
 
-<div th:if="${usuario.invitaciones==null or usuario.invitaciones.empty}">
-    <tr>
-        <th>Invitaciones</th>
-        <td> No tienes invitaciones</td>
-    </tr>
-</div>
-</div>
 </body>
 
 </html>

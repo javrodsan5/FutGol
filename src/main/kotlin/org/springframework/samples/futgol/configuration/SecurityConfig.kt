@@ -24,6 +24,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/h2-console/**", "/usuarios/registro").permitAll()
             .antMatchers("/misligas/**", "/liga/**", "/usuarios/buscar", "/micuenta/**").authenticated()
             .antMatchers("/equipo/**").authenticated()
+            .antMatchers("/usuarios/**").authenticated()
             .anyRequest().permitAll()
             .and()
             .formLogin()

@@ -8,19 +8,20 @@
 
 <h2>Mi cuenta</h2>
 <div style="display: inline-flex">
-    <div class="profile-wrapper">
-        <div class="profile-body">
-            <img src="../../static/resources/images/userIcon.PNG" th:src="@{/resources/images/userIcon.PNG}" alt=""/>
-            <div class="profile-details">
-                <h1 th:text="${usuario.user.username}"></h1>
-                <p class="description" th:text="${usuario.email}"></p>
-                <p th:text="${usuario.name}"></p>
-            </div>
-        </div>
+    <div class="cartona">
         <div>
-            <a class="btn btn-default" th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar
-                mis datos</a>
+            <img class="avatart" src="../../static/resources/images/userIcon.PNG"
+                 th:src="@{/resources/images/userIcon.PNG}" alt=""/>
         </div>
+        <div class="titulon">
+            <h2 th:text="${usuario.user.username}"/>
+        </div>
+        <div class="descriptiona" th:text="${usuario.email}">
+        </div>
+        <div class="descriptiona" th:text="${usuario.name}">
+        </div>
+        <a class="btn btn-default" th:href="@{micuenta/editarmisdatos}"><span class="glyphicon glyphicon-pencil"></span>Editar
+            mis datos</a>
     </div>
 
 

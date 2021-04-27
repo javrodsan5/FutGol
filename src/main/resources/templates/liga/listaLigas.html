@@ -8,15 +8,15 @@
 <h2>Mis ligas</h2>
 <p>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></p>
 <div th:if="${ligas!=null and !ligas.empty}">
-    <table id="ligas" class="table table-striped">
+    <table class="tablaLiga">
         <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Administrador</th>
+        <tr class="filatabla">
+            <th class="guiz-awards-header-title">Nombre</th>
+            <th class="guiz-awards-header-title">Administrador</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="liga : ${ligas}">
+        <tr th:each="liga : ${ligas}" class="filatabla">
             <td><a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
             <td><a th:href="@{/usuarios/{username} (username= ${liga.admin.user.username})}"
                    th:text="${liga.admin.user.username}"/></a></td>

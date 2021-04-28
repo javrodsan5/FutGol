@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,900");
+
 html {
-    font-family: sans-serif;
+    font-family: poppins;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
@@ -120,7 +122,7 @@ code,
 kbd,
 pre,
 samp {
-    font-family: monospace, monospace;
+    font-family: poppins;
     font-size: 1em;
 }
 
@@ -303,18 +305,11 @@ th {
     }
 }
 
-
-@font-face {
-    font-family: 'Glyphicons Halflings';
-    src: url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.eot');
-    src: url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../../webjars/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
-}
-
 .glyphicon {
     position: relative;
     top: 1px;
     display: inline-block;
-    font-family: 'Glyphicons Halflings';
+    font-family: poppins;
     font-style: normal;
     font-weight: normal;
     line-height: 1;
@@ -1390,7 +1385,7 @@ html {
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: poppins;
     font-size: 14px;
     line-height: 1.428571429;
     color: #34302D;
@@ -1401,19 +1396,19 @@ input,
 button,
 select,
 textarea {
-    font-family: inherit;
+    font-family: poppins;
     font-size: inherit;
     line-height: inherit;
 }
 
 a {
-    color: #5fa134;
+    color: #0d9404;
     text-decoration: none;
 }
 
 a:hover,
 a:focus {
-    color: #5fa134;
+    color: #0d9404;
     text-decoration: underline;
 }
 
@@ -1507,7 +1502,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: inherit;
+    font-family: poppins;
     font-weight: 500;
     line-height: 1.1;
     color: inherit;
@@ -1923,7 +1918,7 @@ code,
 kbd,
 pre,
 samp {
-    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-family: poppins;
 }
 
 code {
@@ -2888,12 +2883,14 @@ th {
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
     padding: 8px;
+    text-align: center;
     line-height: 1.428571429;
     vertical-align: top;
     border-top: 1px solid #34302D;
 }
 
 .table > thead > tr > th {
+    text-align: center;
     vertical-align: bottom;
     border-bottom: 2px solid #34302D;
 }
@@ -3102,6 +3099,7 @@ table th[class*="col-"] {
     .table-responsive > .table > thead > tr > td,
     .table-responsive > .table > tbody > tr > td,
     .table-responsive > .table > tfoot > tr > td {
+        text-align: center;
         white-space: nowrap;
     }
 
@@ -3822,7 +3820,7 @@ fieldset[disabled] a.btn {
 .btn-default {
     color: #f1f1f1;
     background-color: #34302D;
-    border-color: #6db33f;
+    border-color: #43b93c;
 }
 
 .btn-default:focus,
@@ -3876,7 +3874,7 @@ fieldset[disabled] .btn-default:focus,
 .btn-default[disabled].focus,
 fieldset[disabled] .btn-default.focus {
     background-color: #34302D;
-    border-color: #6db33f;
+    border-color: #43b93c;
 }
 
 .btn-default .badge {
@@ -4210,7 +4208,7 @@ fieldset[disabled] .btn-danger.focus {
 }
 
 .btn-link {
-    color: #5fa134;
+    color: #43b93c;
     font-weight: normal;
     border-radius: 0;
 }
@@ -4234,7 +4232,7 @@ fieldset[disabled] .btn-link {
 
 .btn-link:hover,
 .btn-link:focus {
-    color: #5fa134;
+    color: #43b93c;
     text-decoration: underline;
     background-color: transparent;
 }
@@ -4921,7 +4919,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav .open > a:hover,
 .nav .open > a:focus {
     background-color: #eeeeee;
-    border-color: #5fa134;
+    border-color: #43b93c;
 }
 
 .nav .nav-divider {
@@ -5532,14 +5530,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
     color: #f1f1f1;
-    background-color: #6db33f;
+    background-color: #43b93c;
 }
 
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
     color: #f1f1f1;
-    background-color: #6db33f;
+    background-color: #43b93c;
 }
 
 .navbar-default .navbar-nav > .disabled > a,
@@ -5570,7 +5568,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
-    background-color: #6db33f;
+    background-color: #43b93c;
     color: #f1f1f1;
 }
 
@@ -5582,14 +5580,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
     .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
         color: #f1f1f1;
-        background-color: #6db33f;
+        background-color: #43b93c;
     }
 
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
     .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
         color: #f1f1f1;
-        background-color: #6db33f;
+        background-color: #43b93c;
     }
 
     .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
@@ -5790,7 +5788,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     padding: 6px 12px;
     line-height: 1.428571429;
     text-decoration: none;
-    color: #5fa134;
+    color: #43b93c;
     background-color: #fff;
     border: 1px solid #ddd;
     margin-left: -1px;
@@ -5814,7 +5812,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > li > a:focus,
 .pagination > li > span:focus {
     z-index: 2;
-    color: #5fa134;
+    color: #43b93c;
     background-color: #eeeeee;
     border-color: #ddd;
 }
@@ -5828,7 +5826,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     z-index: 3;
     color: #fff;
     background-color: #34302D;
-    border-color: #6db33f;
+    border-color: #43b93c;
     cursor: default;
 }
 
@@ -6049,7 +6047,7 @@ a.badge:focus {
 
 .list-group-item.active > .badge,
 .nav-pills > .active > a > .badge {
-    color: #5fa134;
+    color: #43b93c;
     background-color: #fff;
 }
 
@@ -6139,7 +6137,7 @@ a.badge:focus {
 a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
-    border-color: #5fa134;
+    border-color: #43b93c;
 }
 
 .thumbnail .caption {
@@ -7289,7 +7287,7 @@ button.close {
     position: absolute;
     z-index: 1070;
     display: block;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: poppins;
     font-style: normal;
     font-weight: normal;
     letter-spacing: normal;
@@ -7423,7 +7421,7 @@ button.close {
     display: none;
     max-width: 276px;
     padding: 1px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: poppins;
     font-style: normal;
     font-weight: normal;
     letter-spacing: normal;
@@ -7732,7 +7730,7 @@ button.close {
     width: 20px;
     height: 20px;
     line-height: 1;
-    font-family: serif;
+    font-family: poppins;
 }
 
 .carousel-control .icon-prev:before {
@@ -8178,22 +8176,6 @@ button.close {
     }
 }
 
-@font-face {
-    font-family: 'varela_roundregular';
-    src: url('../fonts/varela_round-webfont.eot');
-    src: url('../fonts/varela_round-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/varela_round-webfont.woff') format('woff'), url('../fonts/varela_round-webfont.ttf') format('truetype'), url('../fonts/varela_round-webfont.svg#varela_roundregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'montserratregular';
-    src: url('../fonts/montserrat-webfont.eot');
-    src: url('../fonts/montserrat-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/montserrat-webfont.woff') format('woff'), url('../fonts/montserrat-webfont.ttf') format('truetype'), url('../fonts/montserrat-webfont.svg#montserratregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
 body,
 h1,
 h2,
@@ -8202,14 +8184,14 @@ p,
 input {
     margin: 0;
     font-weight: 400;
-    font-family: "varela_roundregular", sans-serif;
+    font-family: poppins;
     color: #34302d;
 }
 
 h1 {
     font-size: 24px;
     line-height: 30px;
-    font-family: "montserratregular", sans-serif;
+    font-family: poppins;
 }
 
 h2 {
@@ -8217,7 +8199,7 @@ h2 {
     font-weight: 700;
     line-height: 24px;
     margin-bottom: 10px;
-    font-family: "montserratregular", sans-serif;
+    font-family: poppins;
 }
 
 h3 {
@@ -8229,11 +8211,11 @@ h3 {
 
 strong {
     font-weight: 700;
-    font-family: "montserratregular", sans-serif;
+    font-family: poppins;
 }
 
 .navbar {
-    border-top: 4px solid #6db33f;
+    border-top: 4px solid #43b93c;
     background-color: #34302d;
     margin-bottom: 0px;
     border-bottom: 0;
@@ -8243,7 +8225,7 @@ strong {
 
 .navbar a.navbar-brand {
     background: url("../images/logoFutgol.png") -1px -1px no-repeat;
-    margin: 12px 0 6px;
+    margin: 12px 0 6px 30px;
     width: 229px;
     height: 46px;
     display: inline-block;
@@ -8268,7 +8250,8 @@ strong {
 
 .navbar li > a,
 .navbar-text {
-    font-family: "montserratregular", sans-serif;
+    font-family: poppins;
+    font-weight: 600;
     text-shadow: none;
     font-size: 14px;
     padding: 28px 20px;
@@ -8290,7 +8273,7 @@ strong {
 
 .navbar li:hover > a {
     color: #eeeeee;
-    background-color: #6db33f;
+    background-color: #43b93c;
 }
 
 .navbar-toggle {
@@ -8414,7 +8397,7 @@ h1 {
 }
 
 .splash {
-    background: #6db33f;
+    background: #43b93c;
     color: #34302D;
     display: none;
 }
@@ -8666,7 +8649,7 @@ hr {
     top: 0;
     visibility: hidden;
     z-index: 3;
-    font-family: "montserratregular", sans-serif;
+    font-family: poppins;
 }
 
 #snav li a:hover .fa {
@@ -10058,8 +10041,8 @@ header {
 }
 
 .cartona {
-    border: 2px solid #6db33f;
-    box-shadow: 5px 6px 0px #6db33f;
+    border: 2px solid #55ca4d;
+    box-shadow: 5px 6px 0px #55ca4d;
     transition: 0.3s all;
     border-radius: 3px;
     background-color: #fff;
@@ -10072,7 +10055,7 @@ header {
 }
 .avatart {
     border-radius: 50%;
-    border: 4px solid #6db33f;
+    border: 4px solid #55ca4d;
     width: 30%;
 }
 
@@ -10092,4 +10075,14 @@ header {
     color: var(--first-color);
     font-weight: 500;
     padding: 0px 90px;
+}
+
+.cajilla_leyenda{
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    margin: auto;
+    border: 2px solid transparent;
+    padding: 0;
+    font-weight: bold;
 }

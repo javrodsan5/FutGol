@@ -11,138 +11,137 @@
 
 </head>
 <body>
-<section class='hero'>
-    <header>
-        <nav class="navbar navbar-default" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" th:href="@{/}"><span></span></a>
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-                        <span class="sr-only"><os-p>Toggle navigation</os-p></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <span th:text="${text}">Template</span>
-                </div>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}"><span></span></a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+                <span class="sr-only"><os-p>Toggle navigation</os-p></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span th:text="${text}">Template</span>
+        </div>
 
-                <div class="navbar-collapse collapse" id="main-navbar">
+        <div class="navbar-collapse collapse" id="main-navbar">
 
-                    <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="isAuthenticated()">
 
-                        <ul class="nav navbar-nav navbar-right">
-                            <li th:class="${'home'==menu ? 'active' : ''}">
-                                <a href='/'>
-                                    <i class="fa fa-home"></i>
-                                    <span>Inicio</span>
-                                </a>
-                            </li>
+                <ul class="nav navbar-nav navbar-right">
+                    <li th:class="active">
+                        <a href='/'>
+                            <i class="fa fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
 
-                            <li th:class="${'jornadas'==menu ? 'active' : ''}">
-                                <a href='/jornadas'>
-                                    <i class="fa fa-futbol-o"></i>
-                                    <span>Jornadas</span>
-                                </a>
-                            </li>
+                    <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                        <a href='/jornadas'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Jornadas</span>
+                        </a>
+                    </li>
 
-                            <li class="nav-item dropdown" data-hover="dropdown">
-                                <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"> Rankings </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
-                                        Usuarios</a></li>
-                                    <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top
-                                        Jugadores
-                                    </a></li>
-                                </ul>
-                            </li>
-
-                            <li th:class="${'equiposReales'==menu ? 'active' : ''}">
-                                <a href='/equiposLiga'>
-                                    <i class="fa fa-shield"></i>
-                                    <span>Equipos</span>
-                                </a>
-                            </li>
-
-                            <li th:class="${'ligas'==menu ? 'active' : ''}">
-                                <a href='/misligas'>
-                                    <i class="fa fa-trophy"></i>
-                                    <span>Mis ligas</span>
-                                </a>
-                            </li>
-
-                            <li th:class="${'usuarios'==menu ? 'active' : ''}">
-                                <a href='/micuenta'>
-                                    <i class="fa fa-user-circle"></i>
-                                    <span>Mi cuenta</span>
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href='/logout'>
-                                    <i class="fa fa-sign-out"></i>
-                                    <span>Logout</span>
-                                </a>
-                            </li>
-
+                    <li class="nav-item dropdown" data-hover="dropdown">
+                        <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"><i
+                                class="fa fa-sort-amount-asc" aria-hidden="true"></i>
+                            Rankings </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
+                                Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top Jugadores
+                            </a></li>
                         </ul>
-                    </div>
-                    <div sec:authorize="!isAuthenticated()">
-                        <ul class="nav navbar-nav navbar-right">
+                    </li>
 
-                            <li th:class="${'home'==menu ? 'active' : ''}">
-                                <a href='/'>
-                                    <i class="fa fa-home"></i>
-                                    <span>Inicio</span>
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown" data-hover="dropdown">
-                                <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"> Rankings </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
-                                        Usuarios</a></li>
-                                    <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top
-                                        Jugadores
-                                    </a></li>
-                                </ul>
-                            </li>
+                    <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                        <a href='/equiposLiga'>
+                            <i class="fa fa-shield"></i>
+                            <span>Equipos</span>
+                        </a>
+                    </li>
 
-                            <li th:class="${'jornadas'==menu ? 'active' : ''}">
-                                <a href='/jornadas'>
-                                    <i class="fa fa-futbol-o"></i>
-                                    <span>Jornadas</span>
-                                </a>
-                            </li>
+                    <li th:class="${'ligas'==menu ? 'active' : ''}">
+                        <a href='/misligas'>
+                            <i class="fa fa-trophy"></i>
+                            <span>Mis ligas</span>
+                        </a>
+                    </li>
 
-                            <li th:class="${'equiposReales'==menu ? 'active' : ''}">
-                                <a href='/equiposLiga'>
-                                    <i class="fa fa-shield"></i>
-                                    <span>Equipos</span>
-                                </a>
-                            </li>
+                    <li th:class="${'usuarios'==menu ? 'active' : ''}">
+                        <a href='/micuenta'>
+                            <i class="fa fa-user-circle"></i>
+                            <span>Mi cuenta</span>
+                        </a>
+                    </li>
 
-                            <li th:class="${'registro'==menu ? 'active' : ''}">
-                                <a href='/usuarios/registro'>
-                                    <i class="fa fa-user-plus"></i>
-                                    <span>Registro</span>
-                                </a>
-                            </li>
+                    <li>
+                        <a href='/logout'>
+                            <i class="fa fa-sign-out"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
 
-                            <li th:class="${'login'==menu ? 'active' : ''}">
-                                <a href='/login'>
-                                    <i class="fa fa-sign-in"></i>
-                                    <span>Login</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
+                </ul>
             </div>
-        </nav>
+            <div sec:authorize="!isAuthenticated()">
+                <ul class="nav navbar-nav navbar-right">
 
-    </header>
+                    <li th:class="active">
+                        <a href='/'>
+                            <i class="fa fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" data-hover="dropdown">
+                        <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown"><i
+                                class="fa fa-sort-amount-asc" aria-hidden="true"></i>
+                            Rankings </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/topUsuarios"><i class="fa fa-users"></i> Top
+                                Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/topJugadores"><i class="fa fa-star"></i> Top Jugadores
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <li th:class="${'jornadas'==menu ? 'active' : ''}">
+                        <a href='/jornadas'>
+                            <i class="fa fa-futbol-o"></i>
+                            <span>Jornadas</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'equiposReales'==menu ? 'active' : ''}">
+                        <a href='/equiposLiga'>
+                            <i class="fa fa-shield"></i>
+                            <span>Equipos</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'registro'==menu ? 'active' : ''}">
+                        <a href='/usuarios/registro'>
+                            <i class="fa fa-user-plus"></i>
+                            <span>Registro</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'login'==menu ? 'active' : ''}">
+                        <a href='/login'>
+                            <i class="fa fa-sign-in"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<section class='hero'>
     <div class='hero-content'>
-        <h2 class='hero-content__title'>¡Conviértete en<br><br>el mejor entrenador<br><br> de tu pandilla!</h2>
+        <h2 class='hero-content__title'><br>¡Conviértete en<br><br>el mejor entrenador<br><br> de tu pandilla!</h2>
 
     </div>
     <div class='hero-box-container'>

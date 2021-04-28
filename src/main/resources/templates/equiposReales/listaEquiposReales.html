@@ -3,13 +3,37 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout (~{::body},'equiposReales')}">
 <body>
+<style>
+    td {
+        font-size: 16px;
+    }
+</style>
 <h1>Equipos de LaLiga</h1>
-<p>PJ: Partidos Jugados, G: Ganados, E: Empatados, P: Perdidos, GF: Goles a Favor, GC: Goles en Contra, DG: Diferencia
-    de Goles</p>
-<table class="table">
+<div class="card" style="border: 1px solid #0d9404">
+    <div class="card-body">
+        <div style="display: inline-block; margin:2%">
+            <h5>PJ: Partidos Jugados <br> G: Ganados <br> E: Empatados <br> P: Perdidos <br>GF: Goles a Favor<br>GC:
+                Goles en Contra<br>DG:
+                Diferencia de Goles</h5>
+        </div>
+        <div style="display: inline-block; margin-left: 40%">
+            <div class="cajilla_leyenda" style="background-color: dodgerblue;"></div>
+            <div style="display: inline-block"><h5>Acceso - Champions League (Fase Grupos)</h5></div><br>
+            <div class="cajilla_leyenda" style="background-color: darkorange;"></div>
+            <div style="display: inline-block"><h5>Acceso - Europa League (Fase Grupos)</h5></div><br>
+            <div class="cajilla_leyenda" style="background-color: #fbd145;"></div>
+            <div style="display: inline-block"><h5>Acceso - Europa Conference League (Clasificación)</h5></div><br>
+            <div class="cajilla_leyenda" style="background-color: #ff4444;"></div>
+            <div style="display: inline-block"><h5>Descenso - LaLiga SmartBank</h5></div><br>
+            </h5>
+        </div>
+    </div>
+</div>
+
+<table class="table" style="display: inline-block">
     <thead>
     <tr>
-        <th width="5%">#</th>
+        <th width="1%">#</th>
         <th width="20%">Equipo</th>
         <th width="10%">PJ</th>
         <th width="10%">G</th>
@@ -25,7 +49,14 @@
     <tbody>
 
     <tr th:each="equipo : ${equiposReales}">
-        <td style="background-color: white" th:text="${equipo.posicion}"></td>
+        <td th:if="${equipo.posicion}<=4" style="background-color: dodgerblue;" th:text="${equipo.posicion}"></td>
+        <td th:if="${equipo.posicion}==5 or ${equipo.posicion}==6" style="background-color: darkorange;"
+            th:text="${equipo.posicion}"></td>
+        <td th:if="${equipo.posicion}==7" style="background-color: #fbd145;" th:text="${equipo.posicion}"></td>
+        <td th:if="${equipo.posicion}>7 and ${equipo.posicion}<18 " style="background-color: white;"
+            th:text="${equipo.posicion}"></td>
+        <td th:if="${equipo.posicion}>=18" style="background-color: #ff4444;" th:text="${equipo.posicion}"></td>
+
         <td style="background-color: white; text-align: center"><img style="float: left;" width="30px" height="30px"
                                                                      th:src="${equipo.escudo}"/><a
                 th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${equipo.name})}" th:text="${equipo.name}"/></td>

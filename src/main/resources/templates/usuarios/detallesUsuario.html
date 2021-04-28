@@ -15,23 +15,25 @@
                  th:src="@{/resources/images/userIcon.PNG}" alt=""/>
         </div>
         <div class="titulon">
-            <h2 th:text="${usuario.user.username}"/>
+            <h1><b th:text="${usuario.user.username}"/></h1>
         </div>
-        <div class="descriptiona" th:text="${usuario.email}">
+        <div class="descriptiona">
+            <h1 th:text="${usuario.name}"/>
         </div>
-        <div class="descriptiona" th:text="${usuario.name}">
-        </div>
+        <div class="descriptiona" th:text="${usuario.email}"/>
     </div>
 </div>
 <div class="ligasPart" style="float: right">
     <h2>Ligas en las que participa</h2>
-    <div th:each="liga : ${ligasUsuario}">
-        <div class="drop__card">
-            <div class="drop__data">
-                <h1 class="nombreLiga" th:text="${liga}"></h1>
+    <div class="scroll_vertical" id="style_scroll">
+        <div th:each="liga : ${ligasUsuario}">
+            <div class="drop__card">
+                <div class="drop__data">
+                    <h1 class="nombreLiga" th:text="${liga}"></h1>
+                </div>
             </div>
+            <br>
         </div>
-        <br>
     </div>
 </div>
 </div>

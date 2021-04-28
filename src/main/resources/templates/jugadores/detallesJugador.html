@@ -4,102 +4,102 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
 
 <body>
-<div style="display: inline-flex">
-    <div class="caja" style="float: left;">
-        <div style="display: inline-block;float: left;">
-            <br><br>
+<div class="detJugador" style="float: left">
+    <div style="display: inline-block; width: 60%;">
+        <img class="avatart" th:src="${jugador.foto}">
+        <div style="display: inline-block;">
             <h1><b th:text="${jugador.name}"></b></h1>
-        </div>
-        <div style="display: inline-block;float: left;">
-            <br>
-            <img th:src="${jugador.foto}"><br><br><br>
-        </div>
-        <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
-        <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
-    </div>
-
-    <div class="medias">
-        <div th:if="${tieneMedias}">
-
-            <h2>Medias del jugador</h2>
-            <ul>
-                <div th:if="${esPortero}">
-                    <li><h5>Puntos: <b th:text="${medias[3]}"></b></h5></li>
-                    <li><h3>Paradas: <b th:text="${medias[0]}"></b></h3></li>
-                    <li>Disparos Recibidos: <b th:text="${medias[1]}"></b></li>
-                    <li>Goles Recibidos: <b th:text="${medias[2]}"></b></li>
-                    <li>Minutos: <b th:text="${medias[4]}"></b></li>
-                    <li>Tarjetas Amarillas: <b th:text="${medias[5]}"></b></li>
-                    <li>Tarjetas Rojas: <b th:text="${medias[6]}"></b></li>
-                </div>
-                <div th:if="${esCCoDL}">
-                    <li><h3>Puntos: <b th:text="${medias[6]}"></b></h3></li>
-                    <li><h3>Goles: <b th:text="${est.goles}"></b></h3></li>
-                    <li><h3>Asistencias: <b th:text="${medias[1]}"></b>/h3></li>
-                    <li>Disparos a puerta: <b th:text="${medias[2]}"></b></li>
-                    <li>Disparos realizados: <b th:text="${medias[3]}"></b></li>
-                    <li>Penaltis lanzados: <b th:text="${medias[4]}"></b></li>
-                    <li>Penaltis Marcados: <b th:text="${medias[5]}"></b></li>
-                    <li>Minutos: <b th:text="${medias[7]}"></b></li>
-                    <li>Tarjetas Amarillas: <b th:text="${medias[8]}"></b></li>
-                    <li>Tarjetas Rojas: <b th:text="${medias[9]}"></b></li>
-                </div>
-                <div th:if="${esDF}">
-                    <li><h3>Puntos: <b th:text="${medias[3]}"></b></h3></li>
-                    <li><h3>Robos: <b th:text="${medias[0]}"></b></h3></li>
-                    <li>Bloqueos: <b th:text="${medias[1]}"></b></li>
-                    <li>Asistencias: <b th:text="${medias[2]}"></b></li>
-                    <li>Minutos: <b th:text="${medias[4]}"></b></li>
-                    <li>Tarjetas Amarillas: <b th:text="${medias[5]}"></b></li>
-                    <li>Tarjetas Rojas: <b th:text="${medias[6]}"></b></li>
-                </div>
-            </ul>
+            <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
+            <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
         </div>
     </div>
-
-    <div class="statsJornada">
-        <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="true">
-                Jornadas
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-
-                <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                                       th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
-                </li>
-            </ul>
-        </div>
-
-        <div th:if="${tieneEstadistica}">
-            <h2>Estadísticas de la jornada <b th:text="${est.partido.jornada.numeroJornada}"/></h2>
-            <ul>
-                <li>Minutos jugados: <b th:text="${est.minutosJugados}"></b></li>
-                <li>Goles: <b th:text="${est.goles}"></b></li>
-                <li>Asistencias: <b th:text="${est.asistencias}"></b></li>
-                <li>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></li>
-                <li>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></li>
-                <li>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></li>
-                <li>Disparos totales: <b th:text="${est.disparosTotales}"></b></li>
-                <li>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></li>
-                <li>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></li>
-                <li>Robos: <b th:text="${est.robos}"></b></li>
-                <li>Bloqueos: <b th:text="${est.bloqueos}"></b></li>
-                <li>Puntos: <b th:text="${est.puntos}"></b></li>
-                <div th:if="${esPortero}">
-                    <li>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></li>
-                    <li>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></li>
-                    <li>Salvadas: <b th:text="${est.salvadas}"></b></li>
-                </div>
-                <li>Valoración: <b th:text="${est.valoracion}"></b></li>
-            </ul>
-        </div>
-        <div th:if="${tieneEstadistica== false}">
-            <h4>El jugador no participó en esta jornada.</h4>
-        </div>
+    <div style="float: right">
+        <img th:src="${jugador.club.escudo}">
+        <h2>Equipo: <b th:text="${jugador.club.name}"></b></h2>
     </div>
 </div>
+
+<div class="statsJornada" style="float: right">
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+            Jornadas
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+            <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                                   th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
+            </li>
+        </ul>
+    </div>
+
+    <div th:if="${tieneEstadistica}">
+        <h2>Estadísticas de la jornada <b th:text="${est.partido.jornada.numeroJornada}"/></h2>
+        <ul>
+            <li>Puntos: <b th:text="${est.puntos}"></b></li>
+            <li>Minutos jugados: <b th:text="${est.minutosJugados}"></b></li>
+            <li>Goles: <b th:text="${est.goles}"></b></li>
+            <li>Asistencias: <b th:text="${est.asistencias}"></b></li>
+            <li>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></li>
+            <li>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></li>
+            <li>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></li>
+            <li>Disparos totales: <b th:text="${est.disparosTotales}"></b></li>
+            <li>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></li>
+            <li>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></li>
+            <li>Robos: <b th:text="${est.robos}"></b></li>
+            <li>Bloqueos: <b th:text="${est.bloqueos}"></b></li>
+            <div th:if="${esPortero}">
+                <li>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></li>
+                <li>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></li>
+                <li>Salvadas: <b th:text="${est.salvadas}"></b></li>
+            </div>
+            <li>Valoración: <b th:text="${est.valoracion}"></b></li>
+        </ul>
+    </div>
+    <div th:if="${tieneEstadistica== false}">
+        <h4>El jugador no participó en esta jornada.</h4>
+    </div>
+</div>
+
+<div class="medias">
+    <div th:if="${tieneMedias}">
+        <h2>Medias del jugador</h2>
+        <ul>
+            <div th:if="${esPortero}">
+                <h5>Puntos: <b th:text="${medias[3]}"></b></h5>
+                <h3>Paradas: <b th:text="${medias[0]}"></b></h3>
+                <li>Disparos Recibidos: <b th:text="${medias[1]}"></b></li>
+                <li>Goles Recibidos: <b th:text="${medias[2]}"></b></li>
+                <li>Minutos: <b th:text="${medias[4]}"></b></li>
+                <li>Tarjetas Amarillas: <b th:text="${medias[5]}"></b></li>
+                <li>Tarjetas Rojas: <b th:text="${medias[6]}"></b></li>
+            </div>
+            <div th:if="${esCCoDL}">
+                <h3>Puntos: <b th:text="${medias[6]}"></b></h3>
+                <h3>Goles: <b th:text="${medias[0]}"></b></h3>
+                <h3>Asistencias: <b th:text="${medias[1]}"></b></h3>
+                <li>Disparos a puerta: <b th:text="${medias[2]}"></b></li>
+                <li>Disparos realizados: <b th:text="${medias[3]}"></b></li>
+                <li>Penaltis lanzados: <b th:text="${medias[4]}"></b></li>
+                <li>Penaltis Marcados: <b th:text="${medias[5]}"></b></li>
+                <li>Minutos: <b th:text="${medias[7]}"></b></li>
+                <li>Tarjetas Amarillas: <b th:text="${medias[8]}"></b></li>
+                <li>Tarjetas Rojas: <b th:text="${medias[9]}"></b></li>
+            </div>
+            <div th:if="${esDF}">
+                <h3>Puntos: <b th:text="${medias[3]}"></b></h3>
+                <h3>Robos: <b th:text="${medias[0]}"></b></h3>
+                <li>Bloqueos: <b th:text="${medias[1]}"></b></li>
+                <li>Asistencias: <b th:text="${medias[2]}"></b></li>
+                <li>Minutos: <b th:text="${medias[4]}"></b></li>
+                <li>Tarjetas Amarillas: <b th:text="${medias[5]}"></b></li>
+                <li>Tarjetas Rojas: <b th:text="${medias[6]}"></b></li>
+            </div>
+        </ul>
+    </div>
+</div>
+
 </body>
 
 </html>

@@ -9581,6 +9581,9 @@ footer {
     position: relative;
     animation: animatop 0.9s cubic-bezier(0.425, 1.14, 0.47, 1.125) forwards;
 }
+.inBlock {
+    display: inline-block;
+}
 
 .card2 {
     width: 1000px;
@@ -9602,6 +9605,70 @@ footer {
     position: absolute;
     animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
 }
+
+.card3 {
+    margin-left: 50px;
+    width: 500px;
+    min-height: 100px;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+#primero:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #f9f34e;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+
+#segundo:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #dadad6;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+
+#tercero:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #e68712;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+
+#cuarto:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #12a2e6;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+#quinto:after {
+    content: '';
+    display: block;
+    width: 190px;
+    height: 300px;
+    background: #da26e6;
+    position: absolute;
+    animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
+}
+
+
+
 
 .badgescard {
     padding: 10px 20px;
@@ -9629,6 +9696,18 @@ footer {
 }
 
 .firstinfo img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100%;
+}
+
+.firstinfo2 {
+    flex-direction: row;
+    z-index: 2;
+    position: relative;
+}
+
+.firstinfo2 img {
     border-radius: 50%;
     width: 100px;
     height: 100%;
@@ -10118,3 +10197,12 @@ header {
     width: 60%;
     background-color: #EEF9F5;
 }
+
+.topMedal_img{
+    width: 20%;
+    position: relative;
+    z-index: 200;
+    height: 100px;
+    display: inline-flex;
+}
+

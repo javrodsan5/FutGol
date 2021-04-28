@@ -3,23 +3,62 @@
 
 <body>
 <h2>Top 5 jugadores</h2>
+<div th:each="jugador, i : ${jugadores}" th:class="${i.index + 1!= 1} ? 'content inBlock' : 'content'">
+    <div class="card3" style="margin: auto" th:if="${i.index + 1== 1}" id="primero" }>
+        <img class="topMedal_img" src="../resources/images/first.svg"/>
+        <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
+            <div class="profileinfo">
+                <h3 th:text="*{jugador.name}"></h3>
+                <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
-<table id="clasificacionJugadores" class="table table-striped">
-    <thead>
-    <tr>
-        <th>Jugador</th>
-        <th>Puntos</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="jugador : ${jugadores}">
-        <td th:text="${jugador.name}"></td>
-        <td th:text="${jugador.puntos}"></td>
-    </tr>
+            </div>
+        </div>
     </div>
-    </tbody>
-</table>
+    <br>
+    <div style="display: inline-block">
+        <div class="card3" style="display: inline-block" th:if="${i.index + 1== 2}" id="segundo" }>
+            <img class="topMedal_img" src="../resources/images/second.svg"/>
+            <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{jugador.name}"></h3>
+                    <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
+                </div>
+            </div>
+        </div>
+        <div class="card3" style="display: inline-block" th:if="${i.index + 1== 3}" id="tercero" }>
+            <img class="topMedal_img" src="../resources/images/third.svg"/>
+            <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{jugador.name}"></h3>
+                    <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="card3" style="display: inline-block" th:if="${i.index + 1== 4}" id="cuarto" }>
+            <img class="topMedal_img" style="filter: hue-rotate(300deg)" src="../resources/images/fourth.svg"/>
+            <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{jugador.name}"></h3>
+                    <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="card3" style="display: inline-block" th:if="${i.index + 1== 5}" id="quinto" }>
+            <img class="topMedal_img" src="../resources/images/fifth.svg"/>
+            <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
+                <div class="profileinfo">
+                    <h3 th:text="*{jugador.name}"></h3>
+                    <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br>
 <h2>Buscar jugador</h2>
 
 <form th:object="${jugador}" th:action="@{/jugadores}" method="get"

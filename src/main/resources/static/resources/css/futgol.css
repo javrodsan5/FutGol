@@ -10055,7 +10055,7 @@ header {
 }
 .avatart {
     border-radius: 50%;
-    border: 4px solid #55ca4d;
+    border: 4px solid #34302d;
     width: 30%;
 }
 
@@ -10085,4 +10085,27 @@ header {
     border: 2px solid transparent;
     padding: 0;
     font-weight: bold;
+}
+
+#style_scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+#style_scroll::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+#style_scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #2781e8;
+}
+
+.scroll_vertical {
+    height: 300px;
+    overflow: auto;
+    padding: 8px;
 }

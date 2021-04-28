@@ -9699,16 +9699,18 @@ footer {
 }
 
 .medias {
-    margin: 10px 10px;
+    float: left;
     border: 2px solid #008B8B;
+    background-color: #DBE8FC;
     border-radius: 4%;
-    padding: 40px;
-    width: 30%;
+    margin: 1% 20% 0% 0%;
+    padding: 2% 2% 1% 2%;
 }
 
 .statsJornada {
     margin: 10px 10px;
     border: 2px solid #3DC25D;
+    background-color: #E6F3E5;
     border-radius: 4%;
     padding: 40px;
     width: 30%;
@@ -10116,5 +10118,26 @@ header {
     border-radius: 5%;
     border: 4px solid #C83226;
     width: 60%;
-    background-color: #EEF9F5;
+    background-color: #F7E2E0;
+}
+.vaespo{
+    display: inline-block;
+    margin: 5% 0px 0px 15%;
+}
+
+.alpepi{
+    display: inline-flex;
+    margin: 0% 0% 1% 30%;
+}
+
+.fotoJugador {
+    border-radius: 50%;
+    border: 4px solid #34302d;
+    width: 30%;
+    float: left;
+    margin: 2% 0% 0% 2%;
+}
+
+.separados{
+    padding: 0% 20% 0% 0%;
 }

@@ -6,16 +6,22 @@
 <body>
 <div class="detJugador" style="float: left">
     <div style="display: inline-block; width: 60%;">
-        <img class="avatart" th:src="${jugador.foto}">
-        <div style="display: inline-block;">
+        <img class="fotoJugador" th:src="${jugador.foto}">
+        <div class="vaespo">
             <h1><b th:text="${jugador.name}"></b></h1>
             <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
             <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
+            <h2><b th:text="${jugador.posicion}"></b></h2>
+        </div>
+        <div class="alpepi">
+            <h2 class="separados"><b th:text="${jugador.altura}"></b> cm</h2>
+            <h2 class="separados"><b th:text="${jugador.peso}"></b> kg</h2>
+            <h2 >Pierna <b th:text="${jugador.piePrimario}"></b></h2>
         </div>
     </div>
-    <div style="float: right">
+    <div style="float: right; margin: 2%">
         <img th:src="${jugador.club.escudo}">
-        <h2>Equipo: <b th:text="${jugador.club.name}"></b></h2>
+        <h2 th:text="${jugador.club.name}"/>
     </div>
 </div>
 
@@ -61,7 +67,7 @@
         <h4>El jugador no participó en esta jornada.</h4>
     </div>
 </div>
-
+<br>
 <div class="medias">
     <div th:if="${tieneMedias}">
         <h2>Medias del jugador</h2>

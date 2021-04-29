@@ -2477,7 +2477,7 @@ pre code {
     }
 
     .col-md-3 {
-        width: 25%;
+        width: 30%;
     }
 
     .col-md-2 {
@@ -9581,6 +9581,7 @@ footer {
     position: relative;
     animation: animatop 0.9s cubic-bezier(0.425, 1.14, 0.47, 1.125) forwards;
 }
+
 .inBlock {
     display: inline-block;
 }
@@ -9657,6 +9658,7 @@ footer {
     position: absolute;
     animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
 }
+
 #quinto:after {
     content: '';
     display: block;
@@ -9666,8 +9668,6 @@ footer {
     position: absolute;
     animation: rotatemagic 0.75s cubic-bezier(0.425, 1.04, 0.47, 1.105) 1s both;
 }
-
-
 
 
 .badgescard {
@@ -9778,19 +9778,46 @@ footer {
 }
 
 .medias {
-    margin: 10px 10px;
+    float: left;
+    width: 60%;
     border: 2px solid #008B8B;
+    background-color: #DBE8FC;
     border-radius: 4%;
-    padding: 40px;
+    margin: 1% 20% 0% 0%;
+    padding: 2% 2% 1% 2%;
+}
+.vaespo{
+    display: inline-block;
+    margin: 5% 0px 0px 15%;
+}
+
+.alpepi{
+    display: inline-flex;
+    margin: 0% 0% 1% 30%;
+}
+
+.fotoJugador {
+    border-radius: 50%;
+    border: 4px solid #34302d;
     width: 30%;
+    float: left;
+    margin: 2% 0% 0% 2%;
+}
+
+.separados{
+    padding: 0% 20% 0% 0%;
 }
 
 .statsJornada {
-    margin: 10px 10px;
+    margin: 0% 0% 0% 5%;
+    position: absolute;
+    display: inline-block;
+    text-align: center;
+    background-color: #DEFBD9;
     border: 2px solid #3DC25D;
     border-radius: 4%;
     padding: 40px;
-    width: 30%;
+    width: 20%;
 }
 
 .ganador {
@@ -10134,6 +10161,7 @@ header {
     text-align: center;
     width: auto;
 }
+
 .avatart {
     border-radius: 50%;
     border: 4px solid #34302d;
@@ -10151,14 +10179,15 @@ header {
     margin-top: 18px;
     color: #64707d;
 }
-.nombreLiga{
+
+.nombreLiga {
     font-size: var(--normal-font-size);
     color: var(--first-color);
     font-weight: 500;
     padding: 0px 90px;
 }
 
-.cajilla_leyenda{
+.cajilla_leyenda {
     height: 10px;
     width: 10px;
     display: inline-block;
@@ -10194,11 +10223,12 @@ header {
 .detJugador {
     border-radius: 5%;
     border: 4px solid #C83226;
+    margin: 0% 0% 3% 0%;
     width: 60%;
     background-color: #EEF9F5;
 }
 
-.topMedal_img{
+.topMedal_img {
     width: 20%;
     position: relative;
     z-index: 200;
@@ -10206,3 +10236,101 @@ header {
     display: inline-flex;
 }
 
+.estMedia{
+    width: 30%;
+}
+
+.stati {
+    background: #fff;
+    height: 6em;
+    padding: 1em;
+    margin: 1em 0;
+    -webkit-transition: margin 0.5s ease, box-shadow 0.5s ease;
+    transition: margin 0.5s ease, box-shadow 0.5s ease;
+    -moz-box-shadow: 0px 0.2em 0.4em rgb(0, 0, 0, 0.8);
+    -webkit-box-shadow: 0px 0.2em 0.4em rgb(0, 0, 0, 0.8);
+    box-shadow: 0px 0.2em 0.4em rgb(0, 0, 0, 0.8);
+}
+
+.stati i {
+    font-size: 3.5em;
+}
+
+.stati div {
+    width: calc(100% - 3.5em);
+    display: block;
+    float: right;
+    text-align: right;
+}
+
+.stati div b {
+    font-size: 2.2em;
+    width: 100%;
+    padding-top: 0px;
+    margin-top: -0.2em;
+    margin-bottom: -0.2em;
+    display: block;
+}
+
+.stati div span {
+    font-size: 1em;
+    width: 100%;
+    color: rgb(0, 0, 0, 0.8);
+!important;
+    display: block;
+}
+
+.stati.left div {
+    float: left;
+    text-align: left;
+}
+
+.stati.bg-turquoise {
+    background: rgb(26, 188, 156);
+    color: white;
+}
+.stati.bg-emerald { background: rgb(46, 204, 113); color:white;}
+.stati.bg-peter_river { background: rgb(52, 152, 219); color:white;}
+.stati.bg-amethyst { background: rgb(155, 89, 182); color:white;}
+.stati.bg-wet_asphalt { background: rgb(52, 73, 94); color:white;}
+.stati.bg-green_sea { background: rgb(22, 160, 133); color:white;}
+.stati.bg-nephritis { background: rgb(39, 174, 96); color:white;}
+.stati.bg-belize_hole { background: rgb(41, 128, 185); color:white;}
+.stati.bg-wisteria { background: rgb(142, 68, 173); color:white;}
+.stati.bg-midnight_blue { background: rgb(44, 62, 80); color:white;}
+.stati.bg-sun_flower { background: rgb(241, 196, 15); color:white;}
+.stati.bg-carrot { background: rgb(230, 126, 34); color:white;}
+.stati.bg-alizarin { background: rgb(231, 76, 60); color:white;}
+.stati.bg-clouds { background: rgb(236, 240, 241); color:white;}
+.stati.bg-concrete { background: rgb(149, 165, 166); color:white;}
+.stati.bg-orange { background: rgb(243, 156, 18); color:white;}
+.stati.bg-pumpkin { background: rgb(211, 84, 0); color:white;}
+.stati.bg-pomegranate { background: rgb(192, 57, 43); color:white;}
+.stati.bg-silver { background: rgb(189, 195, 199); color:white;}
+.stati.bg-asbestos { background: rgb(127, 140, 141); color:white;}
+
+
+.stati.turquoise { color: rgb(26, 188, 156); }
+.stati.emerald { color: rgb(46, 204, 113); }
+.stati.peter_river { color: rgb(52, 152, 219); }
+.stati.amethyst { color: rgb(155, 89, 182); }
+.stati.wet_asphalt { color: rgb(52, 73, 94); }
+.stati.green_sea { color: rgb(22, 160, 133); }
+.stati.nephritis { color: rgb(39, 174, 96); }
+.stati.belize_hole { color: rgb(41, 128, 185); }
+.stati.wisteria { color: rgb(142, 68, 173); }
+.stati.midnight_blue { color: rgb(44, 62, 80); }
+.stati.sun_flower { color: rgb(241, 196, 15); }
+.stati.carrot { color: rgb(230, 126, 34); }
+.stati.alizarin { color: rgb(231, 76, 60); }
+.stati.clouds { color: rgb(236, 240, 241); }
+.stati.concrete { color: rgb(149, 165, 166); }
+.stati.orange { color: rgb(243, 156, 18); }
+.stati.pumpkin { color: rgb(211, 84, 0); }
+.stati.pomegranate { color: rgb(192, 57, 43); }
+.stati.silver { color: rgb(189, 195, 199); }
+.stati.asbestos { color: rgb(127, 140, 141); }
+
+.palabraMedia{
+
+}

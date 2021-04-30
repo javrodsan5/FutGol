@@ -8,29 +8,25 @@
 <h2>Mis ligas</h2>
 <p>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></p>
 <div th:if="${ligas!=null and !ligas.empty}">
-    <table id="ligas" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Administrador</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="liga : ${ligas}">
-            <td><a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
-            <td><a th:href="@{/usuarios/{username} (username= ${liga.admin.user.username})}"
-                   th:text="${liga.admin.user.username}"/></a></td>
-
-        </tr>
-
-        </tbody>
-    </table>
+    <div th:each="liga : ${ligas}">
+        <div class="col-md-3">
+            <div class="stati amethyst ">
+                <div>
+                    <b> <a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></b>
+                    <span><a th:href="@{/usuarios/{username} (username= ${liga.admin.user.username})}"
+                             th:text="${liga.admin.user.username}"/></span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div th:if="${ligas==null or ligas.empty}">
     <br>
     <h4> No tienes ninguna liga creada todavía</h4>
 </div>
 <br>
-<a class="btn btn-default" th:href="@{/liga/crear}">Crear liga</a>
+<div style="float: bottom">
+    <a th:href="@{/liga/crear}"><i class="fa fa-plus-circle fa-4x"></i></a>
+</div>
 </body>
 </html>

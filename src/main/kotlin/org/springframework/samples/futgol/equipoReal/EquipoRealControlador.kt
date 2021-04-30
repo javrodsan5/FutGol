@@ -57,12 +57,14 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
 
             var proxPartido = equipoRealServicio.proximoPartido(nombreEquipo)
             model["proxPartido"] = proxPartido
-
+            var b=true
             if (proxPartido.equipoVisitante?.name == equipo.name) {
                 model["rival"] = proxPartido.equipoLocal!!
+                b=false
             } else {
                 model["rival"] = proxPartido.equipoVisitante!!
             }
+            model["equipoEsLocal"] = b
             model["partidosLocal"] = equipo.partidosLocal.sortedBy { x -> x.jornada?.numeroJornada }
             model["partidosVisitante"] = equipo.partidosVisitante.sortedBy { x -> x.jornada?.numeroJornada }
 

@@ -6,7 +6,7 @@
 <body>
 
 <div class="detJugador" style="float: left">
-    <div style="display: inline-block; width: 60%;">
+    <div style="display: inline-block; width: 70%;">
         <img class="fotoJugador" th:src="${jugador.foto}">
         <div class="vaespo">
             <h1><b th:text="${jugador.name}"></b></h1>
@@ -255,32 +255,29 @@
 
     <div th:if="${tieneEstadistica}" style="float: right">
         <h2>Estadísticas de la jornada <b th:text="${est.partido.jornada.numeroJornada}"/></h2>
-        <ul>
-            <li>Puntos: <b th:text="${est.puntos}"></b></li>
-            <li>Minutos jugados: <b th:text="${est.minutosJugados}"></b></li>
-            <li>Goles: <b th:text="${est.goles}"></b></li>
-            <li>Asistencias: <b th:text="${est.asistencias}"></b></li>
-            <li>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></li>
-            <li>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></li>
-            <li>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></li>
-            <li>Disparos totales: <b th:text="${est.disparosTotales}"></b></li>
-            <li>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></li>
-            <li>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></li>
-            <li>Robos: <b th:text="${est.robos}"></b></li>
-            <li>Bloqueos: <b th:text="${est.bloqueos}"></b></li>
-            <div th:if="${esPortero}">
-                <li>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></li>
-                <li>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></li>
-                <li>Salvadas: <b th:text="${est.salvadas}"></b></li>
-            </div>
-            <li>Valoración: <b th:text="${est.valoracion}"></b></li>
-        </ul>
+        <h4>Puntos: <b th:text="${est.puntos}"/></h4>
+        <h4>Minutos jugados: <b th:text="${est.minutosJugados}"></b></h4>
+        <h4>Goles: <b th:text="${est.goles}"></b></h4>
+        <h4>Asistencias: <b th:text="${est.asistencias}"></b></h4>
+        <h4>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></h4>
+        <h4>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></h4>
+        <h4>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></h4>
+        <h4>Disparos totales: <b th:text="${est.disparosTotales}"></b></h4>
+        <h4>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></h4>
+        <h4>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></h4>
+        <h4>Robos: <b th:text="${est.robos}"></b></h4>
+        <h4>Bloqueos: <b th:text="${est.bloqueos}"></b></h4>
+        <div th:if="${esPortero}">
+            <h4>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></h4>
+            <h4>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></h4>
+            <h4>Salvadas: <b th:text="${est.salvadas}"></b></h4>
+        </div>
+        <h4>Valoración: <b th:text="${est.valoracion}"></b></h4>
     </div>
     <div th:if="${tieneEstadistica== false}">
         <h4>El jugador no participó en esta jornada.</h4>
     </div>
 </div>
-
 
 
 </body>

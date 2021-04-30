@@ -2,7 +2,7 @@
       th:replace="~{fragments/layout :: layout (~{::body},'jugadores')}">
 
 <body>
-<h2>Top 5 jugadores</h2>
+<h1>Top 5 jugadores</h1>
 <div th:each="jugador, i : ${jugadores}" th:class="${i.index + 1!= 1} ? 'content inBlock' : 'content'">
     <div class="card3" style="margin: auto" th:if="${i.index + 1== 1}" id="primero" }>
         <img class="topMedal_img" src="../resources/images/first.svg"/>
@@ -59,7 +59,7 @@
     </div>
 </div>
 <br><br><br><br>
-<h2>Buscar jugador</h2>
+<h1>Buscar jugador</h1>
 
 <form th:object="${jugador}" th:action="@{/jugadores}" method="get"
       class="form-horizontal" id="search-jugador-form">

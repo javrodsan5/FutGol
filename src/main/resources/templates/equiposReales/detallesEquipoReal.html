@@ -80,32 +80,42 @@
     </script>
 </div>
 
-<div class="escudoYTops">
-    <div class="caja" style="float: left;">
-        <div style="display: inline-block;float: left;">
-            <br><br>
-            <h1><b th:text="${equipo.name}"></b></h1>
-        </div>
-        <div style="display: inline-block;float: left;">
-            <br>
-
-            <img th:src="${equipo.escudo}"><br><br><br>
-
-        </div>
+<div class="card2" align="center" style="width: 600px; float: left">
+    <div style="display: inline-block;float: right;">
+        <br><br>
+        <h1><b th:text="${equipo.name}"></b></h1>
     </div>
+    <div style="display: inline-block;float: right;">
+        <br>
+
+        <img th:src="${equipo.escudo}"><br><br><br>
+
+    </div>
+</div>
+<div class="card3" style="float: right;">
+    <h1>Próximo partido del equipo</h1>
+
+    <div style="display: inline-block; float: left" align="center">
+        <img th:src="${rival.escudo}">
+        <h2><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${rival.name})}"
+               th:text="${rival.name}"/></h2>
+    </div>
+    <div style="display: inline-block; float: right">
+        <i th:if="${equipoEsLocal}" style="font-size: 105px" class="fa fa-home" aria-hidden="true"></i>
+        <i th:if="${!equipoEsLocal}" style="font-size: 105px" class="fa fa-plane" aria-hidden="true"></i>
+
+    </div>
+    <br><br>
+    <h2 align="center" th:text="${proxPartido.fecha}"/>
+
+</div>
+<div>
     <h2>Top 5 Jugadores</h2>
     <div style="display: inline-block" th:each="jugador : ${top5Jugadores}">
         <div style="margin: 2px 2px 2px"><a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><img
                 class="image--cover img-responsive"
                 th:src="${jugador.foto}"/></a></div>
         <div><b th:text="${jugador.puntos}"/> puntos</div>
-    </div>
-    <div class="cajita" style="float: right;">
-        <h1>Próximo partido del equipo</h1>
-        <h2 th:text="${proxPartido.fecha}"/>
-        <h2><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${rival.name})}"
-               th:text="${rival.name}"/></h2>
-
     </div>
 </div>
 

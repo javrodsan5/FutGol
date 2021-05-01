@@ -9788,10 +9788,6 @@ footer {
     margin: 1% 20% 0% 0%;
     padding: 2% 2% 1% 2%;
 }
-.vaespo{
-    display: inline-block;
-    margin: 5% 0px 0px 15%;
-}
 
 .alpepi{
     display: inline-flex;
@@ -9811,7 +9807,6 @@ footer {
 }
 
 .statsJornada {
-    margin: 0% 0% 0% 5%;
     position: absolute;
     display: inline-block;
     text-align: center;
@@ -9820,6 +9815,7 @@ footer {
     border-radius: 4%;
     padding: 40px;
     width: 20%;
+    margin-left: 25%;
 }
 
 .ganador {

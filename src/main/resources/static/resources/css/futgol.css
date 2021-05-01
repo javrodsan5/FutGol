@@ -9807,7 +9807,6 @@ footer {
 }
 
 .statsJornada {
-    position: absolute;
     display: inline-block;
     text-align: center;
     background-color: #DEFBD9;
@@ -10420,9 +10419,6 @@ header {
     color: rgb(142, 68, 173);
 }
 
-.accionesJugEquipo {
-    bottom: 0;
-}
 
 #style_scroll::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -10445,4 +10441,105 @@ header {
     height: 300px;
     overflow: auto;
     padding: 8px;
+}
+
+.sustTitular {
+    width: 500px;
+    min-height: 100px;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* CSS design by @jofpin */
+@import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
+@import url(http://weloveiconfonts.com/api/?family=entypo);
+
+[class*="entypo-"]:before {
+    font-family: 'entypo', sans-serif;
+}
+
+.title-pen {
+    color: #333;
+    font-family: "Coda", sans-serif;
+    text-align: center;
+}
+.title-pen span {
+    color: #55acee;
+}
+
+.user-profile {
+    margin: auto;
+    width: 25em;
+    height: 11em;
+    background: #fff;
+    border-radius: .3em;
+}
+
+.user-profile  .usernamesust {
+    margin: auto;
+    margin-top: -4.40em;
+    margin-left: 5.80em;
+    color: #658585;
+    font-size: 1.53em;
+    font-family: "Coda", sans-serif;
+    font-weight: bold;
+}
+.user-profile  .bio {
+    margin: auto;
+    display: inline-block;
+    margin-left: 10.43em;
+    color: #e76043;
+    font-size: 1.5emem;
+    font-family: "varela round", sans-serif;
+}
+.user-profile > .bioSust {
+    margin: auto;
+    display: inline-block;
+    margin-left: 10.43em;
+    color: #3DC25D;
+    font-size: 1.5emem;
+    font-family: "varela round", sans-serif;
+}
+.user-profile > img.fotosust {
+    padding: .7em;
+    margin-left: .3em;
+    margin-top: .3em;
+    height: 6.23em;
+    width: 6.23em;
+    border-radius: 18em;
+}
+
+.user-profile h2.data {
+    margin: 2em auto;
+    height: 3.70em;
+    background: #4eb6b6;
+    text-align: center;
+    border-radius: 0 0 .3em .3em;
+}
+.user-profile li {
+    margin: 0 auto;
+    padding: 1.30em;
+    width: 33.33334%;
+    display: table-cell;
+    text-align: center;
+}
+
+.user-profile h2 {
+    font-family: "varela round", sans-serif;
+    color: #e3eeee;
+    white-space: nowrap;
+    font-size: 1.27em;
+    font-weight: bold;
+}
+.user-profile span:hover {
+    color: #daebea;
+}
+
+.posSust{
+    display: inline-block;
+    margin: 2% 0% 0% 8%;
 }

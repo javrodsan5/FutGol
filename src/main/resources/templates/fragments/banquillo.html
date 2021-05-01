@@ -1,0 +1,69 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'banquillo')}">
+
+<body>
+
+<th:block th:fragment="layout (jugadores, miEquipo)">
+
+    <div style="margin-right: 12px; margin-bottom: 40px; text-align: center">
+        <h2 >Banquillo</h2>
+        <div style="display: inline-grid; float: left;" th:each="jugador : ${jugadores}">
+            <div class="player" style="border-radius:0%; background-image: url('/resources/images/banquillo2.png'); background-size:100px; width: 102px; height: 180px; display: inline-block">
+                <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
+                    <img align="center" style="margin-top: 95%; margin-left: 20%" class="image--cover img-responsive"
+                         width="40%" height="40%" th:src="${jugador.foto}">
+                </a>
+                <div class="info">
+                    <div style="display:inline-block;float: left">
+                        <h2 th:text="${jugador.name}"></h2>
+                        <h4>Estado: <b th:text="${jugador.estadoLesion}"></b></h4>
+                        <h4>Valor: <b th:text="${jugador.valor}"></b> mill. €</h4>
+                        <h4>Puntos: <b th:text="${jugador.puntos}"></b>pts</h4>
+                        <h4>Últimas jornadas jugadas:</h4>
+
+                        <div style="display: inline-grid" th:each="e, it : ${jugador.estadisticas}"
+                             th:if="${it.index >= it.size-5}">
+                            <div style="display: inline-block">
+                                <b>
+                                    <h5 style="display: inline"><p
+                                            th:text="J+${e.partido.jornada.numeroJornada}"></p></h5>
+                                </b>
+                            </div>
+
+                            <div class="circulo"><p th:text="${e.puntos}"></p>
+                                <script>
+                                    coloresPuntuaciones();
+                                </script>
+                            </div>
+                        </div>
+                        <br><br>
+                        <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = ${jugador.club.id} ,idJugador= ${jugador.id})}">
+                            <button class="botonSust">Ver detalles del jugador</button>
+                        </a>
+                        <br><br>
+                        <div th:if="${otroEquipo}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Ofrecer intercambio</button>
+                            </a>
+                        </div>
+                        <div th:if="${miEquipo}">
+                            <br><br>
+                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Sustituir</button>
+                            </a>
+                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Sacar a subasta</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+<br><br>
+
+
+</body>
+</html>

@@ -8,7 +8,7 @@
         <img class="topMedal_img" src="../resources/images/first.svg"/>
         <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
             <div class="profileinfo">
-                <h3 th:text="*{jugador.name}"></h3>
+                <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3 th:text="*{jugador.name}"></h3></a>
                 <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
             </div>
@@ -20,7 +20,7 @@
             <img class="topMedal_img" src="../resources/images/second.svg"/>
             <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
                 <div class="profileinfo">
-                    <h3 th:text="*{jugador.name}"></h3>
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3 th:text="*{jugador.name}"></h3></a>
                     <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
                 </div>
@@ -30,7 +30,7 @@
             <img class="topMedal_img" src="../resources/images/third.svg"/>
             <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
                 <div class="profileinfo">
-                    <h3 th:text="*{jugador.name}"></h3>
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3 th:text="*{jugador.name}"></h3></a>
                     <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
                 </div>
@@ -40,7 +40,7 @@
             <img class="topMedal_img" style="filter: hue-rotate(300deg)" src="../resources/images/fourth.svg"/>
             <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
                 <div class="profileinfo">
-                    <h3 th:text="*{jugador.name}"></h3>
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3 th:text="*{jugador.name}"></h3></a>
                     <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
                 </div>
@@ -50,7 +50,7 @@
             <img class="topMedal_img" src="../resources/images/fifth.svg"/>
             <div class="firstinfo" style="margin-left: 25%; text-align:center; flex-direction:column; display: inline-flex"><img th:src="*{jugador.foto}"/>
                 <div class="profileinfo">
-                    <h3 th:text="*{jugador.name}"></h3>
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3 th:text="*{jugador.name}"></h3></a>
                     <h4 th:text="*{jugador.puntos} + ' ' + puntos "></h4>
 
                 </div>

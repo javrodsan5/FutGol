@@ -11,7 +11,17 @@
         <div style="margin-top: 25px; margin-right: 20%; display: inline-block">
             <h1 style="display: table-caption"><b th:text="${jugador.name}"></b></h1>
             <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
-            <h2>Estado: <b th:text="${jugador.estadoLesion}"></b></h2>
+            <h2 th:if="${jugador.estadoLesion}=='En forma'"><b th:text="${jugador.estadoLesion} + ' ' "></b><img
+                    style="width: 20px" src="/resources/images/enForma.svg"/></h2>
+
+            <h2 th:if="${jugador.estadoLesion}=='Sancionado/No disponible'"><b
+                    th:text="${jugador.estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                      src="/resources/images/noDisponible.svg"/>
+            </h2>
+
+            <h2 th:if="${jugador.estadoLesion}=='Lesionado'"><b
+                    th:text="${jugador.estadoLesion} + ' ' "></b><img
+                    style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/></h2>
             <h2>Posición: <b th:text="${jugador.posicion}"></b></h2>
         </div>
 

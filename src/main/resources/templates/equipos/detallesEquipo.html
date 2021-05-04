@@ -84,9 +84,10 @@
         </script>
     </div>
     <div class="puntosEquipo">
-            <div class="ptosJorEq" th:each="pje : ${ptosJorEq}">J <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b> <b
+        <div class="ptosJorEq" th:each="pje : ${ptosJorEq}">J <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b>
+            <b
                     th:text="${pje.puntos}"/> puntos
-            </div>
+        </div>
     </div>
 
     <br><br>
@@ -133,28 +134,10 @@
     </div>
     <div>Formación actual: <b th:text="${equipo.formacion}"></b></div>
 
-    <div th:replace="~{fragments/campoFutbol :: layout (${equipo.onceInicial}, ${miEquipo})}"></div>
+    <div style="display: flex; margin-top: 3%; float: left;">
+        <div th:replace="~{fragments/banquillo :: layout (${equipo.jugBanquillo}, ${miEquipo})}"></div>
+        <div style="margin-top: 20%" th:replace="~{fragments/campoFutbol :: layout (${equipo.onceInicial}, ${miEquipo})}"></div>
 
-    <h1>Banquillo</h1>
-    <br>
-    <div style="display: inline-block" th:each="jugador : ${equipo.jugBanquillo}">
-        <div class="botonImagen">
-            <img th:src="${jugador.foto}"/><a
-                th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}">
-            <button class="btn">Detalles</button>
-        </a>
-        </div>
-        <div th:if="${otroEquipo}">
-            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= ${jugador.id})}">
-                <button class="botonSust">Ofrecer intercambio</button>
-            </a>
-        </div>
-        <div th:if="${miEquipo}">
-            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= ${jugador.id})}">
-                <button class="botonSust">Sacar a subasta</button>
-            </a>
-        </div>
-        <div><b th:text="${jugador.puntos}"/> puntos</div>
     </div>
 </h2>
 <h2 th:if="${SinEquipo}">

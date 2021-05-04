@@ -11,13 +11,13 @@
         <h2>Banquillo</h2>
         <div style="display: inline-grid; float: left;" th:each="jugador : ${jugadores}">
             <div class="player"
-                 style="border-radius:0%; background-image: url('/resources/images/banquillo2.png'); background-size:100px; width: 102px; height: 180px; display: inline-block">
-                <div style="padding-top: 100px; padding-left: 20px;">
+                 style="border-radius:0%; background-image: url('/resources/images/banquillo2.png'); background-size:100px; width: 102px; height: 99px; display: inline-block">
+                <div style="padding-top: 10px; padding-left: 23px;">
                     <div style="position:relative; display: inline-block">
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
                             <img th:src="${jugador.foto}" class="image--cover img-responsive"></a>
                     </div>
-                    <div style="position:absolute; top:0; margin-top: 40px; padding-top: 100px; margin-left: 40px">
+                    <div style="position:absolute; top:0; padding-top: 50px; margin-left: 40px">
                         <img th:if="${jugador.estadoLesion}=='En forma'" style="width: 20px"
                              src="/resources/images/enForma.svg"/>
                         <img th:if="${jugador.estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"

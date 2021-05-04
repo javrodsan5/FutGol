@@ -15,8 +15,7 @@
         <div class="card2" th:each="jugador : ${jugadoresSinEquipo}"
              style="--color-card2: #e2a823; width: 1000px; height: 125px; margin: 15px;">
             <img class="topMedal_img" style="width: 70px; float: left" src="/resources/images/mazo.svg"/>
-            <div class="firstinfo" style="align-items: end; justify-content: space-evenly"><img style="width: 80px"
-                                                                                                th:src="*{jugador.foto}"/>
+            <div class="firstinfo" style="align-items: end; justify-content: space-evenly"><img style="width: 80px" th:src="*{jugador.foto}"/>
                 <div class="profileinfo">
                     <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3
                             th:text="*{jugador.name}"></h3></a>
@@ -36,7 +35,7 @@
 
                     <h4 th:if="${jugador.estadoLesion}=='Lesionado'"><b
                             th:text="${jugador.estadoLesion} + ' ' "></b><img
-                            style="width: 20px" class="topMedal_img" src="/resources/images/lesionado.svg"/></h4>
+                            style="width: 20px; transform: rotate(45deg)" class="topMedal_img" src="/resources/images/lesionado.svg"/></h4>
 
                 </div>
                 <div class="profileinfo">

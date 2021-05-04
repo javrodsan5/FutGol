@@ -30,15 +30,36 @@
             </div>
 
             <div class="player p1" th:object="${jugadores[0]}">
-                <img th:src="*{foto}" class="image--cover img-responsive">
-                <br>
-                <div class="message-container--player"><p class="message--player" th:text="*{name}"></p></div>
+                <div style="position:relative; display: inline-block">
+                    <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'"
+                         style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/noDisponible.svg"/>
+                </div>
+                <div class="message-container--player" style="margin-left: 15%"><p
+                        class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[0].estadisticas}"
@@ -65,30 +86,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p2-442" th:object="${jugadores[1]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[1].estadisticas}"
@@ -115,30 +157,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p3-442" th:object="${jugadores[2]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[2].estadisticas}"
@@ -165,30 +228,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p4-442" th:object="${jugadores[3]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[3].estadisticas}"
@@ -206,7 +290,6 @@
                                 </script>
                             </div>
                         </div>
-                        <br><br>
                         <a th:href="@{/jugador/{idJugador}/jornada/1 (idEquipo = *{club.id} ,idJugador= *{id})}">
                             <button class="botonSust">Ver detalles del jugador</button>
                         </a>
@@ -215,30 +298,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p5-442" th:object="${jugadores[4]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[4].estadisticas}"
@@ -265,30 +369,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p6-442" th:object="${jugadores[5]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px; transform: rotate(45deg)"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[5].estadisticas}"
@@ -315,30 +440,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p7-442" th:object="${jugadores[6]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[6].estadisticas}"
@@ -365,30 +511,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p8-442" th:object="${jugadores[7]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[7].estadisticas}"
@@ -415,30 +582,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p9-442" th:object="${jugadores[8]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[8].estadisticas}"
@@ -465,30 +653,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p10-442" th:object="${jugadores[9]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[9].estadisticas}"
@@ -515,30 +724,51 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="player p11-442" th:object="${jugadores[10]}">
-                <div style="display: inline-block;">
+                <div style="position:relative; display: inline-block">
                     <img th:src="*{foto}" class="image--cover img-responsive">
+                </div>
+                <div style="position:absolute; top:0; margin-top: 40px; margin-left: 40px">
+                    <img th:if="*{estadoLesion}=='En forma'" style="width: 20px" src="/resources/images/enForma.svg"/>
+                    <img th:if="*{estadoLesion}=='Lesionado'" style="width: 20px; transform: rotate(45deg)"
+                         src="/resources/images/lesionado.svg"/>
+                    <img th:if="*{estadoLesion}=='Sancionado/No disponible'" style="width: 20px"
+                         src="/resources/images/noDisponible.svg"/>
                 </div>
                 <div class="message-container--player" style="display: inline-block; margin-left: 15%"><p
                         class="message--player" th:text="*{name}"></p></div>
                 <div class="info">
                     <div style="display:inline-block;float: left">
-                        <h2 th:text="*{name}"></h2>
-                        <h4>Estado: <b th:text="*{estadoLesion}"></b></h4>
-                        <h4>Valor: <b th:text="*{valor}"></b> mill. €</h4>
-                        <h4>Puntos: <b th:text="*{puntos}"></b>pts</h4>
+                        <b><h1 th:text="*{name}" style="font-size: 20px"></h1></b>
+                        <h4 th:if="*{estadoLesion}=='En forma'"><b th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px" src="/resources/images/enForma.svg"/></h4>
+
+                        <h4 th:if="*{estadoLesion}=='Sancionado/No disponible'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                        </h4>
+
+                        <h4 th:if="*{estadoLesion}=='Lesionado'"><b
+                                th:text="*{estadoLesion} + ' ' "></b><img
+                                style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/>
+                        </h4>
+                        <h4><b th:text="*{valor}"></b> millones de €</h4>
+                        <h4><b th:text="*{puntos}"></b> puntos</h4>
                         <h4>Últimas jornadas jugadas:</h4>
 
                         <div style="display: inline-grid" th:each="e, it : ${jugadores[10].estadisticas}"
@@ -565,13 +795,16 @@
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>
-                        <div th:if="${miEquipo}">
-                            <br><br>
-                            <a th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                        <div th:if="${miEquipo}" style="display: inline-flex">
+                            <br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
                                 <button class="botonSust">Sustituir</button>
                             </a>
-                            <a th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
-                                <button class="botonSust">Sacar a subasta</button>
+                            <br><br>
+                            <a style="display: inline-flex; margin: 10px"
+                               th:href="@{/liga/{idLiga}/vender/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                                <button class="botonSust">Vender</button>
                             </a>
                         </div>
                     </div>

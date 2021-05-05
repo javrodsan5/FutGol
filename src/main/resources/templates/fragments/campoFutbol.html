@@ -5,8 +5,11 @@
 
 <th:block th:fragment="layout (jugadores, miEquipo)">
 
-    <div style="display: inline-block;width: 55%;">
-        <h1 th:if="${miEquipo}==false">Once ideal</h1>
+
+    <div style="display: inline-block; width: 55%;">
+        <h1 style="margin-left: 22%" th:if="${miEquipo}==false">Once ideal</h1>
+        <h1 style="margin-left: 22%" th:if="${miEquipo}">Mi once</h1>
+
 
         <div class="field">
             <div class="grass"></div>

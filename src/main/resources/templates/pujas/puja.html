@@ -72,6 +72,10 @@
         margin: 0;
     }
 </style>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0px 20% 1% 20%">
+    <h4>Debes pujar al menos el valor del jugador para llevártelo.</h4>
+</div>
 <div style="display: inline-block; width: 100%">
     <div class="mejorJugadorJornada"
          style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
@@ -89,12 +93,14 @@
         </div>
     </div>
     <div class="mensjPuja">
-        <h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2>
+        <div style="display: inline-block;"><h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2><img style="width: 50px; display: inline-block"
+                                                                        src="/resources/images/mazo.svg"/></div>
 
-        <h2> Tu dinero: <b th:text="${dineroRestante}"/></h2>
+        <div style="display: inline-block;"><h2> Tu dinero: <b th:text="${dineroRestante}"/></h2> <img style="width: 50px; display: inline-block"
+                                                                        src="/resources/images/dineroRestante.svg"/>
+        </div>
         <h2> Precio del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
 
-        <h3>Debes pujar al menos el valor del jugador para llevártelo.</h3>
     </div>
 </div>
 

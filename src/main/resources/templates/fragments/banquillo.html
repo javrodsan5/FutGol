@@ -72,7 +72,7 @@
 
                         <div th:if="${otroEquipo}">
                             <br>
-                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= *{id})}">
+                            <a th:href="@{/liga/{idLiga}/nuevoIntercambio/{idJugador} (idLiga = ${liga.id} ,idJugador= ${jugador.id})}">
                                 <button class="botonSust">Ofrecer intercambio</button>
                             </a>
                         </div>

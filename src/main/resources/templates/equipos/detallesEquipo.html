@@ -83,52 +83,52 @@
             });
         </script>
     </div>
-    <div class="puntosEquipo">
-        <div class="ptosJorEq" th:each="pje : ${ptosJorEq}">J <b th:text="${pje.jornada.numeroJornada}"></b> <b>: </b>
-            <b
-                    th:text="${pje.puntos}"/> puntos
+    <div class="card3" align="center" style="width: 1000px; min-height: 0px; height: 90px">
+        <h4 style="margin: 0px">Puntos por jornadas</h4>
+        <div class="scroll_vertical" id="style_scroll" style="height: 50px">
+            <div class="ptosJorEq" style="margin: 10px" th:each="pje : ${ptosJorEq}">J<b
+                    th:text="${pje.jornada.numeroJornada}"></b>
+                <div class="circulo"><p th:text="${pje.puntos}"></p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <br><br>
+    <br>
 
     <div class="card3" style="width: 1000px">
-        <h1 th:if="${miEquipo==false}">Equipo de <b th:text="${equipo.usuario.user.username}"></b></h1>
-
         <h1><b th:text="${equipo.name}"></b></h1>
-        <div th:if="${miEquipo}" style="display: inline-block; ">
-            <h1 style="font-size: 20px; display: inline-block">Dinero restante: <b style="color: #0d9404"
-                                                                                   th:text="${dineroRestante}"></b></h1>
+        <div style="display: inline-block; float: left"><h1 style="font-size: 20px; display: inline-block">Puntos: <b
+                th:text="${equipo.puntos} + ' puntos'"></b></h1>
             <img style="width: 50px; display: inline-block"
-                 src="/resources/images/dineroRestante.svg"/>
-
+                 src="/resources/images/puntos.svg"/>
         </div>
+
         <div style="display: inline-block; float: right"><h1 style="font-size: 20px; display: inline-block">Numero de
             jugadores: <b th:text="${equipo.jugadores.size} + '/24'"></b></h1>
             <img style="width: 50px; display: inline-block"
                  src="/resources/images/numeroJugadores.svg"/>
         </div>
         <br>
-        <div style="display: inline-block; float: right"><h1 style="font-size: 20px; display: inline-block">Puntos: <b
-                th:text="${equipo.puntos} + ' puntos'"></b></h1>
+        <div th:if="${miEquipo}" style="display: inline-block; float: right; margin-left: 100px ">
+            <h1 style="font-size: 20px; display: inline-block">Dinero restante: <b style="color: #0d9404"
+                                                                                   th:text="${dineroRestante}"></b></h1>
             <img style="width: 50px; display: inline-block"
-                 src="/resources/images/puntos.svg"/>
+                 src="/resources/images/dineroRestante.svg"/>
+
         </div>
         <br>
-        <div style="display: inline-block"><h1 style="font-size: 20px; display: inline-block">Valor del equipo: <b
-                style="color: #c89d10"
-                th:text="${valorEquipo}"></b>
+        <div style="display: inline-block; margin-right: 100px"><h1 style="font-size: 20px; display: inline-block">Valor
+            del equipo: <b
+                    style="color: #01a9af"
+                    th:text="${valorEquipo}"></b>
         </h1>
             <img style="width: 50px; display: inline-block"
                  src="/resources/images/valorClub.svg"/>
         </div>
     </div>
     <br><br>
-    <div th:if="${miEquipo}" th:align="right">
-        <a class="btn btn-default" th:href="@{/liga/{idLiga}/misMovimientos (idLiga= ${liga.id})}">
-            <span class="glyphicon glyphicon-signal"></span> Mis movimientos en la liga</a>
-    </div>
-    <div th:if="${miEquipo}" class="dropdown">
+    <div th:if="${miEquipo}" class="dropdown" align="right">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
             Formaciones
@@ -153,7 +153,14 @@
 
         </ul>
     </div>
-    <div>Formación actual: <b th:text="${equipo.formacion}"></b></div>
+    <div style="display: inline-block; float: right; margin-top: 10px; padding: 5px; border: 2px solid"><h1
+            style="font-size: 20px; text-align: end;display: inline-block">Formación: <b
+            th:text="${equipo.formacion}"></b></h1><img style="width: 50px; display: inline-block; margin-left: 10px"
+                                                        src="/resources/images/formacion.svg"/></div>
+    <div th:if="${miEquipo}">
+        <a class="btn btn-default" th:href="@{/liga/{idLiga}/misMovimientos (idLiga= ${liga.id})}">
+            <span class="glyphicon glyphicon-signal"></span> Mis movimientos en la liga</a>
+    </div>
 
     <div style="display: flex; margin-top: 3%; float: left;">
         <div th:replace="~{fragments/banquillo :: layout (${equipo.jugBanquillo}, ${miEquipo})}"></div>

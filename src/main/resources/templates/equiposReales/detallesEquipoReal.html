@@ -113,8 +113,8 @@
     <h1 style="text-align: center">Top 5 Jugadores</h1>
     <div th:each="jugador, i : ${top5Jugadores}" style=" width: 10%; display: inline-block">
         <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><img
-                class="image--cover img-responsive"
-                th:src="${jugador.foto}" style="display: inline-block;"/></a>
+                class="image--cover img-responsive" th:src="${jugador.foto}"
+                style="display: inline-block; width: 90px; height: 90px"/></a>
         <img th:if="${i.index + 1== 1}" style="width: 30%; margin-left: -30px; margin-top: 60px"
              class="topMedal_img"
              src="../resources/images/first.svg"/>
@@ -137,14 +137,14 @@
 </div>
 
 <br><br>
-<div style="display: flex; margin-top: 3%; float: left;">
+<div style="display: flex;">
     <div th:replace="~{fragments/banquillo :: layout (${banquillo},false)}"></div>
     <div style="margin-top: 20%" th:replace="~{fragments/campoFutbol :: layout (${jugadores},false)}"></div>
 
 </div>
 <br>
 <br>
-<div style="display: inline-block;float: left; text-align: center">
+<div style="display: inline-block;float: left; text-align: center;">
     <h2><b>Partidos como local</b></h2>
     <div class="scroll_vertical" id="style_scroll">
         <div th:each="partido : ${partidosLocal}">
@@ -173,7 +173,7 @@
         </div>
     </div>
 </div>
-<div style="display: inline-block;float: right; text-align: center">
+<div style="display: inline-block;float: right; text-align: center;">
     <h2><b>Partidos como visitante</b></h2>
     <div class="scroll_vertical" id="style_scroll">
         <div th:each="partido : ${partidosVisitante}">

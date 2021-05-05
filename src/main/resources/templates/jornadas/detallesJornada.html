@@ -48,95 +48,84 @@
 
     coloresPuntuaciones();
 </script>
-<div>
-    <h1 th:if="${ultimaJornada}">Última jornada:</h1>
-    <h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
 
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="true">
-            Jornadas
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-
-            <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                                   th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"></a>
-            </li>
-        </ul>
-    </div>
-    <div style="float: right" th:replace="~{fragments/campoFutbol :: layout (${jornada.jugadores}, false)}"></div>
-</div>
-
-<div th:if="${noOnce}">
-    <h1>No existe todavía once ideal de esta jornada.</h1>
-</div>
-
-<div>
-    <div th:if="${!noOnce}">
-
-        <div th:object="${jornada}">
-            <div th:if="*{formacion}=='4-3-3'">
-                <script>
-                    $(document).ready(function () {
-                        cambiarFormacion('433')
-                    });
-                </script>
+<div style="display: inline-block; width: 80%">
+    <h1 th:if="${ultimaJornada}">Última jornada</h1>
+    <div th:if="${!noOnce}" th:object="${jornada}">
+        <div class="mejorJugadorJornada"
+             style="float: left; border: 1px solid red; margin-right: 2%; margin-top: 4%; width:60%;">
+            <div style="display: inline-block; width: 60%">
+                <img class="fotoJugador" th:src="*{mejorJugador.jugador.foto}">
+                <h1 style="display: table-caption"><b th:text="*{mejorJugador.jugador.name}"></b></h1>
+                <h2>Puntos: <b th:text="*{mejorJugador.puntos}"></b></h2>
+                <h2 th:text="*{mejorJugador.jugador.posicion}"></h2>
             </div>
-            <div th:if="*{formacion}=='3-5-2'">
-                <script>
-                    $(document).ready(function () {
-                        cambiarFormacion('352')
-                    });
-                </script>
-            </div>
-            <div th:if="*{formacion}=='5-3-2'">
-                <script>
-                    $(document).ready(function () {
-                        cambiarFormacion('532')
-                    });
-                </script>
-            </div>
-
-            <div>
-
-                <script>
-                    $(document).ready(function () {
-                        coloresPuntuaciones()
-                    });
-                </script>
-            </div>
-
-            <div class="mejorJugadorJornada" style="float: left; border: 1px solid red; margin-right: 2%; margin-top: 4%;">
-                <div style="display: inline-block; width: 60%;">
-                    <img class="fotoJugador" th:src="*{mejorJugador.jugador.foto}">
-                    <div style="margin-top: 25px; margin-right: 20%; display: inline-block">
-                        <h1 style="display: table-caption"><b th:text="*{mejorJugador.jugador.name}"></b></h1>
-                        <h2>Valor: <b th:text="*{mejorJugador.jugador.valor}"></b> mill. €</h2>
-                        <h2>Estado: <b th:text="*{mejorJugador.jugador.estadoLesion}"></b></h2>
-                        <h2>Posición: <b th:text="*{mejorJugador.jugador.posicion}"></b></h2>
-                    </div>
-                </div>
-                <div style="float: right; margin: 2%;">
-                    <div align="center" style="border: 2px solid red; padding: 4px">
-                        <img th:src="*{mejorJugador.jugador.club.escudo}" width="110px" height="100px">
-                        <h2 th:text="*{mejorJugador.jugador.club.name}"/>
-                    </div>
+            <div style="float: right; margin: 2%;">
+                <div align="center" style="border: 2px solid red; padding: 4px">
+                    <img th:src="*{mejorJugador.jugador.club.escudo}" width="70px" height="60px">
+                    <h2 th:text="*{mejorJugador.jugador.club.name}"/>
                 </div>
             </div>
         </div>
-    </div>
+        <div th:if="*{formacion}=='4-3-3'">
+            <script>
+                $(document).ready(function () {
+                    cambiarFormacion('433')
+                });
+            </script>
+        </div>
+        <div th:if="*{formacion}=='3-5-2'">
+            <script>
+                $(document).ready(function () {
+                    cambiarFormacion('352')
+                });
+            </script>
+        </div>
+        <div th:if="*{formacion}=='5-3-2'">
+            <script>
+                $(document).ready(function () {
+                    cambiarFormacion('532')
+                });
+            </script>
+        </div>
 
+        <div>
+
+            <script>
+                $(document).ready(function () {
+                    coloresPuntuaciones()
+                });
+            </script>
+        </div>
+
+    </div>
+    <div style="float: right">
+        <h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+                Jornadas
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+                <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                                       th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div style="display: inline-flex;">
     <div style="display: inline-block;float: left; text-align: center">
         <h1>Partidos</h1>
         <div class="scroll_vertical" id="style_scroll">
             <div th:each="partido : ${jornada.partidos}">
                 <div class="card3" style="height: 1px">
                     <div style="display: inline-block;  float: left"><img style="display: inline-block; float: left"
-                                                                          width="30px"
-                                                                          height="30px"
+                                                                          width="30px" height="30px"
                                                                           th:src="${partido.equipoLocal.escudo}">
-                        <br><br>
                         <h5><a
                                 th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
                                 th:text="${partido.equipoLocal.name}"/></h5></div>
@@ -144,7 +133,7 @@
                                                                           width="30px"
                                                                           height="30px"
                                                                           th:src="${partido.equipoVisitante.escudo}">
-                        <br><br>
+
                         <h5><a
                                 th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
                                 th:text="${partido.equipoVisitante.name}"/></h5></div>
@@ -155,6 +144,14 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div th:if="${!noOnce}" style="margin-left: 4%">
+        <div th:replace="~{fragments/campoFutbol :: layout (${jornada.jugadores}, false)}"></div>
+    </div>
+    <div th:if="${noOnce}" style="float: right; margin: auto">
+
+        <h1>No existe todavía once ideal de esta jornada.</h1>
     </div>
 </div>
 </body>

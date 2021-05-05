@@ -53,7 +53,7 @@
     <h1 th:if="${ultimaJornada}">Última jornada</h1>
     <div th:if="${!noOnce}" th:object="${jornada}">
         <div class="mejorJugadorJornada"
-             style="float: left; border: 1px solid red; margin-right: 2%; margin-top: 4%; width:60%;">
+             style="float: left; border: 1px solid red; margin-right: 2%; width:60%;">
             <div style="display: inline-block; width: 60%">
                 <img class="fotoJugador" th:src="*{mejorJugador.jugador.foto}">
                 <h1 style="display: table-caption"><b th:text="*{mejorJugador.jugador.name}"></b></h1>

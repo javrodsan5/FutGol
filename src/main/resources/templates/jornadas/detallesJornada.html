@@ -48,23 +48,26 @@
 
     coloresPuntuaciones();
 </script>
+<div>
+    <h1 th:if="${ultimaJornada}">Última jornada:</h1>
+    <h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
 
-<h1 th:if="${ultimaJornada}">Última jornada:</h1>
-<h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="true">
+            Jornadas
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 
-<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="true">
-        Jornadas
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-
-        <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                               th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"></a></li>
-    </ul>
+            <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                                   th:href="@{/jornada/{idJornada} (idJornada= ${jornada.id})}"></a>
+            </li>
+        </ul>
+    </div>
+    <div style="float: right" th:replace="~{fragments/campoFutbol :: layout (${jornada.jugadores}, false)}"></div>
 </div>
-<br><br>
+
 <div th:if="${noOnce}">
     <h1>No existe todavía once ideal de esta jornada.</h1>
 </div>
@@ -104,7 +107,7 @@
                 </script>
             </div>
 
-            <div class="mejorJugadorJornada" style="float: left; border: 1px solid red; margin-right: 2%;">
+            <div class="mejorJugadorJornada" style="float: left; border: 1px solid red; margin-right: 2%; margin-top: 4%;">
                 <div style="display: inline-block; width: 60%;">
                     <img class="fotoJugador" th:src="*{mejorJugador.jugador.foto}">
                     <div style="margin-top: 25px; margin-right: 20%; display: inline-block">
@@ -121,34 +124,36 @@
                     </div>
                 </div>
             </div>
-            <div style="float: top" th:replace="~{fragments/campoFutbol :: layout (${jornada.jugadores}, false)}"></div>
         </div>
     </div>
 
-    <div th:object="${jornada}">
-
-        <div style="display: inline-block;float: left;">
-            <table id="partidos" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Equipo Local</th>
-                    <th>Equipo Visitante</th>
-                    <th>Resultado</th>
-                    <th>Fecha</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="partido : *{partidos}">
-                    <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
-                           th:text="${partido.equipoLocal.name}"/>
-                    <td><a th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
-                           th:text="${partido.equipoVisitante.name}"/>
-                    <td th:text="${partido.resultado}"/>
-                    <td th:text="${partido.fecha}"/>
-                </tr>
-                </tbody>
-
-            </table>
+    <div style="display: inline-block;float: left; text-align: center">
+        <h1>Partidos</h1>
+        <div class="scroll_vertical" id="style_scroll">
+            <div th:each="partido : ${jornada.partidos}">
+                <div class="card3" style="height: 1px">
+                    <div style="display: inline-block;  float: left"><img style="display: inline-block; float: left"
+                                                                          width="30px"
+                                                                          height="30px"
+                                                                          th:src="${partido.equipoLocal.escudo}">
+                        <br><br>
+                        <h5><a
+                                th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
+                                th:text="${partido.equipoLocal.name}"/></h5></div>
+                    <div style="display: inline-block; float: right"><img style="display: inline-block; float: right"
+                                                                          width="30px"
+                                                                          height="30px"
+                                                                          th:src="${partido.equipoVisitante.escudo}">
+                        <br><br>
+                        <h5><a
+                                th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
+                                th:text="${partido.equipoVisitante.name}"/></h5></div>
+                    <div align="center">
+                        <h3 th:text="${partido.resultado}"/>
+                        <h5 th:text="${partido.fecha}"/>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -72,50 +72,32 @@
         margin: 0;
     }
 </style>
-
-<h2> Número de pujas ya realizadas: <b th:text="${numPujas}"/></h2>
-
-<h2> Dinero restante: <b th:text="${dineroRestante}"/></h2>
-<h2> Valor del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
-
-<h3>Debes pujar al menos el valor del jugador para llevártelo.</h3>
-
-
-<div style="margin-left:25px;display: inline-block">
-    <div class="row">
-        <div class="col s12 m7">
-            <div class="card">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" th:src="${jugador.foto}" width="210" height="295"/>
-                    <span class="card-title" th:text="${jugador.name}"></span>
-                </div>
-                <div><b th:text="${jugador.puntos}"/> puntos</div>
-                <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4" th:text="${jugador.name}"><i
-                                class="material-icons right">close</i></span>
-                    <ul>
-                        <li>Equipo:
-                            <b th:text="${jugador.club.name}"></b>
-                        </li>
-                        <li>Valor:
-                            <b th:text="${jugador.valor}"> mill.€</b>
-                        </li>
-                        <li>Estado:
-                            <b th:text="${jugador.estadoLesion}"></b>
-                        </li>
-
-                    </ul>
-                </div>
-                <div class="card-action">
-                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
-                        Ver detalles jugador</a>
-                </div>
-
-                </a>
+<div style="display: inline-block; width: 100%">
+    <div class="mejorJugadorJornada"
+         style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
+        <div style="display: inline-block; width: 50%">
+            <img class="fotoJugador" th:src="${jugador.foto}">
+            <h1><b th:text="${jugador.name}"></b></h1>
+            <h2>Puntos: <b th:text="${jugador.puntos}"></b></h2>
+            <h2 th:text="${jugador.posicion}"></h2>
+        </div>
+        <div style="float: right; margin: 2%;">
+            <div align="center" style="border: 2px solid red; padding: 4px">
+                <img th:src="${jugador.club.escudo}" width="70px" height="60px">
+                <h2 th:text="${jugador.club.name}"/>
             </div>
         </div>
     </div>
+    <div class="mensjPuja">
+        <h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2>
+
+        <h2> Tu dinero: <b th:text="${dineroRestante}"/></h2>
+        <h2> Precio del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
+
+        <h3>Debes pujar al menos el valor del jugador para llevártelo.</h3>
+    </div>
 </div>
+
 <div style="display: inline-block; float: right; text-align: center">
     <h1>La puja finalizará en:</h1>
     <div id="countdown">
@@ -126,14 +108,15 @@
             <li class="reloj"><span id="seconds"></span>Segundos</li>
         </ul>
     </div>
-    <br><br>
-    <h1 id="resultado"></h1>
-    <br>
-    <form th:object="${puja}" class="form-horizontal" method="post">
+</div>
+
+<div class="formPuja">
+    <h1 style="text-align: inherit;">Cantidad a pujar</h1>
+    <form th:object="${puja}" method="post">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
         <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
             <div class="col-sm-10">
-                <input type="number" class="form-control" id="valor"
+                <input type="number" class="inputPuja" id="valor"
                        onkeyup="valorADinero()" name="cantidad" required>
                 <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
                       aria-hidden="true"></span>
@@ -142,15 +125,15 @@
                 <span class="help-inline" th:errors="*{cantidad}">Error</span>
             </div>
         </div>
-        <div class="form-group">
+        <div>
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="btn btn-default" type="submit">Pujar</button>
-                <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+                <button class="botonPuja" type="submit">Pujar</button>
+                <button class="botonPuja"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
                 >Cancelar</a></button>
             </div>
         </div>
     </form>
 </div>
-<script type="text/javascript" th:src="@{/resources/js/materialize.js}"></script>
+
 </body>
 </html>

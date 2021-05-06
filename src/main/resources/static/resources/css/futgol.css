@@ -9833,6 +9833,7 @@ footer {
     left: 50%;
     margin-top: -60px;
     margin-left: -50px;
+    text-align: center;
 }
 
 .segundo {
@@ -9841,6 +9842,7 @@ footer {
     left: 30%;
     margin-top: -60px;
     margin-left: -50px;
+    text-align: center;
 }
 
 .tercero {
@@ -9849,6 +9851,7 @@ footer {
     left: 70%;
     margin-top: -60px;
     margin-left: -50px;
+    text-align: center;
 }
 
 .resto {
@@ -9858,6 +9861,7 @@ footer {
     border: 2px solid #3DC25D;
     border-radius: 4%;
     padding: 40px;
+    text-align: center;
 }
 
 .misinvitaciones {

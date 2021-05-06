@@ -7,6 +7,9 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
 
     fun findAll(): Collection<Equipo>
 
+    @Query("SELECT e FROM Equipo e ORDER BY -e.puntos")
+    fun buscaTodosEquiposOrdenPuntos(): Collection<Equipo>
+
     fun save(equipo: Equipo)
 
     @Query("SELECT l.equipos FROM Liga l where l.id = ?1")
@@ -14,10 +17,6 @@ interface EquipoRepositorio : Repository<Equipo, Int> {
 
     @Query("SELECT e FROM Equipo e where e.id = ?1")
     fun buscaEquiposPorId(id: Int): Equipo
-
-    //REVISAR
-    @Query("SELECT e FROM Equipo e where e.name = ?1")
-    fun buscarEquipoPorNombre(nombre: String): Equipo
 
     @Query("SELECT e FROM Equipo e where e.name = ?1 and e.liga.id = ?2")
     fun buscarEquipoPorNombreYLiga(nombreEquipo: String, idLiga: Int): Equipo

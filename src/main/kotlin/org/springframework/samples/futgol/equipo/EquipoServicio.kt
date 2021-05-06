@@ -164,8 +164,8 @@ class EquipoServicio {
     }
 
     @Transactional(readOnly = true)
-    fun buscaTodosEquipos(): Collection<Equipo>? {
-        return equipoRepositorio?.findAll()
+    fun buscaTodosEquiposOrdenPuntos(): Collection<Equipo>? {
+        return equipoRepositorio?.buscaTodosEquiposOrdenPuntos()
     }
 
     @Transactional(readOnly = true)

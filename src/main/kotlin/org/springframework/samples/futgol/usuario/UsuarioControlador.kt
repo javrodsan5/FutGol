@@ -223,15 +223,12 @@ class UsuarioControlador(
 
     @GetMapping("topUsuarios")
     fun clasificacionGeneral(model: Model): String {
-        var equipos = equipoServicio.buscaTodosEquipos()?.sortedBy { x -> -x.puntos }?.subList(0, 4)
+        var equipos = equipoServicio.buscaTodosEquiposOrdenPuntos()?.toList()?.subList(0,9)
         if (equipos != null) {
-            model["equipos"] = equipos
-//            var valores: MutableList<Double> = ArrayList()
-//            for (e in equipos) {
-//                e.liga?.id?.let { equipoServicio.calcularValorEquipo(e.name, it) }?.let { valores.add(it) }
-//            }
-//            model["valores"] = valores
-//            model["posiciones"] = equipos.indices
+            model["ganador"] = equipos[0]
+            model["segundo"] = equipos[1]
+            model["tercero"] = equipos[2]
+            model["restoEquipos"] = equipos.drop(7)
         }
         return VISTA_RANKING_USUARIOS
     }

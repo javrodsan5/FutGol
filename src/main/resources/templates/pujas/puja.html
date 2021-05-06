@@ -93,13 +93,17 @@
         </div>
     </div>
     <div class="mensjPuja">
-        <div style="display: inline-block;"><h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2><img style="width: 50px; display: inline-block"
-                                                                        src="/resources/images/mazo.svg"/></div>
+        <div style="display: flex;"><h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2><img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/mazo.svg"/></div>
 
-        <div style="display: inline-block;"><h2> Tu dinero: <b th:text="${dineroRestante}"/></h2> <img style="width: 50px; display: inline-block"
-                                                                        src="/resources/images/dineroRestante.svg"/>
+        <div style="display: flex;"><h2> Tu dinero: <b th:text="${dineroRestante}"/></h2> <img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/dineroRestante.svg"/>
         </div>
-        <h2> Precio del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2>
+        <div style="display: flex;"><h2> Precio del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2><img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/valorClub.svg"/></div>
 
     </div>
 </div>

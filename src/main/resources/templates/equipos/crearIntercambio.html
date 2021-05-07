@@ -26,67 +26,59 @@
         margin: 0;
     }
 </style>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0% 0% 1% 10%;">
+    <h1> Vas a realizar un intercambio por el siguiente jugador</h1>
+</div>
+<div class="mejorJugadorJornada"
+     style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
+    <div style="display: inline-block; width: 50%">
+        <img class="fotoJugador" th:src="${jugador.foto}">
+        <h1><b th:text="${jugador.name}"></b></h1>
+        <h2>Puntos: <b th:text="${jugador.puntos}"></b></h2>
+        <h2 th:text="${jugador.posicion}"></h2>
+        <h2>Valor: <b th:text="${jugador.valor}"/> mill.€</h2>
 
-<h1> Vas a realizar un intercambio por el siguiente jugador</h1>
-<div style="margin-left:45px;display: inline-block">
-    <div class="row">
-        <div class="col s12 m7">
-            <div class="card">
-                <div class="card-image waves-effect waves-block waves-light">
-                    <img class="activator" th:src="${jugador.foto}" width="210" height="295"/>
-                    <span class="card-title" th:text="${jugador.name}"></span>
-                </div>
-                <div><b th:text="${jugador.puntos}"/> puntos</div>
-                <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4" th:text="${jugador.name}"><i
-                                class="material-icons right">close</i></span>
-                </div>
-                <div class="card-action">
-                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
-                        Ver detalles jugador</a>
-                </div>
+    </div>
+    <div style="float: right; margin: 2%;">
+        <div align="center" style="border: 2px solid red; padding: 4px">
+            <img th:src="${jugador.club.escudo}" width="70px" height="60px">
+            <h2 th:text="${jugador.club.name}"/>
+        </div>
+    </div>
+</div>
 
-                </a>
+<div style="float: right">
+    <form th:object="${intercambio}" class="form-horizontal" method="post">
+        <h2>Elige el jugador que le quieras ofrecer</h2>
+        <h5>Jugador:Puntos:Posición:Valor</h5>
+        <select name="jugadorCreadorIntercambio">
+            <option th:each="j : ${misJugadores}"
+                    th:value="${j.id}"
+                    data-thumbnail="${j.foto}"
+                    th:text="${j.name}+' : '+${j.puntos}+' : '+${j.posicion}+' : '+${j.valor}"/>
+        </select>
+        <h2>¿Quieres añadir dinero a tu intercambio para convencerlo?</h2>
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
+            <div class="col-sm-10">
+                <input type="number" class="inputPuja" id="valor" onkeyup="valorADinero()" name="dinero" required>
+                <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
+                      aria-hidden="true"></span>
+                <span th:if="${!valido}" class="glyphicon glyphicon-remove form-control-feedback"
+                      aria-hidden="true"></span>
+                <span class="help-inline" th:errors="*{dinero}">Error</span>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="botonPuja" type="submit">Pujar</button>
+                <button class="botonPuja"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+                >Cancelar</a></button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-<div style="float: right">
-    <h2>Valor jugador: <b th:text="${jugador.valor}"/> mill.€</h2>
-</div>
-
-<h1>¿Quieres añadir dinero a tu intercambio para convencerlo?</h1>
-<h1 id="resultado"></h1>
-
-<form th:object="${intercambio}" class="form-horizontal" method="post">
-    <div class="form-group has-feedback">
-    <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
-      <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
-          <div class="col-sm-10">
-              <input type="number" class="form-control" id="valor" onkeyup="valorADinero()" name="dinero" required>
-              <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
-                    aria-hidden="true"></span>
-              <span th:if="${!valido}" class="glyphicon glyphicon-remove form-control-feedback"
-                    aria-hidden="true"></span>
-              <span class="help-inline" th:errors="*{dinero}">Error</span>
-          </div>
-          <br><br><br>
-          <h2>Elige el jugador que le quieras ofrecer</h2>
-          <h5>Jugador:Puntos:Posición:Valor</h5>
-          <select name="jugadorCreadorIntercambio">
-              <option th:each="j : ${misJugadores}"
-                      th:value="${j.id}"
-                      data-thumbnail= "${j.foto}"
-                      th:text="${j.name}+' : '+${j.puntos}+' : '+${j.posicion}+' : '+${j.valor}"/>
-          </select>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-default" type="submit">Pujar</button>
-            <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
-            >Cancelar</a></button>
-        </div>
-    </div>
-</form>
 </body>
 </html>

@@ -3,9 +3,10 @@
 
 <body>
 
-<h2>
+<h1>
     Ponle nombre a la liga
-</h2>
+</h1>
+<br>
 <form th:object="${liga}" class="form-horizontal" method="post">
     <div class="form-group has-feedback">
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
@@ -17,11 +18,12 @@
             <input type="hidden" name="ligaId" th:value="${liga.id}"/>
             <button
                     th:with="text=${liga['new']} ? 'Crear liga' : 'Editar'"
-                    class="btn btn-default" type="submit" th:text="${text}">Crear
+                    class="btn btn-success" type="submit" th:text="${text}">Crear
                 Liga
             </button>
-            <button class="btn btn-default"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
-            >Cancelar</a></button>
+
+            <a class="btn btn-danger" th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+            >Cancelar <i class="fa fa-times" aria-hidden="true"></i></a>
         </div>
     </div>
 </form>

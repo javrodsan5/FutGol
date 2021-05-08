@@ -30,6 +30,7 @@
      style="background-color: #f5e5758c; margin: 0% 0% 1% 10%;">
     <h1> Vas a realizar un intercambio por el siguiente jugador</h1>
 </div>
+<br><br>
 <div class="mejorJugadorJornada"
      style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
     <div style="display: inline-block; width: 50%">
@@ -51,6 +52,7 @@
 <div style="float: right">
     <form th:object="${intercambio}" class="form-horizontal" method="post">
         <h2>Elige el jugador que le quieras ofrecer</h2>
+        <br>
         <h5>Jugador:Puntos:Posición:Valor</h5>
         <select name="jugadorCreadorIntercambio">
             <option th:each="j : ${misJugadores}"
@@ -58,22 +60,27 @@
                     data-thumbnail="${j.foto}"
                     th:text="${j.name}+' : '+${j.puntos}+' : '+${j.posicion}+' : '+${j.valor}"/>
         </select>
+        <br><br>
         <h2>¿Quieres añadir dinero a tu intercambio para convencerlo?</h2>
+        <br>
+        <br><br>
+        <h1 style="font-weight: bold" id="resultado"></h1>
+        <br>
         <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
         <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
             <div class="col-sm-10">
-                <input type="number" class="inputPuja" id="valor" onkeyup="valorADinero()" name="dinero" required>
-                <span th:if="${valido}" class="glyphicon glyphicon-ok form-control-feedback"
+                <input type="number" class="inputPuja" id="valor"
+                       onkeyup="valorADinero()" name="dinero" required>
+                <span th:if="${valido}" class="fa fa-check form-control-feedback"
                       aria-hidden="true"></span>
-                <span th:if="${!valido}" class="glyphicon glyphicon-remove form-control-feedback"
+                <span th:if="${!valido}" class="fa fa-times form-control-feedback"
                       aria-hidden="true"></span>
                 <span class="help-inline" th:errors="*{dinero}">Error</span>
             </div>
-
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="botonPuja" type="submit">Pujar</button>
+                <button class="botonPuja" type="submit">Ofrecer intercambio</button>
                 <button class="botonPuja"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
                 >Cancelar</a></button>
             </div>

@@ -6,8 +6,8 @@
 <body>
 
 
-<h2>Información de su cuenta</h2>
-
+<h1>Información de su cuenta</h1>
+<br>
 <div style="display: inline-flex">
     <div class="cartona">
         <div>
@@ -29,7 +29,7 @@
         <div th:each="liga : ${ligasUsuario}">
             <div class="drop__card">
                 <div class="drop__data">
-                    <h1 class="nombreLiga" th:text="${liga}"></h1>
+                    <h1 th:text="${liga}"></h1>
                 </div>
             </div>
             <br>
@@ -37,10 +37,11 @@
     </div>
 </div>
 </div>
+<br><br>
 <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="true">
-        Añadir usuario una de mis ligas
+        Añadir usuario una de mis ligas <i class="fa fa-user-plus" aria-hidden="true"></i>
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

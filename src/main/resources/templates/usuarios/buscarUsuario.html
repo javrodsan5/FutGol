@@ -17,8 +17,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
 
-<h2>Buscar usuario</h2>
-
+<h1>Invitar usuario a liga</h1>
+<br>
 <form th:object="${usuario}" th:action="@{/usuarios}" method="get"
       class="form-horizontal" id="search-usuario-form">
     <input type="hidden" id="usuarios" name="usuarios" th:value="${usuarios}"/>
@@ -36,7 +36,9 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default">Buscar usuario</button>
+            <button type="submit" class="btn btn-success">Buscar usuario <i class="fa fa-search-plus"
+                                                                            aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 

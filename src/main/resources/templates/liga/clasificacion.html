@@ -32,7 +32,8 @@
         <h3>Puntos: <b th:text="${tercero.puntos}"/></h3>
     </div>
 
-    <div class="resto" th:each="equipo : ${restoEquipos}">
+    <div class="resto" th:each="equipo, i : ${restoEquipos}">
+        <div style="float: right; float: top"><h1 th:text="${i.index + 4}+'º'"></h1></div>
         <div style="display: block">
             <h4><b th:text="${equipo.name}"/></h4>
             <h4 th:text="${equipo.usuario.user.username}"/>

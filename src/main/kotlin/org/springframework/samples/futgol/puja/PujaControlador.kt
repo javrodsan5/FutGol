@@ -48,8 +48,20 @@ class PujaControlador(
                     }!! && jugador in subasta!!.jugadores) {
                     model["equipo"] = miEquipo
                     model["jugador"] = jugador
+                    val pujas = pujaServicio.buscarPujasJugadorSubasta(idJugador, subasta.id!!)
                     model["numPujas"] =
                         subasta.id?.let { pujaServicio.buscarPujasJugadorSubasta(idJugador, it)?.size }!!
+                    if (subasta.id?.let { pujaServicio.existePujaEqJugSub(miEquipo.id!!, idJugador, it) } == true) {
+                        model["hePujado"] = true
+                        model["miPuja"] = MetodosAux().enteroAEuros(
+                            pujaServicio.buscarPujaPorEquipoJugadorSubasta(
+                                miEquipo.id!!, idJugador,
+                                subasta.id!!
+                            )!!.cantidad
+                        )
+                    } else {
+                        model["hePujado"] = false
+                    }
                     model["puja"] = Puja()
                     model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
                     model["dineroRestante"] = MetodosAux().enteroAEuros((miEquipo.dineroRestante))
@@ -100,7 +112,7 @@ class PujaControlador(
             puja.subasta = subasta
             puja.jugador = jugadorServicio.buscaJugadorPorId(idJugador)
             pujaServicio.guardarPuja(puja)
-            "redirect:/liga/$idLiga/subastas"
+            "redirect:/liga/$idLiga/subastas/$idJugador"
         }
     }
 

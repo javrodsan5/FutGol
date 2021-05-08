@@ -10577,7 +10577,7 @@ header {
 .mensjPuja {
     border-radius: 3px;
     width: 45%;
-    padding: 2%;
+    padding: 2% 2% 2% 10%;
     float: right;
     background-color: #C2FFD2;
     margin-bottom: 2%;

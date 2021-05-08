@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'aboutUs')}">
+<body>
+<h1>Sobre nosotros</h1>
+<div style="float: left; width: 50%;">
+    <div class="javi">
+        <div style="display: inline-block; text-align: center;">
+            <img class="image--cover" style="height: 400px" src="../../static/resources/images/javi.png"
+                 th:src="@{/resources/images/javi.png}"/>
+            <h4>Javier Rodríguez Santiago</h4>
+            <div class="social_media" style="float: bottom;" th:align="center">
+                <a href="https://github.com/javrodsan5"><i class="fa fa-github fa-3x"></i></a>
+                <a href="https://linkedin.com/in/javier-rodríguez-santiago-0930b8189"><i
+                        class="fa fa-linkedin fa-3x"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="fernando">
+        <div style="display: inline-block; text-align: center;">
+            <img class="image--cover" style="height: 400px" src="../../static/resources/images/fernando.png"
+                 th:src="@{/resources/images/fernando.png}"/>
+            <h4>Fernando Calvo Durán</h4>
+        </div>
+        <div class="social_media" style="float: bottom;" th:align="center">
+            <a href="https://github.com/fercaldur"><i class="fa fa-github fa-3x"></i></a>
+            <a href="https://www.linkedin.com/in/fernando-calvo-durán-768823204"><i
+                    class="fa fa-linkedin fa-3x"></i></a>
+        </div>
+    </div>
+</div>
+<div class="aboutEsp">
+    <div style="display: -webkit-inline-box"><h1>Español</h1><img src="../../static/resources/images/spain.svg"
+                                                            th:src="@{/resources/images/spain.svg}" width="15%"/></div>
+    <p>Somos dos estudiantes de Ingeniería de Software de la Unviersidad de Sevilla. hemos desarrollado esta aplicación
+        web como trabajo de finde grado
+        FutGol ha sido desarrollado utilizando kotlin y el framework Spring, obteniendo los datos que se emplean
+        mediante Web Scraping, de diferentes fuentes.</p>
+</div>
+<div class="mensjPuja">
+    <div style="display: -webkit-inline-box"><h1>English</h1><img src="../../static/resources/images/uk.svg"
+                                                            th:src="@{/resources/images/uk.svg}" width="15%"/></div>
+    <p>We are two Software Engineering students from the Unviersity of Seville. We have developed this web application
+        as the final project for the degree. FutGol has been developed using Kotlin and Spring Framework,
+        obtaining all the data via Web Scraping from different sources.</p>
+</div>
+</body>
+</html>

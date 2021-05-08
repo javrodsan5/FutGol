@@ -31,25 +31,24 @@
 </div>
 
 <h1>Posibles sustituciones</h1>
-<div class="posSust" th:each="jugador : ${jugadoresMismaPos}">
-    <div class="user-profile">
-        <img class="fotosust" th:src="${jugador.foto}">
-        <div class="usernamesust" th:text="${jugador.name}"/>
-        <h2 class="bio"><b th:text="${jugador.puntos}"></b> puntos</h2>
-        <h2 class="bioSust"><b th:text="${jugador.estadoLesion}"></b></h2>
-        <h2 class="data"><b th:text="${jugador.valor}"></b> mill. €
-            <a style="float: right; margin: 3% 3% 0% 0%"
-               th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugadorOnce}/por/{idJugadorBanquillo} (idLiga= ${liga.id}, idJugadorBanquillo= ${jugador.id}, idJugadorOnce= ${titular.id})}"><i
-                    class="fa fa-exchange fa-2x"></i></a>
-            <a style="float: left; margin: 3% 0% 0% 3%"
-               th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}"><i
-                    class="fa fa-user fa-2x"></i>
-            </a>
-        </h2>
+<div class="scroll_vertical" id="style_scroll" style="margin-right: 20%;">
+    <div class="posSust" th:each="jugador : ${jugadoresMismaPos}">
+        <div class="user-profile">
+            <img class="fotosust" th:src="${jugador.foto}">
+            <div class="usernamesust" th:text="${jugador.name}"/>
+            <h2 class="bio"><b th:text="${jugador.puntos}"></b> puntos</h2>
+            <h2 class="bioSust"><b th:text="${jugador.estadoLesion}"></b></h2>
+            <h2 class="data"><b th:text="${jugador.valor}"></b> mill. €
+                <a style="float: right; margin: 3% 3% 0% 0%"
+                   th:href="@{/liga/{idLiga}/miEquipo/cambiarOnce/{idJugadorOnce}/por/{idJugadorBanquillo} (idLiga= ${liga.id}, idJugadorBanquillo= ${jugador.id}, idJugadorOnce= ${titular.id})}"><i
+                        class="fa fa-exchange fa-2x"></i></a>
+                <a style="float: left; margin: 3% 0% 0% 3%"
+                   th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id} ,idJugador= ${jugador.id})}"><i
+                        class="fa fa-user fa-2x"></i>
+                </a>
+            </h2>
+        </div>
     </div>
 </div>
-
-<script type="text/javascript" th:src="@{/resources/js/materialize.js}"></script>
-
 </body>
 </html>

@@ -79,7 +79,8 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
             banquilloOrdenadoMut.addAll(banquillo.sortedByDescending { x -> MetodosAux().transformador(x.posicion) })
 
             model["banquillo"] = banquilloOrdenadoMut
-
+            model["miEquipo"] = false
+            model["otroEquipo"] = false
         } else {
             return "redirect:/equiposLiga"
         }

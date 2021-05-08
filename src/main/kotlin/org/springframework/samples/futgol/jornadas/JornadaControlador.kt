@@ -34,6 +34,8 @@ class JornadaControlador(
             model["jornada"] = jornada
             var jornadaId = jornada.id
             model["ultimaJornada"] = true
+            model["miEquipo"] = false
+            model["otroEquipo"] = false
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
 
             if (jornadaId?.let { this.estadisticaJugadorServicio.existeEstadisticasJornada(it) } == true) {
@@ -126,7 +128,10 @@ class JornadaControlador(
                     }
                 }
             }
+            model["miEquipo"] = false
+            model["otroEquipo"] = false
             model["noOnce"] = noOnceTodavia
+
             return VISTA_DETALLES_JORNADA
         }
         return "redirect:/"

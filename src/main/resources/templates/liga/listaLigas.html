@@ -5,8 +5,11 @@
 
 <body>
 
-<h2>Mis ligas</h2>
-<p>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></p>
+<h1>Mis ligas</h1>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; width: 80%">
+    <h4>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></h4>
+</div>
 <div th:if="${ligas!=null and !ligas.empty}">
     <div th:each="liga : ${ligas}">
         <div class="col-md-3">

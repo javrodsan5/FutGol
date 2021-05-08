@@ -75,5 +75,9 @@ class AdministracionControlador(
         }
     }
 
+    @GetMapping("/aboutUs")
+    fun aboutUs(): String {
+        return "aboutUs"
+    }
 
 }

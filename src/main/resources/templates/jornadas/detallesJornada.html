@@ -102,7 +102,7 @@
     <div style="float: right">
         <h2 th:object="${jornada}"> Jornada <b th:text="*{numeroJornada}"></b></h2>
         <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="true">
                 Jornadas
                 <span class="caret"></span>
@@ -119,20 +119,16 @@
 
 <div style="display: inline-flex;">
     <div style="display: inline-block;float: left; text-align: center">
+        <br>
         <h1>Partidos</h1>
         <div class="scroll_vertical" id="style_scroll">
             <div th:each="partido : ${jornada.partidos}">
                 <div class="card3" style="height: 1px">
-                    <div style="display: inline-block;  float: left"><img style="display: inline-block; float: left"
-                                                                          width="30px" height="30px"
-                                                                          th:src="${partido.equipoLocal.escudo}">
+                    <div style="display: inline-block;  float: left"><img style="display: inline-block; float: left" width="30px" height="30px" th:src="${partido.equipoLocal.escudo}">
                         <h5><a
                                 th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoLocal.name})}"
                                 th:text="${partido.equipoLocal.name}"/></h5></div>
-                    <div style="display: inline-block; float: right"><img style="display: inline-block; float: right"
-                                                                          width="30px"
-                                                                          height="30px"
-                                                                          th:src="${partido.equipoVisitante.escudo}">
+                    <div style="display: inline-block; float: right"><img style="display: inline-block; float: right" width="30px" height="30px" th:src="${partido.equipoVisitante.escudo}">
 
                         <h5><a
                                 th:href="@{/equiposLiga/{nombreEquipo} (nombreEquipo= ${partido.equipoVisitante.name})}"
@@ -149,9 +145,9 @@
     <div th:if="${!noOnce}" style="margin-left: 4%">
         <div th:replace="~{fragments/campoFutbol :: layout (${jornada.jugadores}, false)}"></div>
     </div>
-    <div th:if="${noOnce}" style="float: right; margin: auto">
+    <div th:if="${noOnce}" style="float: right; margin: 100px">
 
-        <h1>No existe todavía once ideal de esta jornada.</h1>
+        <h1 >No existe todavía once ideal de esta jornada.</h1>
     </div>
 </div>
 </body>

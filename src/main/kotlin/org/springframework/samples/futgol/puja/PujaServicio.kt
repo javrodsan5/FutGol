@@ -32,6 +32,11 @@ class PujaServicio {
     }
 
     @Transactional(readOnly = true)
+    fun buscarPujaPorEquipoJugadorSubasta(idEquipo: Int, idJugador: Int, idSubasta: Int): Puja? {
+        return pujaRepositorio?.buscarPujaPorEquipoJugadorSubasta(idEquipo, idJugador, idSubasta)
+    }
+
+    @Transactional(readOnly = true)
     fun existePujaEqJugSub(idEquipo: Int, idJugador: Int, idSubasta: Int): Boolean? {
         return pujaRepositorio?.existePujaEqJugSub(idEquipo, idJugador, idSubasta)
     }

@@ -38,10 +38,12 @@
 </h2>
 
 <h2 th:if="${soyAdmin}">
-    <a class="btn btn-default" th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Invitar
-        usuario</a>
+    <a class="btn btn-success" th:href="@{/usuarios/buscar}"> Invitar
+        usuario <i class="fa fa-search-plus" aria-hidden="true"></i></a>
 
-    <a class="btn btn-default" th:href="@{/liga/editar/{nombreLiga}/(nombreLiga= ${liga.name})}">Cambiar nombre a la liga</a>
+    <a class="btn btn-primary" th:href="@{/liga/editar/{nombreLiga}/(nombreLiga= ${liga.name})}">Cambiar nombre a la
+        liga
+        <i class="fa fa-pencil" aria-hidden="true"></i></a>
 </h2>
 
 

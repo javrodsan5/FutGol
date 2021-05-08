@@ -9735,6 +9735,12 @@ hr {
     color: #009688;
     font-style: italic;
 }
+.firstinfo .intercambio h3 {
+    font-size: 1.2em;
+    margin-left: 2%;
+    color: black;
+    font-style: italic;
+}
 
 .firstinfo .profileinfo p.bio {
     padding: 10px 0px;

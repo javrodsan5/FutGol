@@ -32,8 +32,8 @@
 <br>
 <h2 th:if="${noLimiteEquipos}">
     <h2 th:if="${noTengoEquipo}">
-        <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
-            <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+        <a class="btn btn-warning" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
+            Crear equipo <i class="fa fa-pencil" aria-hidden="true"></i></a>
     </h2>
 </h2>
 

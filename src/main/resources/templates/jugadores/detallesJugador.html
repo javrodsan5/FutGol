@@ -4,280 +4,280 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
 
 <body>
+<div style="display: -webkit-inline-box">
+    <div class="card3" style="float: left; border: 1px solid red; margin: 2%;">
+        <div style="display: inline-block; width: 60%;">
+            <img class="fotoJugador" th:src="${jugador.foto}">
+            <div style="margin-top: 25px; margin-right: 20%; display: inline-block">
+                <h1 style="display: table-caption"><b th:text="${jugador.name}"></b></h1>
+                <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
+                <h2 th:if="${jugador.estadoLesion}=='En forma'"><b th:text="${jugador.estadoLesion} + ' ' "></b><img
+                        style="width: 20px" src="/resources/images/enForma.svg"/></h2>
 
-<div class="card3" style="float: left; border: 1px solid red; margin: 2%;">
-    <div style="display: inline-block; width: 60%;">
-        <img class="fotoJugador" th:src="${jugador.foto}">
-        <div style="margin-top: 25px; margin-right: 20%; display: inline-block">
-            <h1 style="display: table-caption"><b th:text="${jugador.name}"></b></h1>
-            <h2>Valor: <b th:text="${jugador.valor}"></b> mill. €</h2>
-            <h2 th:if="${jugador.estadoLesion}=='En forma'"><b th:text="${jugador.estadoLesion} + ' ' "></b><img
-                    style="width: 20px" src="/resources/images/enForma.svg"/></h2>
+                <h2 th:if="${jugador.estadoLesion}=='Sancionado/No disponible'"><b
+                        th:text="${jugador.estadoLesion} + ' ' "></b><img style="width: 20px"
+                                                                          src="/resources/images/noDisponible.svg"/>
+                </h2>
 
-            <h2 th:if="${jugador.estadoLesion}=='Sancionado/No disponible'"><b
-                    th:text="${jugador.estadoLesion} + ' ' "></b><img style="width: 20px"
-                                                                      src="/resources/images/noDisponible.svg"/>
-            </h2>
+                <h2 th:if="${jugador.estadoLesion}=='Lesionado'"><b
+                        th:text="${jugador.estadoLesion} + ' ' "></b><img
+                        style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/></h2>
+                <h2>Posición: <b th:text="${jugador.posicion}"></b></h2>
+            </div>
 
-            <h2 th:if="${jugador.estadoLesion}=='Lesionado'"><b
-                    th:text="${jugador.estadoLesion} + ' ' "></b><img
-                    style="width: 20px; transform: rotate(45deg)" src="/resources/images/lesionado.svg"/></h2>
-            <h2>Posición: <b th:text="${jugador.posicion}"></b></h2>
         </div>
-
+        <div style="float: right; margin: 2%;">
+            <div align="center" style="border: 2px solid red; padding: 4px">
+                <img th:src="${jugador.club.escudo}">
+                <h2 th:text="${jugador.club.name}"/>
+            </div>
+            <div style="margin-top: 25px">
+                <h2 class="separados"><b th:text="${jugador.altura}"></b> cm</h2>
+                <h2 class="separados"><b th:text="${jugador.peso}"></b> kg</h2>
+                <h2>Pierna: <b th:text="${jugador.piePrimario}"></b></h2>
+            </div>
+        </div>
     </div>
-    <div style="float: right; margin: 2%;">
-        <div align="center" style="border: 2px solid red; padding: 4px">
-            <img th:src="${jugador.club.escudo}">
-            <h2 th:text="${jugador.club.name}"/>
+
+    <div th:if="${tieneMedias}" class="medias" style="text-align: center; margin: 0px">
+        <h2 class="palabraMedia">Medias del jugador</h2>
+        <div th:if="${esPortero}">
+            <div class="col-md-3">
+                <div class="stati turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
+                    <div>
+                        <b th:text="${medias[3]}"></b>
+                        <span>Puntos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/paradas.svg"/>
+                    <div>
+                        <b th:text="${medias[0]}"></b>
+                        <span>Paradas</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/disparosRecibidos.svg"/>
+                    <div>
+                        <b th:text="${medias[1]}"></b>
+                        <span>Disparos Recibidos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati bg-emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/golesRecibidos.svg"/>
+                    <div>
+                        <b th:text="${medias[2]}"></bth:text></b>
+                        <span>Goles Recibidos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
+                    <div>
+                        <b th:text="${medias[4]}"></b>
+                        <span>Minutos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati bg-peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
+                    <div>
+                        <b th:text="${medias[5]}"/>
+                        <span>Tarjetas Amarillas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati amethyst ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
+                    <div>
+                        <b th:text="${medias[6]}"></b>
+                        <span>Tarjetas Rojas</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div style="margin-top: 25px">
-            <h2 class="separados"><b th:text="${jugador.altura}"></b> cm</h2>
-            <h2 class="separados"><b th:text="${jugador.peso}"></b> kg</h2>
-            <h2>Pierna: <b th:text="${jugador.piePrimario}"></b></h2>
+        <div th:if="${esCCoDL}">
+            <div class="col-md-3">
+                <div class="stati turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
+                    <div>
+                        <b th:text="${medias[6]}"></b>
+                        <span>Puntos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/goles.svg"/>
+                    <div>
+                        <b th:text="${medias[0]}"></b>
+                        <span>Goles</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/asistencias.svg"/>
+                    <div>
+                        <b th:text="${medias[1]}"></b>
+                        <span>Asistencias</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati bg-emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/disparosAPuerta.svg"/>
+                    <div>
+                        <b th:text="${medias[2]}"></bth:text></b>
+                        <span>Disparos a puerta</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <img style="float: left" width="30%" src="/resources/images/disparosTotales.svg"/>
+                <div class="stati peter_river ">
+                    <div>
+                        <b th:text="${medias[3]}"></b>
+                        <span>Disparos realizados</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati bg-peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/penaltis.svg"/>
+                    <div>
+                        <b th:text="${medias[4]}"/>
+                        <span>Penaltis Lanzados</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati amethyst ">
+                    <img style="float: left" width="30%" src="/resources/images/golesRecibidos.svg"/>
+                    <div>
+                        <b th:text="${medias[5]}"></b>
+                        <span>Penaltis marcados</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-alizarin ">
+                    <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
+                    <div>
+                        <b th:text="${medias[7]}"></b>
+                        <span>Minutos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
+                    <div>
+                        <b th:text="${medias[5]}"/>
+                        <span>Tarjetas Amarillas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati amethyst ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
+                    <div>
+                        <b th:text="${medias[6]}"></b>
+                        <span>Tarjetas Rojas</span>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div th:if="${esDF}">
+            <div class="col-md-3">
+                <div class="stati turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
+                    <div>
+                        <b th:text="${medias[3]}"></b>
+                        <span>Puntos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-turquoise ">
+                    <img style="float: left" width="30%" src="/resources/images/robo.svg"/>
+                    <div>
+                        <b th:text="${medias[0]}"></b>
+                        <span>Robos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/bloqueos.svg"/>
+                    <div>
+                        <b th:text="${medias[1]}"></b>
+                        <span>Bloqueos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stati bg-emerald ">
+                    <img style="float: left" width="30%" src="/resources/images/asistencias.svg"/>
+                    <div>
+                        <b th:text="${medias[2]}"></bth:text></b>
+                        <span>Asistencias</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
+                    <div>
+                        <b th:text="${medias[4]}"/>
+                        <span>Minutos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati bg-peter_river ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
+                    <div>
+                        <b th:text="${medias[5]}"/>
+                        <span>Tarjetas Amarillas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stati amethyst ">
+                    <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
+                    <div>
+                        <b th:text="${medias[6]}"></b>
+                        <span>Tarjetas Rojas</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </ul>
     </div>
 </div>
-
-<div th:if="${tieneMedias}" class="medias" style="text-align: center; margin: 0px">
-    <h2 class="palabraMedia">Medias del jugador</h2>
-    <div th:if="${esPortero}">
-        <div class="col-md-3">
-            <div class="stati turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
-                <div>
-                    <b th:text="${medias[3]}"></b>
-                    <span>Puntos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/paradas.svg"/>
-                <div>
-                    <b th:text="${medias[0]}"></b>
-                    <span>Paradas</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati emerald ">
-                <img style="float: left" width="30%" src="/resources/images/disparosRecibidos.svg"/>
-                <div>
-                    <b th:text="${medias[1]}"></b>
-                    <span>Disparos Recibidos</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati bg-emerald ">
-                <img style="float: left" width="30%" src="/resources/images/golesRecibidos.svg"/>
-                <div>
-                    <b th:text="${medias[2]}"></bth:text></b>
-                    <span>Goles Recibidos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
-                <div>
-                    <b th:text="${medias[4]}"></b>
-                    <span>Minutos</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati bg-peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
-                <div>
-                    <b th:text="${medias[5]}"/>
-                    <span>Tarjetas Amarillas</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati amethyst ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
-                <div>
-                    <b th:text="${medias[6]}"></b>
-                    <span>Tarjetas Rojas</span>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <div th:if="${esCCoDL}">
-        <div class="col-md-3">
-            <div class="stati turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
-                <div>
-                    <b th:text="${medias[6]}"></b>
-                    <span>Puntos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/goles.svg"/>
-                <div>
-                    <b th:text="${medias[0]}"></b>
-                    <span>Goles</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati emerald ">
-                <img style="float: left" width="30%" src="/resources/images/asistencias.svg"/>
-                <div>
-                    <b th:text="${medias[1]}"></b>
-                    <span>Asistencias</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati bg-emerald ">
-                <img style="float: left" width="30%" src="/resources/images/disparosAPuerta.svg"/>
-                <div>
-                    <b th:text="${medias[2]}"></bth:text></b>
-                    <span>Disparos a puerta</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <img style="float: left" width="30%" src="/resources/images/disparosTotales.svg"/>
-            <div class="stati peter_river ">
-                <div>
-                    <b th:text="${medias[3]}"></b>
-                    <span>Disparos realizados</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati bg-peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/penaltis.svg"/>
-                <div>
-                    <b th:text="${medias[4]}"/>
-                    <span>Penaltis Lanzados</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati amethyst ">
-                <img style="float: left" width="30%" src="/resources/images/golesRecibidos.svg"/>
-                <div>
-                    <b th:text="${medias[5]}"></b>
-                    <span>Penaltis marcados</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-alizarin ">
-                <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
-                <div>
-                    <b th:text="${medias[7]}"></b>
-                    <span>Minutos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
-                <div>
-                    <b th:text="${medias[5]}"/>
-                    <span>Tarjetas Amarillas</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati amethyst ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
-                <div>
-                    <b th:text="${medias[6]}"></b>
-                    <span>Tarjetas Rojas</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div th:if="${esDF}">
-        <div class="col-md-3">
-            <div class="stati turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/puntos.svg"/>
-                <div>
-                    <b th:text="${medias[3]}"></b>
-                    <span>Puntos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-turquoise ">
-                <img style="float: left" width="30%" src="/resources/images/robo.svg"/>
-                <div>
-                    <b th:text="${medias[0]}"></b>
-                    <span>Robos</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati emerald ">
-                <img style="float: left" width="30%" src="/resources/images/bloqueos.svg"/>
-                <div>
-                    <b th:text="${medias[1]}"></b>
-                    <span>Bloqueos</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="stati bg-emerald ">
-                <img style="float: left" width="30%" src="/resources/images/asistencias.svg"/>
-                <div>
-                    <b th:text="${medias[2]}"></bth:text></b>
-                    <span>Asistencias</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/minutosJugados.svg"/>
-                <div>
-                    <b th:text="${medias[4]}"/>
-                    <span>Minutos</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati bg-peter_river ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaAmarilla.svg"/>
-                <div>
-                    <b th:text="${medias[5]}"/>
-                    <span>Tarjetas Amarillas</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stati amethyst ">
-                <img style="float: left" width="30%" src="/resources/images/tarjetaRoja.svg"/>
-                <div>
-                    <b th:text="${medias[6]}"></b>
-                    <span>Tarjetas Rojas</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    </ul>
-</div>
-
-<div class="statsJornada" style="float: right; margin-left: 0px">
+<div class="statsJornada" align="center">
     <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="true">
             Jornadas
             <span class="caret"></span>

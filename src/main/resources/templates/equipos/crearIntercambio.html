@@ -80,9 +80,9 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button class="botonPuja" type="submit">Ofrecer intercambio</button>
-                <button class="botonPuja"><a th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
-                >Cancelar</a></button>
+                <button class="btn btn-success" type="submit">Ofrecer intercambio</button>
+                <a class="btn btn-danger" th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+                >Cancelar</a>
             </div>
         </div>
     </form>

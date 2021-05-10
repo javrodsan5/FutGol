@@ -104,7 +104,6 @@
                             <span>Logout</span>
                         </a>
                     </li>
-
                 </ul>
             </div>
             <div sec:authorize="!isAuthenticated()">
@@ -153,6 +152,13 @@
                         <a href='/login'>
                             <i class="fa fa-sign-in"></i>
                             <span>Login</span>
+                        </a>
+                    </li>
+
+                    <li th:class="${'aboutUs'==menu ? 'active' : ''}">
+                        <a href='/aboutUs'>
+                            <i class="fa fa-address-card"></i>
+                            <span>About us</span>
                         </a>
                     </li>
 

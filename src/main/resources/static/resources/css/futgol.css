@@ -8898,7 +8898,8 @@ hr {
 
 .image--cover {
     border-radius: 50%;
-    width: 80%;
+    width: 60px;
+    height: 60px;
     border: solid 2px #fff;
     object-fit: cover;
     object-position: center;

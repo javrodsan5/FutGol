@@ -4,6 +4,36 @@
       th:replace="~{fragments/layout :: layout (~{::body},'detallesJugador')}">
 
 <body>
+<div th:if="${equipoNoReal}" align="center">
+    <h2 th:if="${loTengoEnMiEquipo}">
+        <h2 style="width: 50%; margin-right: 10px; display: inline" class="alert-warning">Solo se puede actualizar la
+            cláusula una vez cada 8 días.</h2>
+        <div style="display: inline" th:if="${puedeActualizarClausula}">
+            <a class="btn btn-success"
+               th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/clausula (idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Actualizar
+                cláusula <i class="fa fa-pencil" aria-hidden="true"></i></a>
+        </div>
+        <br><br>
+        <h2 style="width: 50%; margin-top: 10%; margin-right: 10px; display: inline" class="alert-warning">La cláusula
+            tiene un coste del 1% del valor y se te resta cada jornada.</h2>
+
+        <div style="display: inline">
+            <a class="btn btn-warning"
+               th:href="@{/liga/{idLiga}/vender/{idJugador} (idJugador= ${jugador.id}, idLiga= ${liga.id})}">Poner en
+                venta</a>
+        </div>
+    </h2>
+    <h2 th:if="${noLoTengoEnMiEquipo}">
+        <h2 style="width: 50%; margin-right: 10px; display: inline" class="alert-warning">¿Quieres pagar la cláusula de
+            este jugador?</h2>
+        <div style="display: inline">
+            <a class="btn btn-success"
+               th:href="@{/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula (idLiga = ${liga.id}, idJugador= ${jugador.id}, idEquipo= ${equipo.id})}">Pagar
+                clausula</a>
+        </div>
+    </h2>
+</div>
+<br>
 <div style="display: -webkit-inline-box">
     <div class="card3" style="float: left; border: 1px solid red; margin: 2%; height: 20%">
         <div style="display: inline-block; width: 60%;">
@@ -34,9 +64,11 @@
             <div style="margin-top: 25px">
                 <h2 class="separados"><b th:text="${jugador.altura}"></b> cm</h2>
                 <h2 class="separados"><b th:text="${jugador.peso}"></b> kg</h2>
-                <h2>Pierna: <b th:text="${jugador.piePrimario}"></b></h2>
+                <h2 class="separados">Pierna: <b th:text="${jugador.piePrimario}"></b></h2>
             </div>
         </div>
+        <h2 th:if="${equipoNoReal}">Cláusula: <b style="color: blue" th:text="${clausula}"></b></h2>
+
     </div>
 
     <div th:if="${tieneMedias}" class="medias" style="text-align: center; margin: 0px">
@@ -312,7 +344,8 @@
             <div class="stati peter_river ">
                 <img style="float: left" width="30%" src="/resources/images/esTitular.svg"/>
                 <div style="width: auto">
-                    <b th:text="${est.fueTitular}"></b>
+                    <b th:if="${est.fueTitular}">Sí</b>
+                    <b th:if="${!est.fueTitular}">No</b>
                     <span>¿Titular?</span>
                 </div>
             </div>
@@ -451,29 +484,9 @@
                 </div>
             </div>
         </div>
-
-        <!--        <h4>Puntos: <b th:text="${est.puntos}"/></h4>-->
-        <!--        <h4>Minutos jugados: <b th:text="${est.minutosJugados}"></b></h4>-->
-        <!--        <h4>Goles: <b th:text="${est.goles}"></b></h4>-->
-        <!--        <h4>Asistencias: <b th:text="${est.asistencias}"></b></h4>-->
-        <!--        <h4>Penaltis Marcados: <b th:text="${est.minutosJugados}"></b></h4>-->
-        <!--        <h4>Penaltis Lanzados: <b th:text="${est.minutosJugados}"></b></h4>-->
-        <!--        <h4>Disparos a puerta: <b th:text="${est.disparosPuerta}"></b></h4>-->
-        <!--        <h4>Disparos totales: <b th:text="${est.disparosTotales}"></b></h4>-->
-        <!--        <h4>Tarjetas amarillas: <b th:text="${est.tarjetasAmarillas}"></b></h4>-->
-        <!--        <h4>Tarjetas rojas: <b th:text="${est.tarjetasRojas}"></b></h4>-->
-        <!--        <h4>Robos: <b th:text="${est.robos}"></b></h4>-->
-        <!--        <h4>Bloqueos: <b th:text="${est.bloqueos}"></b></h4>-->
-        <!--        <div th:if="${esPortero}">-->
-        <!--            <h4>Disparos Recibidos: <b th:text="${est.disparosRecibidos}"></b></h4>-->
-        <!--            <h4>Goles Recibidos: <b th:text="${est.golesRecibidos}"></b></h4>-->
-        <!--            <h4>Salvadas: <b th:text="${est.salvadas}"></b></h4>-->
-        <!--        </div>-->
-        <!--        <h4>Valoración: <b th:text="${est.valoracion}"></b></h4>-->
-        <!--    </div>-->
-        <div th:if="${tieneEstadistica== false}">
-            <h4>El jugador no participó en esta jornada.</h4>
-        </div>
+    </div>
+    <div th:if="${!tieneEstadistica}">
+        <h4 style="text-align: center">El jugador no participó en esta jornada.</h4>
     </div>
 
 

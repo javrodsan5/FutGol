@@ -41,7 +41,6 @@ class JugadorControlador(
 
     private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
     private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
-    private val VISTA_DETALLES_JUGADOR_EQUIPO = "jugadores/detallesJugadorEquipo"
     private val VISTA_BUSCAR_JUGADOR = "jugadores/buscaJugador"
 
     @InitBinder("clausula")
@@ -79,6 +78,7 @@ class JugadorControlador(
             } else {
                 model["tieneEstadistica"] = false
             }
+            model["equipoNoReal"] = false
             model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
             VISTA_DETALLES_JUGADOR
         } else {
@@ -120,11 +120,12 @@ class JugadorControlador(
                 idJugador, idEquipo
             ) && jornadaServicio.existeJornada(numeroJornada) == true
         ) {
+            model["equipoNoReal"] = true
             var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
             var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
             model["jugador"] = jugador
             val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
-            model["clausula"] = MetodosAux().enteroAEuros(clausula?.valorClausula!!)
+            model["clausula"] = MetodosAux().enteroAEuros(clausula.valorClausula)
 
             if((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
                 model["puedeActualizarClausula"] = true
@@ -164,7 +165,7 @@ class JugadorControlador(
         } else {
             return "redirect:/"
         }
-        return VISTA_DETALLES_JUGADOR_EQUIPO
+        return VISTA_DETALLES_JUGADOR
     }
 
     @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")

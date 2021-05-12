@@ -125,6 +125,7 @@ class LigaControlador(
             val nombreUsuario = usuarioServicio.usuarioLogueado(principal!!)?.user?.username
             var noLimiteEquipos = true
             model["liga"] = liga!!
+
             var equiposLiga = liga.equipos.sortedBy { x -> x.name }
             model["equipos"] = equiposLiga
             if (liga.equipos.size >= 8) {

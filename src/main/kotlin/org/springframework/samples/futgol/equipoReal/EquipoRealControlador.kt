@@ -80,6 +80,7 @@ class EquipoRealControlador(val equipoRealServicio: EquipoRealServicio, val jorn
 
             model["banquillo"] = banquilloOrdenadoMut
             model["miEquipo"] = false
+            model["equipoReal"] = true
             model["otroEquipo"] = false
         } else {
             return "redirect:/equiposLiga"

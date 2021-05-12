@@ -7,9 +7,14 @@
 
 
 <h1 th:object="${liga}"><b th:text="*{name}"></b></h1>
-<h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
+<div style="display: initial; width: 80%">
+    <h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
 
-<br>
+    <div class="alert alert-warning" role="alert" align="center"
+         style="background-color: #f5e5758c; width: 20%; float: right">
+        <h4>Nº equipos <b th:text="${liga.equipos.size}"></b> /8</h4>
+    </div>
+</div>
 <table id="usuarios" class="table table-striped">
     <thead>
     <tr>

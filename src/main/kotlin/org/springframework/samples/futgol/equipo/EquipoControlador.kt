@@ -140,6 +140,7 @@ class EquipoControlador(
                 }
                 model["tengoEquipo"] = true
                 model["miEquipo"] = true
+                model["equipoReal"] = false
                 model["equipo"] = miEquipo
                 model["dineroRestante"] = MetodosAux().enteroAEuros(miEquipo.dineroRestante)
 
@@ -175,6 +176,7 @@ class EquipoControlador(
                 model["liga"] = liga
                 model["equipo"] = equipo
                 model["otroEquipo"] = true
+                model["equipoReal"] = false
                 model["tengoEquipo"] = true
                 model["valorEquipo"] = MetodosAux().enteroAEuros((equipo.name?.let {
                     equipoServicio.calcularValorEquipo(

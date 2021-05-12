@@ -9,7 +9,6 @@
 <div class="alert alert-warning" role="alert" align="center"
      style="background-color: #f5e5758c; width: 80%">
     <h4>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></h4>
-
 </div>
 <div th:if="${ligas!=null and !ligas.empty}">
     <div th:each="liga : ${ligas}">

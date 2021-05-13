@@ -72,7 +72,7 @@
                             </a>
                         </div>
                         <div th:if="${otroEquipo}">
-                            <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}">
+                            <a th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/1 (idEquipo = ${equipo.id},idJugador= ${jugador.id})}">
                                 <button class="botonSust">Ver detalles del jugador</button>
                             </a>
                             <br>

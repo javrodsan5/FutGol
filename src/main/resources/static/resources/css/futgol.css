@@ -9867,7 +9867,8 @@ hr {
 }
 
 .resto {
-    margin: 40% 20% 0px 0px;
+    margin: 30% 10% 0% 0%;
+    float: left;
     width: 15%;
     display: inline-flex;
     border: 2px solid #3DC25D;

@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas')}">
 
 <body>
-
-  <h2>Mis ligas</h2>
-
-  <div th:if="${ligas!=null and !ligas.empty}">
-  <table id="ligas" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-          <th>Administrador</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="liga : ${ligas}">
-         <td> <a th:href="@{liga/__${liga.name}__}" th:text="${liga.name}"/></a></td>
-        <td th:text="${liga.admin.user.username}"></td>
-      </tr>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${edicionLigaExito}">
+        <p th:class="message">Has editado la liga con éxito.</p>
     </div>
-    </tbody>
-  </table>
-  <div th:if="${ligas==null or ligas.empty}">
-      <br>
-      <h4> No tienes ninguna liga creada todavía</h4>
-  </div>
-  <br>
-  <a class="btn btn-default" th:href="@{/liga/crear}">Crear liga</a>
+</div>
+<br>
+<h1>Mis ligas</h1>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; width: 80%">
+    <h4>Para ver las invitaciones que te han mandado, dirígete al apartado de <a th:href="@{/micuenta}">Mi cuenta</a></h4>
+</div>
+<div th:if="${ligas!=null and !ligas.empty}">
+    <div th:each="liga : ${ligas}">
+        <div class="col-md-3">
+            <div class="stati amethyst ">
+                <div>
+                    <b> <a th:href="@{/liga/__${liga.name}__}" th:text="${liga.name}"/></b>
+                    <span><a style="color: blue" th:href="@{/usuarios/{username} (username= ${liga.admin.user.username})}"
+                             th:text="${liga.admin.user.username}"/></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:if="${ligas==null or ligas.empty}">
+    <br>
+    <h4> No tienes ninguna liga creada todavía</h4>
+</div>
+<br>
+<div style="float: bottom">
+    <a th:href="@{/liga/crear}"><i class="fa fa-plus-circle fa-4x"></i></a>
+</div>
 </body>
 </html>

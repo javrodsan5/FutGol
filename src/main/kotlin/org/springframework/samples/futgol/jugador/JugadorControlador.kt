@@ -1,72 +1,277 @@
 package org.springframework.samples.futgol.jugador
 
-import org.jsoup.Jsoup
+import org.springframework.cache.annotation.CachePut
+import org.springframework.samples.futgol.clausula.Clausula
+import org.springframework.samples.futgol.clausula.ClausulaServicio
+import org.springframework.samples.futgol.clausula.ClausulaValidador
 import org.springframework.samples.futgol.equipo.EquipoServicio
+import org.springframework.samples.futgol.equipoReal.EquipoRealServicio
+import org.springframework.samples.futgol.estadisticaJugador.EstadisticaJugadorServicio
+import org.springframework.samples.futgol.jornadas.JornadaServicio
+import org.springframework.samples.futgol.liga.LigaServicio
+import org.springframework.samples.futgol.usuario.UsuarioServicio
+import org.springframework.samples.futgol.util.MetodosAux
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.validation.BindingResult
+import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.InitBinder
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import java.security.Principal
+import java.util.*
 import java.util.stream.Collectors
+import javax.validation.Valid
+import kotlin.Comparator
+
 
 @Controller
-class JugadorControlador(val equipoServicio: EquipoServicio, val jugadorServicio: JugadorServicio) {
+class JugadorControlador(
+    val jugadorServicio: JugadorServicio,
+    val equipoServicio: EquipoServicio,
+    val equipoRealServicio: EquipoRealServicio,
+    val clausulaServicio: ClausulaServicio,
+    val estadisticaJugadorServicio: EstadisticaJugadorServicio,
+    val usuarioServicio: UsuarioServicio,
+    val jornadaServicio: JornadaServicio,
+    val ligaServicio: LigaServicio
+) {
 
-    private val VISTA_WSJUGADORES = "jugadores/wsJugadores"
+    private val VISTA_DETALLES_JUGADOR = "jugadores/detallesJugador"
+    private val VISTA_CLAUSULA_JUGADOR = "jugadores/clausulaJugador"
+    private val VISTA_BUSCAR_JUGADOR = "jugadores/buscaJugador"
 
-
-    @GetMapping("/WSJugadores")
-    fun iniciaWSJugadores(model: Model): String {
-        return VISTA_WSJUGADORES
+    @InitBinder("clausula")
+    fun initClausulaBinder(dataBinder: WebDataBinder) {
+        dataBinder.validator = ClausulaValidador()
     }
 
-    @PostMapping("/WSJugadores")
-    fun creaWSJugadores(model: Model): String {
-        val urlBase = "https://www.transfermarkt.es"
-        val doc = Jsoup.connect("$urlBase/laliga/startseite/wettbewerb/ES1/plus/?saison_id=2020").get()
-        val linksEquipos =
-            doc.select("div.box.tab-print td a.vereinprofil_tooltip").map { col -> col.attr("href") }.stream()
-                .distinct().collect(Collectors.toList())
-        for (linkEquipo in linksEquipos) {
-            val doc2 = Jsoup.connect("$urlBase" + linkEquipo).get()
-            val linkPlantilla =
-                doc2.select("li#vista-general.first-button a").map { col -> col.attr("href") }.stream().distinct()
-                    .collect(Collectors.toList())
-            val doc3 = Jsoup.connect("$urlBase" + linkPlantilla[0]).get()
-            val precioJugadores = doc3.select("div.responsive-table tbody tr td.rechts.hauptlink")
-            val jugadores = doc3.select("div#yw1.grid-view table.items tbody tr:first-of-type")
-            jugadores.removeAt(0)
-            for (n in 0 until jugadores.size) {
-                var jugador = Jugador()
-                var persona = jugadores[n].select("td div.di.nowrap:first-of-type span a")
-                var nombre = persona.attr("title")
+    @CachePut("detallesJugador")
+    @GetMapping("/jugador/{idJugador}/jornada/{numeroJornada}")
+    fun detallesJugadorCualquiera(
+        model: Model,
+        @PathVariable idJugador: Int,
+        @PathVariable numeroJornada: Int
+    ): String {
+        return if (jugadorServicio.existeJugadorId(idJugador) == true && jornadaServicio.existeJornada(numeroJornada) == true) {
+            val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["jugador"] = jugador
+            var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+            if (mediasJug.isNotEmpty()) {
+                model["tieneMedias"] = true
+                model["medias"] = mediasJug
+            }
+            model["esPortero"] = jugador.posicion == "PO"
+            model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
+            model["esDF"] = jugador.posicion == "DF"
+            if (jugador.id?.let {
+                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
+                        it,
+                        numeroJornada
+                    )
+                } == true) {
+                model["tieneEstadistica"] = true
+                model["est"] =
+                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+            } else {
+                model["tieneEstadistica"] = false
+            }
+            model["equipoNoReal"] = false
+            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
+            VISTA_DETALLES_JUGADOR
+        } else {
+            "redirect:/"
+        }
+    }
 
-                var linkDetallePersona = persona.attr("href")
-                val doc4 = Jsoup.connect("$urlBase" + linkDetallePersona).get()
-                var foto = doc4.select("div.dataBild img").attr("src")
-                var estado = "En forma"
-                if (!jugadores[n].select("td span.verletzt-table").isEmpty()) {
-                    estado = "Lesionado"
-                } else if (!jugadores[n].select("td span.ausfall-6-table").isEmpty()) {
-                    estado = "Sancionado/No disponible"
+    @GetMapping("/topJugadores")
+    fun buscaJugador(model: Model): String {
+        model["jugadores"] =
+            jugadorServicio.buscaJugadoresOrdenPuntos()?.stream()?.limit(5)
+                ?.collect(Collectors.toList())!!
+        model.addAttribute(Jugador())
+        return VISTA_BUSCAR_JUGADOR
+    }
+
+    @GetMapping("/jugadores")
+    fun procesoBusquedaJugador(jugador: Jugador, result: BindingResult, model: Model): String {
+        return if (jugador.name?.let { jugadorServicio.existeJugadorNombre(it) } == true) {
+            var jug = jugadorServicio.buscaJugadorPorNombre(jugador.name!!)
+            "redirect:/jugador/" + jug!!.id + "/jornada/1"
+        } else {
+            result.rejectValue("name", "No se ha encontrado", "No se ha encontrado")
+            model["jugadores"] =
+                jugadorServicio.buscaTodosJugadores()?.stream()?.sorted(Comparator.comparing { x -> -x.puntos })
+                    ?.limit(5)
+                    ?.collect(Collectors.toList())!!
+            VISTA_BUSCAR_JUGADOR
+        }
+    }
+
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada}")
+    fun detallesJugadorEquipo(
+        model: Model,
+        @PathVariable idEquipo: Int,
+        @PathVariable idJugador: Int, @PathVariable numeroJornada: Int, principal: Principal?
+    ): String {
+        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo
+            ) && jornadaServicio.existeJornada(numeroJornada) == true
+        ) {
+            model["equipoNoReal"] = true
+            var equipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+            var jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+            model["jugador"] = jugador
+            val clausula = this.clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            model["clausula"] = MetodosAux().enteroAEuros(clausula.valorClausula)
+
+            if ((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
+                model["puedeActualizarClausula"] = true
+            }
+
+            if (jugadorServicio.tieneEstadisticas(idJugador) == true) {
+                var mediasJug = jugadorServicio.mediaEstadisticasJugador(idJugador)!!
+                model["tieneMedias"] = true
+                model["medias"] = mediasJug
+                model["esCCoDL"] = jugador.posicion == "CC" || jugador.posicion == "DL"
+                model["esDF"] = jugador.posicion == "DF"
+            }
+            model["esPortero"] = jugador.posicion == "PO"
+
+            if (jugador.id?.let {
+                    this.estadisticaJugadorServicio.existeEstadisticaJugadorJornada(
+                        it,
+                        numeroJornada
+                    )
+                } == true) {
+                model["tieneEstadistica"] = true
+                model["est"] =
+                    estadisticaJugadorServicio.buscarEstadisticasPorJugadorJornada(idJugador, numeroJornada)!!
+            } else {
+
+                model["tieneEstadistica"] = false
+            }
+            model["jornadas"] = jornadaServicio.buscarTodasJornadas()!!
+            model["equipo"] = equipo
+            model["liga"] = equipo.liga!!
+
+            if (equipo.usuario?.user?.username == principal?.let { usuarioServicio.usuarioLogueado(it)?.user?.username }) {
+                model["loTengoEnMiEquipo"] = true
+            } else {
+                model["noLoTengoEnMiEquipo"] = true
+            }
+        } else {
+            return "redirect:/"
+        }
+        return VISTA_DETALLES_JUGADOR
+    }
+
+    @GetMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
+    fun iniciarActualizacionClausulaJugador(
+        model: Model,
+        @PathVariable("idJugador") idJugador: Int,
+        @PathVariable("idEquipo") idEquipo: Int, principal: Principal?
+    ): String {
+        if (equipoServicio.comprobarSiExisteEquipo(idEquipo) == true && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo
+            )
+        ) {
+            model["valido"] = true
+            var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+            if ((Date().time - clausula.ultModificacion.time) / 86400000 >= 8) {
+                var usuario = principal?.let { usuarioServicio.usuarioLogueado(it) }
+                if (usuario != null && equipoServicio.buscaEquiposPorId(idEquipo)!!.usuario?.user?.username == usuario.user?.username) {
+                    model["clausula"] = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+                    return VISTA_CLAUSULA_JUGADOR
                 }
-                var precio = precioJugadores[n].text()
-                var precioD = 0.1
-                if (!precio.isEmpty()) {
-                    if (precio.contains("mill")) {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble()
-                    } else {
-                        precioD = precio.substringBefore(" mil").replace(",", ".").toDouble() / 1000//pasar a millones
-                    }
-                }
-                jugador.name=nombre
-                jugador.estadoLesion=estado
-                jugador.valor=precioD
-                jugador.foto=foto
-                jugadorServicio.saveJugador(jugador)
+                return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
+            }
+            return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
+        } else {
+            return "redirect:/equipo/$idEquipo/jugador/$idJugador/jornada/1"
+        }
+        return VISTA_CLAUSULA_JUGADOR
+    }
+
+    @PostMapping("/equipo/{idEquipo}/jugador/{idJugador}/clausula")
+    fun procesarActualizacionClausulaJugador(
+        @Valid clausula: Clausula,
+        result: BindingResult,
+        model: Model,
+        @PathVariable("idEquipo") idEquipo: Int,
+        @PathVariable("idJugador") idJugador: Int, principal: Principal?
+    ): String {
+
+        if (result.hasErrors()) {
+            model["valido"] = false
+            model["clausula"] = clausula
+            return VISTA_CLAUSULA_JUGADOR
+        } else {
+            val j = jugadorServicio.buscaJugadorPorId(idJugador)
+            return if (clausula.valorClausula < (j?.valor?.times(1000000)!!)) {
+                model["valido"] = false
+                result.rejectValue(
+                    "valorClausula",
+                    "La cláusula no puede ser inferior al valor del jugador",
+                    "La cláusula no puede ser inferior al valor del jugador"
+                )
+                VISTA_CLAUSULA_JUGADOR
+            } else {
+                model["valido"] = true
+                clausula.ultModificacion = Date()
+                clausula.equipo = equipoServicio.buscaEquiposPorId(idEquipo)
+                clausula.jugador = j
+                clausulaServicio.guardarClausula(clausula)
+                model["editClausulaExito"] = true
+                return detallesJugadorEquipo(model, idEquipo, idJugador, 1, principal)
             }
         }
-        return VISTA_WSJUGADORES
     }
 
+    @GetMapping("/liga/{idLiga}/equipo/{idEquipo}/jugador/{idJugador}/pagarClausula")
+    fun pagarClausula(
+        model: Model,
+        @PathVariable("idJugador") idJugador: Int, @PathVariable("idLiga") idLiga: Int,
+        @PathVariable("idEquipo") idEquipo: Int, principal: Principal
+    ): String {
+
+        if (ligaServicio.estoyEnLiga2(idLiga, principal) && equipoServicio.comprobarSiExisteEquipoLiga2(
+                idEquipo,
+                idLiga
+            ) && jugadorServicio.existeJugadorEnEquipo(
+                idJugador, idEquipo
+            ) && equipoServicio.tengoEquipo(idLiga, principal)
+        ) {
+            val miEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal)!!
+            if (miEquipo.id != idEquipo) {
+                var otroEquipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
+                val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
+                var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
+                miEquipo.dineroRestante -= clausula.valorClausula
+                miEquipo.jugadores.add(jugador)
+                miEquipo.jugBanquillo.add(jugador)
+
+                otroEquipo.dineroRestante += clausula.valorClausula
+                otroEquipo.jugBanquillo.removeIf { x -> x.id == idJugador }
+                otroEquipo.jugadores.removeIf { x -> x.id == idJugador }
+                otroEquipo.onceInicial.removeIf { x -> x.id == idJugador }
+
+                equipoServicio.guardarEquipo(miEquipo)
+                equipoServicio.guardarEquipo(otroEquipo)
+                clausulaServicio.borraClausulaByEquipoIdAndJugadorId(idEquipo, idJugador)
+
+                var clau = Clausula()
+                clau.equipo = miEquipo
+                clau.jugador = jugador
+                var fecha = Calendar.getInstance()
+                fecha.add(Calendar.DAY_OF_YEAR, -9)
+                clau.ultModificacion = fecha.time
+                clau.valorClausula = ((jugador.valor + (jugador.valor * 0.5)) * 1000000).toInt()
+                this.clausulaServicio.guardarClausula(clau)
+            }
+        }
+        return "redirect:/liga/$idLiga/miEquipo"
+    }
 }

@@ -1,8 +1,10 @@
 package org.springframework.samples.futgol.liga
 
 
+import org.springframework.cache.annotation.CachePut
 import org.springframework.samples.futgol.equipo.EquipoServicio
-import org.springframework.samples.futgol.login.User
+import org.springframework.samples.futgol.subasta.Subasta
+import org.springframework.samples.futgol.subasta.SubastaServicio
 import org.springframework.samples.futgol.usuario.Usuario
 import org.springframework.samples.futgol.usuario.UsuarioServicio
 import org.springframework.stereotype.Controller
@@ -23,31 +25,27 @@ import javax.validation.Valid
 class LigaControlador(
     val ligaServicio: LigaServicio,
     val usuarioServicio: UsuarioServicio,
-    val equipoServicio: EquipoServicio
+    val equipoServicio: EquipoServicio,
+    val subastaServicio: SubastaServicio
 ) {
 
     private val VISTA_CREAR_EDITAR_LIGA = "liga/crearEditarLiga"
     private val VISTA_LISTA_LIGAS = "liga/listaLigas"
     private val VISTA_DETALLES_LIGA = "liga/detallesLiga"
     private val VISTA_CLASIFICACION_LIGA = "liga/clasificacion"
-    private val VISTA_ERROR_403 = "errores/error-403"
 
     @InitBinder("liga")
     fun initLigaBinder(dataBinder: WebDataBinder) {
         dataBinder.validator = LigaValidador()
     }
 
-    fun usuarioLogueado(principal: Principal): Usuario? {
-        val username: String = principal.name
-        return usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-    }
-
+    @CachePut("ligas")
     @GetMapping("/misligas")
     fun listaLigas(model: Model, principal: Principal): String {
-        val usuario: Usuario? = usuarioLogueado(principal)
+        val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
         val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
         if (ligas != null) {
-            model["ligas"] = ligas
+            model["ligas"] = ligas.sortedBy { x -> x.name }
         }
         return VISTA_LISTA_LIGAS
     }
@@ -60,124 +58,114 @@ class LigaControlador(
     }
 
     @PostMapping("/liga/crear")
-    fun procesoCrear(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
-
-        if (ligaServicio.checkLigaExists(liga.name)) {
+    fun procesoCreacion(@Valid liga: Liga, result: BindingResult, principal: Principal, model: Model): String {
+        if (ligaServicio.comprobarSiExisteLiga(liga.name) == true) {
             result.addError(FieldError("liga", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
             model["liga"] = liga
             VISTA_CREAR_EDITAR_LIGA
         } else {
-            val usuario: Usuario? = usuarioLogueado(principal)
+            val usuario: Usuario? = usuarioServicio.usuarioLogueado(principal)
             liga.admin = usuario
             usuario?.ligas?.add(liga)
             if (usuario != null) {
                 liga.usuarios.add(usuario)
-                this.ligaServicio.saveLiga(liga)
+                this.ligaServicio.guardarLiga(liga)
+                this.subastaServicio.subasta(liga.id!!)
 
             }
-            "redirect:/liga/" + liga.name
+            "redirect:/liga/" + liga.id + "/nuevoEquipo"
         }
     }
 
-    @GetMapping("/liga/editar/{idLiga}")
-    fun initUpdateForm(@PathVariable("idLiga") idLiga: Int, model: Model, principal: Principal): String {
-        val liga = this.ligaServicio.buscarLigaPorId(idLiga)
-        var adminLiga = liga?.admin?.user?.username
-        val usuario = usuarioLogueado(principal)?.user?.username
-        if (liga != null && usuario != null && adminLiga == usuario) {
-            model.addAttribute(liga)
+    @GetMapping("/liga/editar/{nombreLiga}")
+    fun iniciarActualizacion(
+        @PathVariable("nombreLiga") nombreLiga: String, model: Model, principal: Principal
+    ): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true) {
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            if (liga?.admin?.user?.username == usuarioServicio.usuarioLogueado(principal)?.user?.username) {
+                model.addAttribute(liga!!)
+            } else {
+                return "redirect:/misligas"
+            }
+        } else {
+            return "redirect:/misligas"
         }
         return VISTA_CREAR_EDITAR_LIGA
     }
 
-    @PostMapping("/liga/editar/{idLiga}")
+    @PostMapping("/liga/editar/{nombreLiga}")
     fun procesoActualizacion(
-        liga: Liga, principal: Principal, @PathVariable("idLiga") idLiga: Int, result: BindingResult,
+        liga: Liga, principal: Principal, @PathVariable("nombreLiga") nombreLiga: String, result: BindingResult,
         model: Model
     ): String {
-        var ligaComparador = ligaServicio.buscarLigaPorId(idLiga)
-        if (ligaComparador != null) {
-            if (liga.name != ligaComparador.name && ligaServicio.checkLigaExists(liga.name)) {
-                result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
-            }
+        val ligaComparador = ligaServicio.buscarLigaPorNombre(nombreLiga)
+        if (liga.name != ligaComparador!!.name && ligaServicio.comprobarSiExisteLiga(liga.name) == true) {
+            result.addError(FieldError("usuario", "name", "Ya existe una liga con ese nombre"))
         }
         return if (result.hasErrors()) {
             VISTA_CREAR_EDITAR_LIGA
         } else {
-
-            val ligaAntigua = this.ligaServicio.buscarLigaPorId(idLiga)
-            if (ligaAntigua != null) {
-                liga.id = idLiga
-                liga.admin = ligaAntigua?.admin
-                liga.usuariosInvitados = ligaAntigua.usuariosInvitados
-                liga.usuarios = ligaAntigua.usuarios
-            }
-
-            this.ligaServicio.saveLiga(liga)
-            "redirect:/misligas"
+            liga.id = ligaComparador.id
+            liga.admin = ligaComparador.admin
+            liga.usuariosInvitados = ligaComparador.usuariosInvitados
+            liga.usuarios = ligaComparador.usuarios
+            this.ligaServicio.guardarLiga(liga)
+            model["edicionLigaExito"] = true
+            listaLigas(model, principal)
         }
     }
 
+    @CachePut("detallesLiga")
     @GetMapping("liga/{nombreLiga}")
-    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal): String {
-        val liga = ligaServicio.findLigaByName(nombreLiga)
-        var soyAdmin = false
-        val usuario = usuarioLogueado(principal)
-        val ligas = usuario?.user?.username?.let { usuarioServicio.buscarLigasUsuario(it) }
-        if (ligas != null && liga != null) {
-            if (ligas.stream().anyMatch { x -> x.name.equals(nombreLiga) }) {
-                model["liga"] = liga
-                var equiposLiga = ligaServicio.buscaEquiposLiga(liga.id)
-                model["equipos"] = equiposLiga
-            } else {
-                return VISTA_ERROR_403
+    fun detallesLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            val nombreUsuario = usuarioServicio.usuarioLogueado(principal!!)?.user?.username
+            var noLimiteEquipos = true
+            model["liga"] = liga!!
+
+            var equiposLiga = liga.equipos.sortedBy { x -> x.name }
+            model["equipos"] = equiposLiga
+            if (liga.equipos.size >= 8) {
+                noLimiteEquipos = false
             }
-        }
-        if (usuario != null && liga != null) {
-            if (liga.admin?.user?.username.equals(usuario.user?.username)) {
-                soyAdmin = true
-                model["soyAdmin"] = soyAdmin
+            model["noLimiteEquipos"] = noLimiteEquipos
+
+            if (liga.admin?.user?.username.equals(nombreUsuario)) {
+                model["soyAdmin"] = true
             }
-            var noTengoEquipo = false
             if (liga.id?.let { equipoServicio.tengoEquipo(it, principal) } == false) {
-                noTengoEquipo = true
-                model["noTengoEquipo"] = noTengoEquipo
+                model["noTengoEquipo"] = true
             }
+            return VISTA_DETALLES_LIGA
+        } else {
+            return "redirect:/misligas"
         }
-        return VISTA_DETALLES_LIGA
     }
 
     @GetMapping("liga/{nombreLiga}/clasificacion")
-    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String): String {
-        var liga = ligaServicio.findLigaByName(nombreLiga)
-        var equiposLiga = liga?.id?.let { equipoServicio.buscaEquiposDeLigaPorId(it) }?.sortedBy { x -> x.puntos }
-        if (equiposLiga != null) {
-            model["equiposLiga"] = equiposLiga
-        }
-        return VISTA_CLASIFICACION_LIGA
-    }
-
-    @GetMapping("/liga/{nombreLiga}/add/{username}")
-    fun asociarUsuarioLiga(
-        @PathVariable username: String,
-        @PathVariable nombreLiga: String,
-        model: MutableMap<String, Any>
-    ): String {
-
-        var usuario = usuarioServicio.buscarUsuarioPorNombreUsuario(username)
-        var liga = ligaServicio.findLigaByName(nombreLiga)
-        if (usuario != null && liga != null) {
-            if (!usuario.ligas.contains(liga)) {
-                usuario.ligas.add(liga)
-                liga.usuarios.add(usuario)
-                model["mensaje"] = "Usuario añadido correctamente a la liga!"
+    fun clasificacionLiga(model: Model, @PathVariable nombreLiga: String, principal: Principal?): String {
+        if (ligaServicio.comprobarSiExisteLiga(nombreLiga) == true && ligaServicio.estoyEnLiga(nombreLiga, principal)) {
+            val liga = ligaServicio.buscarLigaPorNombre(nombreLiga)
+            model["liga"] = liga!!
+            val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
+            val tam = equiposLiga.size
+            if (tam >= 3) {
+                model["puedeCalcularse"] = true
+                model["numEquipos"] = tam
+                model["ganador"] = equiposLiga[0]
+                model["segundo"] = equiposLiga[1]
+                model["tercero"] = equiposLiga[2]
+                model["restoEquipos"] = equiposLiga.drop(3)
             } else {
-                model["mensaje"] = "El usuario ya pertenece a la liga"
+                model["noPuedeCalcularse"] = true
             }
+            return VISTA_CLASIFICACION_LIGA
         }
-
-        return VISTA_DETALLES_LIGA
+        return "redirect:/misligas"
     }
+
 }

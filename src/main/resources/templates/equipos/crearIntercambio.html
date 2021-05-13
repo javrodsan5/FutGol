@@ -1,0 +1,91 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+<script>
+
+    function formatoNumero(val) {
+        while (/(\d+)(\d{3})/.test(val.toString())) {
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1' + '.' + '$2');
+        }
+        return val;
+    }
+
+    function valorADinero() {
+        var valor = document.getElementById("valor").value;
+
+        document.getElementById("resultado").innerHTML = 'Vas a ofrecer ' + formatoNumero(valor) + '€';
+    }
+
+</script>
+
+<style>
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0% 0% 1% 10%;">
+    <h1> Vas a realizar un intercambio por el siguiente jugador</h1>
+</div>
+<br><br>
+<div class="mejorJugadorJornada"
+     style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
+    <div style="display: inline-block; width: 50%">
+        <img class="fotoJugador" th:src="${jugador.foto}">
+        <h1><b th:text="${jugador.name}"></b></h1>
+        <h2>Puntos: <b th:text="${jugador.puntos}"></b></h2>
+        <h2 th:text="${jugador.posicion}"></h2>
+        <h2>Valor: <b th:text="${jugador.valor}"/> mill.€</h2>
+
+    </div>
+    <div style="float: right; margin: 2%;">
+        <div align="center" style="border: 2px solid red; padding: 4px">
+            <img th:src="${jugador.club.escudo}" width="70px" height="60px">
+            <h2 th:text="${jugador.club.name}"/>
+        </div>
+    </div>
+</div>
+
+<div style="float: right">
+    <form th:object="${intercambio}" class="form-horizontal" method="post">
+        <h2>Elige el jugador que le quieras ofrecer</h2>
+        <br>
+        <h5>Jugador:Puntos:Posición:Valor</h5>
+        <select name="jugadorCreadorIntercambio">
+            <option th:each="j : ${misJugadores}"
+                    th:value="${j.id}"
+                    data-thumbnail="${j.foto}"
+                    th:text="${j.name}+' : '+${j.puntos}+' : '+${j.posicion}+' : '+${j.valor}"/>
+        </select>
+        <br><br>
+        <h2>¿Quieres añadir dinero a tu intercambio para convencerlo?</h2>
+        <br>
+        <br><br>
+        <h1 style="font-weight: bold" id="resultado"></h1>
+        <br>
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
+            <div class="col-sm-10">
+                <input type="number" class="inputPuja" id="valor"
+                       onkeyup="valorADinero()" name="dinero" required>
+                <span th:if="${valido}" class="fa fa-check form-control-feedback"
+                      aria-hidden="true"></span>
+                <span th:if="${!valido}" class="fa fa-times form-control-feedback"
+                      aria-hidden="true"></span>
+                <span class="help-inline" th:errors="*{dinero}">Error</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-success" type="submit">Ofrecer intercambio</button>
+                <a class="btn btn-danger" th:href="@{/liga/{nombreLiga} (nombreLiga= ${liga.name})}"
+                >Cancelar</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

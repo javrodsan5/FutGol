@@ -1,0 +1,155 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+<script>
+
+    (function () {
+        const second = 1000,
+                minute = second * 60,
+                hour = minute * 60,
+                day = hour * 24;
+        var d = new Date();
+        var dt = new Date();
+
+        if (dt.getHours() !== 0 || d.getHours() !== 1) {
+            dt.setDate(d.getDate() + 1);
+        }
+        dt.setHours(2);
+        dt.setMinutes(0);
+        dt.setSeconds(0);
+
+        countDown = new Date(dt).getTime(),
+                x = setInterval(function () {
+
+                    let now = new Date().getTime(),
+                            distance = countDown - now;
+
+                    document.getElementById("days").innerText = Math.floor(distance / (day)),
+                            document.getElementById("hours").innerText = Math.floor((distance % (day)) / (hour)),
+                            document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute)),
+                            document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
+
+                    if (distance < 0) {
+                        let headline = document.getElementById("headline"),
+                                countdown = document.getElementById("countdown"),
+                                content = document.getElementById("content");
+
+                        headline.innerText = "La puja ha finalizado";
+                        countdown.style.display = "none";
+                        content.style.display = "block";
+
+                        clearInterval(x);
+                    }
+                }, 0)
+    }());
+
+</script>
+<script>
+
+    function formatoNumero(val) {
+        while (/(\d+)(\d{3})/.test(val.toString())) {
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1' + '.' + '$2');
+        }
+        return val;
+    }
+
+    function valorADinero() {
+        var valor = document.getElementById("valor").value;
+
+        document.getElementById("resultado").innerHTML = 'Vas a pujar ' + formatoNumero(valor) + '€';
+    }
+
+</script>
+
+<style>
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+<div th:if="${!hePujado}" class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0px 20% 1% 20%">
+    <h4>Debes pujar al menos el valor del jugador para llevártelo.</h4>
+</div>
+<br>
+<div th:if="${hePujado}" class="alert alert-success" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0px 20% 1% 20%">
+    <h4 th:text="'Ya has pujado ' +  ${miPuja} + ' por este jugador. '"></h4>
+</div>
+<br>
+<div style="display: inline-block; width: 100%">
+    <div class="mejorJugadorJornada"
+         style="float: left; border: 1px solid red; margin-right: 2%; width:45%;">
+        <div style="display: inline-block; width: 50%">
+            <img class="fotoJugador" th:src="${jugador.foto}">
+            <h1><b th:text="${jugador.name}"></b></h1>
+            <h2>Puntos: <b th:text="${jugador.puntos}"></b></h2>
+            <h2 th:text="${jugador.posicion}"></h2>
+        </div>
+        <div style="float: right; margin: 2%;">
+            <div align="center" style="border: 2px solid red; padding: 4px">
+                <img th:src="${jugador.club.escudo}" width="70px" height="60px">
+                <h2 th:text="${jugador.club.name}"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="mensjPuja">
+        <div style="display: flex;"><h2>Pujas hasta ahora: <b th:text="${numPujas}"/></h2><img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/mazo.svg"/></div>
+
+        <div style="display: flex;"><h2> Tu dinero: <b th:text="${dineroRestante}"/></h2> <img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/dineroRestante.svg"/>
+        </div>
+        <div style="display: flex;"><h2> Precio del jugador: <b th:text="${jugador.valor}"></b> mill. €</h2><img
+                style="width: 30px; display: inline-block; margin: 0% 0% 0% 2%;"
+                src="/resources/images/valorClub.svg"/></div>
+
+    </div>
+</div>
+
+<div style="display: inline-block; float: right; text-align: center">
+    <h1>La puja finalizará en:</h1>
+    <div id="countdown">
+        <ul>
+            <li style="display: none" class="reloj"><span id="days"></span>días</li>
+            <li class="reloj"><span id="hours"></span>Horas</li>
+            <li class="reloj"><span id="minutes"></span>Minutos</li>
+            <li class="reloj"><span id="seconds"></span>Segundos</li>
+        </ul>
+    </div>
+</div>
+<br><br>
+<h1 style="font-weight: bold" id="resultado"></h1>
+<div class="formPuja">
+    <br>
+    <h1 style="text-align: inherit;">Cantidad a pujar</h1>
+    <form th:object="${puja}" method="post">
+        <input type="hidden" th:attr="name=${_csrf.parameterName},value=${_csrf.token}"/>
+        <div th:class="${valido==true ? 'form-group' : 'form-group has-error'}">
+            <div class="col-sm-10">
+                <input type="number" class="inputPuja" id="valor"
+                       onkeyup="valorADinero()" name="cantidad">
+                <span th:if="${valido}" class="fa fa-check form-control-feedback"
+                      aria-hidden="true"></span>
+                <span th:if="${!valido}" class="fa fa-times form-control-feedback"
+                      aria-hidden="true"></span>
+                <span class="help-inline" th:errors="*{cantidad}">Error</span>
+            </div>
+        </div>
+        <div align="center">
+            <button class="btn btn-success" type="submit">Pujar <i class="fa fa-gavel"></i></button>
+            <a class="btn btn-danger" th:href="@{/liga/{idLiga}/subastas (idLiga= ${liga.id})}"
+            >Cancelar <i class="fa fa-times" aria-hidden="true"></i></a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

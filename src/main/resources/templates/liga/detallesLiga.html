@@ -7,9 +7,14 @@
 
 
 <h1 th:object="${liga}"><b th:text="*{name}"></b></h1>
-<h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
+<div style="display: initial; width: 80%">
+    <h2>Administrador: <b th:object="${liga}" th:text="*{admin.user.username}"></b></h2>
 
-<br>
+    <div class="alert alert-warning" role="alert" align="center"
+         style="background-color: #f5e5758c; width: 20%; float: right">
+        <h4>Nº equipos <b th:text="${liga.equipos.size}"></b> /8</h4>
+    </div>
+</div>
 <table id="usuarios" class="table table-striped">
     <thead>
     <tr>
@@ -21,30 +26,31 @@
     <tbody>
 
     <tr th:each="equipo : ${equipos}">
-        <td th:text="${equipo.name}"></td>
-        <td th:text="${equipo.usuario.username}"></td>
+        <td><a th:href="@{/liga/{nombreLiga}/equipos/{idEquipo} (nombreLiga= ${liga.name}, idEquipo= ${equipo.id})}"
+               th:text="${equipo.name}"/></a></td>
+        <td th:text="${equipo.usuario.user.username}"></td>
         <td th:text="${equipo.puntos}"></td>
     </tr>
     </div>
     </tbody>
 </table>
 <br>
-<a class="btn btn-default" th:href="@{/liga/{nombreLiga}/clasificacion (nombreLiga= ${liga.name})}">
-    <span class="glyphicon glyphicon-edit"></span> Clasificación</a>
-
-<h2 th:if="${noTengoEquipo}">
-    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
-        <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+<h2 th:if="${noLimiteEquipos}">
+    <h2 th:if="${noTengoEquipo}">
+        <a class="btn btn-warning" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
+            Crear equipo <i class="fa fa-pencil" aria-hidden="true"></i></a>
+    </h2>
 </h2>
 
 <h2 th:if="${soyAdmin}">
-    <a class="btn btn-default" th:href="@{/usuarios/buscar}"><span class="glyphicon glyphicon-search"></span> Buscar
-        usuario</a>
+    <a class="btn btn-success" th:href="@{/usuarios/buscar}"> Invitar
+        usuario <i class="fa fa-search-plus" aria-hidden="true"></i></a>
 
-    <a class="btn btn-default" th:href="@{/liga/editar/{idLiga}/nuevoEquipo(idLiga= ${liga.id})}">Editar liga</a>
+    <a class="btn btn-primary" th:href="@{/liga/editar/{nombreLiga}/(nombreLiga= ${liga.name})}">Cambiar nombre a la
+        liga
+        <i class="fa fa-pencil" aria-hidden="true"></i></a>
 </h2>
 
 
 </body>
-
 </html>

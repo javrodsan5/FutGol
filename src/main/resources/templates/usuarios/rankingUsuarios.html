@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'rankingUsuarios')}">
+<body>
+
+<h1>Top 10 equipos de usuarios</h1>
+<div>
+    <div class="ganador">
+        <h4 th:text="${ganador.usuario.user.username}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/ganador.svg"
+             th:src="@{/resources/images/ganador.svg}"/>
+        <h3 th:text="${ganador.name}"></h3>
+        <h3>Puntos: <b th:text="${ganador.puntos}"/></h3>
+    </div>
+    <div class="segundo">
+        <h4 th:text="${segundo.usuario.user.username}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/segundo.svg"
+             th:src="@{/resources/images/segundo.svg}"/>
+        <h3 th:text="${segundo.name}"></h3>
+        <h3>Puntos: <b th:text="${segundo.puntos}"/></h3>
+    </div>
+    <div class="tercero">
+        <h4 th:text="${tercero.usuario.user.username}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/tercero.svg"
+             th:src="@{/resources/images/tercero.svg}"/>
+        <h3 th:text="${tercero.name}"></h3>
+        <h3>Puntos: <b th:text="${tercero.puntos}"/></h3>
+    </div>
+    <div align="center">
+        <div class="resto" th:each="equipo, i : ${restoEquipos}">
+            <div style="float: right; float: top"><h1 th:text="${i.index + 4}+'º'"></h1></div>
+            <div style="display: block">
+                <h4><b th:text="${equipo.name}"/></h4>
+                <h4 th:text="${equipo.usuario.user.username}"/>
+                <h3>Puntos: <b th:text="${equipo.puntos}"/></h3>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

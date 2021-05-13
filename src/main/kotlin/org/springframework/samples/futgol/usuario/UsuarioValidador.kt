@@ -7,9 +7,9 @@ import java.util.regex.Pattern
 
 class UsuarioValidador : Validator {
 
-    private val REQUIRED = "Campo requerido."
+    private val REQUERIDO = "Campo requerido"
 
-    private val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
+    private val PATRON_EMAIL: Pattern = Pattern.compile(
         "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
                 "\\@" +
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
@@ -21,7 +21,7 @@ class UsuarioValidador : Validator {
 
     private fun soloLetrasNombre(nombre: String): Boolean {
         var res = false
-        val sonSoloLetras: Boolean = Pattern.compile("[A-Za-zÁÉÍÓÚáéíóúñÑ ]").matcher(nombre).find()
+        val sonSoloLetras: Boolean = Pattern.compile("^[\\p{L} .'-]+$").matcher(nombre).find()
         if (sonSoloLetras) {
             res = true
         }
@@ -55,15 +55,15 @@ class UsuarioValidador : Validator {
 
 
     override fun validate(target: Any, errors: Errors) {
-        var usuario = target as Usuario
-        var name = usuario.name
-        var email = usuario.email
-        var username = usuario.user?.username
-        var password = usuario.user?.password
+        val usuario = target as Usuario
+        val name = usuario.name
+        val email = usuario.email
+        val username = usuario.user?.username
+        val password = usuario.user?.password
 
 
         if (!StringUtils.hasLength(name)) {
-            errors.rejectValue("name", REQUIRED, REQUIRED)
+            errors.rejectValue("name", REQUERIDO, REQUERIDO)
         }
 
         if (name?.let { soloLetrasNombre(it) } == false) {
@@ -75,8 +75,8 @@ class UsuarioValidador : Validator {
         }
 
         when {
-            !StringUtils.hasLength(email) -> errors.rejectValue("email", REQUIRED, REQUIRED)
-            !EMAIL_ADDRESS_PATTERN.matcher(email).matches() -> errors.rejectValue(
+            !StringUtils.hasLength(email) -> errors.rejectValue("email", REQUERIDO, REQUERIDO)
+            !PATRON_EMAIL.matcher(email).matches() -> errors.rejectValue(
                 "email",
                 "Tu email debe tener un formato correcto",
                 "Tu email debe tener un formato correcto"
@@ -84,7 +84,7 @@ class UsuarioValidador : Validator {
 
         }
         if (!StringUtils.hasLength(username)) {
-            errors.rejectValue("user.username", REQUIRED, REQUIRED)
+            errors.rejectValue("user.username", REQUERIDO, REQUERIDO)
         }
 
         if (username?.let { soloLetrasNumeros(it) } == false) {
@@ -97,7 +97,7 @@ class UsuarioValidador : Validator {
 
         if (password != null) {
             when {
-                !StringUtils.hasLength(password) -> errors.rejectValue("user.password", REQUIRED, REQUIRED)
+                !StringUtils.hasLength(password) -> errors.rejectValue("user.password", REQUERIDO, REQUERIDO)
                 password.length < 5 -> errors.rejectValue(
                     "user.password",
                     "La contraseña debe tener más de 5 caracteres",

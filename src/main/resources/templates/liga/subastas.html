@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
+
+<body>
+
+<h1>Jugadores en subasta</h1>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${venderExito}">
+        <p th:class="message">Has puesto a la venta al jugador.</p>
+    </div>
+</div>
+<br>
+<div class="alert alert-warning" role="alert" align="center"
+     style="background-color: #f5e5758c; margin: 0px 20% 0px 20%">
+    <h4>Cada día a las 02:00 se actualizan los jugadores en esta lista</h4>
+</div>
+<div align="center">
+    <div class="content">
+        <div class="card2" th:each="jugador : ${jugadoresSinEquipo}"
+             style="--color-card2: #e2a823; width: 1000px; height: 125px; margin: 15px;">
+            <img class="topMedal_img" style="width: 70px; float: left" src="/resources/images/mazo.svg"/>
+            <div class="firstinfo" style="align-items: end; justify-content: space-evenly"><img style="width: 80px"
+                                                                                                th:src="*{jugador.foto}"/>
+                <div class="profileinfo">
+                    <a th:href="@{/jugador/{idJugador}/jornada/1 (idJugador= ${jugador.id})}"><h3
+                            th:text="*{jugador.name}"></h3></a>
+                    <h4><b th:text="${jugador.valor}"></b> mill. €</h4>
+                    <h4><b th:text="${jugador.puntos}"></b> puntos</h4>
+
+                </div>
+                <div class="profileinfo">
+                    <h4>Posición: <b th:text="${jugador.posicion}"></b></h4>
+                    <h4 th:if="${jugador.estadoLesion}=='En forma'"><b th:text="${jugador.estadoLesion} + ' ' "></b><img
+                            style="width: 20px" class="topMedal_img" src="/resources/images/enForma.svg"/></h4>
+
+                    <h4 th:if="${jugador.estadoLesion}=='Sancionado/No disponible'"><b
+                            th:text="${jugador.estadoLesion} + ' ' "></b><img style="width: 20px" class="topMedal_img"
+                                                                              src="/resources/images/noDisponible.svg"/>
+                    </h4>
+
+                    <h4 th:if="${jugador.estadoLesion}=='Lesionado'"><b
+                            th:text="${jugador.estadoLesion} + ' ' "></b><img
+                            style="width: 20px; transform: rotate(45deg)" class="topMedal_img"
+                            src="/resources/images/lesionado.svg"/></h4>
+
+                </div>
+                <div class="profileinfo">
+                    <img style="border-radius: 0%; width: 30px" th:src="*{jugador.club.escudo}"/>
+                    <br>
+                    <br>
+                    <a class="btn btn-success"
+                       th:href="@{/liga/{idLiga}/subastas/{idJugador} (idLiga= ${liga.id},idJugador= ${jugador.id})}">Pujar
+                        <i class="fa fa-gavel"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -3,24 +3,26 @@ package org.springframework.samples.futgol.usuario
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 import org.springframework.samples.futgol.liga.Liga
+import org.springframework.samples.futgol.login.AuthoritiesServicio
 import org.springframework.samples.futgol.login.UserServicio
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
-import java.util.stream.Collectors
-
 
 @Service
 class UsuarioServicio {
 
-    private var usuarioRepository: UsuarioRepository? = null
+    private var usuarioRepositorio: UsuarioRepositorio? = null
 
     @Autowired
     private val userService: UserServicio? = null
 
     @Autowired
-    fun UsuarioServicio(usuarioRepository: UsuarioRepository?) {
-        this.usuarioRepository = usuarioRepository
+    private val authoritiesServicio: AuthoritiesServicio? = null
+
+    @Autowired
+    fun UsuarioServicio(usuarioRepositorio: UsuarioRepositorio?) {
+        this.usuarioRepositorio = usuarioRepositorio
     }
 
     fun usuarioLogueado(principal: Principal): Usuario? {
@@ -30,71 +32,74 @@ class UsuarioServicio {
 
     @Transactional
     @Throws(DataAccessException::class)
-    fun saveUsuario(usuario: Usuario) {
-        usuarioRepository?.save(usuario)
-        usuario.user?.let {
-            userService?.saveUser(it)
-        }
-    }
-
-    @Transactional(readOnly = true)
-    fun checkUsuarioExists(nombreUsuario: String?): Boolean {
-        var res = false
-        var usuarios = usuarioRepository?.findAll()
-        if (usuarios != null) {
-            for (u in usuarios) {
-                if (u.user?.username.equals(nombreUsuario)) {
-                    res = true
-                }
-            }
-        }
-        return res
-    }
-
-    @Transactional(readOnly = true)
-    fun checkEmailExists(email: String?): Boolean {
-        var res = false
-        var usuarios = usuarioRepository?.findAll()
-        if (usuarios != null) {
-            for (u in usuarios) {
-                if (u.email.equals(email)) {
-                    res = true
-                }
-            }
-        }
-        return res
+    fun guardarUsuario(usuario: Usuario) {
+        usuarioRepositorio?.save(usuario)
     }
 
 
     @Transactional(readOnly = true)
-    @Throws(DataAccessException::class)
-    fun findUsuarioById(idUsuario: Int): Usuario? {
-        return usuarioRepository?.findById(idUsuario)
+    fun comprobarSiNombreUsuarioExiste(nombreUsuario: String?): Boolean? {
+        return nombreUsuario?.let { usuarioRepositorio?.existeUsuario(it) }
+    }
+
+    @Transactional(readOnly = true)
+    fun comprobarSiEmailExiste(email: String?): Boolean? {
+        return email?.let { usuarioRepositorio?.existeUsuarioConEmail(it) }
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarUsuarioPorNombreUsuario(username: String): Usuario? {
-        return usuarioRepository?.buscarUsuarioPorNombreUsuario(username)
+        return usuarioRepositorio?.buscarUsuarioPorNombreUsuario(username)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
     fun buscarLigasUsuario(username: String): Collection<Liga>? {
-        return usuarioRepository?.buscarLigasUsuario(username)
+        return usuarioRepositorio?.buscarLigasUsuario(username)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarUsuarioPorId(id: Int): Usuario? {
-        return usuarioRepository?.buscarUsuarioPorId(id)
+    fun buscarInvitacionesUsuario(username: String): Collection<Liga>? {
+        return usuarioRepositorio?.buscarInvitacionesUsuario(username)
     }
 
     @Transactional(readOnly = true)
     @Throws(DataAccessException::class)
-    fun buscarTodosUsuarios(): MutableList<String?>? {
-        return usuarioRepository?.findAll()?.stream()?.map { x-> x.user?.username }?.collect(Collectors.toList())
+    fun buscarTodosNombresUsuarios(): MutableList<String>? {
+        return usuarioRepositorio?.buscaTodosNombresusuario()
     }
 
+    @Transactional(readOnly = true)
+    fun ligasAInvitar(username: String, principal: Principal): MutableList<Liga> {
+        val ligasUsuario = buscarLigasUsuario(username)
+        var ligasNoUsuario: MutableList<Liga> = ArrayList()
+        val misLigas = usuarioLogueado(principal)?.user?.let { buscarLigasUsuario(it.username) }
+        val ligasInvitado = buscarInvitacionesUsuario(username)
+
+        if (misLigas != null && ligasUsuario != null && ligasInvitado != null) {
+            for (ligaM in misLigas) {
+                var resLig = true
+                var resInv = true
+                for (ligaU in ligasUsuario) {
+                    if (ligaM.name.equals(ligaU.name)) {
+                        resLig = false
+                        break
+                    }
+                }
+                for (ligaI in ligasInvitado) {
+                    if (ligaM.name.equals(ligaI.name)) {
+                        resLig = false
+                        break
+                    }
+                }
+                if (resLig && resInv && ligaM.equipos.size <= 8) {
+                    ligasNoUsuario.add(ligaM)
+                }
+            }
+        }
+        return ligasNoUsuario
+    }
 
 }

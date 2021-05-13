@@ -6,41 +6,55 @@
 <body>
 
 
-<h2>Información de su cuenta</h2>
-
-
-<table class="table table-striped" th:object="${usuario}">
-    <tr>
-        <th>Nombre</th>
-        <td th:text="*{name}"/></td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td th:text="*{email}"/></td>
-    </tr>
-    <tr>
-        <th>Nombre de usuario</th>
-        <td th:text="*{user.username}"/></td>
-    </tr>
-</table>
-<h2>Ligas en las que participa</h2>
-<ul th:each="liga : ${ligasUsuario}">
-    <li th:text="*{liga.name}"> </li>
-</ul>
-
-
+<h1>Información de su cuenta</h1>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${invitacionExito}">
+        <p th:class="message">Has invitado al usuario con éxito.</p>
+    </div>
+</div>
+<br>
+<div style="display: inline-flex">
+    <div class="cartona">
+        <div>
+            <img class="avatart" src="../../static/resources/images/userIcon.PNG"
+                 th:src="@{/resources/images/userIcon.PNG}" alt=""/>
+        </div>
+        <div class="titulon">
+            <h1><b th:text="${usuario.user.username}"/></h1>
+        </div>
+        <div class="descriptiona">
+            <h1 th:text="${usuario.name}"/>
+        </div>
+        <div class="descriptiona" th:text="${usuario.email}"/>
+    </div>
+</div>
+<div class="ligasPart" style="float: right">
+    <h2>Ligas en las que participa</h2>
+    <div class="scroll_vertical" id="style_scroll">
+        <div th:each="liga : ${ligasUsuario}">
+            <div class="drop__card">
+                <div class="drop__data">
+                    <h1 th:text="${liga}"></h1>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+</div>
+<br><br>
 <div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Añadir usuario una de mis ligas
+    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="true">
+        Añadir usuario una de mis ligas <i class="fa fa-user-plus" aria-hidden="true"></i>
         <span class="caret"></span>
     </button>
-    <ul  class="dropdown-menu" aria-labelledby="dropdownMenu1">
-
-        <li th:each="liga : ${ligasNoUsuario}"><a id= url th:text="*{liga.name}" th:href="@{/liga/{nombreLiga}/invitar/{nombreUsuario}(nombreLiga=${liga.name}, nombreUsuario=${usuario.user.username})}"/></a></li>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li th:each="liga : ${ligasNoUsuario}"><a id=url th:text="*{liga.name}"
+                                                  th:href="@{/liga/{nombreLiga}/invitar/{nombreUsuario}(nombreLiga=${liga.name}, nombreUsuario=${usuario.user.username})}"/></a>
+        </li>
     </ul>
 </div>
-
-
 
 </body>
 

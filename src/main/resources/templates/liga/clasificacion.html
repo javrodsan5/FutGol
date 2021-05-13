@@ -1,27 +1,50 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: layout (~{::body},'clasificacion')}">
+      th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 <body>
 
-<h2>Clasificación</h2>
+<h1>Clasificación de <b th:text="${liga.name}"></b></h1>
+<div th:if="${puedeCalcularse}">
+    <h3>Nº equipos: <b th:text="${numEquipos}"></b></h3>
 
-    <table id="clasificacion" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Usuario</th>
-            <th>Puntos</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="ganador">
+        <h4 th:text="${ganador.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/ganador.svg"
+             th:src="@{/resources/images/ganador.svg}"/>
+        <h4 th:text="${ganador.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${ganador.puntos}"/></h3>
+    </div>
 
-        <tr th:each="equipo : ${equiposLiga}">
-            <td th:text="${equipo.usuario.username}"></td>
-            <td th:text="${equipo.puntos}"></td>
-        </tr>
+    <div class="segundo">
+        <h4 th:text="${segundo.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/segundo.svg"
+             th:src="@{/resources/images/segundo.svg}"/>
+        <h4 th:text="${segundo.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${segundo.puntos}"/></h3>
+    </div>
+
+    <div class="tercero">
+        <h4 th:text="${tercero.name}"/>
+        <img style="width: 70px; height: 70px" src="../../static/resources/images/tercero.svg"
+             th:src="@{/resources/images/tercero.svg}"/>
+        <h4 th:text="${tercero.usuario.user.username}"/>
+        <h3>Puntos: <b th:text="${tercero.puntos}"/></h3>
+    </div>
+
+    <div class="resto" th:each="equipo, i : ${restoEquipos}">
+        <div style="float: right; float: top"><h1 th:text="${i.index + 4}+'º'"></h1></div>
+        <div style="display: block">
+            <h4><b th:text="${equipo.name}"/></h4>
+            <h4 th:text="${equipo.usuario.user.username}"/>
+            <h3>Puntos: <b th:text="${equipo.puntos}"/></h3>
         </div>
-        </tbody>
-    </table>
+    </div>
+</div>
+<div th:if="${noPuedeCalcularse}">
 
+    <h2 style="text-align: center; margin: 40px 15% 0px 15%" class="alert-warning">Debe haber al menos 3 equipos en la liga para
+        que se muestre la clasificación.</h2>
+</div>
 </body>
 </html>

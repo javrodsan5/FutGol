@@ -7,6 +7,11 @@
 
 
 <h1>Información de su cuenta</h1>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${invitacionExito}">
+        <p th:class="message">Has invitado al usuario con éxito.</p>
+    </div>
+</div>
 <br>
 <div style="display: inline-flex">
     <div class="cartona">

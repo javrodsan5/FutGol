@@ -7,6 +7,12 @@
 
 <h1>Mi cuenta</h1>
 <br>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${editadoExito}">
+        <p th:class="message">Has editado la cuenta con éxito.</p>
+    </div>
+</div>
+<br>
 <div style="display: inline-flex">
     <div class="cartona">
         <div>
@@ -21,11 +27,23 @@
         </div>
         <div class="descriptiona" th:text="${usuario.email}"/>
 
-        <div><a style="float: right" th:href="@{micuenta/editarmisdatos}"><i class="fa fa-edit fa-3x" style="color: #000000;"></i></a></div>
+        <div><a style="float: right" th:href="@{/micuenta/editarmisdatos}"><i class="fa fa-edit fa-3x"
+                                                                             style="color: #000000;"></i></a></div>
     </div>
 
 
     <div class="misinvitaciones">
+        <div class="form-container">
+            <div class="message-container--error" style="background-color: #67b168" th:if="${aceptacionInvitacion}">
+                <p th:class="message">Has aceptado la invitación.</p>
+            </div>
+        </div>
+        <div class="form-container">
+            <div class="message-container--error" th:if="${rechazarInvitacion}">
+                <p th:class="message">Has rechazado la invitación.</p>
+            </div>
+        </div>
+        <br>
         <div th:if="${usuario.invitaciones!=null and !usuario.invitaciones.empty}">
 
             <h1>Mis Invitaciones</h1>

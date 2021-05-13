@@ -48,12 +48,13 @@ class SubastaControlador(
         ) {
             var idMiEquipo = equipoServicio.buscaMiEquipoEnLiga(idLiga, principal).id!!
             if (jugadorServicio.existeJugadorEnEquipo(idJugador, idMiEquipo) && equipoServicio.puedoVenderJugador(idMiEquipo, idJugador) == true) {
-
+                model["venderExito"] = true
                 var subasta = subastaServicio.buscarSubastaPorLigaId(idLiga)!!
                 subastaServicio.sacarJugadorSubasta(idJugador, subasta)
                 model["liga"] = ligaServicio.buscarLigaPorId(idLiga)!!
-                return "redirect:/liga/$idLiga/subastas"
+                return jugadoresLibresSubasta(idLiga,model,principal)
             }else {
+                model["venderExito"] = false
                 return "redirect:/liga/$idLiga/miEquipo"
             }
         } else {

@@ -6,6 +6,12 @@
 <body>
 <div th:if="${equipoNoReal}" align="center">
     <h2 th:if="${loTengoEnMiEquipo}">
+        <div class="form-container">
+            <div class="message-container--error" style="background-color: #67b168" th:if="${editClausulaExito}">
+                <p th:class="message">Has editado la cláusula con éxito.</p>
+            </div>
+        </div>
+        <br>
         <h2 style="width: 50%; margin-right: 10px; display: inline" class="alert-warning">Solo se puede actualizar la
             cláusula una vez cada 8 días.</h2>
         <div style="display: inline" th:if="${puedeActualizarClausula}">

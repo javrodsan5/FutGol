@@ -113,7 +113,8 @@ class LigaControlador(
             liga.usuariosInvitados = ligaComparador.usuariosInvitados
             liga.usuarios = ligaComparador.usuarios
             this.ligaServicio.guardarLiga(liga)
-            "redirect:/misligas"
+            model["edicionLigaExito"] = true
+            listaLigas(model, principal)
         }
     }
 
@@ -152,14 +153,14 @@ class LigaControlador(
             model["liga"] = liga!!
             val equiposLiga = liga.equipos.sortedBy { x -> -x.puntos }
             val tam = equiposLiga.size
-            if(tam>=3) {
+            if (tam >= 3) {
                 model["puedeCalcularse"] = true
                 model["numEquipos"] = tam
                 model["ganador"] = equiposLiga[0]
                 model["segundo"] = equiposLiga[1]
                 model["tercero"] = equiposLiga[2]
                 model["restoEquipos"] = equiposLiga.drop(3)
-            }else {
+            } else {
                 model["noPuedeCalcularse"] = true
             }
             return VISTA_CLASIFICACION_LIGA

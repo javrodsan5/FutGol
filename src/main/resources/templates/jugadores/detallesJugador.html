@@ -320,9 +320,11 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-
-            <li th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
-                                                   th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
+            <li th:if="${equipoNoReal}" th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                                   th:href="@{/equipo/{idEquipo}/jugador/{idJugador}/jornada/{numeroJornada} (idEquipo= ${equipo.id} , idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
+            </li>
+            <li th:if="${!equipoNoReal}" th:each="jornada : ${jornadas}"><a id=url th:text="*{jornada.numeroJornada}"
+                                                                           th:href="@{/jugador/{idJugador}/jornada/{numeroJornada} (idJugador= ${jugador.id}, numeroJornada= ${jornada.numeroJornada})}"/>
             </li>
         </ul>
     </div>
@@ -494,6 +496,7 @@
     <div th:if="${!tieneEstadistica}">
         <h4 style="text-align: center">El jugador no participó en esta jornada.</h4>
     </div>
+</div>
 
 
 </body>

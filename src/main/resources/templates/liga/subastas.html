@@ -6,6 +6,12 @@
 <body>
 
 <h1>Jugadores en subasta</h1>
+<div class="form-container">
+    <div class="message-container--error" style="background-color: #67b168" th:if="${venderExito}">
+        <p th:class="message">Has puesto a la venta al jugador.</p>
+    </div>
+</div>
+<br>
 <div class="alert alert-warning" role="alert" align="center"
      style="background-color: #f5e5758c; margin: 0px 20% 0px 20%">
     <h4>Cada día a las 02:00 se actualizan los jugadores en esta lista</h4>

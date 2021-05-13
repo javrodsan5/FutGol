@@ -71,8 +71,9 @@ class UsuarioControlador(
                 liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
                 this.usuarioServicio.guardarUsuario(usuario)
                 this.ligaServicio.guardarLiga(liga)
+                model["aceptacionInvitacion"] = true
             }
-            return "redirect:/micuenta"
+            return miCuenta(model,principal)
         }
         return "redirect:/"
     }
@@ -87,8 +88,10 @@ class UsuarioControlador(
                 liga.usuariosInvitados.removeIf { it.user?.username == usuario.user?.username }
                 this.usuarioServicio.guardarUsuario(usuario)
                 this.ligaServicio.guardarLiga(liga)
+                model["rechazarInvitacion"] = true
+                return miCuenta(model,principal)
             }
-            return "redirect:/micuenta"
+            return miCuenta(model,principal)
         }
         return "redirect:/"
     }
@@ -153,17 +156,17 @@ class UsuarioControlador(
                 usuarioComparador.name = usuario.name
                 usuarioComparador.email = usuario.email
                 this.usuarioServicio.guardarUsuario(usuarioComparador)
-
+                model["editadoExito"] = true
             }
-            "redirect:/micuenta"
+            miCuenta(model,principal)
         }
     }
 
     @GetMapping("/liga/{nombreLiga}/invitar/{nombreUsuario}")
     fun invitarUsuario(
-        model: Model,
+        model: MutableMap<String, Any>,
         @PathVariable("nombreLiga") nombreLiga: String,
-        @PathVariable("nombreUsuario") nombreUsuario: String
+        @PathVariable("nombreUsuario") nombreUsuario: String, principal: Principal
     ): String {
         if (usuarioServicio.comprobarSiNombreUsuarioExiste(nombreUsuario) == true && ligaServicio.comprobarSiExisteLiga(
                 nombreLiga
@@ -177,7 +180,8 @@ class UsuarioControlador(
             usuario.invitaciones.add(liga)
             liga.usuariosInvitados.add(usuario)
             this.usuarioServicio.guardarUsuario(usuario)
-            return "redirect:/usuarios/$nombreUsuario"
+            model["invitacionExito"] = true
+            return detallesUsuario(model, nombreUsuario, principal)
         }
         return "redirect:/misligas"
     }

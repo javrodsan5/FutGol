@@ -4,8 +4,8 @@
       th:replace="~{fragments/layout :: layout (~{::body},'ligas-login')}">
 
 <body>
+<h1>Intercambios que me han ofrecido</h1>
 <h2 th:if="${tienesInt==true}">
-    <h1>Intercambios que me han ofrecido</h1>
     <div th:each="intercambio : ${intercambios}">
         <div class="content">
             <div class="card2" style="--color-card2: #2062ee">
@@ -37,7 +37,7 @@
         </div>
     </div>
 </h2>
-<h2 th:if="${tienesInt == false}">
+<h2 style="margin: 0px 30% 0px 30%; text-align: center" class="alert-warning" th:if="${tienesInt == false}">
     Todavía no te han ofrecido ningún intercambio.
 </h2>
 </body>

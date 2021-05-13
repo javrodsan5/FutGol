@@ -86,8 +86,10 @@
     <div class="card3" align="center" style="width: 1000px; min-height: 0px; height: 90px">
         <h4 style="margin: 0px">Puntos por jornadas</h4>
         <div class="scroll_vertical" id="style_scroll" style="height: 50px">
-            <h2 class="alert-info" style="margin-left: 25%; margin-right: 25%" th:if="${miEquipo} and ${ptosJorEq.size==0}">Aún no has disputado ninguna jornada</h2>
-            <h2 class="alert-info" style="margin-left: 25%; margin-right: 25%" th:if="${!miEquipo} and ${ptosJorEq.size==0}">No ha disputado ninguna jornada aún</h2>
+            <h2 class="alert-info" style="margin-left: 25%; margin-right: 25%"
+                th:if="${miEquipo} and ${ptosJorEq.size==0}">Aún no has disputado ninguna jornada</h2>
+            <h2 class="alert-info" style="margin-left: 25%; margin-right: 25%"
+                th:if="${!miEquipo} and ${ptosJorEq.size==0}">No ha disputado ninguna jornada aún</h2>
             <div class="ptosJorEq" style="margin: 10px" th:each="pje : ${ptosJorEq}">J<b
                     th:text="${pje.jornada.numeroJornada}"></b>
                 <div class="circulo"><p th:text="${pje.puntos}"></p>
@@ -155,6 +157,12 @@
 
         </ul>
     </div>
+    <div class="form-container">
+        <div class="message-container--error" style="background-color: #67b168" th:if="${sustitucionExito}">
+            <p th:class="message">Has sustituido al jugador con éxito.</p>
+        </div>
+    </div>
+    <br>
     <div style="display: inline-block; float: left; margin-top: 10px; padding: 5px; border: 2px solid"><h1
             style="font-size: 20px; text-align: end;display: inline-block">Formación: <b
             th:text="${equipo.formacion}"></b></h1><img style="width: 50px; display: inline-block; margin-left: 10px"
@@ -173,8 +181,8 @@
 </h2>
 <h2 th:if="${SinEquipo}">
     <h1>Todavía no tienes un equipo creado en esta liga, pincha aquí para crearlo.</h1>
-    <a class="btn btn-default" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">
-        <span class="glyphicon glyphicon-edit"></span> Crear equipo en esta liga</a>
+    <a class="btn btn-success" th:href="@{/liga/{idLiga}/nuevoEquipo (idLiga= ${liga.id})}">Crear equipo en esta
+        liga</a>
 </h2>
 
 </body>

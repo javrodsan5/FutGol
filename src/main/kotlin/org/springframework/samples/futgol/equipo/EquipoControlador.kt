@@ -492,13 +492,14 @@ class EquipoControlador(
                     equipo.jugBanquillo = banquilloOrdenadoMut
                     equipoServicio.guardarEquipo(equipo)
                     model["equipo"] = equipo
+                    model["sustitucionExito"] = true
 
                 }
             }
         } else {
             return "redirect:/"
         }
-        return "redirect:/liga/$idLiga/miEquipo"
+        return detallesMiEquipo(model, idLiga, principal)
     }
 
 }

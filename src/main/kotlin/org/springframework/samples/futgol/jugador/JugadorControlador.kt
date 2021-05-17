@@ -24,7 +24,6 @@ import java.security.Principal
 import java.util.*
 import java.util.stream.Collectors
 import javax.validation.Valid
-import kotlin.Comparator
 
 
 @Controller
@@ -249,27 +248,29 @@ class JugadorControlador(
                 var otroEquipo = equipoServicio.buscaEquiposPorId(idEquipo)!!
                 val jugador = jugadorServicio.buscaJugadorPorId(idJugador)!!
                 var clausula = clausulaServicio.buscarClausulasPorJugadorYEquipo(idJugador, idEquipo)!!
-                miEquipo.dineroRestante -= clausula.valorClausula
-                miEquipo.jugadores.add(jugador)
-                miEquipo.jugBanquillo.add(jugador)
+                if (clausula.valorClausula <= miEquipo.dineroRestante) {
+                    miEquipo.dineroRestante -= clausula.valorClausula
+                    miEquipo.jugadores.add(jugador)
+                    miEquipo.jugBanquillo.add(jugador)
 
-                otroEquipo.dineroRestante += clausula.valorClausula
-                otroEquipo.jugBanquillo.removeIf { x -> x.id == idJugador }
-                otroEquipo.jugadores.removeIf { x -> x.id == idJugador }
-                otroEquipo.onceInicial.removeIf { x -> x.id == idJugador }
+                    otroEquipo.dineroRestante += clausula.valorClausula
+                    otroEquipo.jugBanquillo.removeIf { x -> x.id == idJugador }
+                    otroEquipo.jugadores.removeIf { x -> x.id == idJugador }
+                    otroEquipo.onceInicial.removeIf { x -> x.id == idJugador }
 
-                equipoServicio.guardarEquipo(miEquipo)
-                equipoServicio.guardarEquipo(otroEquipo)
-                clausulaServicio.borraClausulaByEquipoIdAndJugadorId(idEquipo, idJugador)
+                    equipoServicio.guardarEquipo(miEquipo)
+                    equipoServicio.guardarEquipo(otroEquipo)
+                    clausulaServicio.borraClausulaByEquipoIdAndJugadorId(idEquipo, idJugador)
 
-                var clau = Clausula()
-                clau.equipo = miEquipo
-                clau.jugador = jugador
-                var fecha = Calendar.getInstance()
-                fecha.add(Calendar.DAY_OF_YEAR, -9)
-                clau.ultModificacion = fecha.time
-                clau.valorClausula = ((jugador.valor + (jugador.valor * 0.5)) * 1000000).toInt()
-                this.clausulaServicio.guardarClausula(clau)
+                    var clau = Clausula()
+                    clau.equipo = miEquipo
+                    clau.jugador = jugador
+                    var fecha = Calendar.getInstance()
+                    fecha.add(Calendar.DAY_OF_YEAR, -9)
+                    clau.ultModificacion = fecha.time
+                    clau.valorClausula = ((jugador.valor + (jugador.valor * 0.5)) * 1000000).toInt()
+                    this.clausulaServicio.guardarClausula(clau)
+                }
             }
         }
         return "redirect:/liga/$idLiga/miEquipo"

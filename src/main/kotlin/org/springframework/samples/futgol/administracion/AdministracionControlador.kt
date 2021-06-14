@@ -50,17 +50,6 @@ class AdministracionControlador(
         this.subastaServicio.autoGanaryGenerarSubasta()
     }
 
-    @GetMapping("/pujaAuto")
-    fun pujaAuto(): String {
-        this.subastaServicio.autoGanaryGenerarSubasta()
-        return "welcome"
-    }
-
-    @GetMapping("/puntos")
-    fun puntosAuto(): String {
-        this.equipoServicio.asignarPuntosEquipo()
-        return "welcome"
-    }
 
     fun costeClausulasJornada() {
         val ligas = ligaServicio.buscarTodasLigas()!!
